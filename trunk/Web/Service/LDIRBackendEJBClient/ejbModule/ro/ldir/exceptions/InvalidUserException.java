@@ -24,7 +24,10 @@
 package ro.ldir.exceptions;
 
 /**
- * @author Stefan Guna
+ * Exception thrown when an user operation cannot be completed.
+ * 
+ * For instance, this may be when trying to insert an user that would duplicate
+ * an existing email address.
  * 
  */
 public class InvalidUserException extends RuntimeException {

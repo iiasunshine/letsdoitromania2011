@@ -44,7 +44,18 @@ import ro.ldir.dto.Garbage;
 import ro.ldir.dto.Garbage.Status;
 
 /**
- * Session Bean implementation class GarbageManager
+ * Session bean managing garbages.
+ * 
+ * A garbage is defined by the {@link ro.ldir.dto.Garbage} entity bean.
+ * 
+ * The exported methods are defined by the
+ * {@link ro.ldir.beans.GarbageManagerLocal} interface. Access to this bean is
+ * exported by the webservice defined by the
+ * {@link ro.ldir.ws.GarbageWebService}.
+ * 
+ * @see ro.ldir.dto.Garbage
+ * @see ro.ldir.beans.GarbageManagerLocal
+ * @see ro.ldir.ws.UserWebService
  */
 @Stateless
 @LocalBean
@@ -52,21 +63,34 @@ public class GarbageManager implements GarbageManagerLocal {
 	@PersistenceContext(unitName = "ldir")
 	EntityManager em;
 
+	/**
+	 * The size of the buffer used during image transfer from the temporary
+	 * location to the final directory. It is loaded as an EJB environment
+	 * entry.
+	 */
 	@Resource
 	private Integer imgBufSize;
+	/**
+	 * The directory where images are stored. It is loaded as an EJB environment
+	 * entry.
+	 */
 	@Resource
 	private String imgLocation;
 
-	/**
-	 * Default constructor.
-	 */
+	/** Default constructor. */
 	public GarbageManager() {
 	}
 
-	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ro.ldir.beans.GarbageManagerLocal#addNewImage(int, java.io.File,
+	 * java.lang.String)
+	 */
 	@Override
 	public void addNewImage(int garbageId, File file, String originalName)
 			throws FileNotFoundException, IOException {
+		// TODO check that the file is actually an image.
 		Garbage garbage = em.find(Garbage.class, garbageId);
 		int size = 0;
 		if (garbage.pictures != null)
@@ -100,6 +124,11 @@ public class GarbageManager implements GarbageManagerLocal {
 		out.close();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ro.ldir.beans.GarbageManagerLocal#deleteImage(int, int)
+	 */
 	@Override
 	public void deleteImage(int garbageId, int imageId) {
 		Garbage garbage = em.find(Garbage.class, garbageId);
@@ -114,11 +143,22 @@ public class GarbageManager implements GarbageManagerLocal {
 		throw new ArrayIndexOutOfBoundsException();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ro.ldir.beans.GarbageManagerLocal#getGarbage(int)
+	 */
 	@Override
 	public Garbage getGarbage(int garbageId) {
 		return em.find(Garbage.class, garbageId);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * ro.ldir.beans.GarbageManagerLocal#getGarbages(ro.ldir.dto.Garbage.Status)
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Garbage> getGarbages(Status status) {
@@ -128,6 +168,12 @@ public class GarbageManager implements GarbageManagerLocal {
 		return (List<Garbage>) query.getResultList();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * ro.ldir.beans.GarbageManagerLocal#getGarbagesByCounty(java.lang.String)
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Garbage> getGarbagesByCounty(String county) {
@@ -137,6 +183,12 @@ public class GarbageManager implements GarbageManagerLocal {
 		return (List<Garbage>) query.getResultList();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * ro.ldir.beans.GarbageManagerLocal#getGarbagesByTown(java.lang.String)
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Garbage> getGarbagesByTown(String town) {
@@ -146,6 +198,11 @@ public class GarbageManager implements GarbageManagerLocal {
 		return (List<Garbage>) query.getResultList();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ro.ldir.beans.GarbageManagerLocal#getImagePath(int, int)
+	 */
 	@Override
 	public String getImagePath(int garbageId, int imageId) {
 		Garbage garbage = em.find(Garbage.class, garbageId);
@@ -158,6 +215,12 @@ public class GarbageManager implements GarbageManagerLocal {
 		throw new ArrayIndexOutOfBoundsException();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ro.ldir.beans.GarbageManagerLocal#setGarbageStatus(int,
+	 * ro.ldir.dto.Garbage.Status)
+	 */
 	@Override
 	public void setGarbageStatus(int garbageId, Status status) {
 		Garbage garbage = em.find(Garbage.class, garbageId);

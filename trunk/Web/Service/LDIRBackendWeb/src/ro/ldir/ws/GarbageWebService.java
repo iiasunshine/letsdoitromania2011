@@ -51,6 +51,10 @@ import com.sun.jersey.api.Responses;
 import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataParam;
 
+/**
+ * The garbage webservice. Implements queries for the garbage, updates of
+ * garbage information, uploads of images, etc.
+ */
 @Path("garbage")
 public class GarbageWebService {
 	@SuppressWarnings("unused")
