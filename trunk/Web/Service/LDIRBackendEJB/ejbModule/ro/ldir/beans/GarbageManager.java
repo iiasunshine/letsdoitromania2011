@@ -63,6 +63,7 @@ public class GarbageManager implements GarbageManagerLocal {
 	public GarbageManager() {
 	}
 
+	
 	@Override
 	public void addNewImage(int garbageId, File file, String originalName)
 			throws FileNotFoundException, IOException {
@@ -131,7 +132,7 @@ public class GarbageManager implements GarbageManagerLocal {
 	@Override
 	public List<Garbage> getGarbagesByCounty(String county) {
 		Query query = em
-				.createQuery("SELECT x FROM Garbage x WHERE county = :countyParam");
+				.createQuery("SELECT x FROM Garbage x WHERE x.county = :countyParam");
 		query.setParameter("countyParam", county);
 		return (List<Garbage>) query.getResultList();
 	}
@@ -140,7 +141,7 @@ public class GarbageManager implements GarbageManagerLocal {
 	@Override
 	public List<Garbage> getGarbagesByTown(String town) {
 		Query query = em
-				.createQuery("SELECT x FROM Garbage x WHERE town = :townParam");
+				.createQuery("SELECT x FROM Garbage x WHERE x.town = :townParam");
 		query.setParameter("townParam", town);
 		return (List<Garbage>) query.getResultList();
 	}
