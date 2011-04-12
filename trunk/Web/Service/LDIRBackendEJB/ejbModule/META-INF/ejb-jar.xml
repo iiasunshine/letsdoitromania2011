@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ejb-jar xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:ejb="http://java.sun.com/xml/ns/javaee/ejb-jar_3_0.xsd"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/ejb-jar_3_1.xsd"
+	version="3.1">
+	<display-name>LDIRBackendEJB</display-name>
+	<enterprise-beans>
+		<session>
+			<ejb-name>GarbageManager</ejb-name>
+			<env-entry>
+				<description>ImageCopyBufferSize</description>
+				<env-entry-name>ro.ldir.beans.GarbageManager/imgBufSize</env-entry-name>
+				<env-entry-type>java.lang.Integer</env-entry-type>
+				<env-entry-value>1024</env-entry-value>
+			</env-entry>
+			<env-entry>
+				<description>ImageLocation</description>
+				<env-entry-name>ro.ldir.beans.GarbageManager/imgLocation</env-entry-name>
+				<env-entry-type>java.lang.String</env-entry-type>
+				<env-entry-value>/tmp</env-entry-value>
+			</env-entry>
+		</session>
+	</enterprise-beans>
+	<ejb-client-jar>LDIRBackendEJBClient.jar</ejb-client-jar>
+</ejb-jar>
