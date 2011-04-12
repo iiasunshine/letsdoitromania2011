@@ -47,6 +47,10 @@ import ro.ldir.exceptions.InvalidUserException;
 
 import com.sun.jersey.api.Responses;
 
+/**
+ * The garbage user. Implements queries for users, updates of users information,
+ * user authentication, etc.
+ */
 @Path("user")
 public class UserWebService {
 	@SuppressWarnings("unused")

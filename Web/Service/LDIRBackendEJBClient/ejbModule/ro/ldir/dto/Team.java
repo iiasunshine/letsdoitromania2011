@@ -41,8 +41,8 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import ro.ldir.dto.adapters.IntegerAdapter;
 
 /**
- * @author Stefan Guna
- * 
+ * The entity bean describing a team. Objects of this type are persisted in the
+ * database and send via JSON / XML to clients of the webservices.
  */
 @Entity
 @XmlRootElement

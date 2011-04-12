@@ -40,7 +40,17 @@ import ro.ldir.dto.User.Type;
 import ro.ldir.exceptions.InvalidUserException;
 
 /**
- * Session Bean implementation class UserManager
+ * Session bean managing users.
+ * 
+ * A user is defined by the {@link ro.ldir.dto.User} entity bean.
+ * 
+ * The exported methods are defined by the
+ * {@link ro.ldir.beans.UserManagerLocal} interface. Access to this bean is
+ * exported by the webservice defined by the {@link ro.ldir.ws.UserWebService}.
+ * 
+ * @see ro.ldir.dto.User
+ * @see ro.ldir.beans.UserManagerLocal
+ * @see ro.ldir.ws.UserWebService
  */
 @Stateless
 @LocalBean
@@ -48,13 +58,17 @@ public class UserManager implements UserManagerLocal {
 	@PersistenceContext(unitName = "ldir")
 	EntityManager em;
 
-	/**
-	 * Default constructor.
-	 */
+	/** Default constructor. */
 	public UserManager() {
 		// TODO Auto-generated constructor stub
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ro.ldir.beans.UserManagerLocal#addNewGarbage(int,
+	 * ro.ldir.dto.Garbage)
+	 */
 	@Override
 	public void addNewGarbage(int userId, Garbage garbage) {
 		User user = em.find(User.class, userId);
@@ -63,6 +77,11 @@ public class UserManager implements UserManagerLocal {
 		em.merge(user);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ro.ldir.beans.UserManagerLocal#addUser(ro.ldir.dto.User)
+	 */
 	@Override
 	public void addUser(User user) throws InvalidUserException {
 		Query query = em
@@ -74,17 +93,32 @@ public class UserManager implements UserManagerLocal {
 		em.persist(user);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ro.ldir.beans.UserManagerLocal#getGarbages(int)
+	 */
 	@Override
 	public Collection<Garbage> getGarbages(int userId) {
 		User user = em.find(User.class, userId);
 		return user.garbages;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ro.ldir.beans.UserManagerLocal#getUser(int)
+	 */
 	@Override
 	public User getUser(int id) {
 		return em.find(User.class, id);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ro.ldir.beans.UserManagerLocal#getUsers(ro.ldir.dto.User.Activity)
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<User> getUsers(Activity activity) {
@@ -94,6 +128,11 @@ public class UserManager implements UserManagerLocal {
 		return (List<User>) query.getResultList();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ro.ldir.beans.UserManagerLocal#getUsers(java.lang.String)
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<User> getUsers(String town) {
@@ -103,6 +142,11 @@ public class UserManager implements UserManagerLocal {
 		return (List<User>) query.getResultList();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ro.ldir.beans.UserManagerLocal#getUsers(ro.ldir.dto.User.Type)
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<User> getUsers(Type type) {
@@ -112,6 +156,12 @@ public class UserManager implements UserManagerLocal {
 		return (List<User>) query.getResultList();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ro.ldir.beans.UserManagerLocal#setUserActivities(int,
+	 * java.util.List)
+	 */
 	@Override
 	public void setUserActivities(int userId, List<Activity> activities) {
 		User user = em.find(User.class, userId);
@@ -119,6 +169,12 @@ public class UserManager implements UserManagerLocal {
 		em.merge(user);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ro.ldir.beans.UserManagerLocal#setUserStatus(int,
+	 * ro.ldir.dto.User.Status)
+	 */
 	@Override
 	public void setUserStatus(int userId, Status status) {
 		User user = em.find(User.class, userId);
@@ -126,6 +182,11 @@ public class UserManager implements UserManagerLocal {
 		em.merge(user);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ro.ldir.beans.UserManagerLocal#updateUser(int, ro.ldir.dto.User)
+	 */
 	@Override
 	public void updateUser(int userId, User user) {
 		User existing = em.find(User.class, userId);

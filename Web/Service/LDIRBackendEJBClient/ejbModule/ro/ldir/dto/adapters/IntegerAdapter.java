@@ -26,8 +26,7 @@ package ro.ldir.dto.adapters;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 /**
- * @author Stefan Guna
- * 
+ * This adapter is used to serialize integers during XML serialization.
  */
 public class IntegerAdapter extends XmlAdapter<String, Integer> {
 
