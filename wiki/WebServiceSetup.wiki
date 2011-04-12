@@ -1,0 +1,237 @@
+#summary Instructions on how to install and configure the webservice.
+#labels Phase-Implementation
+
+= The environment =
+
+== MySQL ==
+ # Install MySQL.
+ # Create a database called `lair`.
+ # Create a MySQL user called `lair` with password `lair`.
+ # Grant the `lair` user all permissions on the `lair` database. Restrict the remote access to the database.
+
+== Java tools ==
+ # Install Java JDK 1.6.
+ # Install Apache Ant from [http://ant.apache.org/ here].
+
+== GlassFish ==
+ # Download the GlassFish Server Open Source Edition - 3.1 Final from [http://glassfish.java.net/downloads/3.1-final.html here]. Make sure you use the *full platform* distribution.
+ # Configure GlassFish using the default settings.
+ # Copy the [http://repo2.maven.org/maven2/org/wamblee/glassfish/flexiblejdbcrealm-deploy/1.2/flexiblejdbcrealm-deploy-1.2-all.jar Flexible JDBC Realm 1.2] jar in `glassfish/lib`.
+ # Configure a connection to the database. I configured it with the GUI of the administration console, I had to fill in few fields. But the changes in the configuration file are monstrous. To replicate my environment, in `glassfish/domains/domain1/config/domain.xml` (this directory should be located within your GlassFish installation), add the following under the `<resources>` element :
+{{{
+    <jdbc-connection-pool driver-classname="" datasource-classname="com.mysql.jdbc.jdbc2.optional.MysqlDataSource" res-type="javax.sql.DataSource" description="" name="LDIRPool">
+      <property name="User" value="ldir"></property>
+      <property name="AutoReconnectForPools" value="false"></property>
+      <property name="LoggerClassName" value="com.mysql.jdbc.log.StandardLogger"></property>
+      <property name="ServerName" value="localhost"></property>
+      <property name="RetriesAllDown" value="120"></property>
+      <property name="IgnoreNonTxTables" value="false"></property>
+      <property name="ProfilerEventHandler" value="com.mysql.jdbc.profiler.LoggingProfilerEventHandler"></property>
+      <property name="StrictFloatingPoint" value="false"></property>
+      <property name="TransformedBitIsBoolean" value="false"></property>
+      <property name="UseOldUTF8Behavior" value="false"></property>
+      <property name="TreatUtilDateAsTimestamp" value="true"></property>
+      <property name="CallableStatementCacheSize" value="100"></property>
+      <property name="TcpSndBuf" value="0"></property>
+      <property name="Port" value="3306"></property>
+      <property name="UseSqlStateCodes" value="true"></property>
+      <property name="InitialTimeout" value="2"></property>
+      <property name="LoadBalanceExceptionChecker" value="com.mysql.jdbc.StandardLoadBalanceExceptionChecker"></property>
+      <property name="AllowUrlInLocalInfile" value="false"></property>
+      <property name="DatabaseName" value="ldir"></property>
+      <property name="NullNamePatternMatchesAll" value="true"></property>
+      <property name="Password" value="ldir"></property>
+      <property name="AllowLoadLocalInfile" value="true"></property>
+      <property name="PreparedStatementCacheSqlLimit" value="256"></property>
+      <property name="Logger" value="com.mysql.jdbc.log.StandardLogger"></property>
+      <property name="PrepStmtCacheSize" value="25"></property>
+      <property name="AlwaysSendSetIsolation" value="true"></property>
+      <property name="ClientCertificateKeyStoreType" value="JKS"></property>
+      <property name="CapitalizeTypeNames" value="true"></property>
+      <property name="CallableStmtCacheSize" value="100"></property>
+      <property name="LocatorFetchBufferSize" value="1048576"></property>
+      <property name="UseSSL" value="false"></property>
+      <property name="JdbcCompliantTruncationForReads" value="true"></property>
+      <property name="TcpRcvBuf" value="0"></property>
+      <property name="UseSSPSCompatibleTimezoneShift" value="false"></property>
+      <property name="CacheCallableStatements" value="false"></property>
+      <property name="DefaultFetchSize" value="0"></property>
+      <property name="UseCompression" value="false"></property>
+      <property name="GenerateSimpleParameterMetadata" value="false"></property>
+      <property name="UseTimezone" value="false"></property>
+      <property name="CacheServerConfiguration" value="false"></property>
+      <property name="AutoDeserialize" value="false"></property>
+      <property name="MaxRows" value="-1"></property>
+      <property name="UseLocalTransactionState" value="false"></property>
+      <property name="SecondsBeforeRetryMaster" value="30"></property>
+      <property name="UseUnicode" value="true"></property>
+      <property name="SlowQueryThresholdMillis" value="2000"></property>
+      <property name="TcpTrafficClass" value="0"></property>
+      <property name="NetTimeoutForStreamingResults" value="600"></property>
+      <property name="DynamicCalendars" value="false"></property>
+      <property name="IncludeThreadNamesAsStatementComment" value="false"></property>
+      <property name="TcpKeepAlive" value="true"></property>
+      <property name="NoDatetimeStringSync" value="false"></property>
+      <property name="EmulateUnsupportedPstmts" value="true"></property>
+      <property name="NullCatalogMeansCurrent" value="true"></property>
+      <property name="ExplainSlowQueries" value="false"></property>
+      <property name="ConnectTimeout" value="0"></property>
+      <property name="UseStreamLengthsInPrepStmts" value="true"></property>
+      <property name="EmptyStringsConvertToZero" value="true"></property>
+      <property name="MaxQuerySizeToLog" value="2048"></property>
+      <property name="FailOverReadOnly" value="true"></property>
+      <property name="IsInteractiveClient" value="false"></property>
+      <property name="LoadBalanceEnableJMX" value="false"></property>
+      <property name="RoundRobinLoadBalance" value="false"></property>
+      <property name="UseAffectedRows" value="false"></property>
+      <property name="ContinueBatchOnError" value="true"></property>
+      <property name="UseFastDateParsing" value="true"></property>
+      <property name="BlobSendChunkSize" value="1048576"></property>
+      <property name="OverrideSupportsIntegrityEnhancementFacility" value="false"></property>
+      <property name="ElideSetAutoCommits" value="false"></property>
+      <property name="PreparedStatementCacheSize" value="25"></property>
+      <property name="GatherPerfMetrics" value="false"></property>
+      <property name="UseOnlyServerErrorMessages" value="true"></property>
+      <property name="TcpNoDelay" value="true"></property>
+      <property name="LogXaCommands" value="false"></property>
+      <property name="ReportMetricsIntervalMillis" value="30000"></property>
+      <property name="AutoSlowLog" value="true"></property>
+      <property name="UseGmtMillisForDatetimes" value="false"></property>
+      <property name="PinGlobalTxToPhysicalConnection" value="false"></property>
+      <property name="VerifyServerCertificate" value="true"></property>
+      <property name="LoadBalanceValidateConnectionOnSwapServer" value="false"></property>
+      <property name="EnableQueryTimeouts" value="true"></property>
+      <property name="UseInformationSchema" value="false"></property>
+      <property name="NoAccessToProcedureBodies" value="false"></property>
+      <property name="LoadBalanceBlacklistTimeout" value="0"></property>
+      <property name="TrustCertificateKeyStoreType" value="JKS"></property>
+      <property name="UltraDevHack" value="false"></property>
+      <property name="AllowMultiQueries" value="false"></property>
+      <property name="FunctionsNeverReturnBlobs" value="false"></property>
+      <property name="SlowQueryThresholdNanos" value="0"></property>
+      <property name="StrictUpdates" value="true"></property>
+      <property name="AutoClosePStmtStreams" value="false"></property>
+      <property name="Url" value="jdbc:mysql://localhost:3306/"></property>
+      <property name="HoldResultsOpenOverStatementClose" value="false"></property>
+      <property name="TinyInt1isBit" value="true"></property>
+      <property name="LoadBalanceStrategy" value="random"></property>
+      <property name="UseUsageAdvisor" value="false"></property>
+      <property name="TraceProtocol" value="false"></property>
+      <property name="YearIsDateType" value="true"></property>
+      <property name="CachePrepStmts" value="false"></property>
+      <property name="UseColumnNamesInFindColumn" value="false"></property>
+      <property name="ProfileSQL" value="false"></property>
+      <property name="PadCharsWithSpace" value="false"></property>
+      <property name="LoadBalanceAutoCommitStatementThreshold" value="0"></property>
+      <property name="ClientInfoProvider" value="com.mysql.jdbc.JDBC4CommentClientInfoProvider"></property>
+      <property name="UseDynamicCharsetInfo" value="true"></property>
+      <property name="UseNanosForElapsedTime" value="false"></property>
+      <property name="SocketFactory" value="com.mysql.jdbc.StandardSocketFactory"></property>
+      <property name="DontTrackOpenResources" value="false"></property>
+      <property name="DumpMetadataOnColumnNotFound" value="false"></property>
+      <property name="UseLegacyDatetimeCode" value="true"></property>
+      <property name="CompensateOnDuplicateKeyUpdateCounts" value="false"></property>
+      <property name="UseBlobToStoreUTF8OutsideBMP" value="false"></property>
+      <property name="UseReadAheadInput" value="true"></property>
+      <property name="PacketDebugBufferSize" value="20"></property>
+      <property name="BlobsAreStrings" value="false"></property>
+      <property name="ProcessEscapeCodesForPrepStmts" value="true"></property>
+      <property name="AutoGenerateTestcaseScript" value="false"></property>
+      <property name="UseDirectRowUnpack" value="true"></property>
+      <property name="UseOldAliasMetadataBehavior" value="false"></property>
+      <property name="UseServerPrepStmts" value="false"></property>
+      <property name="UseServerPreparedStmts" value="false"></property>
+      <property name="PrepStmtCacheSqlLimit" value="256"></property>
+      <property name="PortNumber" value="3306"></property>
+      <property name="URL" value="jdbc:mysql://localhost:3306/ldir"></property>
+      <property name="UseJDBCCompliantTimezoneShift" value="false"></property>
+      <property name="CachePreparedStatements" value="false"></property>
+      <property name="Paranoid" value="false"></property>
+      <property name="UseJvmCharsetConverters" value="false"></property>
+      <property name="NoTimezoneConversionForTimeType" value="false"></property>
+      <property name="QueryTimeoutKillsConnection" value="false"></property>
+      <property name="UseUltraDevWorkAround" value="false"></property>
+      <property name="InteractiveClient" value="false"></property>
+      <property name="QueriesBeforeRetryMaster" value="50"></property>
+      <property name="UseFastIntParsing" value="true"></property>
+      <property name="MaxReconnects" value="3"></property>
+      <property name="EmulateLocators" value="false"></property>
+      <property name="Pedantic" value="false"></property>
+      <property name="RelaxAutoCommit" value="false"></property>
+      <property name="ZeroDateTimeBehavior" value="exception"></property>
+      <property name="ClobberStreamingResults" value="false"></property>
+      <property name="IncludeInnodbStatusInDeadlockExceptions" value="false"></property>
+      <property name="ReconnectAtTxEnd" value="false"></property>
+      <property name="MetadataCacheSize" value="50"></property>
+      <property name="LoginTimeout" value="0"></property>
+      <property name="UseCursorFetch" value="false"></property>
+      <property name="LogSlowQueries" value="false"></property>
+      <property name="RetainStatementAfterResultSetClose" value="false"></property>
+      <property name="AllowNanAndInf" value="false"></property>
+      <property name="JdbcCompliantTruncation" value="true"></property>
+      <property name="RunningCTS13" value="false"></property>
+      <property name="DumpQueriesOnException" value="false"></property>
+      <property name="ResultSetSizeThreshold" value="100"></property>
+      <property name="RollbackOnPooledClose" value="true"></property>
+      <property name="UseLocalSessionState" value="false"></property>
+      <property name="CacheCallableStmts" value="false"></property>
+      <property name="MaxAllowedPacket" value="-1"></property>
+      <property name="GatherPerformanceMetrics" value="false"></property>
+      <property name="LoadBalancePingTimeout" value="0"></property>
+      <property name="SelfDestructOnPingSecondsLifetime" value="0"></property>
+      <property name="RewriteBatchedStatements" value="false"></property>
+      <property name="CreateDatabaseIfNotExist" value="false"></property>
+      <property name="PopulateInsertRowWithDefaultValues" value="false"></property>
+      <property name="SocketFactoryClassName" value="com.mysql.jdbc.StandardSocketFactory"></property>
+      <property name="MaintainTimeStats" value="true"></property>
+      <property name="UseHostsInPrivileges" value="true"></property>
+      <property name="UseUnbufferedInput" value="true"></property>
+      <property name="IncludeThreadDumpInDeadlockExceptions" value="false"></property>
+      <property name="RequireSSL" value="false"></property>
+      <property name="SelfDestructOnPingMaxOperations" value="0"></property>
+      <property name="SocketTimeout" value="0"></property>
+      <property name="EnablePacketDebug" value="false"></property>
+      <property name="CacheResultSetMetadata" value="false"></property>
+      <property name="ProfileSql" value="false"></property>
+    </jdbc-connection-pool>
+}}}
+ # Configure a JNDI resource for the pool. In the same file as the above, still in under `resources`, add the following:
+{{{
+<jdbc-resource pool-name="LDIRPool" description="" jndi-name="jdbc/ldir"></jdbc-resource>
+}}}
+ # Append the following tp `glassfish/domains/domain1/config/login.conf`:
+{{{
+ldirRealm {
+    org.wamblee.glassfish.auth.FlexibleJdbcLoginModule required;
+};
+}}}
+ # Now, let's define the security realm that forces clients to authenticate. In `glassfish/domains/domain1/config/domain.xml`, look for the beginning of the `<security-service>` element. There are *two* occurrences of this element. Change both to look like:
+{{{
+ <security-service default-realm="ldir-realm" activate-default-principal-to-role-mapping="true">
+}}}
+ # Under the both `<security-service>` elements, append the following realm:
+{{{
+        <auth-realm name="ldir-realm" classname="org.wamblee.glassfish.auth.FlexibleJdbcRealm">
+          <property name="datasource.jndi" value="jdbc/ldir"></property>
+          <property name="sql.groups" value="select role from user where email = ?"></property>
+          <property name="sql.password" value="select passwd from user where email = ?"></property>
+          <property name="password.encoding" value="HEX:64"></property>
+          <property name="jaas.context" value="ldirRealm"></property>
+          <property name="password.digest" value="SHA-256"></property>
+        </auth-realm>
+}}}
+
+
+= The web service =
+
+== Configure the web service ==
+
+Right now, the only configuration required configuration for the web service is the location where garbage images should be stored. Inside of `LDIRBackendEJB/ejbModule/META-INF/ejb-jar.xml`, change the `<env-entry-value>` element of the entry described as _ImageLocation_ to point to a directory where the glassfish has read/write permissions.
+
+== Build the web service ==
+
+TBD. For the moment, you can try to import it in Eclipse and try to give it a go in there.
+
+== Deploy the web service ==
+
+TBD. For the moment, you can try to import it in Eclipse and try to give it a go in there.
