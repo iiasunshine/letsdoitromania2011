@@ -226,12 +226,52 @@ ldirRealm {
 
 == Configure the web service ==
 
-Right now, the only configuration required configuration for the web service is the location where garbage images should be stored. Inside of `LDIRBackendEJB/ejbModule/META-INF/ejb-jar.xml`, change the `<env-entry-value>` element of the entry described as _ImageLocation_ to point to a directory where the glassfish has read/write permissions.
+ # Configure the location where garbage images should be stored. Inside of `Web/Service/LDIRBackendEJB/ejbModule/META-INF/ejb-jar.xml`, change the `<env-entry-value>` element of the entry described as _ImageLocation_ to point to a directory where the glassfish has read/write permissions.
+ # Set the environment variable called `GLASSFISH_HOME` to point to the GlassFish instalation directory. You might want to consider adding this to your `.bashrc` file. For instance, in a terminal (or in your `.bashrc` file):
+{{{
+export GLASSFISH_HOME=/Users/stefan/glassfish3
+}}}
+
 
 == Build the web service ==
 
-TBD. For the moment, you can try to import it in Eclipse and try to give it a go in there.
+At the top level directory of the web service, i.e., in `Web/Service` execute:
+{{{
+$ ant 
+}}}
+If the build succeeds, you can find the application packaged in the file `Web/Service/LDIRBackend/LDIRBackend.ear`.
 
 == Deploy the web service ==
+ 
+First, make sure that GlassFish is running. Then, use a special `ant` target. That is, at the top level directory of the web service, i.e., in `Web/Service` execute:
+{{{
+$ ant deploy 
+}}}
 
-TBD. For the moment, you can try to import it in Eclipse and try to give it a go in there.
+If the deployment succeeds, the server log file in `glassfish/domains/domain1/logs/server.log` should read:
+{{{
+INFO: [AutoDeploy] Selecting file /Users/stefan/glassfish3/glassfish/domains/domain1/autodeploy/LDIRBackend.ear for autodeployment.
+INFO: file:/Users/stefan/glassfish3/glassfish/domains/domain1/applications/LDIRBackend/LDIRBackendEJB_jar/_ldir logout successful
+
+INFO: ro.ldir.dto.User actually got transformed
+INFO: ro.ldir.dto.Team actually got transformed
+INFO: ro.ldir.dto.Garbage actually got transformed
+INFO: Instantiated an instance of org.hibernate.validator.engine.resolver.JPATraversableResolver.
+INFO: EclipseLink, version: Eclipse Persistence Services - 2.2.0.v20110202-r8913
+INFO: file:/Users/stefan/glassfish3/glassfish/domains/domain1/applications/LDIRBackend/LDIRBackendEJB_jar/_ldir login successful
+
+INFO: Portable JNDI names for EJB UserManager : [java:global/LDIRBackend/LDIRBackendEJB/UserManager!ro.ldir.beans.UserManagerLocal, java:global/LDIRBackend/LDIRBackendEJB/UserManager!ro.ldir.beans.UserManager]
+
+INFO: Portable JNDI names for EJB GarbageManager : [java:global/LDIRBackend/LDIRBackendEJB/GarbageManager!ro.ldir.beans.GarbageManager, java:global/LDIRBackend/LDIRBackendEJB/GarbageManager!ro.ldir.beans.GarbageManagerLocal]
+INFO: Scanning for root resource and provider classes in the packages:
+  ro.ldir.ws
+INFO: Root resource classes found:
+  class ro.ldir.ws.GarbageWebService
+  class ro.ldir.ws.UserWebService
+INFO: No provider classes found.
+INFO: Initiating Jersey application, version 'Jersey: 1.5 01/14/2011 12:36 PM'
+
+INFO: WEB0671: Loading application [LDIRBackend#LDIRBackendWeb.war] at [LDIRBackend]
+INFO: LDIRBackend was successfully deployed in 2,918 milliseconds.
+INFO: [AutoDeploy] Successfully autodeployed : /Users/stefan/glassfish3/glassfish/domains/domain1/autodeploy/LDIRBackend.ear.
+}}}
