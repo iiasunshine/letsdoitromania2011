@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<project basedir="." default="ear" name="LDIRBackend">
+	<include file="build-common.xml" as="build-common" />
+
+	<target name="clean">
+		<ant dir="${app.location}" target="clean" />
+		<ant dir="${ejb.location}" target="clean" />
+		<ant dir="${ejbclient.location}" target="clean" />
+		<ant dir="${webservice.location}" target="clean" />
+	</target>
+
+	<target name="ear">
+		<ant dir="${app.location}" target="ear" />
+	</target>
+
+	<target depends="ear" name="deploy">
+		<copy file="${app.ear}" todir="${glassfish.home}/glassfish/domains/${glassfish.domain}/autodeploy" />
+	</target>
+</project>
