@@ -199,6 +199,10 @@
 {{{
 <jdbc-resource pool-name="LDIRPool" description="" jndi-name="jdbc/ldir"></jdbc-resource>
 }}}
+ # Configure the server to use the resource. Under `<servers>`, under `<resource-ref ref="jdbc/ldir"></resource-ref>` add a line:
+{{{
+<resource-ref ref="jdbc/ldir"></resource-ref>
+}}}
  # Append the following tp `glassfish/domains/domain1/config/login.conf`:
 {{{
 ldirRealm {
