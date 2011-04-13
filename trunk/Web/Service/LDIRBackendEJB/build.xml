@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<project basedir="." default="build" name="LDIRBackendEJB">
+	<include file="../build-common.xml" as="build-common" />
+
+	<path id="LDIRBackendEJB.classpath">
+		<pathelement location="build/classes" />
+		<path refid="GlassFish 3.1 [GlassFish 3.1].libraryclasspath" />
+		<path refid="EAR Libraries.libraryclasspath" />
+	</path>
+
+	<target depends="build-common.build-ejbclient" name="init">
+		<mkdir dir="build/classes" />
+		<copy includeemptydirs="false" todir="build/classes">
+			<fileset dir="ejbModule">
+				<exclude name="**/*.launch" />
+				<exclude name="**/*.g" />
+				<exclude name="**/*.java" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="clean">
+		<delete dir="build/classes" />
+		<delete file="${ejb.jar}" />
+	</target>
+
+	<target depends="init" name="build">
+		<echo message="${ant.project.name}: ${ant.file}" />
+		<javac destdir="build/classes">
+			<src path="ejbModule" />
+			<classpath refid="LDIRBackendEJB.classpath" />
+		</javac>
+	</target>
+
+	<target depends="build" name="jar">
+		<jar destfile="${ejb.jar}" basedir="build/classes" filesetmanifest="merge" />
+	</target>
+</project>
