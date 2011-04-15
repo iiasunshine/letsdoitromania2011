@@ -14,7 +14,11 @@
 		<path refid="EAR Libraries.libraryclasspath" />
 	</path>
 
-	<target depends="build-common.build-ejbclient" name="init">
+	<target name="build-ejbclient">
+		<ant dir="${ejbclient.location}" target="jar" />
+	</target>
+
+	<target depends="build-ejbclient" name="init">
 		<mkdir dir="build/classes" />
 		<copy includeemptydirs="false" todir="build/classes">
 			<fileset dir="src">
