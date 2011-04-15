@@ -33,6 +33,17 @@ import ro.ldir.dto.User;
  */
 public class SecurityHelper {
 	/**
+	 * Check whether the user is an admin.
+	 * 
+	 * @param sc
+	 *            The security context.
+	 * @return {@code true} if security check passes, {@code false} otherwise.
+	 */
+	public static boolean checkAdmin(SecurityContext sc) {
+		return sc.isUserInRole(User.SecurityRole.ADMIN.toString());
+	}
+
+	/**
 	 * Checks whether the authenticated use is the same to the one whose fields
 	 * are changed or whether the authenticated user is an admin.
 	 * 
@@ -46,20 +57,23 @@ public class SecurityHelper {
 	 */
 	public static boolean checkUserOrAdmin(UserManagerLocal um,
 			SecurityContext sc, int userId) {
-		if (sc.isUserInRole(User.SecurityRole.ADMIN.getRestName()))
+		if (sc.isUserInRole(User.SecurityRole.ADMIN.toString()))
 			return true;
 		String email = sc.getUserPrincipal().getName();
-		return um.getUser(email).userId == userId;
+		return um.getUser(email).getUserId() == userId;
 	}
 
 	/**
-	 * Check whether the user is an admin.
+	 * Finds the user ID using the security context.
 	 * 
+	 * @param um
+	 *            The UserManager bean.
 	 * @param sc
 	 *            The security context.
-	 * @return {@code true} if security check passes, {@code false} otherwise.
+	 * @return The user ID of the logged user.
 	 */
-	public static boolean checkAdmin(SecurityContext sc) {
-		return sc.isUserInRole(User.SecurityRole.ADMIN.getRestName());
+	public static int getUserId(UserManagerLocal um, SecurityContext sc) {
+		String email = sc.getUserPrincipal().getName();
+		return um.getUser(email).getUserId();
 	}
 }

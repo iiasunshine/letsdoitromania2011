@@ -33,7 +33,7 @@ import java.lang.annotation.Target;
  * {@link FieldAccessBean#fieldsEqual(Class)}.
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
+@Target(ElementType.METHOD)
 public @interface NonComparableField {
 
 }

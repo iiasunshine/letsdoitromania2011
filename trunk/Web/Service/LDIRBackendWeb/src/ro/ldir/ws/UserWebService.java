@@ -42,6 +42,7 @@ import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
 import ro.ldir.beans.UserManagerLocal;
+import ro.ldir.dto.Organization;
 import ro.ldir.dto.User;
 import ro.ldir.ws.helper.SecurityHelper;
 
@@ -66,8 +67,25 @@ public class UserWebService {
 	@GET
 	public String authenticate(@Context SecurityContext sc) {
 		return new Integer(
-				userManager.getUser(sc.getUserPrincipal().getName()).userId)
+				userManager.getUser(sc.getUserPrincipal().getName()).getUserId())
 				.toString();
+	}
+
+	@GET
+	@Produces({ "application/json", "application/xml" })
+	@Path("{userId:[0-9]+}/organizations")
+	public Collection<Organization> getOrganizations(
+			@PathParam("userId") int userId, @Context SecurityContext sc) {
+		if (!SecurityHelper.checkUserOrAdmin(userManager, sc, userId))
+			throw new WebApplicationException(401);
+
+		try {
+			return userManager.getUser(userId).getOrganizations();
+		} catch (EJBException e) {
+			if (e.getCausedByException() instanceof NullPointerException)
+				throw new WebApplicationException(404);
+			throw new WebApplicationException(500);
+		}
 	}
 
 	@GET
@@ -93,7 +111,7 @@ public class UserWebService {
 			throw new WebApplicationException(401);
 
 		User user = userManager.getUser(userId);
-		return user.activities;
+		return user.getActivities();
 	}
 
 	@GET
@@ -105,7 +123,7 @@ public class UserWebService {
 			throw new WebApplicationException(401);
 
 		for (User.Activity a : User.Activity.values())
-			if (a.getRestName().equals(activity))
+			if (a.toString().equals(activity))
 				return userManager.getUsers(a);
 
 		throw new WebApplicationException(404);
@@ -131,7 +149,7 @@ public class UserWebService {
 			throw new WebApplicationException(401);
 
 		for (User.SecurityRole a : User.SecurityRole.values())
-			if (a.getRestName().equals(type))
+			if (a.toString().equals(type))
 				return userManager.getUsers(a);
 
 		throw new WebApplicationException(404);

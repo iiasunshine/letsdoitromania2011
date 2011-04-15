@@ -24,6 +24,8 @@
 package ro.ldir.dto.helper;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /**
  * The base DTO class that provide helper functions to compare, copy and update
@@ -41,17 +43,28 @@ public abstract class FieldAccessBean {
 		if (!this.getClass().equals(other.getClass()))
 			return;
 
-		for (Field f : this.getClass().getFields()) {
-			NonTransferableField a = f
+		for (Method m : this.getClass().getMethods()) {
+			NonTransferableField a = m
 					.getAnnotation(NonTransferableField.class);
-			if (a != null)
+			if (a != null || !m.getName().startsWith("set"))
 				continue;
 			try {
-				f.set(this, f.get(other));
+				String getterString = "g" + m.getName().substring(1);
+				Method getter = this.getClass().getMethod(getterString);
+				m.invoke(this, getter.invoke(other));
 			} catch (IllegalArgumentException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SecurityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NoSuchMethodException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -72,25 +85,24 @@ public abstract class FieldAccessBean {
 		if (!this.getClass().equals(other.getClass()))
 			return false;
 
-		for (Field f : this.getClass().getFields()) {
-			NonComparableField a = f.getAnnotation(NonComparableField.class);
-			if (a != null)
+		for (Method m : this.getClass().getMethods()) {
+			NonComparableField a = m.getAnnotation(NonComparableField.class);
+			if (a != null || !m.getName().startsWith("get"))
 				continue;
 			try {
-				Object mine = f.get(this);
-				Object his = f.get(other);
+				Object mine = m.invoke(this);
+				Object his = m.invoke(other);
 				if (mine == null && his == null)
 					continue;
-				if (mine == null || his == null
-						|| !f.get(this).equals(f.get(other))) {
-					System.out.println("different " + f.getName() + " " + mine
-							+ " " + other);
+				if (mine == null || his == null || !mine.equals(his))
 					return false;
-				}
 			} catch (IllegalArgumentException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
