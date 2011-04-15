@@ -196,6 +196,12 @@ function editOrgClick()
 			generic_insert_callback, json_object, false, username, password);
 }
 
+function deleteOrgClick()
+{
+	gen_req = sendRequest('delete', 'http://localhost:8080/LDIRBackend/ws/organization/' + generic_edit_id + '/',
+			generic_insert_callback, null, false, username, password);
+}
+
 function fetchMyOrg()
 {
 	generic_select = 'organizations';
@@ -235,7 +241,8 @@ function displayOrganization()
 	<option value="SCHOOL">School</option>
 	</select> <br>
 </form>
-<input type="button" value="Register" onclick="editOrgClick()" >
+<input type="button" value="Update" onclick="editOrgClick()" >
+<input type="button" value="Delete" onclick="deleteOrgClick()" >
 </div>
 </body>
 </html>
