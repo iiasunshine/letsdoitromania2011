@@ -24,10 +24,6 @@
 package ro.ldir.dto;
 
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -36,22 +32,18 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlID;
-import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import ro.ldir.dto.adapters.EncryptAdapter;
 import ro.ldir.dto.adapters.IntegerAdapter;
-import ro.ldir.dto.adapters.PasswordAdapter;
 import ro.ldir.dto.helper.FieldAccessBean;
 import ro.ldir.dto.helper.NonTransferableField;
+import ro.ldir.dto.helper.SHA256Encrypt;
 
 /**
  * The entity bean describing a user. Objects of this type are persisted in the
@@ -75,25 +67,51 @@ public class User extends FieldAccessBean implements Serializable {
 		}
 	}
 
-	public enum CleaningTools {
-		BAGS, GLOVES
-	}
+	// public enum CleaningTools {
+	// BAGS, GLOVES
+	// }
 
 	@XmlType(name = "UserStatus")
-	public enum Status {
-		REGISTERED, SUSPENDED, UNCONFIRMED
-	}
+	public enum UserStatus {
+		REGISTERED("registered"), PENDING("pending"), SUSPENDED("suspended");
 
-	public enum Transport {
-		BIKE, CAR, PUBLIC
-	}
-
-	public enum Type {
-		ORGANIZATION("organization"), PERSON("person"), PUBLIC_INSTITITUION(
-				"public_institution");
 		private String restName;
 
-		private Type(String restName) {
+		private UserStatus(String restName) {
+			this.restName = restName;
+		}
+
+		public String getRestName() {
+			return restName;
+		}
+	}
+
+	// public enum Transport {
+	// BIKE, CAR, PUBLIC
+	// }
+
+	// public enum Type {
+	// ORGANIZATION("organization"), PERSON("person"), PUBLIC_INSTITITUION(
+	// "public_institution");
+	// private String restName;
+	//
+	// private Type(String restName) {
+	// this.restName = restName;
+	// }
+	//
+	// public String getRestName() {
+	// return restName;
+	// }
+	// }
+
+	public enum SecurityRole {
+		ADMIN("admin"), ORGANIZER("organizer"), ORGANIZER_MULTI(
+				"organizer_multi"), VOLUNTEER("volunteer"), VOLUNTEER_MULTI(
+				"volunteer_multi");
+
+		private String restName;
+
+		private SecurityRole(String restName) {
 			this.restName = restName;
 		}
 
@@ -104,86 +122,56 @@ public class User extends FieldAccessBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * Encrypts a string using the SHA-256 algorithm. This is used to store
-	 * passwords in the database.
-	 * 
-	 * @param toEnc
-	 *            String to encrypt.
-	 * @return The encrypted string.
-	 */
-	public static String sha256Encrypt(String toEnc) {
-		MessageDigest md = null;
-		try {
-			md = MessageDigest.getInstance("SHA-256");
-			md.update(toEnc.getBytes("UTF-8"));
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		byte[] digest = md.digest();
-		StringBuffer sb = new StringBuffer();
-		for (int i = 0; i < digest.length; i++) {
-			String hex = Integer.toHexString(0xff & digest[i]);
-			if (hex.length() == 1)
-				sb.append('0');
-			sb.append(hex);
-		}
-		return sb.toString();
-	}
-
+	@NonTransferableField
 	public List<Activity> activities;
 
 	@Temporal(TemporalType.TIME)
 	public Date birthday;
-
-	public List<CleaningTools> cleaningTools;
 
 	@Column(unique = true, nullable = false)
 	public String email;
 
 	public String firstName;
 
-	@OneToMany(mappedBy = "insertBy")
-	@XmlIDREF
-	@NonTransferableField
-	public Collection<Garbage> garbages;
-
-	public boolean hasGPS;
+	// @OneToMany(mappedBy = "insertBy")
+	// @XmlIDREF
+	// @NonTransferableField
+	// public Collection<Garbage> garbages;
 
 	public String lastName;
 
-	public int membersNumber;
-
-	public String organizationName;
-
 	@Column(nullable = false, length = 64)
-	@XmlJavaTypeAdapter(PasswordAdapter.class)
+	@XmlJavaTypeAdapter(EncryptAdapter.class)
 	public String passwd;
+
+	@Column(length = 64)
+	public String registrationToken;
 
 	public String phone;
 
-	public String role;
-
-	public Status status;
-
-	@ManyToMany
-	@JoinTable(name = "USER_TEAM", joinColumns = @JoinColumn(name = "USERID", referencedColumnName = "USERID"), inverseJoinColumns = @JoinColumn(name = "TEAMID", referencedColumnName = "TEAMID"))
-	@XmlIDREF
 	@NonTransferableField
-	public Collection<Team> teams;
+	public UserStatus status;
 
-	@OneToMany(mappedBy = "leader")
-	@XmlIDREF
-	@NonTransferableField
-	public Collection<Team> teamsLed;
+	// @ManyToMany
+	// @JoinTable(name = "USER_TEAM", joinColumns = @JoinColumn(name = "USERID",
+	// referencedColumnName = "USERID"), inverseJoinColumns = @JoinColumn(name =
+	// "TEAMID", referencedColumnName = "TEAMID"))
+	// @XmlIDREF
+	// @NonTransferableField
+	// public Collection<Team> teams;
+	//
+	// @OneToMany(mappedBy = "leader")
+	// @XmlIDREF
+	// @NonTransferableField
+	// public Collection<Team> teamsLed;
 
 	public String town;
+	
+	public String county;
 
-	public List<Transport> transport;
-
-	public Type type;
+	@Column(nullable = false)
+	@NonTransferableField
+	public String role;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -203,6 +191,6 @@ public class User extends FieldAccessBean implements Serializable {
 	 * @return {@code true} if the password matches.
 	 */
 	public boolean testPassword(String rawPassword) {
-		return this.passwd.equals(sha256Encrypt(rawPassword));
+		return this.passwd.equals(SHA256Encrypt.encrypt(rawPassword));
 	}
 }

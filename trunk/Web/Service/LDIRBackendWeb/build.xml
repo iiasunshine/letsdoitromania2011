@@ -55,7 +55,6 @@
 
 	<target depends="build" name="test">
 		<java classname="org.junit.runner.JUnitCore">
-			<arg value="ro.ldir.ws.tests.DtoAnnotationTest" />
 			<arg value="ro.ldir.ws.tests.UserManagementTest" />
 			<classpath refid="LDIRBackendWeb.classpath" />
 		</java>

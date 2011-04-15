@@ -23,7 +23,7 @@
  */
 package ro.ldir.beans;
 
-import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import javax.ejb.LocalBean;
@@ -32,11 +32,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
-import ro.ldir.dto.Garbage;
 import ro.ldir.dto.User;
 import ro.ldir.dto.User.Activity;
-import ro.ldir.dto.User.Status;
-import ro.ldir.dto.User.Type;
+import ro.ldir.dto.User.SecurityRole;
+import ro.ldir.dto.helper.SHA256Encrypt;
 import ro.ldir.exceptions.InvalidUserException;
 
 /**
@@ -60,21 +59,21 @@ public class UserManager implements UserManagerLocal {
 
 	/** Default constructor. */
 	public UserManager() {
-		// TODO Auto-generated constructor stub
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see ro.ldir.beans.UserManagerLocal#addNewGarbage(int,
-	 * ro.ldir.dto.Garbage)
+	 * @see ro.ldir.beans.UserManagerLocal#activateUser(int, java.lang.String)
 	 */
 	@Override
-	public void addNewGarbage(int userId, Garbage garbage) {
-		User user = em.find(User.class, userId);
-		garbage.insertBy = user;
-		user.garbages.add(garbage);
-		em.merge(user);
+	public void activateUser(int userId, String key)
+			throws InvalidUserException {
+		User existing = em.find(User.class, userId);
+		if (existing.status != User.UserStatus.PENDING)
+			throw new InvalidUserException("The user is not pending.");
+		existing.status = User.UserStatus.REGISTERED;
+		em.merge(existing);
 	}
 
 	/*
@@ -90,18 +89,10 @@ public class UserManager implements UserManagerLocal {
 		if (query.getResultList().size() > 0)
 			throw new InvalidUserException("Email " + user.email
 					+ " already in use.");
+		user.status = User.UserStatus.PENDING;
+		user.role = User.SecurityRole.VOLUNTEER.getRestName();
+		user.registrationToken = SHA256Encrypt.encrypt(new Date() + user.email);
 		em.persist(user);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see ro.ldir.beans.UserManagerLocal#getGarbages(int)
-	 */
-	@Override
-	public Collection<Garbage> getGarbages(int userId) {
-		User user = em.find(User.class, userId);
-		return user.garbages;
 	}
 
 	/*
@@ -112,6 +103,19 @@ public class UserManager implements UserManagerLocal {
 	@Override
 	public User getUser(int id) {
 		return em.find(User.class, id);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ro.ldir.beans.UserManagerLocal#getUser(java.lang.String)
+	 */
+	@Override
+	public User getUser(String email) {
+		Query query = em
+				.createQuery("SELECT x FROM User x WHERE x.email = :emailParam");
+		query.setParameter("emailParam", email);
+		return (User) query.getSingleResult();
 	}
 
 	/*
@@ -149,10 +153,10 @@ public class UserManager implements UserManagerLocal {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<User> getUsers(Type type) {
+	public List<User> getUsers(User.SecurityRole role) {
 		Query query = em
-				.createQuery("SELECT x FROM User x WHERE x.type = :typeParam");
-		query.setParameter("typeParam", type);
+				.createQuery("SELECT x FROM User x WHERE x.role = :roleParam");
+		query.setParameter("roleParam", role);
 		return (List<User>) query.getResultList();
 	}
 
@@ -172,11 +176,24 @@ public class UserManager implements UserManagerLocal {
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see ro.ldir.beans.UserManagerLocal#setUserRole(int,
+	 * ro.ldir.dto.User.SecurityRole)
+	 */
+	@Override
+	public void setUserRole(int userId, SecurityRole role) {
+		User existing = em.find(User.class, userId);
+		existing.role = role.getRestName();
+		em.merge(existing);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see ro.ldir.beans.UserManagerLocal#setUserStatus(int,
 	 * ro.ldir.dto.User.Status)
 	 */
 	@Override
-	public void setUserStatus(int userId, Status status) {
+	public void setUserStatus(int userId, User.UserStatus status) {
 		User user = em.find(User.class, userId);
 		user.status = status;
 		em.merge(user);
