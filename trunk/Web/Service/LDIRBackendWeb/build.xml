@@ -5,7 +5,10 @@
 
 	<property name="war.file" value="${webservice.war}" />
 
-	<path id="Web App Libraries.libraryclasspath" />
+	<path id="Web App Libraries.libraryclasspath">
+		<pathelement location="lib/junit-4.8.2.jar" />
+	</path>
+
 
 	<path id="LDIRBackendWeb.classpath">
 		<pathelement location="build/classes" />
@@ -48,5 +51,12 @@
 			<webinf dir="WebContent/WEB-INF" />
 			<metainf dir="WebContent/META-INF" />
 		</war>
+	</target>
+
+	<target depends="build" name="test">
+		<java classname="org.junit.runner.JUnitCore">
+			<arg value="ro.ldir.ws.tests.UserManagementTest" />
+			<classpath refid="LDIRBackendWeb.classpath" />
+		</java>
 	</target>
 </project>
