@@ -83,6 +83,8 @@ public abstract class FieldAccessBean {
 					continue;
 				if (mine == null || his == null
 						|| !f.get(this).equals(f.get(other))) {
+					System.out.println("different " + f.getName() + " " + mine
+							+ " " + other);
 					return false;
 				}
 			} catch (IllegalArgumentException e) {

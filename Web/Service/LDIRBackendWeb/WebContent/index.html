@@ -1,0 +1,97 @@
+<html>
+<head>
+</head>
+<body>
+<script type="text/javascript" src="./json.js"></script>
+<script type="text/javascript" src="./wsclient.js"></script>
+<script type="text/javascript">
+var username;
+var password;
+var userid;
+</script>
+
+
+<div id="registration_block">
+<hr>
+<h1>Registration</h1>
+<script type="text/javascript">
+var reg_req;
+
+function reg_callback()
+{
+	if (reg_req.readyState != 4)
+		return;
+	if (reg_req.status != 200)
+		alert('Unable to register user. Check fields');
+	else
+		alert('User registered!');
+	document.registration.reset();
+}
+
+function registerClick()
+{
+	var user = new Object();
+	var el, i = 0, rForm = document.registration;
+	while (el = rForm.elements[i++]) 
+		user[el.name] = el.value;
+	var json_user= JSON.stringify(user);
+	reg_req = sendRequest('post', 'http://localhost:8080/LDIRBackend/reg/ws',
+			reg_callback, json_user, false);
+}
+</script>
+
+<form name="registration">
+	Firstname: <input type="text" size="20" name="firstname"> <br> 
+	Lastname: <input type="text" size="20" name="lastname"> <br>
+	Email: <input type="text" size="20" name="email"> <br>
+	Town: <input type="text" size="20" name="town"> <br>
+	County: <input type="text" size="20" name="county"> <br>
+	Password: <input type="password" size="20" name="passwd"> <br>
+	Phone: <input type="text" size="20" name="phone"> <br>
+</form>
+<input type="button" value="Register" onclick="registerClick()" >
+</div>
+
+
+<div id="login_block">
+<hr>
+<h1>Login</h1>
+<script type="text/javascript">
+var login_req;
+
+function login_callback()
+{
+	if (login_req.readyState != 4)
+		return;
+	if (login_req.status != 200)
+		alert('Unable to log in.');
+	else {	
+		userid = login_req.responseText;
+		alert('Logged in!');
+	}
+	document.login.reset();
+}
+
+function loginClick()
+{
+	var user = new Object();
+	var el, i = 0, rForm = document.login;
+	while (el = rForm.elements[i++]) 
+		user[el.name] = el.value;
+	var json_user= JSON.stringify(user);
+	username = document.login.email.value;
+	password = document.login.passwd.value;
+	window.alert(username + ' ' + password)
+	login_req = sendRequestString('get', 'http://localhost:8080/LDIRBackend/ws/user',
+			login_callback, json_user, username, password);
+}
+</script>
+
+<form name="login">
+	Email: <input type="text" size="20" name="email"> <br>
+	Password: <input type="password" size="20" name="passwd"> <br>
+</form>
+<input type="button" value="Login" onclick="loginClick()" >
+</div>
+</body>
+</html>

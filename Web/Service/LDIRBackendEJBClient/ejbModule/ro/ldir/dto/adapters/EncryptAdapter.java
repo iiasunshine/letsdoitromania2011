@@ -17,7 +17,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- *  Filename: PasswordAdapter.java
+ *  Filename: EncryptAdapter.java
  *  Author(s): Stefan Guna, svguna@gmail.com
  *
  */
@@ -25,12 +25,12 @@ package ro.ldir.dto.adapters;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
-import ro.ldir.dto.User;
+import ro.ldir.dto.helper.SHA256Encrypt;
 
 /**
- * This class is used to achieve automatic encryption of the password.
+ * This class is used to achieve automatic encryption of strings.
  */
-public class PasswordAdapter extends XmlAdapter<String, String> {
+public class EncryptAdapter extends XmlAdapter<String, String> {
 
 	/*
 	 * (non-Javadoc)
@@ -51,7 +51,7 @@ public class PasswordAdapter extends XmlAdapter<String, String> {
 	 */
 	@Override
 	public String unmarshal(String arg0) throws Exception {
-		return User.sha256Encrypt(arg0);
+		return SHA256Encrypt.encrypt(arg0);
 	}
 
 }

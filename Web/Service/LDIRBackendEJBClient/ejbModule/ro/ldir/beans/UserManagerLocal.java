@@ -23,12 +23,10 @@
  */
 package ro.ldir.beans;
 
-import java.util.Collection;
 import java.util.List;
 
 import javax.ejb.Local;
 
-import ro.ldir.dto.Garbage;
 import ro.ldir.dto.User;
 import ro.ldir.exceptions.InvalidUserException;
 
@@ -39,15 +37,19 @@ import ro.ldir.exceptions.InvalidUserException;
  */
 @Local
 public interface UserManagerLocal {
+
 	/**
-	 * Called to specify that a new user has inserted a new garbage.
+	 * Marks a user as registered.
 	 * 
 	 * @param userId
-	 *            The ID of the user inserting the garbage.
-	 * @param garbage
-	 *            The new garbage.
+	 *            The user id to change.
+	 * @param key
+	 *            The key to mark the user as registered.
+	 * @throws InvalidUserException
+	 *             If the user is in an invalid state.
 	 */
-	public void addNewGarbage(int userId, Garbage garbage);
+	public void activateUser(int userId, String key)
+			throws InvalidUserException;
 
 	/**
 	 * Inserts a new user in the system in the system.
@@ -61,15 +63,6 @@ public interface UserManagerLocal {
 	public void addUser(User user) throws InvalidUserException;
 
 	/**
-	 * Gets all garbages inserted by a given user.
-	 * 
-	 * @param userId
-	 *            The ID of the user to search against.
-	 * @return A collection of garbages inserted by the user.
-	 */
-	public Collection<Garbage> getGarbages(int userId);
-
-	/**
 	 * Returns the User object corresponding to a given user ID.
 	 * 
 	 * @param userId
@@ -77,6 +70,15 @@ public interface UserManagerLocal {
 	 * @return The user object if found, {@code null} if none found.
 	 */
 	public User getUser(int userId);
+
+	/**
+	 * Get a user by email.
+	 * 
+	 * @param email
+	 *            The email of the user.
+	 * @return The user matching the email, {@code null} if none.
+	 */
+	public User getUser(String email);
 
 	/**
 	 * Returns a list of users in a town.
@@ -97,13 +99,13 @@ public interface UserManagerLocal {
 	public List<User> getUsers(User.Activity activity);
 
 	/**
-	 * A list of users that have given type.
+	 * A list of users that have a given role
 	 * 
-	 * @param type
-	 *            The type to search against.
+	 * @param role
+	 *            The role to search against.
 	 * @return The list of users of the given type.
 	 */
-	public List<User> getUsers(User.Type type);
+	public List<User> getUsers(User.SecurityRole role);
 
 	/**
 	 * Configures an user for a given set of activities. The current activities
@@ -117,6 +119,16 @@ public interface UserManagerLocal {
 	public void setUserActivities(int userId, List<User.Activity> activities);
 
 	/**
+	 * Sets the user's security role.
+	 * 
+	 * @param user
+	 *            Id The user to change
+	 * @param role
+	 *            The new security role.
+	 */
+	public void setUserRole(int userId, User.SecurityRole role);
+
+	/**
 	 * Sets a new status to a user.
 	 * 
 	 * @param userId
@@ -124,7 +136,7 @@ public interface UserManagerLocal {
 	 * @param status
 	 *            The new status of a user.
 	 */
-	public void setUserStatus(int userId, User.Status status);
+	public void setUserStatus(int userId, User.UserStatus status);
 
 	/**
 	 * Updates a user with a new object. All previous fields of the user are
