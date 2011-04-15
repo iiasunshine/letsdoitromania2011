@@ -50,6 +50,8 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import ro.ldir.dto.adapters.IntegerAdapter;
 import ro.ldir.dto.adapters.PasswordAdapter;
+import ro.ldir.dto.helper.FieldAccessBean;
+import ro.ldir.dto.helper.NonTransferableField;
 
 /**
  * The entity bean describing a user. Objects of this type are persisted in the
@@ -57,7 +59,7 @@ import ro.ldir.dto.adapters.PasswordAdapter;
  */
 @Entity
 @XmlRootElement
-public class User implements Serializable {
+public class User extends FieldAccessBean implements Serializable {
 
 	public enum Activity {
 		CHART("chart"), CLEAN("clean");
@@ -145,6 +147,7 @@ public class User implements Serializable {
 
 	@OneToMany(mappedBy = "insertBy")
 	@XmlIDREF
+	@NonTransferableField
 	public Collection<Garbage> garbages;
 
 	public boolean hasGPS;
@@ -168,10 +171,12 @@ public class User implements Serializable {
 	@ManyToMany
 	@JoinTable(name = "USER_TEAM", joinColumns = @JoinColumn(name = "USERID", referencedColumnName = "USERID"), inverseJoinColumns = @JoinColumn(name = "TEAMID", referencedColumnName = "TEAMID"))
 	@XmlIDREF
+	@NonTransferableField
 	public Collection<Team> teams;
 
 	@OneToMany(mappedBy = "leader")
 	@XmlIDREF
+	@NonTransferableField
 	public Collection<Team> teamsLed;
 
 	public String town;
@@ -184,6 +189,7 @@ public class User implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@XmlID
 	@XmlJavaTypeAdapter(IntegerAdapter.class)
+	@NonTransferableField
 	public Integer userId;
 
 	public User() {
@@ -198,22 +204,5 @@ public class User implements Serializable {
 	 */
 	public boolean testPassword(String rawPassword) {
 		return this.passwd.equals(sha256Encrypt(rawPassword));
-	}
-
-	/**
-	 * Use this method to update a user instance with new values. Only the
-	 * fields that should be updated are changed.
-	 * 
-	 * @param user
-	 *            The new user where to copy properties from.
-	 */
-	public void update(User user) {
-		birthday = user.birthday;
-		cleaningTools = user.cleaningTools;
-		firstName = user.firstName;
-		hasGPS = user.hasGPS;
-		lastName = user.lastName;
-		phone = user.phone;
-		// TODO complete reinitialization
 	}
 }

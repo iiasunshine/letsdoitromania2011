@@ -190,7 +190,7 @@ public class UserManager implements UserManagerLocal {
 	@Override
 	public void updateUser(int userId, User user) {
 		User existing = em.find(User.class, userId);
-		existing.update(user);
+		existing.copyFields(user);
 		em.merge(existing);
 	}
 }

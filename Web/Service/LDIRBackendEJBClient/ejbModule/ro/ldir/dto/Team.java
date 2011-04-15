@@ -39,6 +39,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import ro.ldir.dto.adapters.IntegerAdapter;
+import ro.ldir.dto.helper.FieldAccessBean;
+import ro.ldir.dto.helper.NonTransferableField;
 
 /**
  * The entity bean describing a team. Objects of this type are persisted in the
@@ -46,24 +48,27 @@ import ro.ldir.dto.adapters.IntegerAdapter;
  */
 @Entity
 @XmlRootElement
-public class Team implements Serializable {
+public class Team extends FieldAccessBean implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@ManyToOne
 	@JoinColumn(name = "LEADERID", nullable = false)
 	@XmlIDREF
+	@NonTransferableField
 	public User leader;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@XmlID
 	@XmlJavaTypeAdapter(IntegerAdapter.class)
+	@NonTransferableField
 	public Integer teamId;
 
 	public String teamName;
 
 	@ManyToMany(mappedBy = "teams")
 	@XmlIDREF
+	@NonTransferableField
 	public Collection<User> users;
 
 	public Team() {
