@@ -8,8 +8,11 @@
 		<class>ro.ldir.dto.User</class>
 		<class>ro.ldir.dto.Team</class>
 		<class>ro.ldir.dto.Garbage</class>
+		<class>ro.ldir.dto.Organization</class>
 		<properties>
-			<property name="toplink.ddl-generation" value="drop-and-create-tables" />
+			<property name="toplink.ddl-generation" value="create-tables" />
+			<!-- <property name="toplink.ddl-generation" value="drop-and-create-tables" 
+				/> -->
 		</properties>
 	</persistence-unit>
 </persistence>

@@ -70,9 +70,9 @@ public class UserManager implements UserManagerLocal {
 	public void activateUser(int userId, String key)
 			throws InvalidUserException {
 		User existing = em.find(User.class, userId);
-		if (existing.status != User.UserStatus.PENDING)
+		if (existing.getStatus() != User.UserStatus.PENDING)
 			throw new InvalidUserException("The user is not pending.");
-		existing.status = User.UserStatus.REGISTERED;
+		existing.setStatus(User.UserStatus.REGISTERED);
 		em.merge(existing);
 	}
 
@@ -85,13 +85,13 @@ public class UserManager implements UserManagerLocal {
 	public void addUser(User user) throws InvalidUserException {
 		Query query = em
 				.createQuery("SELECT x FROM User x WHERE x.email = :emailParam");
-		query.setParameter("emailParam", user.email);
+		query.setParameter("emailParam", user.getEmail());
 		if (query.getResultList().size() > 0)
-			throw new InvalidUserException("Email " + user.email
+			throw new InvalidUserException("Email " + user.getEmail()
 					+ " already in use.");
-		user.status = User.UserStatus.PENDING;
-		user.role = User.SecurityRole.VOLUNTEER.getRestName();
-		user.registrationToken = SHA256Encrypt.encrypt(new Date() + user.email);
+		user.setStatus(User.UserStatus.PENDING);
+		user.setRole(User.SecurityRole.VOLUNTEER.toString());
+		user.setRegistrationToken(SHA256Encrypt.encrypt(new Date() + user.getEmail()));
 		em.persist(user);
 	}
 
@@ -169,7 +169,7 @@ public class UserManager implements UserManagerLocal {
 	@Override
 	public void setUserActivities(int userId, List<Activity> activities) {
 		User user = em.find(User.class, userId);
-		user.activities = activities;
+		user.setActivities(activities);
 		em.merge(user);
 	}
 
@@ -182,7 +182,7 @@ public class UserManager implements UserManagerLocal {
 	@Override
 	public void setUserRole(int userId, SecurityRole role) {
 		User existing = em.find(User.class, userId);
-		existing.role = role.getRestName();
+		existing.setRole(role.toString());
 		em.merge(existing);
 	}
 
@@ -195,7 +195,7 @@ public class UserManager implements UserManagerLocal {
 	@Override
 	public void setUserStatus(int userId, User.UserStatus status) {
 		User user = em.find(User.class, userId);
-		user.status = status;
+		user.setStatus(status);
 		em.merge(user);
 	}
 

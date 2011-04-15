@@ -27,14 +27,17 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
@@ -54,36 +57,15 @@ import ro.ldir.dto.helper.SHA256Encrypt;
 public class User extends FieldAccessBean implements Serializable {
 
 	public enum Activity {
-		CHART("chart"), CLEAN("clean");
-
-		private String restName;
-
-		private Activity(String restName) {
-			this.restName = restName;
-		}
-
-		public String getRestName() {
-			return restName;
-		}
+		CHART, CLEAN
 	}
 
 	// public enum CleaningTools {
 	// BAGS, GLOVES
 	// }
 
-	@XmlType(name = "UserStatus")
-	public enum UserStatus {
-		REGISTERED("registered"), PENDING("pending"), SUSPENDED("suspended");
-
-		private String restName;
-
-		private UserStatus(String restName) {
-			this.restName = restName;
-		}
-
-		public String getRestName() {
-			return restName;
-		}
+	public enum SecurityRole {
+		ADMIN, ORGANIZER, ORGANIZER_MULTI, VOLUNTEER, VOLUNTEER_MULTI
 	}
 
 	// public enum Transport {
@@ -104,53 +86,35 @@ public class User extends FieldAccessBean implements Serializable {
 	// }
 	// }
 
-	public enum SecurityRole {
-		ADMIN("admin"), ORGANIZER("organizer"), ORGANIZER_MULTI(
-				"organizer_multi"), VOLUNTEER("volunteer"), VOLUNTEER_MULTI(
-				"volunteer_multi");
-
-		private String restName;
-
-		private SecurityRole(String restName) {
-			this.restName = restName;
-		}
-
-		public String getRestName() {
-			return restName;
-		}
+	@XmlType(name = "UserStatus")
+	public enum UserStatus {
+		PENDING, REGISTERED, SUSPENDED;
 	}
 
 	private static final long serialVersionUID = 1L;
 
-	@NonTransferableField
-	public List<Activity> activities;
+	private List<Activity> activities;
 
-	@Temporal(TemporalType.TIME)
-	public Date birthday;
+	private Date birthday;
 
-	@Column(unique = true, nullable = false)
-	public String email;
+	private String county;
 
-	public String firstName;
+	private String email;
 
 	// @OneToMany(mappedBy = "insertBy")
 	// @XmlIDREF
 	// @NonTransferableField
 	// public Collection<Garbage> garbages;
 
-	public String lastName;
+	private String firstName;
 
-	@Column(nullable = false, length = 64)
-	@XmlJavaTypeAdapter(EncryptAdapter.class)
-	public String passwd;
+	private String lastName;
 
-	@Column(length = 64)
-	public String registrationToken;
+	private List<Organization> organizations;
 
-	public String phone;
+	private String passwd;
 
-	@NonTransferableField
-	public UserStatus status;
+	private String phone;
 
 	// @ManyToMany
 	// @JoinTable(name = "USER_TEAM", joinColumns = @JoinColumn(name = "USERID",
@@ -165,22 +129,244 @@ public class User extends FieldAccessBean implements Serializable {
 	// @NonTransferableField
 	// public Collection<Team> teamsLed;
 
-	public String town;
-	
-	public String county;
+	private String registrationToken;
 
+	private String role;
+
+	private UserStatus status;
+
+	private String town;
+
+	private Integer userId;
+
+	public User() {
+	}
+
+	/**
+	 * @return the activities
+	 */
+	public List<Activity> getActivities() {
+		return activities;
+	}
+
+	/**
+	 * @return the birthday
+	 */
+	@Temporal(TemporalType.TIME)
+	public Date getBirthday() {
+		return birthday;
+	}
+
+	/**
+	 * @return the county
+	 */
+	public String getCounty() {
+		return county;
+	}
+
+	/**
+	 * @return the email
+	 */
+	@Column(unique = true, nullable = false)
+	public String getEmail() {
+		return email;
+	}
+
+	/**
+	 * @return the firstName
+	 */
+	public String getFirstName() {
+		return firstName;
+	}
+
+	/**
+	 * @return the lastName
+	 */
+	public String getLastName() {
+		return lastName;
+	}
+
+	/**
+	 * @return the organizations
+	 */
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "contactUser")
+	@XmlIDREF
+	public List<Organization> getOrganizations() {
+		return organizations;
+	}
+
+	/**
+	 * @return the passwd
+	 */
+	@Column(nullable = false, length = 64)
+	@XmlJavaTypeAdapter(EncryptAdapter.class)
+	public String getPasswd() {
+		return passwd;
+	}
+
+	/**
+	 * @return the phone
+	 */
+	public String getPhone() {
+		return phone;
+	}
+
+	/**
+	 * @return the registrationToken
+	 */
+	@Column(length = 64)
+	public String getRegistrationToken() {
+		return registrationToken;
+	}
+
+	/**
+	 * @return the role
+	 */
 	@Column(nullable = false)
-	@NonTransferableField
-	public String role;
+	public String getRole() {
+		return role;
+	}
 
+	/**
+	 * @return the status
+	 */
+	public UserStatus getStatus() {
+		return status;
+	}
+
+	/**
+	 * @return the town
+	 */
+	public String getTown() {
+		return town;
+	}
+
+	/**
+	 * @return the userId
+	 */
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@XmlID
 	@XmlJavaTypeAdapter(IntegerAdapter.class)
-	@NonTransferableField
-	public Integer userId;
+	public Integer getUserId() {
+		return userId;
+	}
 
-	public User() {
+	/**
+	 * @param activities
+	 *            the activities to set
+	 */
+	@NonTransferableField
+	public void setActivities(List<Activity> activities) {
+		this.activities = activities;
+	}
+
+	/**
+	 * @param birthday
+	 *            the birthday to set
+	 */
+	public void setBirthday(Date birthday) {
+		this.birthday = birthday;
+	}
+
+	/**
+	 * @param county
+	 *            the county to set
+	 */
+	public void setCounty(String county) {
+		this.county = county;
+	}
+
+	/**
+	 * @param email
+	 *            the email to set
+	 */
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	/**
+	 * @param firstName
+	 *            the firstName to set
+	 */
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	/**
+	 * @param lastName
+	 *            the lastName to set
+	 */
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	/**
+	 * @param organizations
+	 *            the organizations to set
+	 */
+	@NonTransferableField
+	public void setOrganizations(List<Organization> organizations) {
+		this.organizations = organizations;
+	}
+
+	/**
+	 * @param passwd
+	 *            the passwd to set
+	 */
+	public void setPasswd(String passwd) {
+		this.passwd = passwd;
+	}
+
+	/**
+	 * @param phone
+	 *            the phone to set
+	 */
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	/**
+	 * @param registrationToken
+	 *            the registrationToken to set
+	 */
+	public void setRegistrationToken(String registrationToken) {
+		this.registrationToken = registrationToken;
+	}
+
+	/**
+	 * @param role
+	 *            the role to set
+	 */
+	@NonTransferableField
+	public void setRole(String role) {
+		this.role = role;
+	}
+
+	/**
+	 * @param status
+	 *            the status to set
+	 */
+	@NonTransferableField
+	public void setStatus(UserStatus status) {
+		this.status = status;
+	}
+
+	/**
+	 * @param town
+	 *            the town to set
+	 */
+	public void setTown(String town) {
+		this.town = town;
+	}
+
+	/**
+	 * @param userId
+	 *            the userId to set
+	 */
+	@NonTransferableField
+	public void setUserId(Integer userId) {
+		this.userId = userId;
 	}
 
 	/**

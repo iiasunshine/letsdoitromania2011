@@ -70,7 +70,7 @@ public class UserManagementTest {
 
 	private static Builder build(WebResource resource, User user) {
 		return resource.header(HttpHeaders.AUTHORIZATION, "Basic "
-				+ new String(Base64.encode(user.email + ":" + user.passwd),
+				+ new String(Base64.encode(user.getEmail() + ":" + user.getPasswd()),
 						Charset.forName("ASCII")));
 	}
 
@@ -78,8 +78,8 @@ public class UserManagementTest {
 		return resource.path(path).header(
 				HttpHeaders.AUTHORIZATION,
 				"Basic "
-						+ new String(Base64.encode(user.email + ":"
-								+ user.passwd), Charset.forName("ASCII")));
+						+ new String(Base64.encode(user.getEmail() + ":"
+								+ user.getPasswd()), Charset.forName("ASCII")));
 	}
 
 	// @Test
@@ -106,8 +106,8 @@ public class UserManagementTest {
 	@Before
 	public void addUser1() {
 		user1 = new User();
-		user1.email = "user1@ldir.ro";
-		user1.passwd = password1;
+		user1.setEmail("user1@ldir.ro");
+		user1.setPasswd(password1);
 
 		build(regResource, user1).entity(user1, MediaType.APPLICATION_XML)
 				.post(ClientResponse.class);
@@ -142,8 +142,8 @@ public class UserManagementTest {
 	@Before
 	public void addUser2() {
 		user2 = new User();
-		user2.email = "user2@ldir.ro";
-		user2.passwd = password2;
+		user2.setEmail("user2@ldir.ro");
+		user2.setPasswd(password2);
 
 		build(regResource, user2).entity(user2, MediaType.APPLICATION_XML)
 				.post(ClientResponse.class);

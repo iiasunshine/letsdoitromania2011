@@ -8,6 +8,84 @@
 var username;
 var password;
 var userid;
+
+var gen_form_reference;
+var gen_req;
+
+var generic_select;
+var generic_type;
+var generic_field_id;
+var generic_field_name;
+
+var generic_edit_id;
+
+
+function generic_load_callback()
+{
+	if (gen_req.readyState != 4)
+		return;
+	if (gen_req.status != 200) {
+		alert('Unable to get data: ' + fetchorg_req.status);
+		return;
+	}
+	server_data = JSON.parse(gen_req.responseText);
+	var el, i = 0, rForm = document.getElementById(gen_form_reference);
+	while (el = rForm.elements[i++]) 
+		el.value = server_data[el.name];
+}
+
+
+function generic_select_callback()
+{
+	if (gen_req.readyState != 4)
+		return;
+	if (gen_req.status != 200) {
+		alert('Unable to get data: ' + gen_req.status);
+		return;
+	}
+	reply_string = gen_req.responseText;
+	objects = JSON.parse(reply_string);
+	
+	selectObj = document.getElementById(generic_select);
+	selectObj.options.length = 0;
+	
+	obj_array = objects[generic_type];
+	
+	if (typeof(obj_array[generic_field_id]) != 'undefined') {
+		selectObj.options[selectObj.options.length] = 
+            new Option(obj_array[generic_field_name], obj_array[generic_field_id], false, false);
+		return;
+	}
+	
+	for (idx in obj_array) 
+		selectObj.options[selectObj.options.length] = 
+	            new Option(obj_array[idx][generic_field_name], obj_array[idx][generic_field_id], false, false);
+}
+
+
+function generic_insert_callback()
+{
+	if (gen_req.readyState != 4)
+		return;
+	if (gen_req.status != 200) {
+		alert('Unable to insert data: ' + gen_req.status);
+		return;
+	}
+	alert('Data ok!');
+	document.getElementById(gen_form_reference).reset();
+}
+
+
+function json_from_form(form_name)
+{
+	gen_form_reference = form_name;
+	var org = new Object();
+	var el, i = 0, rForm = document.getElementById(gen_form_reference);
+	while (el = rForm.elements[i++]) 
+		org[el.name] = el.value;
+	return JSON.stringify(org);
+}
+
 </script>
 
 
@@ -15,32 +93,15 @@ var userid;
 <hr>
 <h1>Registration</h1>
 <script type="text/javascript">
-var reg_req;
-
-function reg_callback()
-{
-	if (reg_req.readyState != 4)
-		return;
-	if (reg_req.status != 200)
-		alert('Unable to register user. Check fields');
-	else
-		alert('User registered!');
-	document.registration.reset();
-}
-
 function registerClick()
 {
-	var user = new Object();
-	var el, i = 0, rForm = document.registration;
-	while (el = rForm.elements[i++]) 
-		user[el.name] = el.value;
-	var json_user= JSON.stringify(user);
+	json_object = json_from_form('registration');
 	reg_req = sendRequest('post', 'http://localhost:8080/LDIRBackend/reg/ws',
-			reg_callback, json_user, false);
+			generic_insert_callback, json_object, false);
 }
 </script>
 
-<form name="registration">
+<form name="registration" id="registration">
 	Firstname: <input type="text" size="20" name="firstname"> <br> 
 	Lastname: <input type="text" size="20" name="lastname"> <br>
 	Email: <input type="text" size="20" name="email"> <br>
@@ -74,24 +135,107 @@ function login_callback()
 
 function loginClick()
 {
-	var user = new Object();
-	var el, i = 0, rForm = document.login;
-	while (el = rForm.elements[i++]) 
-		user[el.name] = el.value;
-	var json_user= JSON.stringify(user);
+	json_object = json_from_form('registration');
 	username = document.login.email.value;
 	password = document.login.passwd.value;
-	window.alert(username + ' ' + password)
 	login_req = sendRequestString('get', 'http://localhost:8080/LDIRBackend/ws/user',
-			login_callback, json_user, username, password);
+			login_callback, json_object, username, password);
 }
 </script>
 
-<form name="login">
+<form name="login" id="login">
 	Email: <input type="text" size="20" name="email"> <br>
 	Password: <input type="password" size="20" name="passwd"> <br>
 </form>
 <input type="button" value="Login" onclick="loginClick()" >
+</div>
+
+<div id="new_organization_block">
+<hr>
+<h1>New organization</h1>
+<script type="text/javascript">
+
+
+
+function newOrgClick()
+{
+	json_object = json_from_form('new_organization');
+	gen_req = sendRequest('post', 'http://localhost:8080/LDIRBackend/ws/organization',
+			generic_insert_callback, json_object, false, username, password);
+}
+</script>
+
+<form name="new_organization" id="new_organization">
+	Name: <input type="text" size="20" name="name"> <br> 
+	Address: <input type="text" size="20" name="address"> <br>
+	Members count: <input type="text" size="20" name="membersCount"> <br>
+	Town: <input type="text" size="20" name="town"> <br>
+	County: <input type="text" size="20" name="county"> <br>
+	Type: <select name="type">
+	<option value="CITY_HALL">City hall</option>
+	<option value="COMPANY">Company</option>
+	<option value="LANDFILL">Landfill</option>
+	<option value="REGISTRATION_POINT">Registration point</option>
+	<option value="SCHOOL">School</option>
+	</select> <br>
+</form>
+<input type="button" value="Register" onclick="newOrgClick()" >
+</div>
+
+
+<div id="edit_organization_block">
+<hr>
+<h1>Edit organization</h1>
+<script type="text/javascript">
+function editOrgClick()
+{
+	gen_form_reference = 'edit_organization';
+	json_object = json_from_form(gen_form_reference);
+	window.alert(generic_edit_id + json_object);
+	gen_req = sendRequest('put', 'http://localhost:8080/LDIRBackend/ws/organization/' + generic_edit_id + '/',
+			generic_insert_callback, json_object, false, username, password);
+}
+
+function fetchMyOrg()
+{
+	generic_select = 'organizations';
+	generic_type = 'organization';
+	generic_field_id = 'organizationId';
+	generic_field_name = 'name';
+	gen_req = sendRequest('get', 'http://localhost:8080/LDIRBackend/ws/user/' + userid +'/organizations',
+			generic_select_callback, null, true, username, password);
+}
+
+function displayOrganization()
+{
+	gen_form_reference = 'edit_organization';
+	opt = document.getElementById('organizations');
+	generic_edit_id = opt.options[opt.selectedIndex].value;
+	gen_req = sendRequest('get', 'http://localhost:8080/LDIRBackend/ws/organization/' + generic_edit_id,
+			generic_load_callback, null, true, username, password);
+}
+</script>
+
+<form name="my_organizations">
+<select name="organizations" id="organizations"  onchange="displayOrganization()"></select>
+</form>
+<input type="button" value="Fetch" onclick="fetchMyOrg()">
+
+<form name="edit_organization" id="edit_organization">
+	Name: <input type="text" size="20" name="name"> <br> 
+	Address: <input type="text" size="20" name="address"> <br>
+	Members count: <input type="text" size="20" name="membersCount"> <br>
+	Town: <input type="text" size="20" name="town"> <br>
+	County: <input type="text" size="20" name="county"> <br>
+	Type: <select name="type">
+	<option value="CITY_HALL">City hall</option>
+	<option value="COMPANY">Company</option>
+	<option value="LANDFILL">Landfill</option>
+	<option value="REGISTRATION_POINT">Registration point</option>
+	<option value="SCHOOL">School</option>
+	</select> <br>
+</form>
+<input type="button" value="Register" onclick="editOrgClick()" >
 </div>
 </body>
 </html>
