@@ -49,6 +49,7 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import ro.ldir.dto.adapters.IntegerAdapter;
+import ro.ldir.dto.adapters.PasswordAdapter;
 
 /**
  * The entity bean describing a user. Objects of this type are persisted in the
@@ -101,7 +102,15 @@ public class User implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private static String sha256Encrypt(String toEnc) {
+	/**
+	 * Encrypts a string using the SHA-256 algorithm. This is used to store
+	 * passwords in the database.
+	 * 
+	 * @param toEnc
+	 *            String to encrypt.
+	 * @return The encrypted string.
+	 */
+	public static String sha256Encrypt(String toEnc) {
 		MessageDigest md = null;
 		try {
 			md = MessageDigest.getInstance("SHA-256");
@@ -147,7 +156,8 @@ public class User implements Serializable {
 	public String organizationName;
 
 	@Column(nullable = false, length = 64)
-	private String passwd;
+	@XmlJavaTypeAdapter(PasswordAdapter.class)
+	public String passwd;
 
 	public String phone;
 
@@ -179,14 +189,24 @@ public class User implements Serializable {
 	public User() {
 	}
 
-	public void setPassword(String password) {
-		this.passwd = sha256Encrypt(password);
+	/**
+	 * Tests the given password.
+	 * 
+	 * @param sha256Password
+	 *            The password to test.
+	 * @return {@code true} if the password matches.
+	 */
+	public boolean testPassword(String rawPassword) {
+		return this.passwd.equals(sha256Encrypt(rawPassword));
 	}
 
-	public boolean testPassword(String md5password) {
-		return this.passwd.equals(md5password);
-	}
-
+	/**
+	 * Use this method to update a user instance with new values. Only the
+	 * fields that should be updated are changed.
+	 * 
+	 * @param user
+	 *            The new user where to copy properties from.
+	 */
 	public void update(User user) {
 		birthday = user.birthday;
 		cleaningTools = user.cleaningTools;
