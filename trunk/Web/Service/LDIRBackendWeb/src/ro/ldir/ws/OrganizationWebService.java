@@ -26,6 +26,7 @@ package ro.ldir.ws;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -72,6 +73,19 @@ public class OrganizationWebService {
 		return Response.ok().build();
 	}
 
+	@DELETE
+	@Path("{organizationId:[0-9]+}/")
+	public Response deleteOrganization(
+			@PathParam("organizationId") int organizationId,
+			@Context SecurityContext sc) {
+		Organization existing = orgManager.getOrganization(organizationId);
+		if (!SecurityHelper.checkUserOrAdmin(userManager, sc, existing
+				.getContactUser().getUserId()))
+			throw new WebApplicationException(401);
+		orgManager.deleteOrganization(organizationId);
+		return Response.ok().build();
+	}
+
 	@GET
 	@Produces({ "application/json", "application/xml" })
 	@Path("{organizationId:[0-9]+}/")
@@ -79,8 +93,8 @@ public class OrganizationWebService {
 			@PathParam("organizationId") int organizationId,
 			@Context SecurityContext sc) {
 		Organization organization = orgManager.getOrganization(organizationId);
-		if (!SecurityHelper.checkUserOrAdmin(userManager, sc,
-				organization.getContactUser().getUserId()))
+		if (!SecurityHelper.checkUserOrAdmin(userManager, sc, organization
+				.getContactUser().getUserId()))
 			throw new WebApplicationException(401);
 		return organization;
 	}
@@ -91,9 +105,11 @@ public class OrganizationWebService {
 	public Response updateOrganization(
 			@PathParam("organizationId") int organizationId,
 			Organization organization, @Context SecurityContext sc) {
-
+		Organization existing = orgManager.getOrganization(organizationId);
+		if (!SecurityHelper.checkUserOrAdmin(userManager, sc, existing
+				.getContactUser().getUserId()))
+			throw new WebApplicationException(401);
 		orgManager.updateOrganization(organizationId, organization);
-
 		return Response.ok().build();
 	}
 }
