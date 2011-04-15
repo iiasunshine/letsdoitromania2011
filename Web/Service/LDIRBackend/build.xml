@@ -11,11 +11,15 @@
 		<ant dir="${webservice.location}" target="war" />
 	</target>
 
+	<target name="build-ejbclient">
+		<ant dir="${ejbclient.location}" target="jar" />
+	</target>
+
 	<target name="clean">
 		<delete file="${app.ear}" />
 	</target>
 
-	<target depends="build-ejb,build-webservice,build-common.build-ejbclient" name="ear">
+	<target depends="build-ejb,build-webservice,build-ejbclient" name="ear">
 		<ear destfile="${app.ear}" filesetmanifest="merge" appxml="EarContent/META-INF/application.xml">
 			<fileset dir="EarContent" />
 			<fileset file="${ejb.jar}" />
