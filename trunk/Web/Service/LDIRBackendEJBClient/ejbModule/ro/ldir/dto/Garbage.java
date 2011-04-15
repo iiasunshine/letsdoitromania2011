@@ -39,6 +39,8 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import ro.ldir.dto.adapters.IntegerAdapter;
+import ro.ldir.dto.helper.FieldAccessBean;
+import ro.ldir.dto.helper.NonTransferableField;
 
 /**
  * The entity bean describing a garbage. Objects of this type are persisted in
@@ -46,7 +48,7 @@ import ro.ldir.dto.adapters.IntegerAdapter;
  */
 @Entity
 @XmlRootElement
-public class Garbage implements Serializable {
+public class Garbage extends FieldAccessBean implements Serializable {
 	@XmlType(name = "GarbageStatus")
 	public enum Status {
 		CLEANED("cleaned"), IDENTIFIED("identified");
@@ -72,11 +74,13 @@ public class Garbage implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@XmlID
 	@XmlJavaTypeAdapter(IntegerAdapter.class)
+	@NonTransferableField
 	public Integer garbageId;
 
 	@ManyToOne
 	@JoinColumn(name = "INSERTBY", nullable = false)
 	@XmlIDREF
+	@NonTransferableField
 	public User insertBy;
 
 	public float latitude;
@@ -84,6 +88,7 @@ public class Garbage implements Serializable {
 	public float longitude;
 
 	// TODO change it to an arraylist
+	@NonTransferableField
 	public Collection<String> pictures;
 
 	public Status status;
