@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.util.List;
 
 import javax.activation.MimetypesFileTypeMap;
+import javax.ejb.EJBException;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.ws.rs.Consumes;
@@ -130,10 +131,11 @@ public class GarbageWebService {
 		File f;
 		try {
 			f = new File(garbageManager.getImagePath(garbageId, imageId));
-		} catch (NullPointerException e1) {
-			throw new WebApplicationException(404);
-		} catch (ArrayIndexOutOfBoundsException e1) {
-			throw new WebApplicationException(404);
+		} catch (EJBException e) {
+			if (e.getCausedByException() instanceof NullPointerException
+					|| e.getCausedByException() instanceof ArrayIndexOutOfBoundsException)
+				throw new WebApplicationException(404);
+			throw new WebApplicationException(500);
 		}
 		if (!f.exists())
 			throw new WebApplicationException(404);
@@ -147,11 +149,13 @@ public class GarbageWebService {
 			@PathParam("imageId") int imageId) {
 		try {
 			garbageManager.deleteImage(garbageId, imageId);
-		} catch (NullPointerException e1) {
-			throw new WebApplicationException(404);
-		} catch (ArrayIndexOutOfBoundsException e1) {
-			throw new WebApplicationException(404);
+		} catch (EJBException e) {
+			if (e.getCausedByException() instanceof NullPointerException
+					|| e.getCausedByException() instanceof ArrayIndexOutOfBoundsException)
+				throw new WebApplicationException(404);
+			throw new WebApplicationException(500);
 		}
+
 		return Response.ok().build();
 	}
 
@@ -172,8 +176,10 @@ public class GarbageWebService {
 			Garbage.Status status) {
 		try {
 			garbageManager.setGarbageStatus(garbageId, status);
-		} catch (NullPointerException e) {
-			throw new WebApplicationException(404);
+		} catch (EJBException e) {
+			if (e.getCausedByException() instanceof NullPointerException)
+				throw new WebApplicationException(404);
+			throw new WebApplicationException(500);
 		}
 		return Response.ok().build();
 	}

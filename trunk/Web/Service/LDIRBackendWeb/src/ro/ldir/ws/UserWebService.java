@@ -26,6 +26,7 @@ package ro.ldir.ws;
 import java.util.Collection;
 import java.util.List;
 
+import javax.ejb.EJBException;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.ws.rs.Consumes;
@@ -142,9 +143,12 @@ public class UserWebService {
 	public Response newUser(User user) {
 		try {
 			userManager.addUser(user);
-		} catch (InvalidUserException e) {
-			return Response.status(Responses.CONFLICT).entity(e.getMessage())
-					.type("text/plain").build();
+		} catch (EJBException e) {
+			if (e.getCausedByException() instanceof InvalidUserException)
+				return Response.status(Responses.CONFLICT)
+						.entity(e.getCausedByException().getMessage())
+						.type("text/plain").build();
+			throw new WebApplicationException(500);
 		}
 		return Response.ok().build();
 	}
@@ -156,20 +160,10 @@ public class UserWebService {
 			List<User.Activity> activities) {
 		try {
 			userManager.setUserActivities(userId, activities);
-		} catch (NullPointerException e) {
-			throw new WebApplicationException(404);
-		}
-		return Response.ok().build();
-	}
-
-	@PUT
-	@Consumes({ "application/json", "application/xml" })
-	@Path("{userId:[0-9]+}/")
-	public Response updateUser(@PathParam("userId") int userId, User user) {
-		try {
-			userManager.updateUser(userId, user);
-		} catch (NullPointerException e) {
-			throw new WebApplicationException(404);
+		} catch (EJBException e) {
+			if (e.getCausedByException() instanceof NullPointerException)
+				throw new WebApplicationException(404);
+			throw new WebApplicationException(500);
 		}
 		return Response.ok().build();
 	}
@@ -181,8 +175,24 @@ public class UserWebService {
 			User.Status status) {
 		try {
 			userManager.setUserStatus(userId, status);
-		} catch (NullPointerException e) {
-			throw new WebApplicationException(404);
+		} catch (EJBException e) {
+			if (e.getCausedByException() instanceof NullPointerException)
+				throw new WebApplicationException(404);
+			throw new WebApplicationException(500);
+		}
+		return Response.ok().build();
+	}
+
+	@PUT
+	@Consumes({ "application/json", "application/xml" })
+	@Path("{userId:[0-9]+}/")
+	public Response updateUser(@PathParam("userId") int userId, User user) {
+		try {
+			userManager.updateUser(userId, user);
+		} catch (EJBException e) {
+			if (e.getCausedByException() instanceof NullPointerException)
+				throw new WebApplicationException(404);
+			throw new WebApplicationException(500);
 		}
 		return Response.ok().build();
 	}
