@@ -8,6 +8,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import ro.ldir.dto.Equipment;
 import ro.ldir.dto.Organization;
 import ro.ldir.dto.Team;
 import ro.ldir.dto.User;
@@ -28,6 +29,20 @@ public class TeamManager implements TeamManagerLocal {
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see ro.ldir.beans.TeamManagerLocal#addEquipment(int,
+	 * ro.ldir.dto.Equipment)
+	 */
+	@Override
+	public void addEquipment(int teamId, Equipment equipment) {
+		Team team = em.find(Team.class, teamId);
+		team.getEquipments().add(equipment);
+		equipment.setTeamOwner(team);
+		em.merge(team);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see ro.ldir.beans.TeamManagerLocal#createTeam(int, ro.ldir.dto.Team)
 	 */
 	@Override
@@ -41,6 +56,19 @@ public class TeamManager implements TeamManagerLocal {
 		team.setTeamManager(user);
 		user.getManagedTeams().add(team);
 		em.merge(user);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ro.ldir.beans.TeamManagerLocal#deleteEquipment(int, int)
+	 */
+	@Override
+	public void deleteEquipment(int teamId, int equipmentId) {
+		Team team = em.find(Team.class, teamId);
+		Equipment equipment = em.find(Equipment.class, equipmentId);
+		team.getEquipments().remove(equipment);
+		em.merge(team);
 	}
 
 	/*
@@ -118,6 +146,19 @@ public class TeamManager implements TeamManagerLocal {
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see ro.ldir.beans.TeamManagerLocal#removeEquipment(int, int)
+	 */
+	@Override
+	public void removeEquipment(int teamId, int equipmentId) {
+		Team team = em.find(Team.class, teamId);
+		Equipment equipment = em.find(Equipment.class, equipmentId);
+		team.getEquipments().remove(equipment);
+		em.merge(team);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see ro.ldir.beans.TeamManagerLocal#updateTeam(int, ro.ldir.dto.Team)
 	 */
 	@Override
@@ -139,7 +180,6 @@ public class TeamManager implements TeamManagerLocal {
 		organization.setMemberOf(null);
 		team.getOrganizationMembers().remove(organization);
 		em.merge(organization);
-		// TODO chack whether the organization is affected
 	}
 
 	/*
@@ -154,6 +194,5 @@ public class TeamManager implements TeamManagerLocal {
 		user.setMemberOf(null);
 		team.getVolunteerMembers().remove(user);
 		em.merge(team);
-		// TODO chack whether the user is affected
 	}
 }

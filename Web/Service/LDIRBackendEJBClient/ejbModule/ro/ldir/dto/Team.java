@@ -48,6 +48,7 @@ import ro.ldir.dto.helper.NonTransferableField;
 @Entity
 @XmlRootElement
 public class Team extends FieldAccessBean {
+	private List<Equipment> equipments;
 	private List<Organization> organizationMembers;
 	private Integer teamId;
 	private User teamManager;
@@ -65,7 +66,17 @@ public class Team extends FieldAccessBean {
 	public boolean equals(Object obj) {
 		if (!(obj instanceof Team))
 			return false;
+		if (teamId == null)
+			return super.equals(obj);
 		return teamId.equals(((Team) obj).teamId);
+	}
+
+	/**
+	 * @return the equipments
+	 */
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "teamOwner", orphanRemoval = true)
+	public List<Equipment> getEquipments() {
+		return equipments;
 	}
 
 	/**
@@ -110,6 +121,14 @@ public class Team extends FieldAccessBean {
 	@OneToMany(cascade = CascadeType.MERGE, mappedBy = "memberOf")
 	public List<User> getVolunteerMembers() {
 		return volunteerMembers;
+	}
+
+	/**
+	 * @param equipments
+	 *            the equipments to set
+	 */
+	public void setEquipments(List<Equipment> equipments) {
+		this.equipments = equipments;
 	}
 
 	/**

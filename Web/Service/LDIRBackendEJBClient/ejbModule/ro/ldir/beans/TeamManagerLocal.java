@@ -4,11 +4,22 @@ import java.util.List;
 
 import javax.ejb.Local;
 
+import ro.ldir.dto.Equipment;
 import ro.ldir.dto.Team;
 import ro.ldir.exceptions.InvalidTeamOperationException;
 
 @Local
 public interface TeamManagerLocal {
+	/**
+	 * Add a new equipment to a team.
+	 * 
+	 * @param teamId
+	 *            The team to whom the equipment belongs.
+	 * @param equipment
+	 *            The equipment.
+	 */
+	void addEquipment(int teamId, Equipment equipment);
+
 	/**
 	 * Create a new team managed by the user {@code userId}. The manager does
 	 * not actively participate in the team until it registers to the team.
@@ -22,6 +33,16 @@ public interface TeamManagerLocal {
 	 */
 	public void createTeam(int userId, Team team)
 			throws InvalidTeamOperationException;
+
+	/**
+	 * Delete an equipment from a team.
+	 * 
+	 * @param teamId
+	 *            The team to delete the equipment.
+	 * @param equipmentId
+	 *            The equipment ID to delete.
+	 */
+	public void deleteEquipment(int teamId, int equipmentId);
 
 	/**
 	 * Delete a team.
@@ -76,6 +97,16 @@ public interface TeamManagerLocal {
 	public List<Team> getTeamByName(String name);
 
 	/**
+	 * Remove an equipment from a team.
+	 * 
+	 * @param teamId
+	 *            The team ID to whom the equipment belonged.
+	 * @param equipmentId
+	 *            The equipment ID to remove.
+	 */
+	public void removeEquipment(int teamId, int equipmentId);
+
+	/**
 	 * Updates a team with existing values.
 	 * 
 	 * @param teamId
@@ -94,7 +125,6 @@ public interface TeamManagerLocal {
 	 *            The team ID to withdraw from.
 	 */
 	public void withdrawOrganization(int organizationId, int teamId);
-
 	/**
 	 * Withdraw a user from a team.
 	 * 

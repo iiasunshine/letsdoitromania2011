@@ -153,6 +153,8 @@ public class User extends FieldAccessBean implements Serializable {
 	public boolean equals(Object obj) {
 		if (!(obj instanceof User))
 			return false;
+		if (userId == null)
+			return super.equals(obj);
 		return userId.equals(((User) obj).userId);
 	}
 
@@ -203,7 +205,7 @@ public class User extends FieldAccessBean implements Serializable {
 	/**
 	 * @return the managedTeams
 	 */
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "teamManager")
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "teamManager", orphanRemoval = true)
 	@XmlIDREF
 	public List<Team> getManagedTeams() {
 		return managedTeams;
@@ -221,7 +223,7 @@ public class User extends FieldAccessBean implements Serializable {
 	/**
 	 * @return the organizations
 	 */
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "contactUser")
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "contactUser", orphanRemoval = true)
 	@XmlIDREF
 	public List<Organization> getOrganizations() {
 		return organizations;

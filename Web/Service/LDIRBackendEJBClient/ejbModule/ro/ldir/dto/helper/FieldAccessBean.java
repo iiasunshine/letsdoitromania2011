@@ -52,19 +52,14 @@ public abstract class FieldAccessBean {
 				Method getter = this.getClass().getMethod(getterString);
 				m.invoke(this, getter.invoke(other));
 			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (SecurityException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (NoSuchMethodException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (InvocationTargetException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -96,13 +91,10 @@ public abstract class FieldAccessBean {
 				if (mine == null || his == null || !mine.equals(his))
 					return false;
 			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (InvocationTargetException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

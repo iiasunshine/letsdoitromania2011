@@ -29,6 +29,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlIDREF;
@@ -72,6 +73,8 @@ public class Organization extends FieldAccessBean implements Serializable {
 	public boolean equals(Object obj) {
 		if (!(obj instanceof Organization))
 			return false;
+		if (organizationId == null)
+			return super.equals(obj);
 		return organizationId.equals(((Organization) obj).organizationId);
 	}
 
@@ -87,6 +90,7 @@ public class Organization extends FieldAccessBean implements Serializable {
 	 */
 	@ManyToOne(optional = false)
 	@XmlIDREF
+	@JoinColumn(nullable = false)
 	public User getContactUser() {
 		return contactUser;
 	}
