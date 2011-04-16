@@ -20,6 +20,15 @@
 				<env-entry-value>/tmp</env-entry-value>
 			</env-entry>
 		</session>
+		<session>
+			<ejb-name>UserMailer</ejb-name>
+			<env-entry>
+				<description>EmailTemplateLocation</description>
+				<env-entry-name>ro.ldir.beans.UserMailer/mailTemplates</env-entry-name>
+				<env-entry-type>java.lang.String</env-entry-type>
+				<env-entry-value>/Users/stefan/tmp/ldir</env-entry-value>
+			</env-entry>
+		</session>
 	</enterprise-beans>
 	<ejb-client-jar>LDIRBackendEJBClient.jar</ejb-client-jar>
 </ejb-jar>
