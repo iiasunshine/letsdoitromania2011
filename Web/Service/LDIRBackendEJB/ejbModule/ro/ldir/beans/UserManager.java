@@ -70,9 +70,9 @@ public class UserManager implements UserManagerLocal {
 	public void activateUser(int userId, String key)
 			throws InvalidUserException {
 		User existing = em.find(User.class, userId);
-		if (existing.getStatus() != User.UserStatus.PENDING)
+		if (!existing.getRole().equals(SecurityRole.PENDING.toString()))
 			throw new InvalidUserException("The user is not pending.");
-		existing.setStatus(User.UserStatus.REGISTERED);
+		existing.setRole(SecurityRole.VOLUNTEER.toString());
 		em.merge(existing);
 	}
 
@@ -89,9 +89,9 @@ public class UserManager implements UserManagerLocal {
 		if (query.getResultList().size() > 0)
 			throw new InvalidUserException("Email " + user.getEmail()
 					+ " already in use.");
-		user.setStatus(User.UserStatus.PENDING);
-		user.setRole(User.SecurityRole.VOLUNTEER.toString());
-		user.setRegistrationToken(SHA256Encrypt.encrypt(new Date() + user.getEmail()));
+		user.setRole(User.SecurityRole.PENDING.toString());
+		user.setRegistrationToken(SHA256Encrypt.encrypt(new Date()
+				+ user.getEmail()));
 		em.persist(user);
 	}
 
@@ -163,11 +163,25 @@ public class UserManager implements UserManagerLocal {
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see ro.ldir.beans.UserManagerLocal#searchByEmail(java.lang.String)
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<User> searchByEmail(String email) {
+		Query query = em
+				.createQuery("SELECT x FROM User x WHERE x.email LIKE :emailParam");
+		query.setParameter("emailParam", "%" + email + "%");
+		return query.getResultList();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see ro.ldir.beans.UserManagerLocal#setUserActivities(int,
 	 * java.util.List)
 	 */
 	@Override
-	public void setUserActivities(int userId, List<Activity> activities) {
+	public void setUserActivities(int userId, List<User.Activity> activities) {
 		User user = em.find(User.class, userId);
 		user.setActivities(activities);
 		em.merge(user);
@@ -180,23 +194,10 @@ public class UserManager implements UserManagerLocal {
 	 * ro.ldir.dto.User.SecurityRole)
 	 */
 	@Override
-	public void setUserRole(int userId, SecurityRole role) {
+	public void setUserRole(int userId, User.SecurityRole role) {
 		User existing = em.find(User.class, userId);
 		existing.setRole(role.toString());
 		em.merge(existing);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see ro.ldir.beans.UserManagerLocal#setUserStatus(int,
-	 * ro.ldir.dto.User.Status)
-	 */
-	@Override
-	public void setUserStatus(int userId, User.UserStatus status) {
-		User user = em.find(User.class, userId);
-		user.setStatus(status);
-		em.merge(user);
 	}
 
 	/*

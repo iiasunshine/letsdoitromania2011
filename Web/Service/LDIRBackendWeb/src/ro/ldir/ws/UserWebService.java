@@ -36,6 +36,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
@@ -47,6 +48,7 @@ import ro.ldir.beans.UserManagerLocal;
 import ro.ldir.dto.Organization;
 import ro.ldir.dto.Team;
 import ro.ldir.dto.User;
+import ro.ldir.dto.User.SecurityRole;
 import ro.ldir.ws.helper.SecurityHelper;
 
 /**
@@ -197,6 +199,15 @@ public class UserWebService {
 		throw new WebApplicationException(404);
 	}
 
+	@GET
+	@Path("emailSearch")
+	public List<User> searchUserByEmail(@QueryParam("email") String email,
+			@Context SecurityContext sc) {
+		if (!SecurityHelper.checkAdmin(sc))
+			throw new WebApplicationException(401);
+		return userManager.searchByEmail(email);
+	}
+
 	@PUT
 	@Consumes({ "application/json", "application/xml" })
 	@Path("{userId:[0-9]+}/activities")
@@ -219,9 +230,18 @@ public class UserWebService {
 	@Consumes({ "application/json", "application/xml" })
 	@Path("{userId:[0-9]+}/role")
 	public Response setUserRole(@PathParam("userId") int userId,
-			User.SecurityRole role, @Context SecurityContext sc) {
+			String roleString, @Context SecurityContext sc) {
 		if (!SecurityHelper.checkAdmin(sc))
 			throw new WebApplicationException(401);
+		SecurityRole role = null;
+		for (SecurityRole r : SecurityRole.values())
+			if (roleString.equals(r.toString())) {
+				role = r;
+				break;
+			}
+		if (role == null)
+			throw new WebApplicationException(500);
+
 		try {
 			userManager.setUserRole(userId, role);
 		} catch (EJBException e) {

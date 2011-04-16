@@ -34,6 +34,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
@@ -41,7 +42,6 @@ import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import ro.ldir.dto.adapters.EncryptAdapter;
@@ -62,12 +62,8 @@ public class User extends FieldAccessBean implements Serializable {
 		CHART, CLEAN
 	}
 
-	// public enum CleaningTools {
-	// BAGS, GLOVES
-	// }
-
 	public enum SecurityRole {
-		ADMIN, ORGANIZER, ORGANIZER_MULTI, VOLUNTEER, VOLUNTEER_MULTI;
+		PENDING, SUSPENDED, ADMIN, ORGANIZER, ORGANIZER_MULTI, VOLUNTEER, VOLUNTEER_MULTI;
 		private static List<SecurityRole> multiRoles = null;
 
 		public static List<SecurityRole> getMultiRoles() {
@@ -80,64 +76,20 @@ public class User extends FieldAccessBean implements Serializable {
 		}
 	}
 
-	// public enum Transport {
-	// BIKE, CAR, PUBLIC
-	// }
-
-	// public enum Type {
-	// ORGANIZATION("organization"), PERSON("person"), PUBLIC_INSTITITUION(
-	// "public_institution");
-	// private String restName;
-	//
-	// private Type(String restName) {
-	// this.restName = restName;
-	// }
-	//
-	// public String getRestName() {
-	// return restName;
-	// }
-	// }
-
-	@XmlType(name = "UserStatus")
-	public enum UserStatus {
-		PENDING, REGISTERED, SUSPENDED;
-	}
-
 	private static final long serialVersionUID = 1L;
 	private List<Activity> activities;
 	private Date birthday;
 	private String county;
 	private String email;
-
-	// @OneToMany(mappedBy = "insertBy")
-	// @XmlIDREF
-	// @NonTransferableField
-	// public Collection<Garbage> garbages;
-
 	private String firstName;
 	private String lastName;
 	private List<Team> managedTeams;
 	private Team memberOf;
 	private List<Organization> organizations;
 	private String passwd;
-
-	// @ManyToMany
-	// @JoinTable(name = "USER_TEAM", joinColumns = @JoinColumn(name = "USERID",
-	// referencedColumnName = "USERID"), inverseJoinColumns = @JoinColumn(name =
-	// "TEAMID", referencedColumnName = "TEAMID"))
-	// @XmlIDREF
-	// @NonTransferableField
-	// public Collection<Team> teams;
-	//
-	// @OneToMany(mappedBy = "leader")
-	// @XmlIDREF
-	// @NonTransferableField
-	// public Collection<Team> teamsLed;
-
 	private String phone;
 	private String registrationToken;
 	private String role;
-	private UserStatus status;
 	private String town;
 	private Integer userId;
 
@@ -216,6 +168,7 @@ public class User extends FieldAccessBean implements Serializable {
 	 */
 	@ManyToOne
 	@XmlIDREF
+	@JoinColumn(name = "MEMBEROF")
 	public Team getMemberOf() {
 		return memberOf;
 	}
@@ -259,13 +212,6 @@ public class User extends FieldAccessBean implements Serializable {
 	@Column(nullable = false)
 	public String getRole() {
 		return role;
-	}
-
-	/**
-	 * @return the status
-	 */
-	public UserStatus getStatus() {
-		return status;
 	}
 
 	/**
@@ -401,15 +347,6 @@ public class User extends FieldAccessBean implements Serializable {
 	@NonTransferableField
 	public void setRole(String role) {
 		this.role = role;
-	}
-
-	/**
-	 * @param status
-	 *            the status to set
-	 */
-	@NonTransferableField
-	public void setStatus(UserStatus status) {
-		this.status = status;
 	}
 
 	/**

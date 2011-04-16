@@ -28,6 +28,8 @@ import java.util.List;
 import javax.ejb.Local;
 
 import ro.ldir.dto.User;
+import ro.ldir.dto.User.Activity;
+import ro.ldir.dto.User.SecurityRole;
 import ro.ldir.exceptions.InvalidUserException;
 
 /**
@@ -81,6 +83,15 @@ public interface UserManagerLocal {
 	public User getUser(String email);
 
 	/**
+	 * A list of users that have a given role
+	 * 
+	 * @param role
+	 *            The role to search against.
+	 * @return The list of users of the given type.
+	 */
+	public List<User> getUsers(SecurityRole role);
+
+	/**
 	 * Returns a list of users in a town.
 	 * 
 	 * @param town
@@ -99,13 +110,13 @@ public interface UserManagerLocal {
 	public List<User> getUsers(User.Activity activity);
 
 	/**
-	 * A list of users that have a given role
+	 * Search for all users whose email match.
 	 * 
-	 * @param role
-	 *            The role to search against.
-	 * @return The list of users of the given type.
+	 * @param email
+	 *            The email to search for.
+	 * @return A list of users matching the email
 	 */
-	public List<User> getUsers(User.SecurityRole role);
+	public List<User> searchByEmail(String email);
 
 	/**
 	 * Configures an user for a given set of activities. The current activities
@@ -116,7 +127,7 @@ public interface UserManagerLocal {
 	 * @param activities
 	 *            The new activities to set.
 	 */
-	public void setUserActivities(int userId, List<User.Activity> activities);
+	public void setUserActivities(int userId, List<Activity> activities);
 
 	/**
 	 * Sets the user's security role.
@@ -126,17 +137,7 @@ public interface UserManagerLocal {
 	 * @param role
 	 *            The new security role.
 	 */
-	public void setUserRole(int userId, User.SecurityRole role);
-
-	/**
-	 * Sets a new status to a user.
-	 * 
-	 * @param userId
-	 *            The user to configure.
-	 * @param status
-	 *            The new status of a user.
-	 */
-	public void setUserStatus(int userId, User.UserStatus status);
+	public void setUserRole(int userId, SecurityRole role);
 
 	/**
 	 * Updates a user with a new object. All previous fields of the user are
