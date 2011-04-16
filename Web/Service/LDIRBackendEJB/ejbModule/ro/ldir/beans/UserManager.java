@@ -26,6 +26,7 @@ package ro.ldir.beans;
 import java.util.Date;
 import java.util.List;
 
+import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -57,6 +58,9 @@ public class UserManager implements UserManagerLocal {
 	@PersistenceContext(unitName = "ldir")
 	private EntityManager em;
 
+	@EJB
+	private UserMailer userMailer;
+
 	/** Default constructor. */
 	public UserManager() {
 	}
@@ -83,16 +87,21 @@ public class UserManager implements UserManagerLocal {
 	 */
 	@Override
 	public void addUser(User user) throws InvalidUserException {
+		String email = new String(user.getEmail());
+
 		Query query = em
 				.createQuery("SELECT x FROM User x WHERE x.email = :emailParam");
-		query.setParameter("emailParam", user.getEmail());
+		query.setParameter("emailParam", email);
 		if (query.getResultList().size() > 0)
-			throw new InvalidUserException("Email " + user.getEmail()
+			throw new InvalidUserException("Email " + email
 					+ " already in use.");
+
 		user.setRole(User.SecurityRole.PENDING.toString());
-		user.setRegistrationToken(SHA256Encrypt.encrypt(new Date()
-				+ user.getEmail()));
+		user.setRegistrationToken(SHA256Encrypt.encrypt(new Date() + email));
+
 		em.persist(user);
+
+		userMailer.sendWelcomeMessage(email);
 	}
 
 	/*
