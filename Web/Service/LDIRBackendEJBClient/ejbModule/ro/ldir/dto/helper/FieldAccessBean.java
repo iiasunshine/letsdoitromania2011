@@ -23,7 +23,6 @@
  */
 package ro.ldir.dto.helper;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -39,7 +38,7 @@ public abstract class FieldAccessBean {
 	 * @param other
 	 *            The object to get fields from.
 	 */
-	public void copyFields(FieldAccessBean other) {
+	public final void copyFields(FieldAccessBean other) {
 		if (!this.getClass().equals(other.getClass()))
 			return;
 
@@ -81,7 +80,7 @@ public abstract class FieldAccessBean {
 	 * @return {@code true} if all non-annotated fields match, {@code false}
 	 *         otherwise.
 	 */
-	public boolean fieldsEqual(FieldAccessBean other) {
+	public final boolean fieldsEqual(FieldAccessBean other) {
 		if (!this.getClass().equals(other.getClass()))
 			return false;
 
