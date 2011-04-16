@@ -386,5 +386,58 @@ function userJoinTeamClick()
 
 </div>
 
+<div id="update_user">
+<hr>
+<h1>Set user role</h1>
+<script type="text/javascript">
+function searchUser()
+{
+	user_email = encodeURI(document.forms.user_search.email.value);
+	
+	generic_select = 'found_users';
+	generic_type = 'user';
+	generic_field_id = 'userId';
+	generic_field_name = 'email';
+	gen_req = sendRequest('get', 'http://localhost:8080/LDIRBackend/ws/user/emailSearch/?email=' + user_email,
+			generic_select_callback, null, true, username, password);
+}
+
+function updateRole()
+{
+	userForm = document.getElementById('found_users');
+	user_tochange = userForm.options[userForm.selectedIndex].value;	
+	var role = document.getElementById('user_set_role').value;
+	gen_form_reference = null;
+	gen_req = sendRequest('put', 'http://localhost:8080/LDIRBackend/ws/user/' + user_tochange + '/role',
+			generic_insert_callback, role, true, username, password);
+}
+</script>
+
+<form name="user_search">
+	Email: <input type="text" size="20" name="email"> <br> 
+</form>
+<input type="button" value="Search user" onclick="searchUser()">
+
+<form name="found_users">
+	Found users: <select name="found_users" id="found_users"></select>
+</form>
+
+<form name="user_set_role">
+	Set role:
+	<select name="user_set_role" id="user_set_role">
+		<option value="PENDING">user must confirm its email</option>
+		<option value="SUSPENDED">suspend user</option>
+		<option value="ADMIN">administrator</option>
+		<option value="ORGANIZER">organizer</option>
+		<option value="ORGANIZER_MULTI">organizer with multiple teams</option>
+		<option value="VOLUNTEER">volunteer</option>
+		<option value="VOLUNTEER_MULTI">volunteer with multiple teams</option>
+	</select>
+</form>
+<input type="button" value="Update role" onclick="updateRole()">
+
+</div>
+
+
 </body>
 </html>
