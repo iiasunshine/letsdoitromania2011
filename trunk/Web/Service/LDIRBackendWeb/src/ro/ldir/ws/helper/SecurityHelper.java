@@ -23,9 +23,9 @@
  */
 package ro.ldir.ws.helper;
 
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.SecurityContext;
 
-import ro.ldir.beans.OrganizationManagerLocal;
 import ro.ldir.beans.UserManagerLocal;
 import ro.ldir.dto.Organization;
 import ro.ldir.dto.Team;
@@ -58,6 +58,8 @@ public class SecurityHelper {
 			SecurityContext sc) {
 		if (sc.isUserInRole(User.SecurityRole.ADMIN.toString()))
 			return true;
+		if (team == null)
+			throw new WebApplicationException(404);
 		String email = sc.getUserPrincipal().getName();
 		User user = um.getUser(email);
 		if (team.getTeamManager().equals(user))
@@ -76,6 +78,8 @@ public class SecurityHelper {
 	public static boolean checkMembersOfSameTeam(UserManagerLocal um,
 			int userId, SecurityContext sc) {
 		User user = um.getUser(userId);
+		if (user == null)
+			throw new WebApplicationException(404);
 		String email = sc.getUserPrincipal().getName();
 		User loggedInUser = um.getUser(email);
 		if (user.getMemberOf().equals(loggedInUser.getMemberOf()))
@@ -108,6 +112,8 @@ public class SecurityHelper {
 			Organization org, SecurityContext sc) {
 		String email = sc.getUserPrincipal().getName();
 		User loggedInUser = um.getUser(email);
+		if (org == null)
+			throw new WebApplicationException(404);
 		for (Team team : loggedInUser.getManagedTeams())
 			if (team.getOrganizationMembers().contains(org))
 				return true;
@@ -124,6 +130,8 @@ public class SecurityHelper {
 	 */
 	public static boolean checkTeamMemberOrAdmin(UserManagerLocal um,
 			Team team, SecurityContext sc) {
+		if (team == null)
+			throw new WebApplicationException(404);
 		if (sc.isUserInRole(User.SecurityRole.ADMIN.toString()))
 			return true;
 		String email = sc.getUserPrincipal().getName();
@@ -155,7 +163,8 @@ public class SecurityHelper {
 		if (sc.isUserInRole(User.SecurityRole.ADMIN.toString()))
 			return true;
 		String email = sc.getUserPrincipal().getName();
-		return um.getUser(email).getUserId() == userId;
+		User user = um.getUser(email);
+		return user.getUserId() == userId;
 	}
 
 	/**
