@@ -155,7 +155,7 @@ function orgSearchTeam()
 
 function orgJoinTeamClick()
 {
-	var team = new Object();
+	var team = {};
 	teamForm = document.getElementById('org_found_teams');
 	teamId = teamForm.options[teamForm.selectedIndex].value;
 	team['teamId'] = teamId;
@@ -302,11 +302,21 @@ function withdrawOrgTeamMember()
 	gen_req = sendRequest('delete', 'http://localhost:8080/LDIRBackend/ws/team/' + generic_edit_id + '/organization/' + org_id,
 			generic_insert_callback, null, false, username, password);
 }
+
+function addGPS()
+{
+	opt = document.getElementById('my_teams');
+	generic_edit_id = opt.options[opt.selectedIndex].value;
+	gps_json = json_from_form('add_gps_equipment');
+	window.alert(gps_json);
+	gen_req = sendRequest('put', 'http://localhost:8080/LDIRBackend/ws/team/' + generic_edit_id + '/gps',
+			generic_insert_callback, gps_json, false, username, password);
+}
 </script>
 <input type="button" value="Fetch my teams" onclick="fetchMyTeams()">
 
 <form name="my_teams">
-	My teams:<select name="my_teams" id="my_teams"></select>
+	My teams: <select name="my_teams" id="my_teams"></select>
 </form>
 
 <form name="user_team_members">
@@ -320,6 +330,11 @@ function withdrawOrgTeamMember()
 </form>
 <input type="button" value="Load organization members" onclick="loadOrgTeamMembers()">
 <input type="button" value="Withdraw organization member" onclick="withdrawOrgTeamMember()">
+
+<form name="add_gps_equipment" id="add_gps_equipment">
+	GPS count: <input type="text" size="20" name="count">
+</form>
+<input type="button" value="Add GPS" onClick="addGPS()">
 
 <input type="button" value="Edit team" onclick="displayTeam()">
 
@@ -348,7 +363,7 @@ function userSearchTeam()
 
 function userJoinTeamClick()
 {
-	var team = new Object();
+	var team = {};
 	teamForm = document.getElementById('user_found_teams');
 	teamId = teamForm.options[teamForm.selectedIndex].value;
 	team['teamId'] = teamId;

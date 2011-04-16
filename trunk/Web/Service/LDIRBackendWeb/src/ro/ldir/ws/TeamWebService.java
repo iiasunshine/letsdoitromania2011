@@ -45,8 +45,11 @@ import javax.ws.rs.core.UriInfo;
 import ro.ldir.beans.OrganizationManagerLocal;
 import ro.ldir.beans.TeamManagerLocal;
 import ro.ldir.beans.UserManagerLocal;
+import ro.ldir.dto.CleaningEquipment;
+import ro.ldir.dto.GpsEquipment;
 import ro.ldir.dto.Organization;
 import ro.ldir.dto.Team;
+import ro.ldir.dto.TransportEquipment;
 import ro.ldir.dto.User;
 import ro.ldir.ws.helper.SecurityHelper;
 
@@ -73,10 +76,59 @@ public class TeamWebService {
 				.lookup("java:global/LDIRBackend/LDIRBackendEJB/OrganizationManager!ro.ldir.beans.OrganizationManager");
 	}
 
+	@PUT
+	@Consumes({ "application/json", "application/xml" })
+	@Path("{teamId:[0-9]+}/cleaning")
+	public Response addCleaningEquipment(@PathParam("teamId") int teamId,
+			CleaningEquipment equipment, @Context SecurityContext sc) {
+		Team team = teamManager.getTeam(teamId);
+		if (!SecurityHelper.checkTeamMemberOrAdmin(userManager, team, sc))
+			throw new WebApplicationException(401);
+		teamManager.addEquipment(team.getTeamId(), equipment);
+		return Response.ok().build();
+	}
+
+	@PUT
+	@Consumes({ "application/json", "application/xml" })
+	@Path("{teamId:[0-9]+}/gps")
+	public Response addGpsEquipment(@PathParam("teamId") int teamId,
+			GpsEquipment equipment, @Context SecurityContext sc) {
+		Team team = teamManager.getTeam(teamId);
+		if (!SecurityHelper.checkTeamMemberOrAdmin(userManager, team, sc))
+			throw new WebApplicationException(401);
+		teamManager.addEquipment(team.getTeamId(), equipment);
+		return Response.ok().build();
+	}
+
 	@POST
 	@Consumes({ "application/json", "application/xml" })
 	public Response addTeam(Team team, @Context SecurityContext sc) {
+
 		teamManager.createTeam(SecurityHelper.getUserId(userManager, sc), team);
+		return Response.ok().build();
+	}
+
+	@PUT
+	@Consumes({ "application/json", "application/xml" })
+	@Path("{teamId:[0-9]+}/transport")
+	public Response addTransportEquipment(@PathParam("teamId") int teamId,
+			TransportEquipment equipment, @Context SecurityContext sc) {
+		Team team = teamManager.getTeam(teamId);
+		if (!SecurityHelper.checkTeamMemberOrAdmin(userManager, team, sc))
+			throw new WebApplicationException(401);
+		teamManager.addEquipment(team.getTeamId(), equipment);
+		return Response.ok().build();
+	}
+
+	@DELETE
+	@Path("{teamId:[0-9]+}/equipment/{equipmentId:[0-9]+}")
+	public Response deleteEquipment(@PathParam("teamId") int teamId,
+			@PathParam("equipmentId") int equipmentId,
+			@Context SecurityContext sc) {
+		Team team = teamManager.getTeam(teamId);
+		if (!SecurityHelper.checkTeamMemberOrAdmin(userManager, team, sc))
+			throw new WebApplicationException(401);
+		teamManager.deleteEquipment(team.getTeamId(), equipmentId);
 		return Response.ok().build();
 	}
 
