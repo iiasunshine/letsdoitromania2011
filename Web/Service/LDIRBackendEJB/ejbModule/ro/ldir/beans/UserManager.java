@@ -55,7 +55,7 @@ import ro.ldir.exceptions.InvalidUserException;
 @LocalBean
 public class UserManager implements UserManagerLocal {
 	@PersistenceContext(unitName = "ldir")
-	EntityManager em;
+	private EntityManager em;
 
 	/** Default constructor. */
 	public UserManager() {

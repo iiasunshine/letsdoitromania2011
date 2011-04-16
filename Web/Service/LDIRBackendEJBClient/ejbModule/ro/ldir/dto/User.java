@@ -24,6 +24,7 @@
 package ro.ldir.dto;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -33,6 +34,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -65,7 +67,17 @@ public class User extends FieldAccessBean implements Serializable {
 	// }
 
 	public enum SecurityRole {
-		ADMIN, ORGANIZER, ORGANIZER_MULTI, VOLUNTEER, VOLUNTEER_MULTI
+		ADMIN, ORGANIZER, ORGANIZER_MULTI, VOLUNTEER, VOLUNTEER_MULTI;
+		private static List<SecurityRole> multiRoles = null;
+
+		public static List<SecurityRole> getMultiRoles() {
+			if (multiRoles != null)
+				return multiRoles;
+			multiRoles = new ArrayList<SecurityRole>();
+			multiRoles.add(ORGANIZER_MULTI);
+			multiRoles.add(VOLUNTEER_MULTI);
+			return multiRoles;
+		}
 	}
 
 	// public enum Transport {
@@ -92,13 +104,9 @@ public class User extends FieldAccessBean implements Serializable {
 	}
 
 	private static final long serialVersionUID = 1L;
-
 	private List<Activity> activities;
-
 	private Date birthday;
-
 	private String county;
-
 	private String email;
 
 	// @OneToMany(mappedBy = "insertBy")
@@ -107,14 +115,11 @@ public class User extends FieldAccessBean implements Serializable {
 	// public Collection<Garbage> garbages;
 
 	private String firstName;
-
 	private String lastName;
-
+	private List<Team> managedTeams;
+	private Team memberOf;
 	private List<Organization> organizations;
-
 	private String passwd;
-
-	private String phone;
 
 	// @ManyToMany
 	// @JoinTable(name = "USER_TEAM", joinColumns = @JoinColumn(name = "USERID",
@@ -129,17 +134,26 @@ public class User extends FieldAccessBean implements Serializable {
 	// @NonTransferableField
 	// public Collection<Team> teamsLed;
 
+	private String phone;
 	private String registrationToken;
-
 	private String role;
-
 	private UserStatus status;
-
 	private String town;
-
 	private Integer userId;
 
 	public User() {
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof User))
+			return false;
+		return userId.equals(((User) obj).userId);
 	}
 
 	/**
@@ -184,6 +198,24 @@ public class User extends FieldAccessBean implements Serializable {
 	 */
 	public String getLastName() {
 		return lastName;
+	}
+
+	/**
+	 * @return the managedTeams
+	 */
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "teamManager")
+	@XmlIDREF
+	public List<Team> getManagedTeams() {
+		return managedTeams;
+	}
+
+	/**
+	 * @return the memberOf
+	 */
+	@ManyToOne
+	@XmlIDREF
+	public Team getMemberOf() {
+		return memberOf;
 	}
 
 	/**
@@ -252,6 +284,14 @@ public class User extends FieldAccessBean implements Serializable {
 		return userId;
 	}
 
+	/** Checks whether the role of this user allows multiple teams. */
+	public boolean isMultiRole() {
+		for (SecurityRole sr : SecurityRole.getMultiRoles())
+			if (role.equals(sr.toString()))
+				return true;
+		return false;
+	}
+
 	/**
 	 * @param activities
 	 *            the activities to set
@@ -299,6 +339,24 @@ public class User extends FieldAccessBean implements Serializable {
 	 */
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
+	}
+
+	/**
+	 * @param managedTeams
+	 *            the managedTeams to set
+	 */
+	@NonTransferableField
+	public void setManagedTeams(List<Team> managedTeams) {
+		this.managedTeams = managedTeams;
+	}
+
+	/**
+	 * @param memberOf
+	 *            the memberOf to set
+	 */
+	@NonTransferableField
+	public void setMemberOf(Team memberOf) {
+		this.memberOf = memberOf;
 	}
 
 	/**

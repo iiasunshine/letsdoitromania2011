@@ -5,87 +5,9 @@
 <script type="text/javascript" src="./json.js"></script>
 <script type="text/javascript" src="./wsclient.js"></script>
 <script type="text/javascript">
-var username;
-var password;
-var userid;
-
-var gen_form_reference;
-var gen_req;
-
-var generic_select;
-var generic_type;
-var generic_field_id;
-var generic_field_name;
-
-var generic_edit_id;
-
-
-function generic_load_callback()
-{
-	if (gen_req.readyState != 4)
-		return;
-	if (gen_req.status != 200) {
-		alert('Unable to get data: ' + fetchorg_req.status);
-		return;
-	}
-	server_data = JSON.parse(gen_req.responseText);
-	var el, i = 0, rForm = document.getElementById(gen_form_reference);
-	while (el = rForm.elements[i++]) 
-		el.value = server_data[el.name];
-}
-
-
-function generic_select_callback()
-{
-	if (gen_req.readyState != 4)
-		return;
-	if (gen_req.status != 200) {
-		alert('Unable to get data: ' + gen_req.status);
-		return;
-	}
-	reply_string = gen_req.responseText;
-	objects = JSON.parse(reply_string);
-	
-	selectObj = document.getElementById(generic_select);
-	selectObj.options.length = 0;
-	
-	obj_array = objects[generic_type];
-	
-	if (typeof(obj_array[generic_field_id]) != 'undefined') {
-		selectObj.options[selectObj.options.length] = 
-            new Option(obj_array[generic_field_name], obj_array[generic_field_id], false, false);
-		return;
-	}
-	
-	for (idx in obj_array) 
-		selectObj.options[selectObj.options.length] = 
-	            new Option(obj_array[idx][generic_field_name], obj_array[idx][generic_field_id], false, false);
-}
-
-
-function generic_insert_callback()
-{
-	if (gen_req.readyState != 4)
-		return;
-	if (gen_req.status != 200) {
-		alert('Unable to insert data: ' + gen_req.status);
-		return;
-	}
-	alert('Data ok!');
-	document.getElementById(gen_form_reference).reset();
-}
-
-
-function json_from_form(form_name)
-{
-	gen_form_reference = form_name;
-	var org = new Object();
-	var el, i = 0, rForm = document.getElementById(gen_form_reference);
-	while (el = rForm.elements[i++]) 
-		org[el.name] = el.value;
-	return JSON.stringify(org);
-}
-
+var username='s';
+var password='s';
+var userid = '1';
 </script>
 
 
@@ -96,7 +18,7 @@ function json_from_form(form_name)
 function registerClick()
 {
 	json_object = json_from_form('registration');
-	reg_req = sendRequest('post', 'http://localhost:8080/LDIRBackend/reg/ws',
+	gen_req = sendRequest('post', 'http://localhost:8080/LDIRBackend/reg/ws',
 			generic_insert_callback, json_object, false);
 }
 </script>
@@ -135,11 +57,11 @@ function login_callback()
 
 function loginClick()
 {
-	json_object = json_from_form('registration');
+	//json_object = json_from_form('registration');
 	username = document.login.email.value;
 	password = document.login.passwd.value;
 	login_req = sendRequestString('get', 'http://localhost:8080/LDIRBackend/ws/user',
-			login_callback, json_object, username, password);
+			login_callback, null, username, password);
 }
 </script>
 
@@ -154,8 +76,6 @@ function loginClick()
 <hr>
 <h1>New organization</h1>
 <script type="text/javascript">
-
-
 
 function newOrgClick()
 {
@@ -220,12 +140,48 @@ function displayOrganization()
 	gen_req = sendRequest('get', 'http://localhost:8080/LDIRBackend/ws/organization/' + generic_edit_id,
 			generic_load_callback, null, true, username, password);
 }
+
+function orgSearchTeam()
+{
+	teamName = encodeURI(document.forms.user_team_search.teamName.value);
+	
+	generic_select = 'org_found_teams';
+	generic_type = 'team';
+	generic_field_id = 'teamId';
+	generic_field_name = 'teamName';
+	gen_req = sendRequest('get', 'http://localhost:8080/LDIRBackend/ws/team/nameSearch/?teamName=' + teamName,
+			generic_select_callback, null, true, username, password);
+}
+
+function orgJoinTeamClick()
+{
+	var team = new Object();
+	teamForm = document.getElementById('org_found_teams');
+	teamId = teamForm.options[teamForm.selectedIndex].value;
+	team['teamId'] = teamId;
+	teamJSON = JSON.stringify(team);
+	gen_form_reference = null;
+	gen_req = sendRequest('post', 'http://localhost:8080/LDIRBackend/ws/organization/' + userid + '/team',
+			generic_insert_callback, teamJSON, true, username, password);
+}
 </script>
+<input type="button" value="Fetch my organizations" onclick="fetchMyOrg()">
 
 <form name="my_organizations">
-<select name="organizations" id="organizations"  onchange="displayOrganization()"></select>
+<select name="organizations" id="organizations"></select>
 </form>
-<input type="button" value="Fetch" onclick="fetchMyOrg()">
+
+<form name="org_team_search">
+	Team name: <input type="text" size="20" name="teamName"> <br> 
+</form>
+<input type="button" value="Search team" onclick="orgSearchTeam()">
+
+<form name="org_found_teams">
+	Found teams: <select name="org_found_teams" id="org_found_teams"></select>
+</form>
+<input type="button" value="Join" onclick="orgJoinTeamClick()">
+
+<input type="button" value="Edit organizations" onclick="displayOrganization()">
 
 <form name="edit_organization" id="edit_organization">
 	Name: <input type="text" size="20" name="name"> <br> 
@@ -244,5 +200,176 @@ function displayOrganization()
 <input type="button" value="Update" onclick="editOrgClick()" >
 <input type="button" value="Delete" onclick="deleteOrgClick()" >
 </div>
+
+<div id="new_team_block">
+<hr>
+<h1>New team</h1>
+<script type="text/javascript">
+function newTeamClick()
+{
+	json_object = json_from_form('new_team');
+	gen_req = sendRequest('post', 'http://localhost:8080/LDIRBackend/ws/team',
+			generic_insert_callback, json_object, false, username, password);
+}
+</script>
+
+<form name="new_team" id="new_team">
+	Name: <input type="text" size="20" name="teamName"> <br> 
+</form>
+<input type="button" value="Register" onclick="newTeamClick()" >
+</div>
+
+<div id="edit_team_block">
+<hr>
+<h1>Edit my teams</h1>
+<script type="text/javascript">
+function editTeamClick()
+{
+	json_object = json_from_form('edit_team');
+	gen_req = sendRequest('put', 'http://localhost:8080/LDIRBackend/ws/team',
+			generic_insert_callback, json_object, false, username, password);
+}
+function editOrgClick()
+{
+	gen_form_reference = 'edit_organization';
+	json_object = json_from_form(gen_form_reference);
+	window.alert(generic_edit_id + json_object);
+	gen_req = sendRequest('put', 'http://localhost:8080/LDIRBackend/ws/organization/' + generic_edit_id + '/',
+			generic_insert_callback, json_object, false, username, password);
+}
+
+function deleteTeamClick()
+{
+	gen_req = sendRequest('delete', 'http://localhost:8080/LDIRBackend/ws/team/' + generic_edit_id + '/',
+			generic_insert_callback, null, false, username, password);
+}
+
+function fetchMyTeams()
+{
+	generic_select = 'my_teams';
+	generic_type = 'team';
+	generic_field_id = 'teamId';
+	generic_field_name = 'teamName';
+	gen_req = sendRequest('get', 'http://localhost:8080/LDIRBackend/ws/user/' + userid +'/managedTeams',
+			generic_select_callback, null, true, username, password);
+}
+
+function displayTeam()
+{
+	gen_form_reference = 'edit_team';
+	opt = document.getElementById('my_teams');
+	generic_edit_id = opt.options[opt.selectedIndex].value;
+	gen_req = sendRequest('get', 'http://localhost:8080/LDIRBackend/ws/team/' + generic_edit_id,
+			generic_load_callback, null, true, username, password);
+}
+
+function loadTeamMembers()
+{
+	generic_select = 'user_team_members';
+	generic_type = 'user';
+	generic_field_id = 'userId';
+	generic_field_name = 'email';
+	opt = document.getElementById('my_teams');
+	generic_edit_id = opt.options[opt.selectedIndex].value;
+	gen_req = sendRequest('get', 'http://localhost:8080/LDIRBackend/ws/team/' + generic_edit_id +'/volunteerMembers',
+			generic_select_callback, null, true, username, password);
+}
+
+function withdrawTeamMember()
+{
+	opt = document.getElementById('user_team_members');
+	user_id = opt.options[opt.selectedIndex].value;
+	gen_req = sendRequest('delete', 'http://localhost:8080/LDIRBackend/ws/team/' + generic_edit_id + '/volunteer/' + user_id,
+			generic_insert_callback, null, false, username, password);
+}
+
+function loadOrgTeamMembers()
+{
+	generic_select = 'org_team_members';
+	generic_type = 'organization';
+	generic_field_id = 'organizationId';
+	generic_field_name = 'name';
+	opt = document.getElementById('my_teams');
+	generic_edit_id = opt.options[opt.selectedIndex].value;
+	gen_req = sendRequest('get', 'http://localhost:8080/LDIRBackend/ws/team/' + generic_edit_id +'/organizationMembers',
+			generic_select_callback, null, true, username, password);
+}
+
+function withdrawOrgTeamMember()
+{
+	opt = document.getElementById('org_team_members');
+	org_id = opt.options[opt.selectedIndex].value;
+	gen_req = sendRequest('delete', 'http://localhost:8080/LDIRBackend/ws/team/' + generic_edit_id + '/organization/' + org_id,
+			generic_insert_callback, null, false, username, password);
+}
+</script>
+<input type="button" value="Fetch my teams" onclick="fetchMyTeams()">
+
+<form name="my_teams">
+	My teams:<select name="my_teams" id="my_teams"></select>
+</form>
+
+<form name="user_team_members">
+	Volunteer members: <select name="user_team_members" id="user_team_members"></select>
+</form>
+<input type="button" value="Load volunteer members" onclick="loadTeamMembers()">
+<input type="button" value="Withdraw volunteer member" onclick="withdrawTeamMember()">
+
+<form name="org_team_members">
+	Organization members: <select name="org_team_members" id="org_team_members"></select>
+</form>
+<input type="button" value="Load organization members" onclick="loadOrgTeamMembers()">
+<input type="button" value="Withdraw organization member" onclick="withdrawOrgTeamMember()">
+
+<input type="button" value="Edit team" onclick="displayTeam()">
+
+<form name="edit_team" id="edit_team">
+	Team name: <input type="text" size="20" name="teamName"> <br> 
+</form>
+<input type="button" value="Register" onclick="editTeamClick()" >
+<input type="button" value="Delete" onclick="deleteTeamClick()" >
+</div>
+
+<div id="user_enroll_team">
+<hr>
+<h1>Enroll in team</h1>
+<script type="text/javascript">
+function userSearchTeam()
+{
+	teamName = encodeURI(document.forms.user_team_search.teamName.value);
+	
+	generic_select = 'user_found_teams';
+	generic_type = 'team';
+	generic_field_id = 'teamId';
+	generic_field_name = 'teamName';
+	gen_req = sendRequest('get', 'http://localhost:8080/LDIRBackend/ws/team/nameSearch/?teamName=' + teamName,
+			generic_select_callback, null, true, username, password);
+}
+
+function userJoinTeamClick()
+{
+	var team = new Object();
+	teamForm = document.getElementById('user_found_teams');
+	teamId = teamForm.options[teamForm.selectedIndex].value;
+	team['teamId'] = teamId;
+	teamJSON = JSON.stringify(team);
+	gen_form_reference = null;
+	gen_req = sendRequest('post', 'http://localhost:8080/LDIRBackend/ws/user/' + userid + '/team',
+			generic_insert_callback, teamJSON, true, username, password);
+}
+</script>
+
+<form name="user_team_search">
+	Team name: <input type="text" size="20" name="teamName"> <br> 
+</form>
+<input type="button" value="Search team" onclick="userSearchTeam()">
+
+<form name="user_found_teams">
+	Found teams: <select name="user_found_teams" id="user_found_teams"></select>
+</form>
+<input type="button" value="Join" onclick="userJoinTeamClick()">
+
+</div>
+
 </body>
 </html>
