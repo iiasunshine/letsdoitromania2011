@@ -151,7 +151,7 @@ function generic_insert_callback()
 function json_from_form(form_name)
 {
 	gen_form_reference = form_name;
-	var org = new Object();
+	var org = {};
 	var el, i = 0, rForm = document.getElementById(gen_form_reference);
 	while (el = rForm.elements[i++]) 
 		org[el.name] = el.value;
