@@ -51,24 +51,28 @@ public class Organization extends FieldAccessBean implements Serializable {
 	}
 
 	private static final long serialVersionUID = 1L;;
-
 	private String address;
-
 	private User contactUser;
-
 	private String county;
-
+	private Team memberOf;
 	private Integer membersCount;
-
 	private String name;
-
 	private Integer organizationId;
-
 	private String town;
-
 	private OrganizationType type;
 
 	public Organization() {
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	public boolean equals(Object obj) {
+		if (!(obj instanceof Organization))
+			return false;
+		return organizationId.equals(((Organization) obj).organizationId);
 	}
 
 	/**
@@ -76,14 +80,6 @@ public class Organization extends FieldAccessBean implements Serializable {
 	 */
 	public String getAddress() {
 		return address;
-	}
-
-	/**
-	 * @param address
-	 *            the address to set
-	 */
-	public void setAddress(String address) {
-		this.address = address;
 	}
 
 	/**
@@ -96,15 +92,6 @@ public class Organization extends FieldAccessBean implements Serializable {
 	}
 
 	/**
-	 * @param contactUser
-	 *            the contactUser to set
-	 */
-	@NonTransferableField
-	public void setContactUser(User contactUser) {
-		this.contactUser = contactUser;
-	}
-
-	/**
 	 * @return the county
 	 */
 	public String getCounty() {
@@ -112,11 +99,12 @@ public class Organization extends FieldAccessBean implements Serializable {
 	}
 
 	/**
-	 * @param county
-	 *            the county to set
+	 * @return the memberOf
 	 */
-	public void setCounty(String county) {
-		this.county = county;
+	@ManyToOne
+	@XmlIDREF
+	public Team getMemberOf() {
+		return memberOf;
 	}
 
 	/**
@@ -128,26 +116,10 @@ public class Organization extends FieldAccessBean implements Serializable {
 	}
 
 	/**
-	 * @param membersCount
-	 *            the membersCount to set
-	 */
-	public void setMembersCount(Integer membersCount) {
-		this.membersCount = membersCount;
-	}
-
-	/**
 	 * @return the name
 	 */
 	public String getName() {
 		return name;
-	}
-
-	/**
-	 * @param name
-	 *            the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	/**
@@ -162,6 +134,70 @@ public class Organization extends FieldAccessBean implements Serializable {
 	}
 
 	/**
+	 * @return the town
+	 */
+	public String getTown() {
+		return town;
+	}
+
+	/**
+	 * @return the type
+	 */
+	public OrganizationType getType() {
+		return type;
+	}
+
+	/**
+	 * @param address
+	 *            the address to set
+	 */
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	/**
+	 * @param contactUser
+	 *            the contactUser to set
+	 */
+	@NonTransferableField
+	public void setContactUser(User contactUser) {
+		this.contactUser = contactUser;
+	}
+
+	/**
+	 * @param county
+	 *            the county to set
+	 */
+	public void setCounty(String county) {
+		this.county = county;
+	}
+
+	/**
+	 * @param memberOf
+	 *            the memberOf to set
+	 */
+	@NonTransferableField
+	public void setMemberOf(Team memberOf) {
+		this.memberOf = memberOf;
+	}
+
+	/**
+	 * @param membersCount
+	 *            the membersCount to set
+	 */
+	public void setMembersCount(Integer membersCount) {
+		this.membersCount = membersCount;
+	}
+
+	/**
+	 * @param name
+	 *            the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	/**
 	 * @param organizationId
 	 *            the organizationId to set
 	 */
@@ -171,25 +207,11 @@ public class Organization extends FieldAccessBean implements Serializable {
 	}
 
 	/**
-	 * @return the town
-	 */
-	public String getTown() {
-		return town;
-	}
-
-	/**
 	 * @param town
 	 *            the town to set
 	 */
 	public void setTown(String town) {
 		this.town = town;
-	}
-
-	/**
-	 * @return the type
-	 */
-	public OrganizationType getType() {
-		return type;
 	}
 
 	/**

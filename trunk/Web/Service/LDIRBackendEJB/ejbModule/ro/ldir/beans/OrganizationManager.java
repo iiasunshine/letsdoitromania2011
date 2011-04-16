@@ -5,8 +5,6 @@ import java.util.List;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -20,7 +18,7 @@ import ro.ldir.dto.User;
 @LocalBean
 public class OrganizationManager implements OrganizationManagerLocal {
 	@PersistenceContext(unitName = "ldir")
-	EntityManager em;
+	private EntityManager em;
 
 	public OrganizationManager() {
 	}
@@ -83,12 +81,9 @@ public class OrganizationManager implements OrganizationManagerLocal {
 	 * ro.ldir.dto.Organization)
 	 */
 	@Override
-
 	public void updateOrganization(int organizationId, Organization organization) {
 		Organization existing = em.find(Organization.class, organizationId);
-		//System.out.println("e " + existing.name + "  " + organization.name);
 		existing.copyFields(organization);
-		//existing.setName(new String("sdgfCs"));
 		System.out.println(existing.getName());
 		em.merge(existing);
 		em.flush();

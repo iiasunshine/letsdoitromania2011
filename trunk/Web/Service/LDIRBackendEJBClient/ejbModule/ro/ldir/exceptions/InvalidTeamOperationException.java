@@ -17,7 +17,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- *  Filename: InvalidUserException.java
+ *  Filename: InvalidTeamOperationException.java
  *  Author(s): Stefan Guna, svguna@gmail.com
  *
  */
@@ -26,20 +26,16 @@ package ro.ldir.exceptions;
 import javax.ejb.EJBException;
 
 /**
- * Exception thrown when an user operation cannot be completed.
- * 
- * For instance, this may be when trying to insert an user that would duplicate
- * an existing email address.
- * 
+ *
  */
-public class InvalidUserException extends EJBException {
+public class InvalidTeamOperationException extends EJBException {
 
 	private static final long serialVersionUID = 1L;
 
-	public InvalidUserException() {
+	public InvalidTeamOperationException() {
 	}
 
-	public InvalidUserException(String arg0) {
-		super(arg0);
+	public InvalidTeamOperationException(String string) {
+		super(string);
 	}
 }

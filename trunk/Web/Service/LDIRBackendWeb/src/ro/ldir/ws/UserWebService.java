@@ -31,6 +31,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -41,8 +42,10 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
+import ro.ldir.beans.TeamManagerLocal;
 import ro.ldir.beans.UserManagerLocal;
 import ro.ldir.dto.Organization;
+import ro.ldir.dto.Team;
 import ro.ldir.dto.User;
 import ro.ldir.ws.helper.SecurityHelper;
 
@@ -56,19 +59,54 @@ public class UserWebService {
 	@Context
 	private UriInfo context;
 
+	private TeamManagerLocal teamManager;
 	private UserManagerLocal userManager;
 
 	public UserWebService() throws NamingException {
 		InitialContext ic = new InitialContext();
 		userManager = (UserManagerLocal) ic
 				.lookup("java:global/LDIRBackend/LDIRBackendEJB/UserManager!ro.ldir.beans.UserManager");
+		teamManager = (TeamManagerLocal) ic
+				.lookup("java:global/LDIRBackend/LDIRBackendEJB/TeamManager!ro.ldir.beans.TeamManager");
+	}
+
+	@POST
+	@Consumes({ "application/json", "application/xml" })
+	@Path("{userId:[0-9]+}/team")
+	public Response enrollTeam(@PathParam("userId") int userId, Team team,
+			@Context SecurityContext sc) {
+		if (!SecurityHelper.checkUserOrAdmin(userManager, sc, userId))
+			throw new WebApplicationException(401);
+		try {
+			teamManager.enrollUser(userId, team.getTeamId());
+		} catch (EJBException e) {
+			if (e.getCausedByException() instanceof NullPointerException)
+				throw new WebApplicationException(404);
+			throw new WebApplicationException(500);
+		}
+		return Response.ok().build();
 	}
 
 	@GET
-	public String authenticate(@Context SecurityContext sc) {
-		return new Integer(
-				userManager.getUser(sc.getUserPrincipal().getName()).getUserId())
-				.toString();
+	public String getId(@Context SecurityContext sc) {
+		return new Integer(userManager.getUser(sc.getUserPrincipal().getName())
+				.getUserId()).toString();
+	}
+
+	@GET
+	@Produces({ "application/json", "application/xml" })
+	@Path("{userId:[0-9]+}/managedTeams")
+	public Collection<Team> getManagedTeams(@PathParam("userId") int userId,
+			@Context SecurityContext sc) {
+		if (!SecurityHelper.checkUserOrAdmin(userManager, sc, userId))
+			throw new WebApplicationException(401);
+		try {
+			return userManager.getUser(userId).getManagedTeams();
+		} catch (EJBException e) {
+			if (e.getCausedByException() instanceof NullPointerException)
+				throw new WebApplicationException(404);
+			throw new WebApplicationException(500);
+		}
 	}
 
 	@GET
@@ -93,7 +131,9 @@ public class UserWebService {
 	@Path("{userId:[0-9]+}")
 	public User getUser(@PathParam("userId") Integer userId,
 			@Context SecurityContext sc) {
-		if (!SecurityHelper.checkUserOrAdmin(userManager, sc, userId))
+		if (!SecurityHelper.checkUserOrAdmin(userManager, sc, userId)
+				&& !SecurityHelper.checkMembersOfSameTeam(userManager, userId,
+						sc))
 			throw new WebApplicationException(401);
 
 		User user = userManager.getUser(userId);
@@ -107,7 +147,9 @@ public class UserWebService {
 	@Path("{userId:[0-9]+}/activities")
 	public List<User.Activity> getUserActivities(
 			@PathParam("userId") int userId, @Context SecurityContext sc) {
-		if (!SecurityHelper.checkUserOrAdmin(userManager, sc, userId))
+		if (!SecurityHelper.checkUserOrAdmin(userManager, sc, userId)
+				&& !SecurityHelper.checkMembersOfSameTeam(userManager, userId,
+						sc))
 			throw new WebApplicationException(401);
 
 		User user = userManager.getUser(userId);

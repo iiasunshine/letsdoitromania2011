@@ -23,6 +23,7 @@
  */
 package ro.ldir.ws;
 
+import javax.ejb.EJBException;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.ws.rs.Consumes;
@@ -40,8 +41,10 @@ import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
 import ro.ldir.beans.OrganizationManagerLocal;
+import ro.ldir.beans.TeamManagerLocal;
 import ro.ldir.beans.UserManagerLocal;
 import ro.ldir.dto.Organization;
+import ro.ldir.dto.Team;
 import ro.ldir.ws.helper.SecurityHelper;
 
 /**
@@ -55,6 +58,7 @@ public class OrganizationWebService {
 
 	private OrganizationManagerLocal orgManager;
 	private UserManagerLocal userManager;
+	private TeamManagerLocal teamManager;
 
 	public OrganizationWebService() throws NamingException {
 		InitialContext ic = new InitialContext();
@@ -62,6 +66,8 @@ public class OrganizationWebService {
 				.lookup("java:global/LDIRBackend/LDIRBackendEJB/UserManager!ro.ldir.beans.UserManager");
 		orgManager = (OrganizationManagerLocal) ic
 				.lookup("java:global/LDIRBackend/LDIRBackendEJB/OrganizationManager!ro.ldir.beans.OrganizationManager");
+		teamManager = (TeamManagerLocal) ic
+				.lookup("java:global/LDIRBackend/LDIRBackendEJB/TeamManager!ro.ldir.beans.TeamManager");
 	}
 
 	@POST
@@ -94,7 +100,9 @@ public class OrganizationWebService {
 			@Context SecurityContext sc) {
 		Organization organization = orgManager.getOrganization(organizationId);
 		if (!SecurityHelper.checkUserOrAdmin(userManager, sc, organization
-				.getContactUser().getUserId()))
+				.getContactUser().getUserId())
+				&& !SecurityHelper.checkOrgMembersOfSameTeam(userManager,
+						organization, sc))
 			throw new WebApplicationException(401);
 		return organization;
 	}
@@ -110,6 +118,25 @@ public class OrganizationWebService {
 				.getContactUser().getUserId()))
 			throw new WebApplicationException(401);
 		orgManager.updateOrganization(organizationId, organization);
+		return Response.ok().build();
+	}
+
+	@POST
+	@Consumes({ "application/json", "application/xml" })
+	@Path("{organizationId:[0-9]+}/team")
+	public Response enrollTeam(@PathParam("organizationId") int organizationId,
+			Team team, @Context SecurityContext sc) {
+		Organization existing = orgManager.getOrganization(organizationId);
+		if (!SecurityHelper.checkUserOrAdmin(userManager, sc, existing
+				.getContactUser().getUserId()))
+			throw new WebApplicationException(401);
+		try {
+			teamManager.enrollOrganization(organizationId, team.getTeamId());
+		} catch (EJBException e) {
+			if (e.getCausedByException() instanceof NullPointerException)
+				throw new WebApplicationException(404);
+			throw new WebApplicationException(500);
+		}
 		return Response.ok().build();
 	}
 }

@@ -25,7 +25,10 @@ package ro.ldir.ws.helper;
 
 import javax.ws.rs.core.SecurityContext;
 
+import ro.ldir.beans.OrganizationManagerLocal;
 import ro.ldir.beans.UserManagerLocal;
+import ro.ldir.dto.Organization;
+import ro.ldir.dto.Team;
 import ro.ldir.dto.User;
 
 /**
@@ -41,6 +44,98 @@ public class SecurityHelper {
 	 */
 	public static boolean checkAdmin(SecurityContext sc) {
 		return sc.isUserInRole(User.SecurityRole.ADMIN.toString());
+	}
+
+	/**
+	 * Checks whether the logged in user is the team manager or an admin.
+	 * 
+	 * @param um
+	 * @param team
+	 * @param sc
+	 * @return
+	 */
+	public static boolean checkManagerOrAdmin(UserManagerLocal um, Team team,
+			SecurityContext sc) {
+		if (sc.isUserInRole(User.SecurityRole.ADMIN.toString()))
+			return true;
+		String email = sc.getUserPrincipal().getName();
+		User user = um.getUser(email);
+		if (team.getTeamManager().equals(user))
+			return true;
+		return true;
+	}
+
+	/**
+	 * Checks whether the logged in user is member of a same team.
+	 * 
+	 * @param um
+	 * @param userId
+	 * @param sc
+	 * @return
+	 */
+	public static boolean checkMembersOfSameTeam(UserManagerLocal um,
+			int userId, SecurityContext sc) {
+		User user = um.getUser(userId);
+		String email = sc.getUserPrincipal().getName();
+		User loggedInUser = um.getUser(email);
+		if (user.getMemberOf().equals(loggedInUser.getMemberOf()))
+			return true;
+		if (user.getManagedTeams().contains(loggedInUser.getMemberOf()))
+			return true;
+		if (loggedInUser.getManagedTeams().contains(user.getMemberOf()))
+			return true;
+		for (Organization org : user.getOrganizations())
+			for (Team team : loggedInUser.getManagedTeams())
+				if (team.getOrganizationMembers().contains(org))
+					return true;
+		for (Organization org : loggedInUser.getOrganizations())
+			for (Team team : user.getManagedTeams())
+				if (team.getOrganizationMembers().contains(org))
+					return true;
+		return false;
+	}
+
+	/**
+	 * Check whether the organization is member of the same team with the logged
+	 * in user.
+	 * 
+	 * @param um
+	 * @param org
+	 * @param sc
+	 * @return
+	 */
+	public static boolean checkOrgMembersOfSameTeam(UserManagerLocal um,
+			Organization org, SecurityContext sc) {
+		String email = sc.getUserPrincipal().getName();
+		User loggedInUser = um.getUser(email);
+		for (Team team : loggedInUser.getManagedTeams())
+			if (team.getOrganizationMembers().contains(org))
+				return true;
+		return false;
+	}
+
+	/**
+	 * Checks whether a user can access a team.
+	 * 
+	 * @param um
+	 * @param team
+	 * @param sc
+	 * @return
+	 */
+	public static boolean checkTeamMemberOrAdmin(UserManagerLocal um,
+			Team team, SecurityContext sc) {
+		if (sc.isUserInRole(User.SecurityRole.ADMIN.toString()))
+			return true;
+		String email = sc.getUserPrincipal().getName();
+		User user = um.getUser(email);
+		if (team.getTeamManager().equals(user))
+			return true;
+		if (team.getVolunteerMembers().contains(user))
+			return true;
+		for (Organization org : team.getOrganizationMembers())
+			if (org.getContactUser().equals(user))
+				return true;
+		return false;
 	}
 
 	/**
