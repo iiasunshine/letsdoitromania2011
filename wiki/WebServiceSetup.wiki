@@ -199,10 +199,6 @@
 {{{
 <jdbc-resource pool-name="LDIRPool" description="" jndi-name="jdbc/ldir"></jdbc-resource>
 }}}
- # Configure the server to use the resource. Under `<servers>`, under `<resource-ref ref="jdbc/ldir"></resource-ref>` add a line:
-{{{
-<resource-ref ref="jdbc/ldir"></resource-ref>
-}}}
  # Append the following tp `glassfish/domains/domain1/config/login.conf`:
 {{{
 ldirRealm {
@@ -224,16 +220,67 @@ ldirRealm {
           <property name="password.digest" value="SHA-256"></property>
         </auth-realm>
 }}}
+ # Configure the account used to send automatic emails as a mail resource.  In the same file as the above, under `resources`, add the following:
+{{{
+    <mail-resource host="smtp.gmail.com" store-protocol="" store-protocol-class="" description="JavaMail resource for lets do it romania" jndi-name="mail/ldir" from="svguna.auto@gmail.com" user="svguna.auto@gmail.com">
+      <property name="mail.smtp.password" value="YOUR_PASSWORD_HERE"></property>
+      <property name="mail.smtp.auth" value="true"></property>
+      <property name="mail.smtp.starttls.enable" value="true"></property>
+      <property name="mail.smtp.ssl.enable" value="true"></property>
+      <property name="mail.smtp.port" value="465"></property>
+    </mail-resource>
+}}}
+
+ # Finally, you must configure the server to use all resources defined above. Make sure that the following are present under `<servers>`, inside the only `<server ...>...</server>`:
+{{{
+     <resource-ref ref="jdbc/ldir"></resource-ref>
+     <resource-ref ref="mail/ldir"></resource-ref>
+}}}
 
 
 = The web service =
 
 == Configure the web service ==
 
- # Configure the location where garbage images should be stored. Inside of `Web/Service/LDIRBackendEJB/ejbModule/META-INF/ejb-jar.xml`, change the `<env-entry-value>` element of the entry described as _ImageLocation_ to point to a directory where the glassfish has read/write permissions.
+ # Configure the location where garbage images are to be stored. Inside of `Web/Service/LDIRBackendEJB/ejbModule/META-INF/ejb-jar.xml`, change the `<env-entry-value>` element of the entry described as _ImageLocation_ to point to a directory where the glassfish has read/write permissions.
+ # Configure the location where the email templates are located. Inside of `Web/Service/LDIRBackendEJB/ejbModule/META-INF/ejb-jar.xml`, change the `<env-entry-value>` element of the entry described as _EmailTemplateLocation_ to point to a directory where the email templates are stored. See [#Setup_the_email_templates]
  # Set the environment variable called `GLASSFISH_HOME` to point to the GlassFish instalation directory. You might want to consider adding this to your `.bashrc` file. For instance, in a terminal (or in your `.bashrc` file):
 {{{
 export GLASSFISH_HOME=/Users/stefan/glassfish3
+}}}
+
+== Setup the email templates ==
+
+The backend service automatically sends email to registered users when certain events occur. The contents of these emails must be provided in html and stored in a template directory. The application must be made aware of the location of this directory (see [#Configure_the_web_service]).
+
+Each action is associated to a file. For instance, when a user registers, it will send the welcome message contained in a file called `welcome.html`. The following table provides a description of available emails.
+
+|| *File name* || Description ||
+|| `welcome.html` || Sent when the user registers on the website. This must contain the link which allows the user to validate its address. ||
+
+The application looks inside the templates and replaces tags (defined by `{{{tag_lowercase_name}}}`) with user pertinent information. The tags are defined by the getter methods of the `ro.ldir.dto.User` class. For convenience, a few of the available tags are listed in the following table.
+
+|| *Tag* || Description ||
+|| firstname || The user's first name. ||
+|| lastname || The user's last name. ||
+|| email || The user's email. ||
+|| userid || The user's ID. ||
+|| registrationtoken || The user's registration token required to validate its account. ||
+|| birthday || The user's birthday. ||
+|| phone || The user's phone. ||
+|| town || The user's town. ||
+|| county || The user's county. ||
+
+For instance, the automatic email sent when a user registers should be saved in `welcome.html` and contain something along these lines:
+{{{
+Hello {{{firstname}}},
+
+Let's do it together! But first, you must click the link below:
+
+http://localhost:8080/LDIRBackend/reg/ws/{{{userid}}}/{{{registrationtoken}}}
+
+Cheers,
+the LDIR team
 }}}
 
 
