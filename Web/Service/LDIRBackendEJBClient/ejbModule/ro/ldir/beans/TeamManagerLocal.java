@@ -21,6 +21,16 @@ public interface TeamManagerLocal {
 	void addEquipment(int teamId, Equipment equipment);
 
 	/**
+	 * Adds a charting area assignment for the specified team.
+	 * 
+	 * @param teamId
+	 *            the team ID to assignment to.
+	 * @param chartAreaId
+	 *            the chart area ID to assign to the team.
+	 */
+	public void assignChartArea(int teamId, int chartAreaId);
+
+	/**
 	 * Create a new team managed by the user {@code userId}. The manager does
 	 * not actively participate in the team until it registers to the team.
 	 * 
@@ -92,6 +102,16 @@ public interface TeamManagerLocal {
 	 * @return The teams matching the name.
 	 */
 	public List<Team> getTeamByName(String name);
+
+	/**
+	 * Removes an existing charting area assignment for the specified team.
+	 * 
+	 * @param teamId
+	 *            the team ID to remove the assignment.
+	 * @param chartAreaId
+	 *            the chart area ID to remove from the team.
+	 */
+	public void removeChartAreaAssignment(int teamId, int chartAreaId);
 
 	/**
 	 * Remove an equipment from a team.

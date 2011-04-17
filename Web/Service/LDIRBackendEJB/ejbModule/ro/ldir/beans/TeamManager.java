@@ -1,5 +1,6 @@
 package ro.ldir.beans;
 
+import java.util.HashSet;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -12,6 +13,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import ro.ldir.beans.security.SecurityHelper;
+import ro.ldir.dto.ChartedArea;
 import ro.ldir.dto.Equipment;
 import ro.ldir.dto.Organization;
 import ro.ldir.dto.Team;
@@ -24,11 +26,11 @@ import ro.ldir.exceptions.InvalidTeamOperationException;
 @Stateless
 @LocalBean
 public class TeamManager implements TeamManagerLocal {
-	@PersistenceContext(unitName = "ldir")
-	private EntityManager em;
-
 	@Resource
 	private SessionContext ctx;
+
+	@PersistenceContext(unitName = "ldir")
+	private EntityManager em;
 
 	@EJB
 	private UserManager userManager;
@@ -49,6 +51,26 @@ public class TeamManager implements TeamManagerLocal {
 		team.getEquipments().add(equipment);
 		equipment.setTeamOwner(team);
 		em.merge(team);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ro.ldir.beans.TeamManagerLocal#assignChartArea(int, int)
+	 */
+	@Override
+	public void assignChartArea(int teamId, int chartAreaId) {
+		Team team = em.find(Team.class, teamId);
+		SecurityHelper.checkTeamManager(userManager, team, ctx);
+		ChartedArea closedArea = em.find(ChartedArea.class, chartAreaId);
+		if (team.getChartedAreas() == null)
+			team.setChartedAreas(new HashSet<ChartedArea>());
+		if (closedArea.getChartedBy() == null)
+			closedArea.setChartedBy(new HashSet<Team>());
+		team.getChartedAreas().add(closedArea);
+		closedArea.getChartedBy().add(team);
+		em.merge(team);
+		em.merge(closedArea);
 	}
 
 	/*
@@ -153,6 +175,22 @@ public class TeamManager implements TeamManagerLocal {
 				.createQuery("SELECT x FROM Team x WHERE x.teamName LIKE :nameParam");
 		query.setParameter("nameParam", "%" + nameParam + "%");
 		return query.getResultList();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ro.ldir.beans.TeamManagerLocal#removeChartAreaAssignment(int, int)
+	 */
+	@Override
+	public void removeChartAreaAssignment(int teamId, int chartAreaId) {
+		Team team = em.find(Team.class, teamId);
+		SecurityHelper.checkTeamManager(userManager, team, ctx);
+		ChartedArea closedArea = em.find(ChartedArea.class, chartAreaId);
+		team.getChartedAreas().remove(closedArea);
+		closedArea.getChartedBy().remove(team);
+		em.merge(team);
+		em.merge(closedArea);
 	}
 
 	/*
