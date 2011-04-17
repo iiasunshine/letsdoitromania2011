@@ -41,6 +41,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import ro.ldir.beans.TeamManagerLocal;
+import ro.ldir.dto.ChartedArea;
 import ro.ldir.dto.CleaningEquipment;
 import ro.ldir.dto.GpsEquipment;
 import ro.ldir.dto.Organization;
@@ -99,6 +100,15 @@ public class TeamWebService {
 		return Response.ok().build();
 	}
 
+	@POST
+	@Consumes({ "application/json", "application/xml" })
+	@Path("{teamId:[0-9]+}/chartArea")
+	public Response assignChartArea(@PathParam("teamId") int teamId,
+			ChartedArea chartedArea) {
+		teamManager.assignChartArea(teamId, chartedArea.getAreaId());
+		return Response.ok().build();
+	}
+
 	@DELETE
 	@Path("{teamId:[0-9]+}/equipment/{equipmentId:[0-9]+}")
 	public Response deleteEquipment(@PathParam("teamId") int teamId,
@@ -134,6 +144,14 @@ public class TeamWebService {
 	@Path("{teamId:[0-9]+}/volunteerMembers")
 	public List<User> getTeamVolunteerMembers(@PathParam("teamId") int teamId) {
 		return teamManager.getTeam(teamId).getVolunteerMembers();
+	}
+
+	@DELETE
+	@Path("{teamId:[0-9]+}/chartArea/{chartAreaId:[0-9]+}")
+	public Response removeChartAreaAssignment(@PathParam("teamId") int teamId,
+			@PathParam("chartAreaId") int chartAreaId) {
+		teamManager.assignChartArea(teamId, chartAreaId);
+		return Response.ok().build();
 	}
 
 	@GET

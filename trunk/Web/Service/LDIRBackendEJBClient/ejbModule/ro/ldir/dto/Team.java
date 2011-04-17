@@ -24,6 +24,7 @@
 package ro.ldir.dto;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -31,6 +32,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.xml.bind.annotation.XmlID;
@@ -48,6 +50,7 @@ import ro.ldir.dto.helper.NonTransferableField;
 @Entity
 @XmlRootElement
 public class Team extends FieldAccessBean {
+	private Set<ChartedArea> chartedAreas;
 	private List<Equipment> equipments;
 	private List<Organization> organizationMembers;
 	private Integer teamId;
@@ -69,6 +72,15 @@ public class Team extends FieldAccessBean {
 		if (teamId == null)
 			return super.equals(obj);
 		return teamId.equals(((Team) obj).teamId);
+	}
+
+	/**
+	 * @return the chartedAreas
+	 */
+	@ManyToMany(mappedBy = "chartedBy")
+	@XmlIDREF
+	public Set<ChartedArea> getChartedAreas() {
+		return chartedAreas;
 	}
 
 	/**
@@ -121,6 +133,14 @@ public class Team extends FieldAccessBean {
 	@OneToMany(cascade = CascadeType.MERGE, mappedBy = "memberOf")
 	public List<User> getVolunteerMembers() {
 		return volunteerMembers;
+	}
+
+	/**
+	 * @param chartedAreas
+	 *            the chartedAreas to set
+	 */
+	public void setChartedAreas(Set<ChartedArea> chartedAreas) {
+		this.chartedAreas = chartedAreas;
 	}
 
 	/**
