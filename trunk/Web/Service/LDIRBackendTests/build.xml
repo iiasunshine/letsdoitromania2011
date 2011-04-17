@@ -1,19 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 
-<project basedir="." default="build" name="LDIRBackendWeb">
+<project basedir="." default="build" name="LDIRBackendTests">
 	<include file="../build-common.xml" as="build-common" />
 
-	<property name="war.file" value="${webservice.war}" />
-
-	<path id="Web App Libraries.libraryclasspath">
+	<path id="tests.classpath">
 		<pathelement location="lib/junit-4.8.2.jar" />
-	</path>
-
-
-	<path id="LDIRBackendWeb.classpath">
-		<pathelement location="build/classes" />
+		<pathelement location="bin" />
 		<path refid="GlassFish 3.1 [GlassFish 3.1].libraryclasspath" />
-		<path refid="Web App Libraries.libraryclasspath" />
 		<path refid="EAR Libraries.libraryclasspath" />
 	</path>
 
@@ -22,8 +15,8 @@
 	</target>
 
 	<target depends="build-ejbclient" name="init">
-		<mkdir dir="build/classes" />
-		<copy includeemptydirs="false" todir="build/classes">
+		<mkdir dir="bin" />
+		<copy includeemptydirs="false" todir="bin">
 			<fileset dir="src">
 				<exclude name="**/*.launch" />
 				<exclude name="**/*.g" />
@@ -33,23 +26,22 @@
 	</target>
 
 	<target name="clean">
-		<delete dir="build/classes" />
+		<delete dir="bin" />
 		<delete file="${war.file}" />
 	</target>
 
 	<target depends="init" name="build">
 		<echo message="${ant.project.name}: ${ant.file}" />
-		<javac destdir="build/classes">
+		<javac destdir="bin">
 			<src path="src" />
-			<classpath refid="LDIRBackendWeb.classpath" />
+			<classpath refid="tests.classpath" />
 		</javac>
 	</target>
 
-	<target depends="build" name="war">
-		<war destfile="${war.file}" filesetmanifest="merge" needxmlfile="false">
-			<classes dir="build/classes" />
-			<webinf dir="WebContent/WEB-INF" />
-			<metainf dir="WebContent/META-INF" />
-		</war>
+	<target depends="build" name="test">
+		<java classname="org.junit.runner.JUnitCore">
+			<arg value="ro.ldir.tests.ClosedAreaTest" />
+			<classpath refid="tests.classpath" />
+		</java>
 	</target>
 </project>
