@@ -49,7 +49,6 @@ import ro.ldir.dto.Organization;
 import ro.ldir.dto.Team;
 import ro.ldir.dto.User;
 import ro.ldir.dto.User.SecurityRole;
-import ro.ldir.ws.helper.SecurityHelper;
 
 /**
  * The garbage user. Implements queries for users, updates of users information,
@@ -75,10 +74,7 @@ public class UserWebService {
 	@POST
 	@Consumes({ "application/json", "application/xml" })
 	@Path("{userId:[0-9]+}/team")
-	public Response enrollTeam(@PathParam("userId") int userId, Team team,
-			@Context SecurityContext sc) {
-		if (!SecurityHelper.checkUserOrAdmin(userManager, sc, userId))
-			throw new WebApplicationException(401);
+	public Response enrollTeam(@PathParam("userId") int userId, Team team) {
 		try {
 			teamManager.enrollUser(userId, team.getTeamId());
 		} catch (EJBException e) {
@@ -98,10 +94,7 @@ public class UserWebService {
 	@GET
 	@Produces({ "application/json", "application/xml" })
 	@Path("{userId:[0-9]+}/managedTeams")
-	public Collection<Team> getManagedTeams(@PathParam("userId") int userId,
-			@Context SecurityContext sc) {
-		if (!SecurityHelper.checkUserOrAdmin(userManager, sc, userId))
-			throw new WebApplicationException(401);
+	public Collection<Team> getManagedTeams(@PathParam("userId") int userId) {
 		try {
 			return userManager.getUser(userId).getManagedTeams();
 		} catch (EJBException e) {
@@ -115,10 +108,7 @@ public class UserWebService {
 	@Produces({ "application/json", "application/xml" })
 	@Path("{userId:[0-9]+}/organizations")
 	public Collection<Organization> getOrganizations(
-			@PathParam("userId") int userId, @Context SecurityContext sc) {
-		if (!SecurityHelper.checkUserOrAdmin(userManager, sc, userId))
-			throw new WebApplicationException(401);
-
+			@PathParam("userId") int userId) {
 		try {
 			return userManager.getUser(userId).getOrganizations();
 		} catch (EJBException e) {
@@ -131,80 +121,48 @@ public class UserWebService {
 	@GET
 	@Produces({ "application/json", "application/xml" })
 	@Path("{userId:[0-9]+}")
-	public User getUser(@PathParam("userId") Integer userId,
-			@Context SecurityContext sc) {
-		if (!SecurityHelper.checkUserOrAdmin(userManager, sc, userId)
-				&& !SecurityHelper.checkMembersOfSameTeam(userManager, userId,
-						sc))
-			throw new WebApplicationException(401);
-
-		User user = userManager.getUser(userId);
-		if (user == null)
-			throw new WebApplicationException(404);
-		return user;
+	public User getUser(@PathParam("userId") Integer userId) {
+		return userManager.getUser(userId);
 	}
 
 	@GET
 	@Produces({ "application/json", "application/xml" })
 	@Path("{userId:[0-9]+}/activities")
-	public List<User.Activity> getUserActivities(
-			@PathParam("userId") int userId, @Context SecurityContext sc) {
-		if (!SecurityHelper.checkUserOrAdmin(userManager, sc, userId)
-				&& !SecurityHelper.checkMembersOfSameTeam(userManager, userId,
-						sc))
-			throw new WebApplicationException(401);
-
-		User user = userManager.getUser(userId);
-		return user.getActivities();
+	public List<User.Activity> getUserActivities(@PathParam("userId") int userId) {
+		return userManager.getUser(userId).getActivities();
 	}
 
 	@GET
 	@Produces({ "application/json", "application/xml" })
 	@Path("byActivity/{activity}")
 	public Collection<User> getUsersByActivity(
-			@PathParam("activity") String activity, @Context SecurityContext sc) {
-		if (!SecurityHelper.checkAdmin(sc))
-			throw new WebApplicationException(401);
-
+			@PathParam("activity") String activity) {
 		for (User.Activity a : User.Activity.values())
 			if (a.toString().equals(activity))
 				return userManager.getUsers(a);
-
 		throw new WebApplicationException(404);
 	}
 
 	@GET
 	@Produces({ "application/json", "application/xml" })
 	@Path("byTown/{town}")
-	public Collection<User> getUsersByTown(@PathParam("town") String town,
-			@Context SecurityContext sc) {
-		if (!SecurityHelper.checkAdmin(sc))
-			throw new WebApplicationException(401);
-
+	public Collection<User> getUsersByTown(@PathParam("town") String town) {
 		return userManager.getUsers(town);
 	}
 
 	@GET
 	@Produces({ "application/json", "application/xml" })
 	@Path("byRole/{type}")
-	public Collection<User> getUsersByType(@PathParam("type") String type,
-			@Context SecurityContext sc) {
-		if (!SecurityHelper.checkAdmin(sc))
-			throw new WebApplicationException(401);
-
+	public Collection<User> getUsersByType(@PathParam("type") String type) {
 		for (User.SecurityRole a : User.SecurityRole.values())
 			if (a.toString().equals(type))
 				return userManager.getUsers(a);
-
 		throw new WebApplicationException(404);
 	}
 
 	@GET
 	@Path("emailSearch")
-	public List<User> searchUserByEmail(@QueryParam("email") String email,
-			@Context SecurityContext sc) {
-		if (!SecurityHelper.checkAdmin(sc))
-			throw new WebApplicationException(401);
+	public List<User> searchUserByEmail(@QueryParam("email") String email) {
 		return userManager.searchByEmail(email);
 	}
 
@@ -212,10 +170,7 @@ public class UserWebService {
 	@Consumes({ "application/json", "application/xml" })
 	@Path("{userId:[0-9]+}/activities")
 	public Response setUserActivities(@PathParam("userId") int userId,
-			List<User.Activity> activities, @Context SecurityContext sc) {
-		if (!SecurityHelper.checkUserOrAdmin(userManager, sc, userId))
-			throw new WebApplicationException(401);
-
+			List<User.Activity> activities) {
 		try {
 			userManager.setUserActivities(userId, activities);
 		} catch (EJBException e) {
@@ -230,9 +185,7 @@ public class UserWebService {
 	@Consumes({ "application/json", "application/xml" })
 	@Path("{userId:[0-9]+}/role")
 	public Response setUserRole(@PathParam("userId") int userId,
-			String roleString, @Context SecurityContext sc) {
-		if (!SecurityHelper.checkAdmin(sc))
-			throw new WebApplicationException(401);
+			String roleString) {
 		SecurityRole role = null;
 		for (SecurityRole r : SecurityRole.values())
 			if (roleString.equals(r.toString())) {
@@ -255,11 +208,7 @@ public class UserWebService {
 	@PUT
 	@Consumes({ "application/json", "application/xml" })
 	@Path("{userId:[0-9]+}/")
-	public Response updateUser(@PathParam("userId") int userId, User user,
-			@Context SecurityContext sc) {
-		if (!SecurityHelper.checkUserOrAdmin(userManager, sc, userId))
-			throw new WebApplicationException(401);
-
+	public Response updateUser(@PathParam("userId") int userId, User user) {
 		try {
 			userManager.updateUser(userId, user);
 		} catch (EJBException e) {

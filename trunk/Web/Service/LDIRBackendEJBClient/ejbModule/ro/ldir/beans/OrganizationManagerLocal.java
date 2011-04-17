@@ -11,12 +11,10 @@ public interface OrganizationManagerLocal {
 	/**
 	 * Add a new organization in the database.
 	 * 
-	 * @param userId
-	 *            The userId who is a contact for this organization.
 	 * @param organization
 	 *            The organization to enter.
 	 */
-	public void addOrganization(int userId, Organization organization);
+	public void addOrganization(Organization organization);
 
 	/**
 	 * Delete an existing organization.

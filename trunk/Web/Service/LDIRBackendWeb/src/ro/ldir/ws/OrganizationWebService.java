@@ -37,15 +37,12 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
 import ro.ldir.beans.OrganizationManagerLocal;
 import ro.ldir.beans.TeamManagerLocal;
-import ro.ldir.beans.UserManagerLocal;
 import ro.ldir.dto.Organization;
 import ro.ldir.dto.Team;
-import ro.ldir.ws.helper.SecurityHelper;
 
 /**
  * The organization web service.
@@ -57,13 +54,10 @@ public class OrganizationWebService {
 	private UriInfo context;
 
 	private OrganizationManagerLocal orgManager;
-	private UserManagerLocal userManager;
 	private TeamManagerLocal teamManager;
 
 	public OrganizationWebService() throws NamingException {
 		InitialContext ic = new InitialContext();
-		userManager = (UserManagerLocal) ic
-				.lookup("java:global/LDIRBackend/LDIRBackendEJB/UserManager!ro.ldir.beans.UserManager");
 		orgManager = (OrganizationManagerLocal) ic
 				.lookup("java:global/LDIRBackend/LDIRBackendEJB/OrganizationManager!ro.ldir.beans.OrganizationManager");
 		teamManager = (TeamManagerLocal) ic
@@ -72,22 +66,15 @@ public class OrganizationWebService {
 
 	@POST
 	@Consumes({ "application/json", "application/xml" })
-	public Response addOrganization(Organization organization,
-			@Context SecurityContext sc) {
-		orgManager.addOrganization(SecurityHelper.getUserId(userManager, sc),
-				organization);
+	public Response addOrganization(Organization organization) {
+		orgManager.addOrganization(organization);
 		return Response.ok().build();
 	}
 
 	@DELETE
 	@Path("{organizationId:[0-9]+}/")
 	public Response deleteOrganization(
-			@PathParam("organizationId") int organizationId,
-			@Context SecurityContext sc) {
-		Organization existing = orgManager.getOrganization(organizationId);
-		if (!SecurityHelper.checkUserOrAdmin(userManager, sc, existing
-				.getContactUser().getUserId()))
-			throw new WebApplicationException(401);
+			@PathParam("organizationId") int organizationId) {
 		orgManager.deleteOrganization(organizationId);
 		return Response.ok().build();
 	}
@@ -96,15 +83,9 @@ public class OrganizationWebService {
 	@Produces({ "application/json", "application/xml" })
 	@Path("{organizationId:[0-9]+}/")
 	public Organization getOrganization(
-			@PathParam("organizationId") int organizationId,
-			@Context SecurityContext sc) {
-		Organization organization = orgManager.getOrganization(organizationId);
-		if (!SecurityHelper.checkUserOrAdmin(userManager, sc, organization
-				.getContactUser().getUserId())
-				&& !SecurityHelper.checkOrgMembersOfSameTeam(userManager,
-						organization, sc))
-			throw new WebApplicationException(401);
-		return organization;
+			@PathParam("organizationId") int organizationId) {
+		return orgManager.getOrganization(organizationId);
+
 	}
 
 	@PUT
@@ -112,11 +93,7 @@ public class OrganizationWebService {
 	@Path("{organizationId:[0-9]+}/")
 	public Response updateOrganization(
 			@PathParam("organizationId") int organizationId,
-			Organization organization, @Context SecurityContext sc) {
-		Organization existing = orgManager.getOrganization(organizationId);
-		if (!SecurityHelper.checkUserOrAdmin(userManager, sc, existing
-				.getContactUser().getUserId()))
-			throw new WebApplicationException(401);
+			Organization organization) {
 		orgManager.updateOrganization(organizationId, organization);
 		return Response.ok().build();
 	}
@@ -125,11 +102,7 @@ public class OrganizationWebService {
 	@Consumes({ "application/json", "application/xml" })
 	@Path("{organizationId:[0-9]+}/team")
 	public Response enrollTeam(@PathParam("organizationId") int organizationId,
-			Team team, @Context SecurityContext sc) {
-		Organization existing = orgManager.getOrganization(organizationId);
-		if (!SecurityHelper.checkUserOrAdmin(userManager, sc, existing
-				.getContactUser().getUserId()))
-			throw new WebApplicationException(401);
+			Team team) {
 		try {
 			teamManager.enrollOrganization(organizationId, team.getTeamId());
 		} catch (EJBException e) {

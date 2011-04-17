@@ -26,13 +26,18 @@ package ro.ldir.beans;
 import java.util.Date;
 import java.util.List;
 
+import javax.annotation.Resource;
+import javax.annotation.security.DeclareRoles;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
+import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import ro.ldir.beans.security.SecurityHelper;
 import ro.ldir.dto.User;
 import ro.ldir.dto.User.Activity;
 import ro.ldir.dto.User.SecurityRole;
@@ -54,10 +59,12 @@ import ro.ldir.exceptions.InvalidUserException;
  */
 @Stateless
 @LocalBean
+@DeclareRoles("ADMIN")
 public class UserManager implements UserManagerLocal {
+	@Resource
+	private SessionContext ctx;
 	@PersistenceContext(unitName = "ldir")
 	private EntityManager em;
-
 	@EJB
 	private UserMailer userMailer;
 
@@ -101,7 +108,7 @@ public class UserManager implements UserManagerLocal {
 
 		em.persist(user);
 
-		userMailer.sendWelcomeMessage(email);
+		userMailer.sendWelcomeMessage(user);
 	}
 
 	/*
@@ -111,7 +118,9 @@ public class UserManager implements UserManagerLocal {
 	 */
 	@Override
 	public User getUser(int id) {
-		return em.find(User.class, id);
+		User user = em.find(User.class, id);
+		SecurityHelper.checkAccessToUser(this, user, ctx);
+		return user;
 	}
 
 	/*
@@ -124,7 +133,9 @@ public class UserManager implements UserManagerLocal {
 		Query query = em
 				.createQuery("SELECT x FROM User x WHERE x.email = :emailParam");
 		query.setParameter("emailParam", email);
-		return (User) query.getSingleResult();
+		User user = (User) query.getSingleResult();
+		SecurityHelper.checkAccessToUser(this, user, ctx);
+		return user;
 	}
 
 	/*
@@ -134,6 +145,7 @@ public class UserManager implements UserManagerLocal {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
+	@RolesAllowed("ADMIN")
 	public List<User> getUsers(Activity activity) {
 		Query query = em
 				.createQuery("SELECT x FROM User x, IN(x.activities) y WHERE y = :activityParam");
@@ -148,6 +160,7 @@ public class UserManager implements UserManagerLocal {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
+	@RolesAllowed("ADMIN")
 	public List<User> getUsers(String town) {
 		Query query = em
 				.createQuery("SELECT x FROM User x WHERE x.town = :townParam");
@@ -162,6 +175,7 @@ public class UserManager implements UserManagerLocal {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
+	@RolesAllowed("ADMIN")
 	public List<User> getUsers(User.SecurityRole role) {
 		Query query = em
 				.createQuery("SELECT x FROM User x WHERE x.role = :roleParam");
@@ -176,6 +190,7 @@ public class UserManager implements UserManagerLocal {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
+	@RolesAllowed("ADMIN")
 	public List<User> searchByEmail(String email) {
 		Query query = em
 				.createQuery("SELECT x FROM User x WHERE x.email LIKE :emailParam");
@@ -192,6 +207,7 @@ public class UserManager implements UserManagerLocal {
 	@Override
 	public void setUserActivities(int userId, List<User.Activity> activities) {
 		User user = em.find(User.class, userId);
+		SecurityHelper.checkUser(user, ctx);
 		user.setActivities(activities);
 		em.merge(user);
 	}
@@ -203,6 +219,7 @@ public class UserManager implements UserManagerLocal {
 	 * ro.ldir.dto.User.SecurityRole)
 	 */
 	@Override
+	@RolesAllowed("ADMIN")
 	public void setUserRole(int userId, User.SecurityRole role) {
 		User existing = em.find(User.class, userId);
 		existing.setRole(role.toString());
@@ -217,6 +234,7 @@ public class UserManager implements UserManagerLocal {
 	@Override
 	public void updateUser(int userId, User user) {
 		User existing = em.find(User.class, userId);
+		SecurityHelper.checkUser(existing, ctx);
 		existing.copyFields(user);
 		em.merge(existing);
 	}
