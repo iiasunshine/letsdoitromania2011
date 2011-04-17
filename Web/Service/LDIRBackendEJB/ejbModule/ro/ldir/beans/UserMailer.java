@@ -5,10 +5,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
+import java.util.logging.Logger;
 
 import javax.annotation.Resource;
 import javax.ejb.Asynchronous;
-import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.mail.Message;
 import javax.mail.Message.RecipientType;
@@ -28,8 +28,11 @@ import ro.ldir.dto.User;
 @Stateless
 @Asynchronous
 public class UserMailer {
+
 	/** The buffer size used while reading templates. */
 	private static final int BUF_SIZE = 4096;
+
+	private static Logger log = Logger.getLogger(UserMailer.class.getName());
 
 	/** Generic email subject. */
 	private static final String SUBJECT = "Let's do it!";
@@ -42,9 +45,6 @@ public class UserMailer {
 
 	@Resource
 	private String mailTemplates;
-
-	@EJB
-	UserManager userManager;
 
 	public UserMailer() {
 	}
@@ -91,6 +91,7 @@ public class UserMailer {
 				continue;
 			}
 		}
+		log.exiting("UserMailer", "processTemplate", result);
 		return result;
 	}
 
@@ -100,13 +101,13 @@ public class UserMailer {
 	 * @param user
 	 *            The user to notify
 	 */
-	public void sendWelcomeMessage(String email) {
+	public void sendWelcomeMessage(User user) {
+		log.fine("Sending mail to " + user.getEmail());
 		Transport transport;
-		User user = userManager.getUser(email);
 		try {
 			transport = mailSession.getTransport();
 		} catch (NoSuchProviderException e) {
-			e.printStackTrace();
+			log.warning("Cannot send mail: " + e.getMessage());
 			return;
 		}
 		Message msg = new MimeMessage(mailSession);
@@ -117,13 +118,13 @@ public class UserMailer {
 							+ " " + user.getLastName()));
 			msg.setContent(processTemplate(WELCOME, user), "text/html");
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			log.warning("Cannot send mail: " + e.getMessage());
 			return;
 		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+			log.warning("Cannot send mail: " + e.getMessage());
 			return;
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.warning("Cannot send mail: " + e.getMessage());
 			return;
 		}
 
@@ -132,8 +133,9 @@ public class UserMailer {
 			transport.sendMessage(msg,
 					msg.getRecipients(Message.RecipientType.TO));
 			transport.close();
+			log.info("Sent welcome email to " + user.getEmail());
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			log.warning("Cannot send mail: " + e.getMessage());
 		}
 	}
 }

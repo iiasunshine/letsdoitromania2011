@@ -2,12 +2,16 @@ package ro.ldir.beans;
 
 import java.util.List;
 
+import javax.annotation.Resource;
+import javax.ejb.EJB;
 import javax.ejb.LocalBean;
+import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import ro.ldir.beans.security.SecurityHelper;
 import ro.ldir.dto.Equipment;
 import ro.ldir.dto.Organization;
 import ro.ldir.dto.Team;
@@ -23,6 +27,12 @@ public class TeamManager implements TeamManagerLocal {
 	@PersistenceContext(unitName = "ldir")
 	private EntityManager em;
 
+	@Resource
+	private SessionContext ctx;
+
+	@EJB
+	private UserManager userManager;
+
 	public TeamManager() {
 	}
 
@@ -35,6 +45,7 @@ public class TeamManager implements TeamManagerLocal {
 	@Override
 	public void addEquipment(int teamId, Equipment equipment) {
 		Team team = em.find(Team.class, teamId);
+		SecurityHelper.checkTeamManager(userManager, team, ctx);
 		team.getEquipments().add(equipment);
 		equipment.setTeamOwner(team);
 		em.merge(team);
@@ -43,16 +54,11 @@ public class TeamManager implements TeamManagerLocal {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see ro.ldir.beans.TeamManagerLocal#createTeam(int, ro.ldir.dto.Team)
+	 * @see ro.ldir.beans.TeamManagerLocal#createTeam(ro.ldir.dto.Team)
 	 */
 	@Override
-	public void createTeam(int userId, Team team)
-			throws InvalidTeamOperationException {
-		User user = em.find(User.class, userId);
-		if (user.getManagedTeams() != null && !user.getManagedTeams().isEmpty()
-				&& !user.isMultiRole())
-			throw new InvalidTeamOperationException(
-					"The user cannot manage so many teams.");
+	public void createTeam(Team team) {
+		User user = SecurityHelper.getMultiUser(userManager, ctx);
 		team.setTeamManager(user);
 		user.getManagedTeams().add(team);
 		em.merge(user);
@@ -66,6 +72,7 @@ public class TeamManager implements TeamManagerLocal {
 	@Override
 	public void deleteEquipment(int teamId, int equipmentId) {
 		Team team = em.find(Team.class, teamId);
+		SecurityHelper.checkTeamManager(userManager, team, ctx);
 		Equipment equipment = em.find(Equipment.class, equipmentId);
 		team.getEquipments().remove(equipment);
 		em.merge(team);
@@ -78,9 +85,10 @@ public class TeamManager implements TeamManagerLocal {
 	 */
 	@Override
 	public void deleteTeam(int teamId) {
-		Team existing = em.find(Team.class, teamId);
-		existing.getTeamManager().getManagedTeams().remove(existing);
-		em.remove(existing);
+		Team team = em.find(Team.class, teamId);
+		SecurityHelper.checkTeamManager(userManager, team, ctx);
+		team.getTeamManager().getManagedTeams().remove(team);
+		em.remove(team);
 	}
 
 	/*
@@ -92,6 +100,7 @@ public class TeamManager implements TeamManagerLocal {
 	public void enrollOrganization(int organizationId, int teamId)
 			throws InvalidTeamOperationException {
 		Organization organization = em.find(Organization.class, organizationId);
+		SecurityHelper.checkUser(organization.getContactUser(), ctx);
 		if (organization.getMemberOf() != null)
 			throw new InvalidTeamOperationException(
 					"The organization cannot participate in several teams.");
@@ -110,6 +119,7 @@ public class TeamManager implements TeamManagerLocal {
 	public void enrollUser(int userId, int teamId)
 			throws InvalidTeamOperationException {
 		User user = em.find(User.class, userId);
+		SecurityHelper.checkUser(user, ctx);
 		if (user.getMemberOf() != null)
 			throw new InvalidTeamOperationException(
 					"The user cannot participate in several teams.");
@@ -126,7 +136,9 @@ public class TeamManager implements TeamManagerLocal {
 	 */
 	@Override
 	public Team getTeam(int teamId) {
-		return em.find(Team.class, teamId);
+		Team team = em.find(Team.class, teamId);
+		SecurityHelper.checkTeamMember(userManager, team, ctx);
+		return team;
 	}
 
 	/*
@@ -164,6 +176,7 @@ public class TeamManager implements TeamManagerLocal {
 	@Override
 	public void updateTeam(int teamId, Team team) {
 		Team existing = em.find(Team.class, teamId);
+		SecurityHelper.checkTeamManager(userManager, existing, ctx);
 		existing.copyFields(team);
 		em.merge(existing);
 	}
@@ -177,6 +190,8 @@ public class TeamManager implements TeamManagerLocal {
 	public void withdrawOrganization(int organizationId, int teamId) {
 		Organization organization = em.find(Organization.class, organizationId);
 		Team team = em.find(Team.class, teamId);
+		SecurityHelper.checkTeamManagerOrOrganization(userManager, team,
+				organization, ctx);
 		organization.setMemberOf(null);
 		team.getOrganizationMembers().remove(organization);
 		em.merge(organization);
@@ -191,6 +206,7 @@ public class TeamManager implements TeamManagerLocal {
 	public void withdrawUser(int userId, int teamId) {
 		User user = em.find(User.class, userId);
 		Team team = em.find(Team.class, teamId);
+		SecurityHelper.checkTeamManagerOrMember(userManager, team, user, ctx);
 		user.setMemberOf(null);
 		team.getVolunteerMembers().remove(user);
 		em.merge(team);

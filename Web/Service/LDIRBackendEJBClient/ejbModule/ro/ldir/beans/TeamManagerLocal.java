@@ -24,15 +24,12 @@ public interface TeamManagerLocal {
 	 * Create a new team managed by the user {@code userId}. The manager does
 	 * not actively participate in the team until it registers to the team.
 	 * 
-	 * @param userId
-	 *            The user managing the team.
 	 * @param team
 	 *            The new team;
 	 * @throws InvalidTeamOperationException
 	 *             if the user cannot handle that team.
 	 */
-	public void createTeam(int userId, Team team)
-			throws InvalidTeamOperationException;
+	public void createTeam(Team team);
 
 	/**
 	 * Delete an equipment from a team.
@@ -125,6 +122,7 @@ public interface TeamManagerLocal {
 	 *            The team ID to withdraw from.
 	 */
 	public void withdrawOrganization(int organizationId, int teamId);
+
 	/**
 	 * Withdraw a user from a team.
 	 * 

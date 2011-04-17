@@ -36,22 +36,17 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
-import ro.ldir.beans.OrganizationManagerLocal;
 import ro.ldir.beans.TeamManagerLocal;
-import ro.ldir.beans.UserManagerLocal;
 import ro.ldir.dto.CleaningEquipment;
 import ro.ldir.dto.GpsEquipment;
 import ro.ldir.dto.Organization;
 import ro.ldir.dto.Team;
 import ro.ldir.dto.TransportEquipment;
 import ro.ldir.dto.User;
-import ro.ldir.ws.helper.SecurityHelper;
 
 /**
  * The team web service.
@@ -62,29 +57,20 @@ public class TeamWebService {
 	@Context
 	private UriInfo context;
 
-	private OrganizationManagerLocal orgManager;
 	private TeamManagerLocal teamManager;
-	private UserManagerLocal userManager;
 
 	public TeamWebService() throws NamingException {
 		InitialContext ic = new InitialContext();
-		userManager = (UserManagerLocal) ic
-				.lookup("java:global/LDIRBackend/LDIRBackendEJB/UserManager!ro.ldir.beans.UserManager");
 		teamManager = (TeamManagerLocal) ic
 				.lookup("java:global/LDIRBackend/LDIRBackendEJB/TeamManager!ro.ldir.beans.TeamManager");
-		orgManager = (OrganizationManagerLocal) ic
-				.lookup("java:global/LDIRBackend/LDIRBackendEJB/OrganizationManager!ro.ldir.beans.OrganizationManager");
 	}
 
 	@PUT
 	@Consumes({ "application/json", "application/xml" })
 	@Path("{teamId:[0-9]+}/cleaning")
 	public Response addCleaningEquipment(@PathParam("teamId") int teamId,
-			CleaningEquipment equipment, @Context SecurityContext sc) {
-		Team team = teamManager.getTeam(teamId);
-		if (!SecurityHelper.checkTeamMemberOrAdmin(userManager, team, sc))
-			throw new WebApplicationException(401);
-		teamManager.addEquipment(team.getTeamId(), equipment);
+			CleaningEquipment equipment) {
+		teamManager.addEquipment(teamId, equipment);
 		return Response.ok().build();
 	}
 
@@ -92,19 +78,15 @@ public class TeamWebService {
 	@Consumes({ "application/json", "application/xml" })
 	@Path("{teamId:[0-9]+}/gps")
 	public Response addGpsEquipment(@PathParam("teamId") int teamId,
-			GpsEquipment equipment, @Context SecurityContext sc) {
-		Team team = teamManager.getTeam(teamId);
-		if (!SecurityHelper.checkTeamMemberOrAdmin(userManager, team, sc))
-			throw new WebApplicationException(401);
-		teamManager.addEquipment(team.getTeamId(), equipment);
+			GpsEquipment equipment) {
+		teamManager.addEquipment(teamId, equipment);
 		return Response.ok().build();
 	}
 
 	@POST
 	@Consumes({ "application/json", "application/xml" })
-	public Response addTeam(Team team, @Context SecurityContext sc) {
-
-		teamManager.createTeam(SecurityHelper.getUserId(userManager, sc), team);
+	public Response addTeam(Team team) {
+		teamManager.createTeam(team);
 		return Response.ok().build();
 	}
 
@@ -112,33 +94,22 @@ public class TeamWebService {
 	@Consumes({ "application/json", "application/xml" })
 	@Path("{teamId:[0-9]+}/transport")
 	public Response addTransportEquipment(@PathParam("teamId") int teamId,
-			TransportEquipment equipment, @Context SecurityContext sc) {
-		Team team = teamManager.getTeam(teamId);
-		if (!SecurityHelper.checkTeamMemberOrAdmin(userManager, team, sc))
-			throw new WebApplicationException(401);
-		teamManager.addEquipment(team.getTeamId(), equipment);
+			TransportEquipment equipment) {
+		teamManager.addEquipment(teamId, equipment);
 		return Response.ok().build();
 	}
 
 	@DELETE
 	@Path("{teamId:[0-9]+}/equipment/{equipmentId:[0-9]+}")
 	public Response deleteEquipment(@PathParam("teamId") int teamId,
-			@PathParam("equipmentId") int equipmentId,
-			@Context SecurityContext sc) {
-		Team team = teamManager.getTeam(teamId);
-		if (!SecurityHelper.checkTeamMemberOrAdmin(userManager, team, sc))
-			throw new WebApplicationException(401);
-		teamManager.deleteEquipment(team.getTeamId(), equipmentId);
+			@PathParam("equipmentId") int equipmentId) {
+		teamManager.deleteEquipment(teamId, equipmentId);
 		return Response.ok().build();
 	}
 
 	@DELETE
 	@Path("{teamId:[0-9]+}")
-	public Response deleteTeam(@PathParam("teamId") int teamId,
-			@Context SecurityContext sc) {
-		Team team = teamManager.getTeam(teamId);
-		if (!SecurityHelper.checkTeamMemberOrAdmin(userManager, team, sc))
-			throw new WebApplicationException(401);
+	public Response deleteTeam(@PathParam("teamId") int teamId) {
 		teamManager.deleteTeam(teamId);
 		return Response.ok().build();
 	}
@@ -146,34 +117,23 @@ public class TeamWebService {
 	@GET
 	@Produces({ "application/json", "application/xml" })
 	@Path("{teamId:[0-9]+}")
-	public Team getTeam(@PathParam("teamId") int teamId,
-			@Context SecurityContext sc) {
-		Team team = teamManager.getTeam(teamId);
-		if (!SecurityHelper.checkTeamMemberOrAdmin(userManager, team, sc))
-			throw new WebApplicationException(401);
-		return team;
+	public Team getTeam(@PathParam("teamId") int teamId) {
+		return teamManager.getTeam(teamId);
 	}
 
 	@GET
 	@Produces({ "application/json", "application/xml" })
 	@Path("{teamId:[0-9]+}/organizationMembers")
 	public List<Organization> getTeamOrganizationMembers(
-			@PathParam("teamId") int teamId, @Context SecurityContext sc) {
-		Team team = teamManager.getTeam(teamId);
-		if (!SecurityHelper.checkManagerOrAdmin(userManager, team, sc))
-			throw new WebApplicationException(401);
-		return team.getOrganizationMembers();
+			@PathParam("teamId") int teamId) {
+		return teamManager.getTeam(teamId).getOrganizationMembers();
 	}
 
 	@GET
 	@Produces({ "application/json", "application/xml" })
 	@Path("{teamId:[0-9]+}/volunteerMembers")
-	public List<User> getTeamVolunteerMembers(@PathParam("teamId") int teamId,
-			@Context SecurityContext sc) {
-		Team team = teamManager.getTeam(teamId);
-		if (!SecurityHelper.checkManagerOrAdmin(userManager, team, sc))
-			throw new WebApplicationException(401);
-		return team.getVolunteerMembers();
+	public List<User> getTeamVolunteerMembers(@PathParam("teamId") int teamId) {
+		return teamManager.getTeam(teamId).getVolunteerMembers();
 	}
 
 	@GET
@@ -185,11 +145,7 @@ public class TeamWebService {
 	@PUT
 	@Consumes({ "application/json", "application/xml" })
 	@Path("{teamId:[0-9]+}")
-	public Response updateTeam(@PathParam("teamId") int teamId,
-			Team updatedTeam, @Context SecurityContext sc) {
-		Team team = teamManager.getTeam(teamId);
-		if (!SecurityHelper.checkTeamMemberOrAdmin(userManager, team, sc))
-			throw new WebApplicationException(401);
+	public Response updateTeam(@PathParam("teamId") int teamId, Team updatedTeam) {
 		teamManager.updateTeam(teamId, updatedTeam);
 		return Response.ok().build();
 	}
@@ -197,14 +153,7 @@ public class TeamWebService {
 	@DELETE
 	@Path("{teamId:[0-9]+}/organization/{organizationId:[0-9]+}")
 	public Response withdrawOrganization(@PathParam("teamId") int teamId,
-			@PathParam("organizationId") int organizationId,
-			@Context SecurityContext sc) {
-		Team team = teamManager.getTeam(teamId);
-		Organization org = orgManager.getOrganization(organizationId);
-		if (!SecurityHelper.checkManagerOrAdmin(userManager, team, sc)
-				&& !SecurityHelper.checkUserOrAdmin(userManager, sc, org
-						.getContactUser().getUserId()))
-			throw new WebApplicationException(401);
+			@PathParam("organizationId") int organizationId) {
 		teamManager.withdrawOrganization(organizationId, teamId);
 		return Response.ok().build();
 	}
@@ -212,11 +161,7 @@ public class TeamWebService {
 	@DELETE
 	@Path("{teamId:[0-9]+}/volunteer/{userId:[0-9]+}")
 	public Response withdrawVolunteer(@PathParam("teamId") int teamId,
-			@PathParam("userId") int userId, @Context SecurityContext sc) {
-		Team team = teamManager.getTeam(teamId);
-		if (!SecurityHelper.checkManagerOrAdmin(userManager, team, sc)
-				&& !SecurityHelper.checkUserOrAdmin(userManager, sc, userId))
-			throw new WebApplicationException(401);
+			@PathParam("userId") int userId) {
 		teamManager.withdrawUser(userId, teamId);
 		return Response.ok().build();
 	}

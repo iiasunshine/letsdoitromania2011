@@ -3,11 +3,15 @@ package ro.ldir.beans;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Resource;
+import javax.ejb.EJB;
 import javax.ejb.LocalBean;
+import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import ro.ldir.beans.security.SecurityHelper;
 import ro.ldir.dto.Organization;
 import ro.ldir.dto.User;
 
@@ -20,18 +24,24 @@ public class OrganizationManager implements OrganizationManagerLocal {
 	@PersistenceContext(unitName = "ldir")
 	private EntityManager em;
 
+	@EJB
+	private UserManager userManager;
+
+	@Resource
+	private SessionContext ctx;
+
 	public OrganizationManager() {
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see ro.ldir.beans.OrganizationManagerLocal#addOrganization(int,
-	 * ro.ldir.dto.Organization)
+	 * @see ro.ldir.beans.OrganizationManagerLocal#addOrganization(ro.ldir.dto.
+	 * Organization)
 	 */
 	@Override
-	public void addOrganization(int userId, Organization organization) {
-		User user = em.find(User.class, userId);
+	public void addOrganization(Organization organization) {
+		User user = userManager.getUser(ctx.getCallerPrincipal().getName());
 		if (user.getOrganizations() == null)
 			user.setOrganizations(new ArrayList<Organization>());
 		user.getOrganizations().add(organization);
@@ -48,6 +58,7 @@ public class OrganizationManager implements OrganizationManagerLocal {
 	public void deleteOrganization(int organizationId) {
 		Organization existing = em.find(Organization.class, organizationId);
 		User user = existing.getContactUser();
+		SecurityHelper.checkUser(user, ctx);
 		user.getOrganizations().remove(existing);
 		em.remove(existing);
 		em.merge(user);
@@ -60,7 +71,10 @@ public class OrganizationManager implements OrganizationManagerLocal {
 	 */
 	@Override
 	public Organization getOrganization(int organizationId) {
-		return em.find(Organization.class, organizationId);
+		Organization org = em.find(Organization.class, organizationId);
+		SecurityHelper
+				.checkAccessToUser(userManager, org.getContactUser(), ctx);
+		return org;
 	}
 
 	/*
@@ -83,6 +97,7 @@ public class OrganizationManager implements OrganizationManagerLocal {
 	@Override
 	public void updateOrganization(int organizationId, Organization organization) {
 		Organization existing = em.find(Organization.class, organizationId);
+		SecurityHelper.checkUser(existing.getContactUser(), ctx);
 		existing.copyFields(organization);
 		System.out.println(existing.getName());
 		em.merge(existing);
