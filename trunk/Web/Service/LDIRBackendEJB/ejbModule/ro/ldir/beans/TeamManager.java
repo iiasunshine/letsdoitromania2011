@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.annotation.security.DeclareRoles;
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.SessionContext;
@@ -25,6 +26,7 @@ import ro.ldir.exceptions.InvalidTeamOperationException;
  */
 @Stateless
 @LocalBean
+@DeclareRoles("ADMIN")
 public class TeamManager implements TeamManagerLocal {
 	@Resource
 	private SessionContext ctx;

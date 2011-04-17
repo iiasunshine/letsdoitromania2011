@@ -160,8 +160,10 @@ function orgJoinTeamClick()
 	teamId = teamForm.options[teamForm.selectedIndex].value;
 	team['teamId'] = teamId;
 	teamJSON = JSON.stringify(team);
+	orgSelect = document.getElementById('organizations');
+	organizationId = orgSelect.options[orgSelect.selectedIndex].value;
 	gen_form_reference = null;
-	gen_req = sendRequest('post', 'http://localhost:8080/LDIRBackend/ws/organization/' + userid + '/team',
+	gen_req = sendRequest('post', 'http://localhost:8080/LDIRBackend/ws/organization/' + organizationId + '/team',
 			generic_insert_callback, teamJSON, true, username, password);
 }
 </script>
