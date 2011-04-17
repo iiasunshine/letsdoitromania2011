@@ -66,6 +66,27 @@ public abstract class ClosedArea extends FieldAccessBean {
 	public ClosedArea() {
 	}
 
+	/**
+	 * Checks whether this closed surface encloses a point.
+	 * 
+	 * @param point
+	 *            The point to test against.
+	 * @return {@code true} if the area encloses the point, false otherwise.
+	 */
+	public boolean containsPoint(Point2D.Float point) {
+		boolean inside = false;
+		Point2D.Float pi, pj;
+		for (int i = 0, j = polyline.size() - 1; i < polyline.size(); j = i++) {
+			pi = polyline.get(i);
+			pj = polyline.get(j);
+			if (((pi.y <= point.y && point.y < pj.y) || (pj.y <= point.y && point.y < pi.y))
+					&& point.x < (pj.x - pi.x) * (point.y - pi.y)
+							/ (pj.y - pi.y) + pi.x)
+				inside = !inside;
+		}
+		return inside;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -77,6 +98,17 @@ public abstract class ClosedArea extends FieldAccessBean {
 		if (areaId == null)
 			return super.equals(obj);
 		return areaId.equals(((ClosedArea) obj).areaId);
+	}
+
+	/**
+	 * @return the areaId
+	 */
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@XmlID
+	@XmlJavaTypeAdapter(IntegerAdapter.class)
+	public Integer getAreaId() {
+		return areaId;
 	}
 
 	/**
@@ -93,17 +125,6 @@ public abstract class ClosedArea extends FieldAccessBean {
 	@XmlTransient
 	public float getBottomRightY() {
 		return bottomRightY;
-	}
-
-	/**
-	 * @return the areaId
-	 */
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@XmlID
-	@XmlJavaTypeAdapter(IntegerAdapter.class)
-	public Integer getAreaId() {
-		return areaId;
 	}
 
 	/**
@@ -127,6 +148,14 @@ public abstract class ClosedArea extends FieldAccessBean {
 	@XmlTransient
 	public float getTopLeftY() {
 		return topLeftY;
+	}
+
+	/**
+	 * @param areaId
+	 *            the areaId to set
+	 */
+	public void setAreaId(Integer areaId) {
+		this.areaId = areaId;
 	}
 
 	/**
@@ -162,14 +191,6 @@ public abstract class ClosedArea extends FieldAccessBean {
 			if (bottomRightY > point.y)
 				bottomRightY = point.y;
 		}
-	}
-
-	/**
-	 * @param areaId
-	 *            the areaId to set
-	 */
-	public void setAreaId(Integer areaId) {
-		this.areaId = areaId;
 	}
 
 	/**
