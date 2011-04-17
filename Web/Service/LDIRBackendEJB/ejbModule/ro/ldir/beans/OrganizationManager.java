@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.annotation.security.DeclareRoles;
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.SessionContext;
@@ -20,6 +21,7 @@ import ro.ldir.dto.User;
  */
 @Stateless
 @LocalBean
+@DeclareRoles("ADMIN")
 public class OrganizationManager implements OrganizationManagerLocal {
 	@PersistenceContext(unitName = "ldir")
 	private EntityManager em;
