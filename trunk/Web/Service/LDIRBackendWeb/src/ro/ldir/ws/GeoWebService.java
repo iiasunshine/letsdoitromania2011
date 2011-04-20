@@ -77,7 +77,7 @@ public class GeoWebService {
 	@Path("chartedArea/count")
 	public String countChartedAreas(@QueryParam("topLeftX") float topLeftX,
 			@QueryParam("topLeftY") float topLeftY,
-			@QueryParam("bottomRightY") float bottomRightX,
+			@QueryParam("bottomRightX") float bottomRightX,
 			@QueryParam("bottomRightY") float bottomRightY) {
 		List<ChartedArea> chartedAreas = geoManager.getChartedAreas(topLeftX,
 				topLeftY, bottomRightX, bottomRightY);
@@ -106,7 +106,7 @@ public class GeoWebService {
 	public List<ChartedArea> getChartedAreas(
 			@QueryParam("topLeftX") float topLeftX,
 			@QueryParam("topLeftY") float topLeftY,
-			@QueryParam("bottomRightY") float bottomRightX,
+			@QueryParam("bottomRightX") float bottomRightX,
 			@QueryParam("bottomRightY") float bottomRightY) {
 		List<ChartedArea> chartedAreas = geoManager.getChartedAreas(topLeftX,
 				topLeftY, bottomRightX, bottomRightY);

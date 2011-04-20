@@ -49,10 +49,13 @@ public class GeoManager implements GeoManagerLocal {
 	public List<ChartedArea> getChartedAreas(float topLeftX, float topLeftY,
 			float bottomRightX, float bottomRightY) {
 		Query query = em.createQuery("SELECT ca FROM ChartedArea ca WHERE"
-				+ "(ca.topLeftX BETWEEN :topLeftX AND :bottomRightX AND"
-				+ " ca.topLeftY BETWEEN :bottomRightY AND :topLeftY) OR "
-				+ "(ca.bottomRightX BETWEEN :topLeftX AND :bottomRightX AND"
-				+ " ca.bottomRightY BETWEEN :bottomRightY AND :topLeftY)");
+				+ "(ca.topLeftX BETWEEN :topLeftX AND :bottomRightX OR"
+				+ " ca.bottomRightX BETWEEN :topLeftX AND :bottomRightX OR"
+				+ " :topLeftX BETWEEN ca.topLeftX AND ca.bottomRightX)"
+				+ " AND "
+				+ "(ca.topLeftY BETWEEN :bottomRightY AND :topLeftY OR"
+				+ " ca.bottomRightY BETWEEN :bottomRightY AND :topLeftY OR"
+				+ " :bottomRightY BETWEEN ca.bottomRightY and ca.topLeftY)");
 		query.setParameter("topLeftX", topLeftX);
 		query.setParameter("topLeftY", topLeftY);
 		query.setParameter("bottomRightX", bottomRightX);
