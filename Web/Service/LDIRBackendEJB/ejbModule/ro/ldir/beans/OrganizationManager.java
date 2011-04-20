@@ -101,7 +101,6 @@ public class OrganizationManager implements OrganizationManagerLocal {
 		Organization existing = em.find(Organization.class, organizationId);
 		SecurityHelper.checkUser(existing.getContactUser(), ctx);
 		existing.copyFields(organization);
-		System.out.println(existing.getName());
 		em.merge(existing);
 		em.flush();
 	}
