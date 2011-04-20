@@ -23,9 +23,17 @@
  */
 package ro.ldir.dto;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import ro.ldir.dto.helper.NonTransferableField;
 
 /**
  * Defines a county area.
@@ -34,6 +42,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @DiscriminatorValue("CountyArea")
 public class CountyArea extends ClosedArea {
+	private Set<Garbage> garbages = new HashSet<Garbage>();
 	private String name;
 
 	public CountyArea() {
@@ -41,10 +50,28 @@ public class CountyArea extends ClosedArea {
 	}
 
 	/**
+	 * @return the garbages
+	 */
+	@OneToMany(cascade = { CascadeType.MERGE, CascadeType.PERSIST }, mappedBy = "county")
+	@XmlIDREF
+	public Set<Garbage> getGarbages() {
+		return garbages;
+	}
+
+	/**
 	 * @return the name
 	 */
 	public String getName() {
 		return name;
+	}
+
+	/**
+	 * @param garbages
+	 *            the garbages to set
+	 */
+	@NonTransferableField
+	public void setGarbages(Set<Garbage> garbages) {
+		this.garbages = garbages;
 	}
 
 	/**

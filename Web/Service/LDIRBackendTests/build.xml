@@ -42,6 +42,7 @@
 	<target depends="build" name="test">
 		<java classname="org.junit.runner.JUnitCore">
 			<arg value="ro.ldir.tests.ClosedAreaTest" />
+			<arg value="ro.ldir.tests.GarbageTests" />
 			<classpath refid="tests.classpath" />
 		</java>
 	</target>

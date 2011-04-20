@@ -27,6 +27,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -63,7 +64,7 @@ public class User extends FieldAccessBean implements Serializable {
 	}
 
 	public enum SecurityRole {
-		PENDING, SUSPENDED, ADMIN, ORGANIZER, ORGANIZER_MULTI, VOLUNTEER, VOLUNTEER_MULTI;
+		ADMIN, ORGANIZER, ORGANIZER_MULTI, PENDING, SUSPENDED, VOLUNTEER, VOLUNTEER_MULTI;
 		private static List<SecurityRole> multiRoles = null;
 
 		public static List<SecurityRole> getMultiRoles() {
@@ -82,6 +83,7 @@ public class User extends FieldAccessBean implements Serializable {
 	private String county;
 	private String email;
 	private String firstName;
+	private Set<Garbage> garbages;
 	private String lastName;
 	private List<Team> managedTeams;
 	private Team memberOf;
@@ -145,6 +147,14 @@ public class User extends FieldAccessBean implements Serializable {
 	 */
 	public String getFirstName() {
 		return firstName;
+	}
+
+	/**
+	 * @return the garbages
+	 */
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "insertedBy", orphanRemoval = true)
+	public Set<Garbage> getGarbages() {
+		return garbages;
 	}
 
 	/**
@@ -279,6 +289,15 @@ public class User extends FieldAccessBean implements Serializable {
 	 */
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
+	}
+
+	/**
+	 * @param garbages
+	 *            the garbages to set
+	 */
+	@NonTransferableField
+	public void setGarbages(Set<Garbage> garbages) {
+		this.garbages = garbages;
 	}
 
 	/**
