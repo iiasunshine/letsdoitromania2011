@@ -43,6 +43,8 @@ import javax.ws.rs.core.UriInfo;
 
 import ro.ldir.beans.GeoManagerLocal;
 import ro.ldir.dto.ChartedArea;
+import ro.ldir.dto.CountyArea;
+import ro.ldir.dto.TownArea;
 
 /**
  * The geographical web service.
@@ -72,6 +74,22 @@ public class GeoWebService {
 		return Response.ok().build();
 	}
 
+	@POST
+	@Consumes({ "application/json", "application/xml" })
+	@Path("countyArea")
+	public Response addCountyArea(CountyArea countyArea) {
+		geoManager.newCountyArea(countyArea);
+		return Response.ok().build();
+	}
+
+	@POST
+	@Consumes({ "application/json", "application/xml" })
+	@Path("townArea")
+	public Response addTownArea(TownArea townArea) {
+		geoManager.newTownArea(townArea);
+		return Response.ok().build();
+	}
+
 	@GET
 	@Produces({ "application/json", "application/xml" })
 	@Path("chartedArea/count")
@@ -89,6 +107,20 @@ public class GeoWebService {
 	public Response deleteChartedArea(
 			@PathParam("chartedAreaId") int chartedAreaId) {
 		geoManager.deleteChartedArea(chartedAreaId);
+		return Response.ok().build();
+	}
+
+	@DELETE
+	@Path("countyArea/{countyAreaId:[0-9]+}")
+	public Response deleteCountyArea(@PathParam("countyAreaId") int countyAreaId) {
+		geoManager.deleteCountyArea(countyAreaId);
+		return Response.ok().build();
+	}
+
+	@DELETE
+	@Path("townArea/{townAreaId:[0-9]+}")
+	public Response deleteTownArea(@PathParam("townAreaId") int townAreaId) {
+		geoManager.deleteTownArea(townAreaId);
 		return Response.ok().build();
 	}
 
@@ -122,6 +154,24 @@ public class GeoWebService {
 			@PathParam("chartedAreaId") int chartedAreaId,
 			ChartedArea chartedArea) {
 		geoManager.updateChartedArea(chartedAreaId, chartedArea);
+		return Response.ok().build();
+	}
+
+	@PUT
+	@Consumes({ "application/json", "application/xml" })
+	@Path("countyArea/{countyAreaId:[0-9]+}")
+	public Response updateCountyArea(
+			@PathParam("countyAreaId") int countyAreaId, CountyArea countyArea) {
+		geoManager.updateCountyArea(countyAreaId, countyArea);
+		return Response.ok().build();
+	}
+
+	@PUT
+	@Consumes({ "application/json", "application/xml" })
+	@Path("townArea/{townAreaId:[0-9]+}")
+	public Response updateTownArea(@PathParam("townAreaId") int townAreaId,
+			TownArea townArea) {
+		geoManager.updateTownArea(townAreaId, townArea);
 		return Response.ok().build();
 	}
 }
