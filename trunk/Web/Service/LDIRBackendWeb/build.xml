@@ -6,7 +6,6 @@
 	<property name="war.file" value="${webservice.war}" />
 
 	<path id="Web App Libraries.libraryclasspath">
-		<pathelement location="lib/junit-4.8.2.jar" />
 	</path>
 
 
