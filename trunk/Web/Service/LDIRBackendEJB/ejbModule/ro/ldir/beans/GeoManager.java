@@ -76,7 +76,7 @@ public class GeoManager implements GeoManagerLocal {
 	public ChartedArea getChartedArea(Float point) {
 		Query query = em.createQuery("SELECT ca FROM ChartedArea ca WHERE "
 				+ ":x BETWEEN ca.topLeftX AND ca.bottomRightX AND "
-				+ ":y BETWEEN ca.bottomRightY AND ca.topLeftYY");
+				+ ":y BETWEEN ca.bottomRightY AND ca.topLeftY");
 		query.setParameter("x", point.x);
 		query.setParameter("y", point.y);
 		List<ChartedArea> areas = query.getResultList();
@@ -137,7 +137,7 @@ public class GeoManager implements GeoManagerLocal {
 	public CountyArea getCountyArea(Point2D.Float point) {
 		Query query = em.createQuery("SELECT aa FROM CountyArea aa WHERE "
 				+ ":x BETWEEN aa.topLeftX AND aa.bottomRightX AND "
-				+ ":y BETWEEN aa.bottomRightY AND aa.topLeftYY");
+				+ ":y BETWEEN aa.bottomRightY AND aa.topLeftY");
 		query.setParameter("x", point.x);
 		query.setParameter("y", point.y);
 		List<CountyArea> areas = query.getResultList();
@@ -168,7 +168,7 @@ public class GeoManager implements GeoManagerLocal {
 	public TownArea getTownArea(Point2D.Float point) {
 		Query query = em.createQuery("SELECT aa FROM TownArea aa WHERE "
 				+ ":x BETWEEN aa.topLeftX AND aa.bottomRightX AND "
-				+ ":y BETWEEN aa.bottomRightY AND aa.topLeftYY");
+				+ ":y BETWEEN aa.bottomRightY AND aa.topLeftY");
 		query.setParameter("x", point.x);
 		query.setParameter("y", point.y);
 		List<TownArea> areas = query.getResultList();

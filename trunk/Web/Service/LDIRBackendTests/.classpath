@@ -5,5 +5,11 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/LDIRBackendEJBClient"/>
 	<classpathentry kind="lib" path="lib/junit-4.8.2.jar"/>
 	<classpathentry kind="lib" path="lib/mysql-connector-java-5.1.15-bin.jar"/>
+	<classpathentry kind="lib" path="/Users/stefan/glassfish3/glassfish/modules/jersey-client.jar"/>
+	<classpathentry kind="lib" path="/Users/stefan/glassfish3/glassfish/modules/jersey-core.jar"/>
+	<classpathentry kind="lib" path="/Users/stefan/glassfish3/glassfish/modules/jersey-gf-server.jar"/>
+	<classpathentry kind="lib" path="/Users/stefan/glassfish3/glassfish/modules/jersey-gf-statsproviders.jar"/>
+	<classpathentry kind="lib" path="/Users/stefan/glassfish3/glassfish/modules/jersey-json.jar"/>
+	<classpathentry kind="lib" path="/Users/stefan/glassfish3/glassfish/modules/jersey-multipart.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

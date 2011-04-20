@@ -184,4 +184,16 @@ public class SecurityHelper {
 
 		return user;
 	}
+
+	/**
+	 * Gets the user DTO for the logged in user.
+	 * 
+	 * @param userManager
+	 * @param ctx
+	 * @return
+	 */
+	public static User getUser(UserManager userManager, SessionContext ctx) {
+		String email = ctx.getCallerPrincipal().getName();
+		return userManager.getUser(email);
+	}
 }

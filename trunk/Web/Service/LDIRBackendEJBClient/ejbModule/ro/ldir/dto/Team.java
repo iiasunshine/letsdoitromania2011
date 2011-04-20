@@ -23,6 +23,7 @@
  */
 package ro.ldir.dto;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -52,6 +53,7 @@ import ro.ldir.dto.helper.NonTransferableField;
 public class Team extends FieldAccessBean {
 	private Set<ChartedArea> chartedAreas;
 	private List<Equipment> equipments;
+	private Set<Garbage> garbages = new HashSet<Garbage>();
 	private List<Organization> organizationMembers;
 	private Integer teamId;
 	private User teamManager;
@@ -89,6 +91,15 @@ public class Team extends FieldAccessBean {
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "teamOwner", orphanRemoval = true)
 	public List<Equipment> getEquipments() {
 		return equipments;
+	}
+
+	/**
+	 * @return the garbages
+	 */
+	@ManyToMany(cascade = { CascadeType.MERGE, CascadeType.PERSIST }, mappedBy = "enrolledCleaners")
+	@XmlIDREF
+	public Set<Garbage> getGarbages() {
+		return garbages;
 	}
 
 	/**
@@ -149,6 +160,15 @@ public class Team extends FieldAccessBean {
 	 */
 	public void setEquipments(List<Equipment> equipments) {
 		this.equipments = equipments;
+	}
+
+	/**
+	 * @param garbages
+	 *            the garbages to set
+	 */
+	@NonTransferableField
+	public void setGarbages(Set<Garbage> garbages) {
+		this.garbages = garbages;
 	}
 
 	/**

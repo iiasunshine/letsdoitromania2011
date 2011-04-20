@@ -23,15 +23,20 @@
  */
 package ro.ldir.dto;
 
+import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import ro.ldir.dto.helper.NonTransferableField;
 
 /**
  * A class representing an area to be charted.
@@ -41,6 +46,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @DiscriminatorValue("ChartedArea")
 public class ChartedArea extends ClosedArea {
 	private Set<Team> chartedBy;
+	private Set<Garbage> garbages = new HashSet<Garbage>();
 	private int score;
 
 	public ChartedArea() {
@@ -57,6 +63,15 @@ public class ChartedArea extends ClosedArea {
 	}
 
 	/**
+	 * @return the garbages
+	 */
+	@OneToMany(cascade = { CascadeType.MERGE, CascadeType.PERSIST }, mappedBy = "chartedArea")
+	@XmlIDREF
+	public Set<Garbage> getGarbages() {
+		return garbages;
+	}
+
+	/**
 	 * @return the score
 	 */
 	public int getScore() {
@@ -69,6 +84,15 @@ public class ChartedArea extends ClosedArea {
 	 */
 	public void setChartedBy(Set<Team> chartedBy) {
 		this.chartedBy = chartedBy;
+	}
+
+	/**
+	 * @param garbages
+	 *            the garbages to set
+	 */
+	@NonTransferableField
+	public void setGarbages(Set<Garbage> garbages) {
+		this.garbages = garbages;
 	}
 
 	/**

@@ -23,21 +23,38 @@
  */
 package ro.ldir.dto;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import ro.ldir.dto.helper.NonTransferableField;
+
 /**
- * Defines an administrative area.
+ * Defines a town area.
  */
 @Entity
 @XmlRootElement
 @DiscriminatorValue("TownArea")
 public class TownArea extends ClosedArea {
+	private Set<Garbage> garbages = new HashSet<Garbage>();
 	private String name;
 
 	public TownArea() {
+	}
 
+	/**
+	 * @return the garbages
+	 */
+	@OneToMany(cascade = { CascadeType.MERGE, CascadeType.PERSIST }, mappedBy = "town")
+	@XmlIDREF
+	public Set<Garbage> getGarbages() {
+		return garbages;
 	}
 
 	/**
@@ -45,6 +62,15 @@ public class TownArea extends ClosedArea {
 	 */
 	public String getName() {
 		return name;
+	}
+
+	/**
+	 * @param garbages
+	 *            the garbages to set
+	 */
+	@NonTransferableField
+	public void setGarbages(Set<Garbage> garbages) {
+		this.garbages = garbages;
 	}
 
 	/**

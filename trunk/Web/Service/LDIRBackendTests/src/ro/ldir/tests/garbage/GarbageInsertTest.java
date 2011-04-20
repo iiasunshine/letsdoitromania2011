@@ -17,52 +17,54 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- *  Filename: GarbageManager.java
+ *  Filename: GarbageInsertTest.java
  *  Author(s): Stefan Guna, svguna@gmail.com
  *
  */
+package ro.ldir.tests.garbage;
 
-package ro.ldir.tests.helper;
+import static org.junit.Assert.assertEquals;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
-import ro.ldir.dto.User;
-import ro.ldir.dto.helper.SHA256Encrypt;
+import javax.ws.rs.core.MediaType;
+
+import org.junit.AfterClass;
+import org.junit.Test;
+
+import ro.ldir.dto.Garbage;
+import ro.ldir.tests.helper.DatabaseHelper;
+
+import com.sun.jersey.api.client.ClientResponse;
 
 /**
- * Sets up a temporary user in the database.
- * 
+ * Tester for inserting garbages.
  */
-public class UserSetup {
-	public static int addTestUser(String username, User.SecurityRole role)
-			throws ClassNotFoundException, SQLException {
-		Connection c = DatabaseHelper.getDbConnection();
-
-		PreparedStatement s = c
-				.prepareStatement("INSERT INTO User SET "
-						+ " email=?, passwd=?, role=?",
-						Statement.RETURN_GENERATED_KEYS);
-		s.setString(1, username);
-		s.setString(2, SHA256Encrypt.encrypt(username));
-		s.setString(3, role.toString());
-		s.executeUpdate();
-		ResultSet rs = s.getGeneratedKeys();
-		if (rs != null && rs.next())
-			return rs.getInt(1);
-		return -1;
+public class GarbageInsertTest extends GarbageTest {
+	@Test
+	public void unauthorizedInsertGarbage() {
+		Garbage garbage = new Garbage();
+		ClientResponse cr = rootBuilder("blah").entity(garbage,
+				MediaType.APPLICATION_XML).post(ClientResponse.class);
+		assertEquals(401, cr.getStatus());
 	}
 
-	public static void removeTestUser(String username)
-			throws ClassNotFoundException, SQLException {
-		Connection c = DatabaseHelper.getDbConnection();
+	@Test
+	public void insertGarbage() {
+		Garbage garbage = new Garbage();
+		ClientResponse cr = rootBuilder(USER).entity(garbage,
+				MediaType.APPLICATION_XML).post(ClientResponse.class);
+		assertEquals(200, cr.getStatus());
+	}
 
-		PreparedStatement s = c.prepareStatement("DELETE FROM User WHERE "
-				+ " email=?");
-		s.setString(1, username);
+	@AfterClass
+	public static void dbCleanup() throws ClassNotFoundException, SQLException {
+		Connection c = DatabaseHelper.getDbConnection();
+		PreparedStatement s = c
+				.prepareStatement("DELETE FROM Garbage WHERE INSERTEDBY=?");
+		s.setInt(1, userId);
 		s.executeUpdate();
 	}
 }
