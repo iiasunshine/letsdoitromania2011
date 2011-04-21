@@ -122,7 +122,6 @@ public class GarbageManager implements GarbageManagerLocal {
 
 		garbage.getPictures().add(destination);
 		em.merge(garbage);
-		System.out.println("file ok");
 	}
 
 	private void copyFile(File srcfile, File dstFile)

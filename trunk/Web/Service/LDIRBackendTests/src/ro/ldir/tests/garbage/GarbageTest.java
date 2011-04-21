@@ -43,22 +43,11 @@ import com.sun.jersey.core.util.Base64;
  * Abstract class that provides helper methods for the garbage tests.
  */
 public abstract class GarbageTest {
-	protected static final String USER = GarbageInsertTest.class.getName();
-	protected static int userId;
 	protected static Client client;
 	protected static final String location = "http://localhost:8080/LDIRBackend/ws/garbage";
 	protected static WebResource resource;
-
-	@BeforeClass
-	public static void setupUser() throws ClassNotFoundException, SQLException {
-		userId = UserSetup.addTestUser(USER, User.SecurityRole.ADMIN);
-	}
-
-	@BeforeClass
-	public static void setupClient() throws Exception {
-		client = Client.create();
-		resource = client.resource(location);
-	}
+	protected static final String USER = GarbageInsertTest.class.getName();
+	protected static int userId;
 
 	protected static Builder rootBuilder(String user) {
 		return resource.header(
@@ -68,9 +57,31 @@ public abstract class GarbageTest {
 								.forName("ASCII")));
 	}
 
+	@BeforeClass
+	public static void setupClient() throws Exception {
+		client = Client.create();
+		resource = client.resource(location);
+	}
+
+	@BeforeClass
+	public static void setupUser() throws ClassNotFoundException, SQLException {
+		userId = UserSetup.addTestUser(USER, User.SecurityRole.ADMIN);
+	}
+
 	@AfterClass
 	public static void tearDownUser() throws ClassNotFoundException,
 			SQLException {
 		UserSetup.removeTestUser(USER);
+	}
+
+	/** The web resource different for each test. */
+	protected WebResource instanceResource;
+
+	protected Builder instanceBuilder(String user) {
+		return instanceResource.header(
+				HttpHeaders.AUTHORIZATION,
+				"Basic "
+						+ new String(Base64.encode(user + ":" + user), Charset
+								.forName("ASCII")));
 	}
 }

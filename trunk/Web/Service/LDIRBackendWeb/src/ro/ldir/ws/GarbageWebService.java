@@ -33,6 +33,7 @@ import javax.ejb.EJBException;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -100,6 +101,32 @@ public class GarbageWebService {
 		return response;
 	}
 
+	@DELETE
+	@Path("{garbageId:[0-9]+}/image/{imageId:[0-9]+}")
+	public Response deleteImage(@PathParam("garbageId") int garbageId,
+			@PathParam("imageId") int imageId) {
+		try {
+			garbageManager.deleteImage(garbageId, imageId);
+		} catch (EJBException e) {
+			if (e.getCausedByException() instanceof NullPointerException
+					|| e.getCausedByException() instanceof ArrayIndexOutOfBoundsException)
+				throw new WebApplicationException(404);
+			throw new WebApplicationException(500);
+		}
+
+		return Response.ok().build();
+	}
+
+	@GET
+	@Produces({ "application/json", "application/xml" })
+	@Path("{garbageId:[0-9]+}")
+	public Garbage getGarbage(@PathParam("garbageId") Integer garbageId) {
+		Garbage garbage = garbageManager.getGarbage(garbageId);
+		if (garbage == null)
+			throw new WebApplicationException(404);
+		return garbage;
+	}
+
 	@GET
 	@Produces({ "application/json", "application/xml" })
 	@Path("countySearch")
@@ -115,58 +142,30 @@ public class GarbageWebService {
 		return garbageManager.getGarbages(status);
 	}
 
-	//
-	// @GET
-	// @Produces({ "application/json", "application/xml" })
-	// @Path("town/{town}")
-	// public List<Garbage> getGarbageByTown(@PathParam("town") String town) {
-	// return garbageManager.getGarbagesByTown(town);
-	// }
-	//
-	// @GET
-	// @Path("{garbageId:[0-9]+}/image/{imageId:[0-9]+}")
-	// public Response getImage(@PathParam("garbageId") int garbageId,
-	// @PathParam("imageId") int imageId) {
-	// File f;
-	// try {
-	// f = new File(garbageManager.getImagePath(garbageId, imageId));
-	// } catch (EJBException e) {
-	// if (e.getCausedByException() instanceof NullPointerException
-	// || e.getCausedByException() instanceof ArrayIndexOutOfBoundsException)
-	// throw new WebApplicationException(404);
-	// throw new WebApplicationException(500);
-	// }
-	// if (!f.exists())
-	// throw new WebApplicationException(404);
-	// String mt = new MimetypesFileTypeMap().getContentType(f);
-	// return Response.ok(f, mt).build();
-	// }
-	//
-	// @DELETE
-	// @Path("{garbageId:[0-9]+}/image/{imageId:[0-9]+}")
-	// public Response deleteImage(@PathParam("garbageId") int garbageId,
-	// @PathParam("imageId") int imageId) {
-	// try {
-	// garbageManager.deleteImage(garbageId, imageId);
-	// } catch (EJBException e) {
-	// if (e.getCausedByException() instanceof NullPointerException
-	// || e.getCausedByException() instanceof ArrayIndexOutOfBoundsException)
-	// throw new WebApplicationException(404);
-	// throw new WebApplicationException(500);
-	// }
-	//
-	// return Response.ok().build();
-	// }
-	//
-
 	@GET
 	@Produces({ "application/json", "application/xml" })
-	@Path("{garbageId:[0-9]+}")
-	public Garbage getGarbage(@PathParam("garbageId") Integer garbageId) {
-		Garbage garbage = garbageManager.getGarbage(garbageId);
-		if (garbage == null)
+	@Path("emailSearch")
+	public Set<Garbage> getGarbageByTown(@QueryParam("town") String town) {
+		return garbageManager.getGarbagesByTown(town);
+	}
+
+	@GET
+	@Path("{garbageId:[0-9]+}/image/{imageId:[0-9]+}")
+	public Response getImage(@PathParam("garbageId") int garbageId,
+			@PathParam("imageId") int imageId) {
+		File f;
+		try {
+			f = new File(garbageManager.getImagePath(garbageId, imageId));
+		} catch (EJBException e) {
+			if (e.getCausedByException() instanceof NullPointerException
+					|| e.getCausedByException() instanceof ArrayIndexOutOfBoundsException)
+				throw new WebApplicationException(404);
+			throw new WebApplicationException(500);
+		}
+		if (!f.exists())
 			throw new WebApplicationException(404);
-		return garbage;
+		String mt = new MimetypesFileTypeMap().getContentType(f);
+		return Response.ok(f, mt).build();
 	}
 
 	@POST
