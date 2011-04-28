@@ -1,0 +1,131 @@
+\chapter{Introduction}
+
+This document introduces the API of the web service used in the organization of
+the ``Let's Do It, Romania!'' 2011 campaign. Clients can interact with the web
+service using a series of RESTful calls to register users, authenticate users,
+manage teams and organizations, and manage garbage tags. During these calls,
+clients pass and / or retrieve a series of entities describing users, teams,
+garbage tags, and so on. The entities and their properties are described in
+Section~\ref{cha:entities}, and the calls are described in
+Section~\ref{cha:calls}. 
+
+Clients can be implemented in any language, depending on the target platform.
+For instance:
+\begin{itemize}
+  \item JavaScript, if the client is desired to be running inside a web
+    browser,
+  \item Java, if the client is desired to be run as an Android or desktop
+    application,
+  \item Objective C, if the client is desired to be run as an iPhone
+    application.
+\end{itemize}
+
+Entities may be serialized as either JSON or XML.
+
+Next, we provide examples on how to invoke a call from Java and JavaScript.
+
+\section{Inserting a garbage tag from Java code}
+
+The following assumes that Jersey\footnote{A Java package dedicated to RESTful
+calls, available at \url{http://jersey.java.net/}} has been installed. The Java
+implementation of the entities is available in the
+\href{http://code.google.com/p/letsdoitromania2011/source/browse/#svn\%2Ftrunk\%2FWeb\%2FService\%2FLDIRBackendEJBClient\%2FejbModule\%2Fro\%2Fldir\%2Fdto}{\texttt{ro.ldir.dto}}
+package. To make use of the latter, add to your classpath the
+\texttt{LDIRBackendEJBClient.jar} resulting from a build of the web service
+source code.
+
+The following is a code snippet listing the steps required to insert a garbage
+tag in the system:
+\begin{lstlisting}[language=Java]
+// Set up the call's URL, username and password.
+String location = "http://localhost:8080/LDIRBackend/ws/garbage";
+String username = "me@me.com";
+String password = "password";
+
+// Set up the garbage entity.
+Gargage garbage = new Garbage();
+garbage.setX(...);
+garbage.setY(...);
+garbage.setVolume(...);
+
+// Make a Jersey client.
+Client client = Client.create();
+WebResource resource = client.resource(location);
+Builder builder = resource.header(HttpHeaders.AUTHORIZATION, "Basic " +
+    new String(Base64.encode(username + ":" + password), Charset.forName("ASCII")));
+
+// Make the call and pass the garbage entity.
+ClientResponse cr = builder.entity(garbage, 
+        MediaType.APPLICATION_XML).post(ClientResponse.class); 
+
+assert cr.getStatus() == 200;
+\end{lstlisting}
+
+More examples are available in the unit tests implemented in the package
+\href{http://code.google.com/p/letsdoitromania2011/source/browse/#svn\%2Ftrunk\%2FWeb\%2FService\%2FLDIRBackendTests\%2Fsrc\%2Fro\%2Fldir\%2Ftests}{\texttt{ro.ldir.tests}}.
+
+\section{Inserting a garbage tag from JavaScript code}
+
+The following assumes a JSON serializer is used\footnote{Such as the one
+available at \url{http://json.org/js.html}.}.
+\begin{lstlisting}[language=JavaScript]
+
+
+// Set up the call's URL, username and password.
+var location = "http://localhost:8080/LDIRBackend/ws/garbage";
+var username = "me@me.com";
+var password = "password";
+
+// The call object.
+var req;
+
+// Constructor for call objects.
+function createXMLHttpRequest() {
+    try {
+        return new XMLHttpRequest();
+    } catch (e) {
+    }
+    try {
+        return new ActiveXObject("Msxml2.XMLHTTP");
+    } catch (e) {
+    }
+    return new ActiveXObject("Microsoft.XMLHTTP");
+}
+
+
+// A callback which the browser uses to notify changes in the call's state.
+function garbageInsertCallback() {
+    if (req.readyState != 4)
+        return;
+    if (req.status != 200) {
+        alert('Unable to insert data: ' + req.status);
+        return;
+    }
+    alert('Data ok!');
+}
+
+
+// Set up the garbage entity.
+var garbage = {
+    "x" : ...,
+    "y" : ...,
+    "volume" : ...
+};
+
+// Serialize the object.
+var garbageJSON = JSON.stringify(garbage);
+
+// Make a client.
+req = createXMLHttpRequest();
+req.open("post", location, true, username, password);
+req.onreadystatechange = garbageInsertCallback;
+req.setRequestHeader('Content-Type', 'application/json');
+
+// Make an asynchronous call.
+req.send(garbageJSON);
+\end{lstlisting}
+
+More examples are available in the
+\href{http://code.google.com/p/letsdoitromania2011/source/browse/trunk/Web/Service/LDIRBackendWeb/WebContent/index.html}{web
+test client} and the JavaScript files it references.  An AJAX framework to make
+these call is however recommended for ease of work.

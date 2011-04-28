@@ -1,0 +1,141 @@
+\section{User management}
+\label{sec:call:user}
+
+This section describes the calls that affect the state of a system user. These
+are implemented in the
+\svnweb{ro/ldir/ws/UserWebService}{ro.ldir.ws.UserWebService} web resource.
+
+It should be noted that before making most of the calls in this section, the
+user ID of the user being accessed must be known. Section~\ref{sec:user:crt}
+shows how to obtain the logged-in user's ID.
+
+It should be noted that there are some security considerations that must be
+taken into account when making some of the calls that follows. For instance, a
+non-admin user should be allowed to retrieve and update his own state, but he
+should not be able to change his security role or change the state of another
+user. At the same time, an admin should be able to have complete access to all
+users.
+
+All calls that follow must be authenticated using HTTP headers. The username in
+the HTTP headers must match a user's email whose state is not ``PENDING'' or
+``SUSPENDED''.
+
+
+\subsection{Obtaining the logged-in user's ID}
+\label{sec:user:crt}
+
+\apilocation{get}{ws/user}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyditem{a string}{containing the ID of the authenticated user.}
+    \replyitem{403}{if the supplied credentials do not match a valid user.}
+  \end{datalist}
+\end{apidata}
+
+
+\subsection{Getting user information}
+
+\apilocation{get}{ws/user/\param{userId}}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyditem{user}{A \texttt{user} entity describing the user.}
+    \replyitem{403}{if the access policy if violated.}
+    \replyitem{404}{if the user is not found.}
+  \end{datalist}
+\end{apidata}
+\begin{apidata}{access}
+The logged in user must be an ``ADMIN'', the user being accessed, or a user from
+a team in which the accessed user is either part of or manager.
+\end{apidata}
+
+
+\subsection{Updating user information}
+\label{sec:user:update}
+
+\apilocation{put}{ws/user/\param{userId}}
+\begin{apidata}{content}
+  A \texttt{user} entity containing update information.
+\end{apidata}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyitem{200}{if the operation succeeds.}
+    \replyitem{403}{if the access policy if violated.}
+    \replyitem{404}{if the user does not exists.}
+    \replyitem{500}{if another error occurs.}
+  \end{datalist}
+\end{apidata}
+\begin{apidata}{access}
+The logged in user must be an ``ADMIN'' or the user being changed.
+\end{apidata}
+
+
+\subsection{Obtaining user's activities}
+
+\apilocation{get}{ws/user/\param{userId}/activities}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyditem{the activity list of the user.}
+    \replyitem{403}{if the access policy if violated.}
+    \replyitem{404}{if the user does not exists.}
+    \replyitem{500}{if another error occurs.}
+  \end{datalist}
+\end{apidata}
+\begin{apidata}{access}
+The logged in user must be an ``ADMIN'', the user being accessed, or a user from
+a team in which the accessed user is either part of or manager.
+\end{apidata}
+
+
+\subsection{Enrolling a user in a team}
+
+\apilocation{post}{ws/user/\param{userId}/team}
+\begin{apidata}{content}
+  A \texttt{team} entity where only the \texttt{teamId} field is set.
+\end{apidata}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyitem{200}{if the operation succeeds.}
+    \replyitem{404}{if the user does not exists.}
+    \replyitem{500}{if another error occurs.}
+    \replyitem{TBD}{if the user is already enrolled in a team.}
+  \end{datalist}
+\end{apidata}
+\begin{apidata}{access}
+The logged in user must be an ``ADMIN'' or the user being changed.
+\end{apidata}
+
+
+\subsection{Updating user activities}
+
+\apilocation{put}{ws/user/\param{userId}/team}
+\begin{apidata}{content}
+  A list of strings defining the new activities that the user is enrolled for.
+\end{apidata}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyitem{200}{if the operation succeeds.}
+    \replyitem{404}{if the user does not exists.}
+    \replyitem{500}{if another error occurs.}
+  \end{datalist}
+\end{apidata}
+\begin{apidata}{access}
+The logged in user must be an ``ADMIN'' or the user being changed.
+\end{apidata}
+
+
+\subsection{Setting user security roles}
+\apilocation{put}{ws/user/\param{userId}/role}
+\begin{apidata}{content}
+  A string defining the new security role of the user. 
+\end{apidata}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyitem{200}{if the operation succeeds.}
+    \replyitem{404}{if the user does not exists.}
+    \replyitem{500}{if another error occurs.}
+  \end{datalist}
+\end{apidata}
+\begin{apidata}{access}
+The logged in user must be an ``ADMIN''.
+\end{apidata}
+
