@@ -1,0 +1,67 @@
+\section{Searching users}
+\label{sec:call:user_search}
+
+This section describes methods that can be used to search for system users by
+providing various searching criteria. These are implemented in the
+\svnweb{ro/ldir/ws/UserWebService}{ro.ldir.ws.UserWebService} web resource.
+
+The methods in this section are available for using, but not properly tested and
+are likely to experience unexpected behavior.
+
+\subsection{Searching users by enrolled activities}
+
+This method has incomplete implementation.
+
+\apilocation{get}{ws/user/byActivity/\param{activity}}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyditem{list of users}{A list of user entities.}
+  \end{datalist}
+\end{apidata}
+\begin{apidata}{access}
+  TBD.
+\end{apidata}
+
+\subsection{Searching users by town}
+
+This method has incomplete implementation.
+
+\apilocation{get}{ws/user/byTown/?town=\param{town}}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyditem{list of users}{A list of user entities.}
+  \end{datalist}
+\end{apidata}
+\begin{apidata}{access}
+  TBD.
+\end{apidata}
+
+\subsection{Searching users by security role}
+
+This method has incomplete implementation.
+
+\apilocation{get}{ws/user/byRole/\param{role}}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyditem{list of users}{A list of user entities.}
+  \end{datalist}
+\end{apidata}
+\begin{apidata}{access}
+  TBD.
+\end{apidata}
+
+\subsection{Searching users by email}
+
+This method has incomplete implementation.
+
+\apilocation{get}{ws/user/?email=\param{email}}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyditem{list of users}{A list of user entities.}
+  \end{datalist}
+\end{apidata}
+\begin{apidata}{access}
+  TBD.
+\end{apidata}
+
+

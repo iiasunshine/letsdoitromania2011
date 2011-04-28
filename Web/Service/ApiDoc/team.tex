@@ -1,0 +1,198 @@
+\section{Team management}
+\label{sec:call:team}
+
+This section describes the calls that affect the state of the teams managed by
+the system. These are implemented in the
+\svnweb{ro/ldir/ws/TeamWebService}{ro.ldir.ws.TeamWebService} web resource.
+
+Most of calls of this section are relative to a team identifier. There are two
+methods that can be used to obtain team identifiers:
+\begin{itemize}
+  \item indirectly through the appropriate field (\texttt{organizations}) of the
+    \texttt{user} entity. Note that the user can either manage the team, or be a
+    team member. How a user can be accessed is described in
+    Section~\ref{sec:call:user} and Section~\ref{sec:call:user}, or
+  \item searching a team by name. This procedure is described in
+    Section~\ref{sec:call:team:name}.
+\end{itemize}
+
+The procedure to enroll users and organizations in a team is described in
+Section~\ref{sec:call:user}, respectively Section~\ref{sec:call:organization}.
+It should be noted that a user (or a organization) can be a member of at most
+one team. 
+
+All calls that follow must be authenticated using HTTP headers. The username in
+the HTTP headers must match a user's email whose state is not ``PENDING'' or
+``SUSPENDED''.
+
+
+\subsection{Creating a new team}
+\label{sec:team:create}
+
+This call inserts a new organization in the system. The team manager for the new
+organization will be set to match the authenticated user.
+
+A user whose role is ``VOLUNTEER'' or ``ORGANIZER'' can manage a single team.
+Only users whose role is either ``VOLUNTEER\_MULTI'' or ``ORGANIZER\_MULTI'' can
+manage multiple teams.
+
+\apilocation{post}{ws/team}
+\begin{apidata}{contents}
+  A \texttt{team} entity describing the new team.
+\end{apidata}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyitem{200}{if the operation succeeds.}
+    \replyitem{500}{if another error occurs.}
+  \end{datalist}
+\end{apidata}
+
+
+\subsection{Getting team information}
+
+\apilocation{get}{ws/team/\param{teamId}}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyditem{A \texttt{team} entity describing the team.}
+  \end{datalist}
+\end{apidata}
+
+
+\subsection{Deleting a team}
+
+\apilocation{delete}{ws/team/\param{teamId}}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyitem{200}{If the operation succeeds.}
+  \end{datalist}
+\end{apidata}
+\begin{apidata}{access}
+The logged in user must be an ``ADMIN'' or the team's manager.
+\end{apidata}
+
+
+\subsection{Searching for a team by name}
+\label{sec:call:team:name}
+
+\apilocation{get}{ws/team/nameSearch/?teamName=\param{teamName}}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyditem{A list of \texttt{team} entities whose name match the searching
+    criteria.}
+  \end{datalist}
+\end{apidata}
+
+\subsection{Adding team equipment}
+
+\apilocation{put}{ws/team/\param{teamId}/\param{equipment\_type}}
+\begin{apidata}{contents}
+  One of the \texttt{GpsEquipment}, \texttt{CleaningEquipment} or
+  \texttt{TransportEquipment} that are to be added inside the team's equipment
+  list.
+
+  The \texttt{\emph{equipment\_type}} path parameter must match the type of the
+  inserted equipment. It can be one of the following strings: ``gps'',
+  ``cleaning'' and ``transport''.
+\end{apidata}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyitem{200}{If the operation succeeds.}
+  \end{datalist}
+\end{apidata}
+\begin{apidata}{access}
+The logged in user must be an ``ADMIN'' or the team's manager.
+\end{apidata}
+
+
+\subsection{Getting team equipment information}
+
+Given an equipment identifier, this call gets information about the equipment.
+The equipment identifiers can be obtained as a field of the \texttt{team}
+entity.
+
+\apilocation{get}{ws/team/\param{teamId}/equipment/\param{equipmentId}}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyditem{A \texttt{GpsEquipment}, \texttt{CleaningEquipment} or
+    \texttt{TransportEquipment} entity describing the equipment.}
+  \end{datalist}
+\end{apidata}
+\begin{apidata}{access}
+The logged in user must be an ``ADMIN'', the team's manager or a team member.
+\end{apidata}
+
+
+\subsection{Removing team equipment}
+
+Given an equipment identifier, this call removes the equipment from a team's
+ownership. The equipment identifiers can be obtained as a field of the
+\texttt{team} entity.
+
+\apilocation{delete}{ws/team/\param{teamId}/equipment/\param{equipmentId}}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyitem{200}{If the operation succeeds.}
+  \end{datalist}
+\end{apidata}
+\begin{apidata}{access}
+The logged in user must be an ``ADMIN'' or the team's manager.
+\end{apidata}
+
+
+\subsection{Withdrawing a user from the member list}
+
+\apilocation{delete}{ws/team/\param{teamId}/volunteer/\param{volunteerId}}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyitem{200}{If the operation succeeds.}
+  \end{datalist}
+\end{apidata}
+\begin{apidata}{access}
+The logged in user must be an ``ADMIN'' or the team's manager.
+\end{apidata}
+
+
+
+\subsection{Withdrawing an organization from the member list}
+
+\apilocation{delete}{ws/team/\param{teamId}/organization/\param{volunteerId}}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyitem{200}{If the operation succeeds.}
+  \end{datalist}
+\end{apidata}
+\begin{apidata}{access}
+The logged in user must be an ``ADMIN'' or the team's manager.
+\end{apidata}
+
+
+\subsection{Assigning a new area to chart}
+
+\apilocation{post}{ws/team/\param{teamId}/chartArea}
+\begin{apidata}{contents}
+  A \texttt{chartArea} entity whose only set field is the chart area ID.
+\end{apidata}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyitem{200}{If the operation succeeds.}
+  \end{datalist}
+\end{apidata}
+\begin{apidata}{access}
+The logged in user must be an ``ADMIN'' or the team's manager.
+\end{apidata}
+
+
+\subsection{Removing an area from the list of areas to chart}
+
+\apilocation{delete}{ws/team/\param{teamId}/chartArea/\param{chartAreaId}}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyitem{200}{If the operation succeeds.}
+  \end{datalist}
+\end{apidata}
+\begin{apidata}{access}
+The logged in user must be an ``ADMIN'' or the team's manager.
+\end{apidata}
+
+
+
