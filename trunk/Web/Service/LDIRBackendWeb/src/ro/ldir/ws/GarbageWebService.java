@@ -144,7 +144,7 @@ public class GarbageWebService {
 
 	@GET
 	@Produces({ "application/json", "application/xml" })
-	@Path("emailSearch")
+	@Path("townSearch")
 	public Set<Garbage> getGarbageByTown(@QueryParam("town") String town) {
 		return garbageManager.getGarbagesByTown(town);
 	}
