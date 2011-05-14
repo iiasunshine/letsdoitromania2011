@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+   <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dip"
+        android:text="@string/volum_morman"
+    />
+    <Spinner 
+        android:id="@+id/spinner"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:prompt="@string/volum_morman"
+    />
+    <CheckBox android:id="@+id/checkbox_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/chk_1" />
+     <CheckBox android:id="@+id/checkbox_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/chk_2" />
+     <CheckBox android:id="@+id/checkbox_3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/chk_3" />
+     <CheckBox android:id="@+id/checkbox_4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/chk_4" />
+     <CheckBox android:id="@+id/checkbox_5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/chk_5" />
+    <Button android:text="@string/button_morman_add" android:id="@+id/ButtonMorman" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
+</LinearLayout>

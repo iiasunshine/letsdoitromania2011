@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Lets Do It România!</string>
+    <string name="EditText02">0.0</string>
+    <string name="EditText01">0.0</string>
+    <string name="EditText01Label">Latitudinea</string>
+    <string name="EditText02Label">Longitutdinea</string>
+    <string name="button_add">Adaugă un morman la aceste coordonate</string>
+    
+    <string name="name_label">nume</string>
+	<string name="name_text"></string>
+	<string name="pass_label">parola</string>
+	<string name="pass_text"></string>
+	
+	<string name="volum_morman">Volumul estimat</string>
+    <string-array name="volum_array">
+        <item>5 - 20  l</item>
+        <item>20 - 50 l</item>
+        <item>50 - 100 l</item>
+        <item>100 - 200 l</item>
+        <item>peste 200 l</item>
+    </string-array>
+    
+    <string-array name="chks_array">
+    	<item>Menajer</item>
+    	<item>Menajer2</item>
+    </string-array>
+    
+	<string name="chk_1">Menajer</string>
+	<string name="chk_2">Metal</string>
+	<string name="chk_3">Sticla</string>
+	<string name="chk_4">Plastic</string>
+	<string name="chk_5">Mat. de constructii</string>
+	<string name="chk_6">Biologic</string>
+
+	<string name="autentificare">autentificare</string>
+	
+	
+	<string name="button_morman_add">Adaugă</string>	
+	
+	<string name="adaugat_ok">Mormanul a fost adăugat cu succes</string>
+	<string name="adaugat_nok">Mormanul nu a putut fi adăugat</string>
+	<string name="iesire">Iesire</string>
+	<string name="incaunu">Adaugă încă un morman</string>
+	<string name="listamormane">Vezi mormanele adăugate</string>
+</resources>
