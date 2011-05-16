@@ -213,8 +213,8 @@ ldirRealm {
 {{{
         <auth-realm name="ldir-realm" classname="org.wamblee.glassfish.auth.FlexibleJdbcRealm">
           <property name="datasource.jndi" value="jdbc/ldir"></property>
-          <property name="sql.groups" value="select role from user where email = ?"></property>
-          <property name="sql.password" value="select passwd from user where email = ?"></property>
+          <property name="sql.groups" value="select ROLE from USER where EMAIL = ?"></property>
+          <property name="sql.password" value="select PASSWD from USER where EMAIL = ?"></property>
           <property name="password.encoding" value="HEX:64"></property>
           <property name="jaas.context" value="ldirRealm"></property>
           <property name="password.digest" value="SHA-256"></property>
