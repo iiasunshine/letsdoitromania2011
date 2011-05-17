@@ -18,7 +18,7 @@ var userid = '1';
 function registerClick()
 {
 	json_object = json_from_form('registration');
-	gen_req = sendRequest('post', 'http://localhost:8080/LDIRBackend/reg/ws',
+	gen_req = sendRequest('post', 'http://app.letsdoitromania.ro:8080/LDIRBackend/reg/ws',
 			generic_insert_callback, json_object, false);
 }
 </script>
@@ -60,7 +60,7 @@ function loginClick()
 	//json_object = json_from_form('registration');
 	username = document.login.email.value;
 	password = document.login.passwd.value;
-	login_req = sendRequestString('get', 'http://localhost:8080/LDIRBackend/ws/user',
+	login_req = sendRequestString('get', 'http://app.letsdoitromania.ro:8080/LDIRBackend/ws/user',
 			login_callback, null, username, password);
 }
 </script>
@@ -80,7 +80,7 @@ function loginClick()
 function newOrgClick()
 {
 	json_object = json_from_form('new_organization');
-	gen_req = sendRequest('post', 'http://localhost:8080/LDIRBackend/ws/organization',
+	gen_req = sendRequest('post', 'http://app.letsdoitromania.ro:8080/LDIRBackend/ws/organization',
 			generic_insert_callback, json_object, false, username, password);
 }
 </script>
@@ -112,13 +112,13 @@ function editOrgClick()
 	gen_form_reference = 'edit_organization';
 	json_object = json_from_form(gen_form_reference);
 	window.alert(generic_edit_id + json_object);
-	gen_req = sendRequest('put', 'http://localhost:8080/LDIRBackend/ws/organization/' + generic_edit_id + '/',
+	gen_req = sendRequest('put', 'http://app.letsdoitromania.ro:8080/LDIRBackend/ws/organization/' + generic_edit_id + '/',
 			generic_insert_callback, json_object, false, username, password);
 }
 
 function deleteOrgClick()
 {
-	gen_req = sendRequest('delete', 'http://localhost:8080/LDIRBackend/ws/organization/' + generic_edit_id + '/',
+	gen_req = sendRequest('delete', 'http://app.letsdoitromania.ro:8080/LDIRBackend/ws/organization/' + generic_edit_id + '/',
 			generic_insert_callback, null, false, username, password);
 }
 
@@ -128,7 +128,7 @@ function fetchMyOrg()
 	generic_type = 'organization';
 	generic_field_id = 'organizationId';
 	generic_field_name = 'name';
-	gen_req = sendRequest('get', 'http://localhost:8080/LDIRBackend/ws/user/' + userid +'/organizations',
+	gen_req = sendRequest('get', 'http://app.letsdoitromania.ro:8080/LDIRBackend/ws/user/' + userid +'/organizations',
 			generic_select_callback, null, true, username, password);
 }
 
@@ -137,7 +137,7 @@ function displayOrganization()
 	gen_form_reference = 'edit_organization';
 	opt = document.getElementById('organizations');
 	generic_edit_id = opt.options[opt.selectedIndex].value;
-	gen_req = sendRequest('get', 'http://localhost:8080/LDIRBackend/ws/organization/' + generic_edit_id,
+	gen_req = sendRequest('get', 'http://app.letsdoitromania.ro:8080/LDIRBackend/ws/organization/' + generic_edit_id,
 			generic_load_callback, null, true, username, password);
 }
 
@@ -149,7 +149,7 @@ function orgSearchTeam()
 	generic_type = 'team';
 	generic_field_id = 'teamId';
 	generic_field_name = 'teamName';
-	gen_req = sendRequest('get', 'http://localhost:8080/LDIRBackend/ws/team/nameSearch/?teamName=' + teamName,
+	gen_req = sendRequest('get', 'http://app.letsdoitromania.ro:8080/LDIRBackend/ws/team/nameSearch/?teamName=' + teamName,
 			generic_select_callback, null, true, username, password);
 }
 
@@ -163,7 +163,7 @@ function orgJoinTeamClick()
 	orgSelect = document.getElementById('organizations');
 	organizationId = orgSelect.options[orgSelect.selectedIndex].value;
 	gen_form_reference = null;
-	gen_req = sendRequest('post', 'http://localhost:8080/LDIRBackend/ws/organization/' + organizationId + '/team',
+	gen_req = sendRequest('post', 'http://app.letsdoitromania.ro:8080/LDIRBackend/ws/organization/' + organizationId + '/team',
 			generic_insert_callback, teamJSON, true, username, password);
 }
 </script>
@@ -210,7 +210,7 @@ function orgJoinTeamClick()
 function newTeamClick()
 {
 	json_object = json_from_form('new_team');
-	gen_req = sendRequest('post', 'http://localhost:8080/LDIRBackend/ws/team',
+	gen_req = sendRequest('post', 'http://app.letsdoitromania.ro:8080/LDIRBackend/ws/team',
 			generic_insert_callback, json_object, false, username, password);
 }
 </script>
@@ -228,7 +228,7 @@ function newTeamClick()
 function editTeamClick()
 {
 	json_object = json_from_form('edit_team');
-	gen_req = sendRequest('put', 'http://localhost:8080/LDIRBackend/ws/team',
+	gen_req = sendRequest('put', 'http://app.letsdoitromania.ro:8080/LDIRBackend/ws/team',
 			generic_insert_callback, json_object, false, username, password);
 }
 function editOrgClick()
@@ -236,13 +236,13 @@ function editOrgClick()
 	gen_form_reference = 'edit_organization';
 	json_object = json_from_form(gen_form_reference);
 	window.alert(generic_edit_id + json_object);
-	gen_req = sendRequest('put', 'http://localhost:8080/LDIRBackend/ws/organization/' + generic_edit_id + '/',
+	gen_req = sendRequest('put', 'http://app.letsdoitromania.ro:8080/LDIRBackend/ws/organization/' + generic_edit_id + '/',
 			generic_insert_callback, json_object, false, username, password);
 }
 
 function deleteTeamClick()
 {
-	gen_req = sendRequest('delete', 'http://localhost:8080/LDIRBackend/ws/team/' + generic_edit_id + '/',
+	gen_req = sendRequest('delete', 'http://app.letsdoitromania.ro:8080/LDIRBackend/ws/team/' + generic_edit_id + '/',
 			generic_insert_callback, null, false, username, password);
 }
 
@@ -252,7 +252,7 @@ function fetchMyTeams()
 	generic_type = 'team';
 	generic_field_id = 'teamId';
 	generic_field_name = 'teamName';
-	gen_req = sendRequest('get', 'http://localhost:8080/LDIRBackend/ws/user/' + userid +'/managedTeams',
+	gen_req = sendRequest('get', 'http://app.letsdoitromania.ro:8080/LDIRBackend/ws/user/' + userid +'/managedTeams',
 			generic_select_callback, null, true, username, password);
 }
 
@@ -261,7 +261,7 @@ function displayTeam()
 	gen_form_reference = 'edit_team';
 	opt = document.getElementById('my_teams');
 	generic_edit_id = opt.options[opt.selectedIndex].value;
-	gen_req = sendRequest('get', 'http://localhost:8080/LDIRBackend/ws/team/' + generic_edit_id,
+	gen_req = sendRequest('get', 'http://app.letsdoitromania.ro:8080/LDIRBackend/ws/team/' + generic_edit_id,
 			generic_load_callback, null, true, username, password);
 }
 
@@ -273,7 +273,7 @@ function loadTeamMembers()
 	generic_field_name = 'email';
 	opt = document.getElementById('my_teams');
 	generic_edit_id = opt.options[opt.selectedIndex].value;
-	gen_req = sendRequest('get', 'http://localhost:8080/LDIRBackend/ws/team/' + generic_edit_id +'/volunteerMembers',
+	gen_req = sendRequest('get', 'http://app.letsdoitromania.ro:8080/LDIRBackend/ws/team/' + generic_edit_id +'/volunteerMembers',
 			generic_select_callback, null, true, username, password);
 }
 
@@ -281,7 +281,7 @@ function withdrawTeamMember()
 {
 	opt = document.getElementById('user_team_members');
 	user_id = opt.options[opt.selectedIndex].value;
-	gen_req = sendRequest('delete', 'http://localhost:8080/LDIRBackend/ws/team/' + generic_edit_id + '/volunteer/' + user_id,
+	gen_req = sendRequest('delete', 'http://app.letsdoitromania.ro:8080/LDIRBackend/ws/team/' + generic_edit_id + '/volunteer/' + user_id,
 			generic_insert_callback, null, false, username, password);
 }
 
@@ -293,7 +293,7 @@ function loadOrgTeamMembers()
 	generic_field_name = 'name';
 	opt = document.getElementById('my_teams');
 	generic_edit_id = opt.options[opt.selectedIndex].value;
-	gen_req = sendRequest('get', 'http://localhost:8080/LDIRBackend/ws/team/' + generic_edit_id +'/organizationMembers',
+	gen_req = sendRequest('get', 'http://app.letsdoitromania.ro:8080/LDIRBackend/ws/team/' + generic_edit_id +'/organizationMembers',
 			generic_select_callback, null, true, username, password);
 }
 
@@ -301,7 +301,7 @@ function withdrawOrgTeamMember()
 {
 	opt = document.getElementById('org_team_members');
 	org_id = opt.options[opt.selectedIndex].value;
-	gen_req = sendRequest('delete', 'http://localhost:8080/LDIRBackend/ws/team/' + generic_edit_id + '/organization/' + org_id,
+	gen_req = sendRequest('delete', 'http://app.letsdoitromania.ro:8080/LDIRBackend/ws/team/' + generic_edit_id + '/organization/' + org_id,
 			generic_insert_callback, null, false, username, password);
 }
 
@@ -311,7 +311,7 @@ function addGPS()
 	generic_edit_id = opt.options[opt.selectedIndex].value;
 	gps_json = json_from_form('add_gps_equipment');
 	window.alert(gps_json);
-	gen_req = sendRequest('put', 'http://localhost:8080/LDIRBackend/ws/team/' + generic_edit_id + '/gps',
+	gen_req = sendRequest('put', 'http://app.letsdoitromania.ro:8080/LDIRBackend/ws/team/' + generic_edit_id + '/gps',
 			generic_insert_callback, gps_json, false, username, password);
 }
 </script>
@@ -359,7 +359,7 @@ function userSearchTeam()
 	generic_type = 'team';
 	generic_field_id = 'teamId';
 	generic_field_name = 'teamName';
-	gen_req = sendRequest('get', 'http://localhost:8080/LDIRBackend/ws/team/nameSearch/?teamName=' + teamName,
+	gen_req = sendRequest('get', 'http://app.letsdoitromania.ro:8080/LDIRBackend/ws/team/nameSearch/?teamName=' + teamName,
 			generic_select_callback, null, true, username, password);
 }
 
@@ -371,7 +371,7 @@ function userJoinTeamClick()
 	team['teamId'] = teamId;
 	teamJSON = JSON.stringify(team);
 	gen_form_reference = null;
-	gen_req = sendRequest('post', 'http://localhost:8080/LDIRBackend/ws/user/' + userid + '/team',
+	gen_req = sendRequest('post', 'http://app.letsdoitromania.ro:8080/LDIRBackend/ws/user/' + userid + '/team',
 			generic_insert_callback, teamJSON, true, username, password);
 }
 </script>
@@ -400,7 +400,7 @@ function searchUser()
 	generic_type = 'user';
 	generic_field_id = 'userId';
 	generic_field_name = 'email';
-	gen_req = sendRequest('get', 'http://localhost:8080/LDIRBackend/ws/user/emailSearch/?email=' + user_email,
+	gen_req = sendRequest('get', 'http://app.letsdoitromania.ro:8080/LDIRBackend/ws/user/emailSearch/?email=' + user_email,
 			generic_select_callback, null, true, username, password);
 }
 
@@ -410,7 +410,7 @@ function updateRole()
 	user_tochange = userForm.options[userForm.selectedIndex].value;	
 	var role = document.getElementById('user_set_role').value;
 	gen_form_reference = null;
-	gen_req = sendRequest('put', 'http://localhost:8080/LDIRBackend/ws/user/' + user_tochange + '/role',
+	gen_req = sendRequest('put', 'http://app.letsdoitromania.ro:8080/LDIRBackend/ws/user/' + user_tochange + '/role',
 			generic_insert_callback, role, true, username, password);
 }
 </script>
