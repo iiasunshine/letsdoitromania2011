@@ -17,7 +17,7 @@
 				<description>ImageLocation</description>
 				<env-entry-name>ro.ldir.beans.GarbageManager/imgLocation</env-entry-name>
 				<env-entry-type>java.lang.String</env-entry-type>
-				<env-entry-value>/tmp</env-entry-value>
+                <env-entry-value>/home/glassfish/ldir_data/pics</env-entry-value>
 			</env-entry>
 		</session>
 		<session>
@@ -26,7 +26,7 @@
 				<description>EmailTemplateLocation</description>
 				<env-entry-name>ro.ldir.beans.UserMailer/mailTemplates</env-entry-name>
 				<env-entry-type>java.lang.String</env-entry-type>
-				<env-entry-value>/Users/stefan/tmp/ldir</env-entry-value>
+                <env-entry-value>/home/glassfish/ldir_data/email_templates</env-entry-value>
 			</env-entry>
 		</session>
 	</enterprise-beans>

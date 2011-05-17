@@ -48,7 +48,8 @@
 		<war destfile="${war.file}" filesetmanifest="merge" needxmlfile="false">
 			<classes dir="build/classes" />
 			<webinf dir="WebContent/WEB-INF" />
-			<metainf dir="WebContent/META-INF" />
+            <metainf dir="WebContent/META-INF" />
+            <fileset dir="WebContent" />
 		</war>
 	</target>
 </project>
