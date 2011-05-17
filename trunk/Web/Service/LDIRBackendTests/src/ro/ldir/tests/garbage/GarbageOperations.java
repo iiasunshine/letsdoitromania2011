@@ -69,7 +69,7 @@ public class GarbageOperations extends GarbageTest {
 
 		Connection c = DatabaseHelper.getDbConnection();
 		PreparedStatement s = c
-				.prepareStatement("SELECT * FROM Garbage WHERE INSERTEDBY=?");
+				.prepareStatement("SELECT * FROM GARBAGE WHERE INSERTEDBY=?");
 		s.setInt(1, userId);
 		ResultSet rs = s.executeQuery();
 		assertTrue(rs.next());
@@ -120,7 +120,7 @@ public class GarbageOperations extends GarbageTest {
 	public void removeGarbage() throws ClassNotFoundException, SQLException {
 		Connection c = DatabaseHelper.getDbConnection();
 		PreparedStatement s = c
-				.prepareStatement("DELETE FROM Garbage WHERE INSERTEDBY=?");
+				.prepareStatement("DELETE FROM GARBAGE WHERE INSERTEDBY=?");
 		s.setInt(1, userId);
 		s.executeUpdate();
 	}
