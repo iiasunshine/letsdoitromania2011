@@ -63,7 +63,7 @@ public class GarbageInsertTest extends GarbageTest {
 	public static void dbCleanup() throws ClassNotFoundException, SQLException {
 		Connection c = DatabaseHelper.getDbConnection();
 		PreparedStatement s = c
-				.prepareStatement("DELETE FROM Garbage WHERE INSERTEDBY=?");
+				.prepareStatement("DELETE FROM GARBAGE WHERE INSERTEDBY=?");
 		s.setInt(1, userId);
 		s.executeUpdate();
 	}

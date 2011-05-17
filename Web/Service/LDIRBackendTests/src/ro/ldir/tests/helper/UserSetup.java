@@ -43,7 +43,7 @@ public class UserSetup {
 		Connection c = DatabaseHelper.getDbConnection();
 
 		PreparedStatement s = c
-				.prepareStatement("INSERT INTO User SET "
+				.prepareStatement("INSERT INTO USER SET "
 						+ " email=?, passwd=?, role=?",
 						Statement.RETURN_GENERATED_KEYS);
 		s.setString(1, username);
@@ -60,7 +60,7 @@ public class UserSetup {
 			throws ClassNotFoundException, SQLException {
 		Connection c = DatabaseHelper.getDbConnection();
 
-		PreparedStatement s = c.prepareStatement("DELETE FROM User WHERE "
+		PreparedStatement s = c.prepareStatement("DELETE FROM USER WHERE "
 				+ " email=?");
 		s.setString(1, username);
 		s.executeUpdate();
