@@ -7,6 +7,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+//GPS
+import android.content.Context;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -56,9 +62,36 @@ public class MainActivity extends Activity {
        		   ((Activity)arg0.getContext()).finish();
    		}
         });
+        
+        //location
+        // Acquire a reference to the system Location Manager
+        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+
+        // Define a listener that responds to location updates
+        LocationListener locationListener = new LocationListener() {
+            public void onLocationChanged(Location location) {
+              // Called when a new location is found by the network location provider.
+              updateLocation(location);
+            }
+
+            public void onStatusChanged(String provider, int status, Bundle extras) {}
+
+            public void onProviderEnabled(String provider) {}
+
+            public void onProviderDisabled(String provider) {}
+          };
+
+        // Register the listener with the Location Manager to receive location updates
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
        
     };
-    
+    public void updateLocation(Location loc){
+    	double lat = loc.getLatitude();
+    	double lon = loc.getLongitude();
+    	
+    	edit_lat.setText(Double.toString(lat));
+    	edit_long.setText(Double.toString(lon));
+    }
     public void onActivityResult(int param){
     	if (param == 1){
     		//the log in ended
