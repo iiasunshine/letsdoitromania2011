@@ -1,5 +1,6 @@
 package ro.letsdoitromania.android.main;
 
+import ro.letsdoitromania.android.helpers.*;
 //import ro.letsdoitromania.android.structuri.*;
 
 import android.app.Activity;
@@ -18,6 +19,10 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         startActivityForResult(new Intent(this,LogInActivity.class), 1);
+        
+        Connection con = new Connection();
+        
+        con.authenticate();
         
         //Restore authenticated session - if any
         setContentView(R.layout.main);
