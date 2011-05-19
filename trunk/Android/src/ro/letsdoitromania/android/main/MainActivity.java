@@ -7,11 +7,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
-//GPS
+//Location
 import android.content.Context;
 import android.location.Location;
-import android.location.LocationListener;
+//import android.location.LocationListener;
 import android.location.LocationManager;
+import android.location.Criteria;
 
 import android.view.View;
 import android.widget.Button;
@@ -65,32 +66,33 @@ public class MainActivity extends Activity {
         
         //location
         // Acquire a reference to the system Location Manager
+        
         LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-
-        // Define a listener that responds to location updates
-        LocationListener locationListener = new LocationListener() {
-            public void onLocationChanged(Location location) {
-              // Called when a new location is found by the network location provider.
-              updateLocation(location);
-            }
-
-            public void onStatusChanged(String provider, int status, Bundle extras) {}
-
-            public void onProviderEnabled(String provider) {}
-
-            public void onProviderDisabled(String provider) {}
-          };
-
-        // Register the listener with the Location Manager to receive location updates
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+        
+        Criteria provCriteria = new Criteria();
+        provCriteria.setAccuracy(Criteria.ACCURACY_FINE);
+        provCriteria.setAltitudeRequired(false);
+        provCriteria.setBearingRequired(false);
+        provCriteria.setSpeedRequired(false);
+        provCriteria.setCostAllowed(true);
+                
+        String provider = locationManager.getBestProvider(provCriteria, true);//get best provider
+        updateLocation(locationManager.getLastKnownLocation(provider)); //update values
        
     };
     public void updateLocation(Location loc){
-    	double lat = loc.getLatitude();
-    	double lon = loc.getLongitude();
+    	if (loc != null){
+    		try{
+    			double lat = loc.getLatitude();
+    			double lon = loc.getLongitude();
     	
-    	edit_lat.setText(Double.toString(lat));
-    	edit_long.setText(Double.toString(lon));
+    			edit_lat.setText(Double.toString(lat));
+    			edit_long.setText(Double.toString(lon));
+    		}
+    		catch(Exception e){
+    			
+    		}
+    	}
     }
     public void onActivityResult(int param){
     	if (param == 1){
