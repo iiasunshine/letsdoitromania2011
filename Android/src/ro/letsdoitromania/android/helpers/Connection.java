@@ -19,7 +19,8 @@ import org.apache.http.client.CredentialsProvider;
 //import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient; 
 import org.apache.http.client.entity.UrlEncodedFormEntity; 
-import org.apache.http.client.methods.HttpPost; 
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.entity.*;
 import org.apache.http.impl.auth.BasicScheme;
@@ -59,10 +60,22 @@ public class Connection {
 	}
 	
 	public Connection(){};
+
+	//>addresses & actions
+	final static String _ldir_host    = "app.letsdoitromania.ro";
+	final static int    _ldir_port    = 8080;
+	final static String _ldir_proto   = "http";
+	final static String _ldir_ws_auth = "LDIRBackend/ws";
+	//<
 	
-	public boolean authenticate(){
+	String getWsAddress(String action){
+		//"http://app.letsdoitromania.ro:8080/LDIRBackend/ws/garbage");
+		return _ldir_proto + "://" + _ldir_host + Integer.toString(_ldir_port) + "/ws/" + action;
+	}
 	
-	    HttpRequestInterceptor preemptiveAuth = new HttpRequestInterceptor() {
+	DefaultHttpClient getHttpConn(String user, String password){
+	
+		HttpRequestInterceptor preemptiveAuth = new HttpRequestInterceptor() {
 	        public void process(final HttpRequest request, final HttpContext context) throws HttpException, IOException {
 	            AuthState authState = (AuthState) context.getAttribute(ClientContext.TARGET_AUTH_STATE);
 	            CredentialsProvider credsProvider = (CredentialsProvider) context.getAttribute(
@@ -80,28 +93,44 @@ public class Connection {
 	        }    
 	    };
 	    
-	    DefaultHttpClient httpclient = new DefaultHttpClient();
-	    httpclient.addRequestInterceptor(preemptiveAuth, 0);
+	    HttpHost targetHost          = new HttpHost(_ldir_host, _ldir_port, _ldir_proto);
+	    DefaultHttpClient httpClient = new DefaultHttpClient();
+	    
+	    httpClient.addRequestInterceptor(preemptiveAuth, 0);
 
-	    HttpHost targetHost   = new HttpHost("app.letsdoitromania.ro", 8080, "http"); 
-
-	    CredentialsProvider cp  = ((AbstractHttpClient) httpclient).getCredentialsProvider();
+	    CredentialsProvider cp  = ((AbstractHttpClient) httpClient).getCredentialsProvider();
 	    
 	    cp.setCredentials(  new AuthScope(targetHost.getHostName(), targetHost.getPort()),
-	    					new UsernamePasswordCredentials("dummy@dummy.com", "dummy"));
+	    					new UsernamePasswordCredentials(user, password));
 
-	    // Create AuthCache instance
-	    //AuthCache authCache   = new BasicAuthCache();
-	    // Generate BASIC scheme object and add it to the local auth cache
-	    //BasicScheme basicAuth = new BasicScheme();
-	    //authCache.put(targetHost, basicAuth);
-
-	    // Add AuthCache to the execution context
-	    //BasicHttpContext localcontext = new BasicHttpContext();
-	    //localcontext.setAttribute(ClientContext.AUTH_CACHE, authCache); 
-	    //localcontext.setAttribute(ClientContext.CREDS_PROVIDER, cp);
-	    
-	    HttpPost httppost = new HttpPost("http://app.letsdoitromania.ro:8080/LDIRBackend/ws/garbage");
+	    return httpClient;		    
+		
+	}
+	
+	public boolean authenticate(String user, String password, int usrId){
+		
+		HttpGet request 		= new HttpGet("user/userId");
+		HttpResponse response 	= null;
+		
+		try{
+			response = getHttpConn(user,password).execute(request);
+			
+			if (response.getStatusLine().getStatusCode() != 200)
+				return false;
+			
+			String content = convertStreamToString(response.getEntity().getContent());
+			usrId          = Integer.parseInt(content);
+			return true;			
+		}
+		catch(Exception ex){
+			
+		}
+		return false;		
+	}
+	
+	public boolean addGarbage(String user, String password){
+	
+	    HttpPost httppost = new HttpPost(getWsAddress("garbage"));
 	    
 	   // String user = "dummy@dummy.com";
 	   // String pwd  = "dummy";
@@ -114,49 +143,42 @@ public class Connection {
 	    
 	    HttpResponse response = null;
 	    
-	    try {
 	        
-	        // Execute HTTP Post Request
-	        try{
-	
-	        	httppost.setHeader("Content-Type", "application/json");
+	    // Execute HTTP Post Request
+	    try{
+	    	
+	    	httppost.setHeader("Content-Type", "application/json");
 	     
-	        	String morman_json = morman.serializeJSON();
-	        	httppost.setEntity(new StringEntity(morman_json,"ASCII"));
+	    	String morman_json = morman.serializeJSON();
+	    	httppost.setEntity(new StringEntity(morman_json,"ASCII"));
 	       
-	        	response          = httpclient.execute(httppost);
+	    	response          = getHttpConn(user,password).execute(httppost);
 	        	
-	        	StatusLine stat   = response.getStatusLine();
-	        	int status        = stat.getStatusCode();
-	        	HttpEntity entity = response.getEntity();
-	        	String message    = null;
+	    	StatusLine stat   = response.getStatusLine();
+	    	int status        = stat.getStatusCode();
+	    	HttpEntity entity = response.getEntity();
+	    	String message    = null;
 	        	
-	        	if (entity != null){
-        		   InputStream input = entity.getContent();	
-        		   message = convertStreamToString(input);
-        		   System.out.println(message);
-        		   input.close();
-        		}
-	        	if ( status != 200){
-	        		//requestul nu a funcționat
-	        		System.out.println("cannot insert");
-	        		String mesaj = stat.toString();
-	        		System.out.println(mesaj);
+	    	if (entity != null){
+	    		InputStream input = entity.getContent();	
+	    		message = convertStreamToString(input);
+	    		System.out.println(message);
+	    		input.close();
+        	}
+	    	if ( status != 200){
+	    		//requestul nu a funcționat
+	    		System.out.println("cannot insert");
+	    		String mesaj = stat.toString();
+	    		System.out.println(mesaj);
 	        		
 	        		
-	        	}
+	        }
 	        	
-	        }
-	        catch (Exception e){
-	        	return false;
-	        }
+       	}
+	    catch (Exception e){
+	    	return false;
+        }
 	        
-	    //} catch (ClientProtocolException e) {
-	        // TODO Auto-generated catch block
-	    } catch (Exception e) {
-	        // TODO Auto-generated catch block
-	    }
-	    
 	    if (response != null)
 	    	return true;
 	    else
