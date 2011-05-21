@@ -13,13 +13,14 @@ import android.location.Location;
 //import android.location.LocationListener;
 import android.location.LocationManager;
 import android.location.Criteria;
+import android.location.LocationListener;
 
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements LocationListener{
 	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -27,19 +28,15 @@ public class MainActivity extends Activity {
 
         startActivityForResult(new Intent(this,LogInActivity.class), 1);
         
-        Connection con = new Connection();
-        
-        con.authenticate();
-        
         //Restore authenticated session - if any
         setContentView(R.layout.main);
         
-        button_add = (Button)findViewById(R.id.Button01);
-        edit_lat   = (EditText)findViewById(R.id.EditText01);
-        edit_long  = (EditText)findViewById(R.id.EditText02);
+        _button_add = (Button)findViewById(R.id.Button01);
+        _edit_lat   = (EditText)findViewById(R.id.EditText01);
+        _edit_long  = (EditText)findViewById(R.id.EditText02);
         
         //afișeză parametrii adiționali ai mormanului și trimite-l la server, afișează starea tranzacției
-        button_add.setOnClickListener(new View.OnClickListener(){
+        _button_add.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View view) {
 				 Intent myIntent = new Intent(view.getContext(), MormanParams.class);
 	                startActivityForResult(myIntent, 2);
@@ -67,36 +64,80 @@ public class MainActivity extends Activity {
         //location
         // Acquire a reference to the system Location Manager
         
-        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-        
-        Criteria provCriteria = new Criteria();
-        provCriteria.setAccuracy(Criteria.ACCURACY_FINE);
-        provCriteria.setAltitudeRequired(false);
-        provCriteria.setBearingRequired(false);
-        provCriteria.setSpeedRequired(false);
-        provCriteria.setCostAllowed(true);
-                
-        String provider = locationManager.getBestProvider(provCriteria, true);//get best provider
-        updateLocation(locationManager.getLastKnownLocation(provider)); //update values
-       
+        _locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        updateProvider();
+        updateLocation(); //update values   
     };
-    public void updateLocation(Location loc){
+    
+    public void updateProvider(){
+    	 Criteria provCriteria = new Criteria();
+         provCriteria.setAccuracy(Criteria.ACCURACY_FINE);
+         provCriteria.setAltitudeRequired(false);
+         provCriteria.setBearingRequired(false);
+         provCriteria.setSpeedRequired(false);
+         provCriteria.setCostAllowed(true);
+                 
+         _provider = _locationManager.getBestProvider(provCriteria, true);//get best provider
+    }
+    public void updateLocation(){
+    	//get location
+    	
+    	Location  loc    = _locationManager.getLastKnownLocation(_provider);
+        //update
     	if (loc != null){
     		try{
     			double lat = loc.getLatitude();
     			double lon = loc.getLongitude();
     	
-    			edit_lat.setText(Double.toString(lat));
-    			edit_long.setText(Double.toString(lon));
+    			_edit_lat.setText(Double.toString(lat));
+    			_edit_long.setText(Double.toString(lon));
     		}
     		catch(Exception e){
     			
     		}
     	}
     }
-    public void onActivityResult(int param){
+    
+    /** Register for the updates when Activity is in foreground */
+	@Override
+	protected void onResume() {
+		super.onResume();
+		_locationManager.requestLocationUpdates(_provider, 20000, 1, this);
+		updateLocation();
+	}
+
+	/** Stop the updates when Activity is paused */
+	@Override
+	protected void onPause() {
+		super.onPause();
+		_locationManager.removeUpdates(this);
+	}
+
+	public void onLocationChanged(Location location) {
+		//
+	}
+
+	public void onProviderDisabled(String provider) {
+		// let okProvider be bestProvider
+		// re-register for updates
+		//provider is disabled
+		updateProvider();	
+	}
+
+	public void onProviderEnabled(String provider) {
+		// is provider better than bestProvider?
+		// is yes, bestProvider = provider
+		updateProvider();
+	}
+
+	public void onStatusChanged(String provider, int status, Bundle extras) {
+		//provider status changed
+		updateProvider();
+	}
+    
+	public void onActivityResult(int param){
     	if (param == 1){
-    		//the log in ended
+    		//the login ended
     		if (auth_result == "OK")
     	        setContentView(R.layout.main);
     	}
@@ -112,11 +153,15 @@ public class MainActivity extends Activity {
     	}
     }
     
+    //public
     public static String  auth_result;//rezultatul autentificării
     public static boolean add_result;// resultatul adăugării mormanului
-    
-    Button button_add;
-    EditText edit_lat;
-    EditText edit_long;
+
+    ///private
+    Button   			_button_add;
+    EditText 			_edit_lat;
+    EditText 			_edit_long;
+    String              _provider;
+    LocationManager 	_locationManager;
     
 }

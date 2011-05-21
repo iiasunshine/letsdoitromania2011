@@ -3,6 +3,7 @@
  */
 package ro.letsdoitromania.android.main;
 
+import ro.letsdoitromania.android.helpers.*;
 
 import android.app.Activity;
 import android.text.*;
@@ -12,6 +13,7 @@ import android.widget.*;
 import android.view.View;
 import android.content.Intent;
 import android.content.SharedPreferences;
+
 /**
  * @author tudor
  *
@@ -57,10 +59,12 @@ public class LogInActivity extends Activity
 
     	 //foloseștele ca să te logezi
     	if ((user_name != "") && (pwd != "")){
-    	    //TODO logează
-
-    		//TODO salvează usr și pwd dacă sunt ok
-    		saveCredentials(user_name, pwd);
+    		Connection con = new Connection();	
+    		int usrId = -1;
+            if (con.authenticate(user_name, pwd, usrId)){
+               	saveCredentials(user_name, pwd);
+            	returnOK();
+            }	
     		
     	}
     	else{

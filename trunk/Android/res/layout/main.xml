@@ -11,8 +11,29 @@
     	android:layout_alignParentTop="true"
     	>
 		<TextView android:layout_width="wrap_content" android:id="@+id/TextView01" android:layout_height="wrap_content" android:text="@string/EditText01Label"></TextView>
+	</LinearLayout>
+	<LinearLayout 
+    	android:orientation="horizontal"
+    	android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+    	android:layout_alignParentTop="true"
+    	>
 		<EditText android:layout_width="wrap_content" android:id="@+id/EditText01" android:layout_height="wrap_content" android:text="@string/EditText01"></EditText>
+	</LinearLayout>
+	<LinearLayout 
+    	android:orientation="horizontal"
+    	android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+    	android:layout_alignParentTop="true"
+    	>
 		<TextView android:text="@string/EditText02Label" android:id="@+id/TextView02" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+	</LinearLayout>
+	<LinearLayout 
+    	android:orientation="horizontal"
+    	android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+    	android:layout_alignParentTop="true"
+    	>
 		<EditText android:layout_width="wrap_content" android:id="@+id/EditText02" android:layout_height="wrap_content" android:text="@string/EditText02"></EditText>
 	</LinearLayout>
 	<RelativeLayout 
@@ -27,12 +48,13 @@
 	
 	<Button android:text="@string/listamormane" android:id="@+id/ButtonListaMormane" android:layout_width="fill_parent" android:layout_height="wrap_content"></Button>
 	<TextView android:layout_width="wrap_content" android:id="@+id/StatusAdaugat" android:layout_height="wrap_content" android:text="@string/adaugat_ok"></TextView>
-	<RelativeLayout 
+	<Button android:id="@+id/ButtonFinalIesire" android:layout_height="wrap_content" android:text="@string/iesire" android:layout_width="wrap_content"></Button><RelativeLayout 
         android:id="@+id/InnerRelativeLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true" >
 	
-		<Button android:text="@string/iesire" android:id="@+id/ButtonFinalIesire" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
+		
 	</RelativeLayout>
+
 </LinearLayout>
