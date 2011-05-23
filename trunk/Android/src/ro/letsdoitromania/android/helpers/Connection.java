@@ -1,5 +1,7 @@
 package ro.letsdoitromania.android.helpers;
 
+import ro.letsdoitromania.android.structuri.*;
+
 import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
@@ -8,27 +10,19 @@ import org.apache.http.HttpRequest;
 import org.apache.http.HttpException;
 import org.apache.http.protocol.ExecutionContext;
 import org.apache.http.protocol.HttpContext;
-import org.apache.http.NameValuePair; 
 import org.apache.http.StatusLine;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.auth.AuthState;
-//import org.apache.http.client.;
 import org.apache.http.client.CredentialsProvider;
-//import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient; 
-import org.apache.http.client.entity.UrlEncodedFormEntity; 
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.entity.*;
 import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.AbstractHttpClient;
-//import org.apache.http.impl.client.BasicAuthCache;
 import org.apache.http.impl.client.DefaultHttpClient; 
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.BasicHttpContext;
 
 
 
@@ -70,7 +64,7 @@ public class Connection {
 	
 	String getWsAddress(String action){
 		//"http://app.letsdoitromania.ro:8080/LDIRBackend/ws/garbage");
-		return _ldir_proto + "://" + _ldir_host + Integer.toString(_ldir_port) + "/ws/" + action;
+		return _ldir_proto + "://" + _ldir_host + ":" + Integer.toString(_ldir_port) + "/" + _ldir_ws_auth + "/" + action;
 	}
 	
 	DefaultHttpClient getHttpConn(String user, String password){
@@ -107,39 +101,30 @@ public class Connection {
 		
 	}
 	
-	public boolean authenticate(String user, String password, int usrId){
+	public long authenticate(String user, String password){
 		
-		HttpGet request 		= new HttpGet("user/userId");
+		HttpGet request 		= new HttpGet(getWsAddress("user"));
 		HttpResponse response 	= null;
 		
 		try{
 			response = getHttpConn(user,password).execute(request);
 			
 			if (response.getStatusLine().getStatusCode() != 200)
-				return false;
+				return -1;
 			
-			String content = convertStreamToString(response.getEntity().getContent());
-			usrId          = Integer.parseInt(content);
-			return true;			
+			String  content	= convertStreamToString(response.getEntity().getContent());
+			return Long.parseLong(content.toString());
+						
 		}
 		catch(Exception ex){
 			
 		}
-		return false;		
+		return -1;		
 	}
 	
-	public boolean addGarbage(String user, String password){
+	public boolean addGarbage(String user, String password, long usrId, Morman morman){
 	
 	    HttpPost httppost = new HttpPost(getWsAddress("garbage"));
-	    
-	   // String user = "dummy@dummy.com";
-	   // String pwd  = "dummy";
-	    Garbage morman = new Garbage();
-	    morman.description = "dummy_garbage";
-	    morman.status      = "IDENTIFIED";
-	    morman.volume      = 100;
-	    morman.x           = 47.3f;
-	    morman.y           = 44.2f;
 	    
 	    HttpResponse response = null;
 	    
@@ -149,8 +134,7 @@ public class Connection {
 	    	
 	    	httppost.setHeader("Content-Type", "application/json");
 	     
-	    	String morman_json = morman.serializeJSON();
-	    	httppost.setEntity(new StringEntity(morman_json,"ASCII"));
+	    	httppost.setEntity(new StringEntity(morman.toJson(),"ASCII"));
 	       
 	    	response          = getHttpConn(user,password).execute(httppost);
 	        	
@@ -199,7 +183,7 @@ public class Connection {
 
 	            while ((line = reader.readLine()) != null) {
 
-	                sb.append(line + "\n");
+	                sb.append(line);//+ "/n" );
 
 	            }
 
