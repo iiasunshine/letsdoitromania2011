@@ -30,39 +30,39 @@ public class LogInActivity extends Activity
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     
+         	
+        setContentView(R.layout.login);
+        
+        //dacă nu există credențiale corecte - cere credențialele și încearcă din nou	
         //dacă utilizatorul s-a mai logat, încearcă să folosești credențialele precedente
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         if (settings != null){
         
-        	String user_name = settings.getString(USR_NAME, "");
-        	String pswd      = settings.getString(USR_PWD, "");
+        	_usr = settings.getString(USR_NAME, "");
+        	_pwd = settings.getString(USR_PWD, "");
         
-        	if (user_name != "")
-        		if (login(user_name,pswd))
+        	if (_usr != "")
+        		if (login())
         			returnOK();
         		else //poate și-a schimbat parola - pune la user numele de utilizator
-        			((EditText)findViewById(R.id.EditText01)).setText(user_name);
+        			((EditText)findViewById(R.id.EditName)).setText(_usr);
         			 
         }
         
-        //dacă nu există credențiale corecte - cere credențialele și încearcă din nou 	
-        setContentView(R.layout.login);
-        auth = (Button)findViewById(R.id.Button01);
-        auth.setOnClickListener(this);
+        _auth = (Button)findViewById(R.id.Button01);
+        _auth.setOnClickListener(this);
     }
     
     public void onClick(View view){
     	
     	//ia user name-ul și parola
-    	 String user_name = ((Editable)((EditText)findViewById(R.id.EditText01)).getText()).toString();
-    	 String pwd       = ((Editable)((EditText)findViewById(R.id.EditText02)).getText()).toString();
+    	 _usr = ((Editable)((EditText)findViewById(R.id.EditName)).getText()).toString();
+    	 _pwd = ((Editable)((EditText)findViewById(R.id.EditPass)).getText()).toString();
 
     	 //foloseștele ca să te logezi
-    	if ((user_name != "") && (pwd != "")){
-    		Connection con = new Connection();	
-    		int usrId = -1;
-            if (con.authenticate(user_name, pwd, usrId)){
-               	saveCredentials(user_name, pwd);
+    	if ((_usr != "") && (_pwd!= "")){
+            if (login()){
+               	saveCredentials();
             	returnOK();
             }	
     		
@@ -71,7 +71,8 @@ public class LogInActivity extends Activity
     		//TODO popout să bage ceva
     		
     	}
-    	
+
+       	saveCredentials();
     	//return
     	returnOK();
     }
@@ -79,21 +80,35 @@ public class LogInActivity extends Activity
     private void returnOK(){
     	Intent resultIntent = new Intent();
     	resultIntent.putExtra(MainActivity.auth_result, "OK");
+    	resultIntent.putExtra("userId",_userId);
+    	resultIntent.putExtra("usr_name", _usr);
+    	resultIntent.putExtra("usr_pwd", _pwd);
     	this.finish();
     }
     
-    private boolean login(String username, String passwd){
-    	//TODO IMPLMENTEAZĂ PARTEA DE AUTHENTIFICARE
-    	return true;
+    private boolean login(){
+    	if ((_usr != "") && (_pwd != "")){
+    		Connection con = new Connection();	
+    		_userId = con.authenticate(_usr, _pwd);
+    		return (_userId != -1);
+    	}
+    	return false;
     }
-    private void saveCredentials(String usr, String pwd){
+    
+    public void saveCredentials(){
     	 SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
          
     	 SharedPreferences.Editor editor = settings.edit();
-         editor.putString(USR_NAME, usr);
-         editor.putString(USR_PWD, pwd);
+         editor.putString(USR_NAME, _usr);
+         editor.putString(USR_PWD, _pwd);
+         
+         editor.commit();
          
     }
-    Button auth;
-
+    
+    //member variables
+    Button _auth;
+    long   _userId;
+    String _usr;
+    String _pwd;
 }

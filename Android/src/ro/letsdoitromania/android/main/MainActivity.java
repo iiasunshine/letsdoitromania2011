@@ -1,7 +1,7 @@
 package ro.letsdoitromania.android.main;
 
 import ro.letsdoitromania.android.helpers.*;
-//import ro.letsdoitromania.android.structuri.*;
+import ro.letsdoitromania.android.structuri.*;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -26,6 +26,11 @@ public class MainActivity extends Activity implements LocationListener{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //init login data 
+        _usr = "";
+        _pwd = "";
+        _usrId = -1;
+        
         startActivityForResult(new Intent(this,LogInActivity.class), 1);
         
         //Restore authenticated session - if any
@@ -34,6 +39,7 @@ public class MainActivity extends Activity implements LocationListener{
         _button_add = (Button)findViewById(R.id.Button01);
         _edit_lat   = (EditText)findViewById(R.id.EditText01);
         _edit_long  = (EditText)findViewById(R.id.EditText02);
+     
         
         //afișeză parametrii adiționali ai mormanului și trimite-l la server, afișează starea tranzacției
         _button_add.setOnClickListener(new View.OnClickListener(){
@@ -135,14 +141,30 @@ public class MainActivity extends Activity implements LocationListener{
 		updateProvider();
 	}
     
-	public void onActivityResult(int param){
+	public void onActivityResult(int param, Intent intent){
     	if (param == 1){
     		//the login ended
-    		if (auth_result == "OK")
-    	        setContentView(R.layout.main);
+    		if (auth_result == "OK"){
+    			Bundle extras = intent.getExtras();
+    			_usr = extras.getString("usr_name");
+    			_pwd = extras.getString("usr_pwd");
+    			_usrId = extras.getLong("userId");
+    		}
+    	    setContentView(R.layout.main);
     	}
     	if (param == 2){
     		//adaugarea mormanului a avut loc
+    		Bundle extras = getIntent().getExtras();
+    		Morman morman = (Morman)extras.get("morman");
+    		morman.set_lat_Y(Double.parseDouble(_edit_lat.getText().toString()));
+    		morman.set_long_X(Double.parseDouble(_edit_lat.getText().toString()));
+    		
+    		if (auth_result == "OK")//if we are connected and authenticated add new garbage
+    		{
+    			Connection con = new Connection();
+    			con.addGarbage(_usr, _pwd, _usrId, morman);
+    		}
+    		
     		TextView mes = (TextView)findViewById(R.id.StatusAdaugat);
     		if (add_result){
     			mes.setText(R.string.adaugat_ok);
@@ -163,5 +185,10 @@ public class MainActivity extends Activity implements LocationListener{
     EditText 			_edit_long;
     String              _provider;
     LocationManager 	_locationManager;
+    
+    String              _usr;
+    String              _pwd;
+    long                _usrId;
+    
     
 }

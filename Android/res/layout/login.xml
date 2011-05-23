@@ -12,7 +12,7 @@
     	android:layout_alignParentTop="true"
     	>
 		<TextView android:text="@string/name_label" android:id="@+id/TextView01" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
-		<EditText android:text="@string/pass_text" android:layout_width="wrap_content" android:id="@+id/EditText02" android:layout_height="wrap_content"></EditText>
+		<EditText android:text="@string/name_text" android:layout_width="wrap_content" android:id="@+id/EditName" android:layout_height="wrap_content"></EditText>
 	</TableLayout>
 	
 	<TableLayout 
@@ -22,7 +22,7 @@
     	android:layout_alignParentTop="true"
     	>
 	<TextView android:text="@string/pass_label" android:id="@+id/TextView02" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
-	<EditText android:password="true" android:text="@string/name_text" android:layout_width="wrap_content" android:id="@+id/EditText01" android:layout_height="wrap_content"></EditText>
+	<EditText android:password="true" android:text="@string/pass_text" android:layout_width="wrap_content" android:id="@+id/EditPass" android:layout_height="wrap_content"></EditText>
 	</TableLayout>
 	
 
