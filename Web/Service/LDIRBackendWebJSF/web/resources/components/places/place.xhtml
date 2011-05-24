@@ -1,0 +1,21 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:composite="http://java.sun.com/jsf/composite"
+    xmlns:places="http://java.sun.com/jsf/composite/components/places">
+
+   <!--  INTERFACE -->
+   <composite:interface>
+     <composite:attribute name="location" required="true"/>     
+   </composite:interface>
+         
+   <!-- IMPLEMENTATION -->
+   <composite:implementation>
+	   <div class="placeHeading">
+	      <places:map     title="Map"/>
+	      <places:weather title="Weather"/>
+	   </div>
+   </composite:implementation>    
+
+</html>

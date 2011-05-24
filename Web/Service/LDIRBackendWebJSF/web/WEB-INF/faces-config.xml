@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<faces-config xmlns="http://java.sun.com/xml/ns/javaee"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd"
+              version="2.0">
+  <application>
+    <resource-bundle>
+      <base-name>LDIRBackendWebJSF.messages</base-name>
+      <var>msgs</var>
+    </resource-bundle>
+        <resource-bundle>
+      <base-name>LDIRBackendWebJSF.config</base-name>
+      <var>config</var>
+    </resource-bundle>
+    <resource-bundle>
+      <base-name>/Bundle</base-name>
+      <var>bundle</var>
+    </resource-bundle>
+  </application>
+      <managed-bean>
+        <managed-bean-name>layoutBean</managed-bean-name>
+        <managed-bean-class>ro.ldir.view.layoutBean</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
+          <managed-bean>
+        <managed-bean-name>userViewBean</managed-bean-name>
+        <managed-bean-class>ro.ldir.view.userViewBean</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
+</faces-config>
