@@ -1,0 +1,63 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:util="http://java.sun.com/jsf/composite/components/util"
+                xmlns:p="http://primefaces.prime.com.tr/ui"
+                >
+
+    <h:form>
+        <p:messages showDetail="true"/>
+        <h:panelGrid columns="2" cellpadding="5">
+            <h:outputLabel for="lastName" value="Nume: *" />
+            <p:inputText value="#{userViewBean.user.lastName}"
+                         id="lastName" required="true" label="nume"/>
+
+            <h:outputLabel for="firstName" value="Prenume: * " />
+            <p:inputText value="#{userViewBean.user.firstName}"
+                         id="firstName" required="true" label="prenume" />
+
+            <h:outputLabel for="email" value="E-mail: * " />
+            <p:inputText value="#{userViewBean.user.email}"
+                         id="email" required="true" label="e-mail" />
+
+            <h:outputLabel for="passwd" value="Parola: * " />
+            <h:inputSecret value="#{userViewBean.user.passwd}"
+                           id="passwd" required="true" label="password" />
+
+            <h:outputLabel for="repasswd" value="Repetati parola: * " />
+            <h:inputSecret value="#{userViewBean.repasswd}"
+                           id="repasswd" required="true" label="repeat password" />
+
+            <h:outputLabel for="birthday" value="Data nasterii: * " />
+            <p:calendar value="#{userViewBean.user.birthday}"
+                        id="birthday" label="data nasterii" />
+
+            <h:outputLabel for="town" value="Oras: * " />
+            <p:inputText value="#{userViewBean.user.town}"
+                         id="town" required="true" label="oras" />
+
+            <h:outputLabel for="county" value="Judet: * " />
+            <h:selectOneMenu id="county" value="#{userViewBean.user.county}">
+                <f:selectItem itemLabel="alegeti judetul" itemValue="" />
+                <f:selectItems value="#{userViewBean.counties}" />
+            </h:selectOneMenu>
+            <h:outputLabel for="activities" value="Vreau sa particip la: " />
+ 
+            <h:selectManyCheckbox id="activities" value="#{userViewBean.user.activities}">
+                <f:selectItems value="#{userViewBean.activitiesList}" />
+            </h:selectManyCheckbox>
+            <h:outputLabel for="accept" value="" />
+
+            <h:selectBooleanCheckbox id="accept" value="#{userViewBean.accept}">
+                <f:selectItem itemLabel="* accept conditiile de utilizare" itemValue="1" />
+            </h:selectBooleanCheckbox>
+           
+            <f:facet name="footer">
+                <p:commandButton value="Register"
+                                 actionListener="#{userViewBean.register}" ajax="false"
+                                 />
+            </f:facet>
+        </h:panelGrid>
+    </h:form>
+</ui:composition>

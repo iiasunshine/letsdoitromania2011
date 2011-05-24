@@ -1,0 +1,22 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets">
+    
+  <h:form prependId="false">
+    <h:panelGrid columns="2">
+    
+      #{msgs.streetAddress}
+      <h:inputText value="#{place.streetAddress}" size="15"/>
+      
+      #{msgs.city}  <h:inputText value="#{place.city}"  size="10"/>
+      #{msgs.state} <h:inputText value="#{place.state}" size="3"/>
+      #{msgs.zip}   <h:inputText value="#{place.zip}"   size="5"/>
+      
+      <h:commandButton value="#{msgs.goButtonText}" 
+        style="font-family:Palatino;font-style:italic"
+        action="#{place.fetch}"/>
+                     
+    </h:panelGrid>         
+  </h:form>
+  
+</ui:composition>
