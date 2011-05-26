@@ -67,8 +67,8 @@ public class Garbage extends FieldAccessBean {
 	private GarbageStatus status;
 	private TownArea town;
 	private int volume;
-	private float x;
-	private float y;
+	private double x;
+	private double y;
 
 	public Garbage() {
 	}
@@ -184,14 +184,14 @@ public class Garbage extends FieldAccessBean {
 	/**
 	 * @return the x
 	 */
-	public float getX() {
+	public double getX() {
 		return x;
 	}
 
 	/**
 	 * @return the y
 	 */
-	public float getY() {
+	public double getY() {
 		return y;
 	}
 
@@ -294,7 +294,7 @@ public class Garbage extends FieldAccessBean {
 	 * @param x
 	 *            the x to set
 	 */
-	public void setX(float x) {
+	public void setX(double x) {
 		this.x = x;
 	}
 
@@ -302,7 +302,7 @@ public class Garbage extends FieldAccessBean {
 	 * @param y
 	 *            the y to set
 	 */
-	public void setY(float y) {
+	public void setY(double y) {
 		this.y = y;
 	}
 }

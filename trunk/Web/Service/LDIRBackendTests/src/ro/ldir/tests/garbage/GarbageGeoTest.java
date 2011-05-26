@@ -65,11 +65,11 @@ public class GarbageGeoTest extends GarbageTest {
 	@BeforeClass
 	public static void insertChartedArea() throws ClassNotFoundException,
 			SQLException {
-		ArrayList<Point2D.Float> polyline = new ArrayList<Point2D.Float>();
-		polyline.add(new Point2D.Float(0, 0));
-		polyline.add(new Point2D.Float(0, 10));
-		polyline.add(new Point2D.Float(10, 10));
-		polyline.add(new Point2D.Float(10, 0));
+		ArrayList<Point2D.Double> polyline = new ArrayList<Point2D.Double>();
+		polyline.add(new Point2D.Double(0, 0));
+		polyline.add(new Point2D.Double(0, 10));
+		polyline.add(new Point2D.Double(10, 10));
+		polyline.add(new Point2D.Double(10, 0));
 
 		ChartedArea chartedArea = new ChartedArea();
 		chartedArea.setPolyline(polyline);
@@ -96,11 +96,11 @@ public class GarbageGeoTest extends GarbageTest {
 	@BeforeClass
 	public static void insertCountyArea() throws ClassNotFoundException,
 			SQLException {
-		ArrayList<Point2D.Float> polyline = new ArrayList<Point2D.Float>();
-		polyline.add(new Point2D.Float(0, 0));
-		polyline.add(new Point2D.Float(0, 10));
-		polyline.add(new Point2D.Float(10, 10));
-		polyline.add(new Point2D.Float(10, 0));
+		ArrayList<Point2D.Double> polyline = new ArrayList<Point2D.Double>();
+		polyline.add(new Point2D.Double(0, 0));
+		polyline.add(new Point2D.Double(0, 10));
+		polyline.add(new Point2D.Double(10, 10));
+		polyline.add(new Point2D.Double(10, 0));
 
 		CountyArea countyArea = new CountyArea();
 		countyArea.setPolyline(polyline);
@@ -127,11 +127,11 @@ public class GarbageGeoTest extends GarbageTest {
 	@BeforeClass
 	public static void insertTownArea() throws ClassNotFoundException,
 			SQLException {
-		ArrayList<Point2D.Float> polyline = new ArrayList<Point2D.Float>();
-		polyline.add(new Point2D.Float(0, 0));
-		polyline.add(new Point2D.Float(0, 10));
-		polyline.add(new Point2D.Float(10, 10));
-		polyline.add(new Point2D.Float(10, 0));
+		ArrayList<Point2D.Double> polyline = new ArrayList<Point2D.Double>();
+		polyline.add(new Point2D.Double(0, 0));
+		polyline.add(new Point2D.Double(0, 10));
+		polyline.add(new Point2D.Double(10, 10));
+		polyline.add(new Point2D.Double(10, 0));
 
 		TownArea townArea = new TownArea();
 		townArea.setPolyline(polyline);
@@ -239,7 +239,7 @@ public class GarbageGeoTest extends GarbageTest {
 		instanceResource = client.resource(geoLocation + "/chartedArea/"
 				+ chartAreaId);
 		ChartedArea area = instanceBuilder(USER).get(ChartedArea.class);
-		assertTrue(area.containsPoint(new Point2D.Float(5, 5)));
+		assertTrue(area.containsPoint(new Point2D.Double(5, 5)));
 		// TODO: this this returns ID, thus cannot access the field like this
 		// assertEquals(1, area.getGarbages().size());
 	}
@@ -249,7 +249,7 @@ public class GarbageGeoTest extends GarbageTest {
 		instanceResource = client.resource(geoLocation + "/countyArea/"
 				+ countyAreaId);
 		CountyArea area = instanceBuilder(USER).get(CountyArea.class);
-		assertTrue(area.containsPoint(new Point2D.Float(5, 5)));
+		assertTrue(area.containsPoint(new Point2D.Double(5, 5)));
 		// TODO: this this returns ID, thus cannot access the field like this
 		// assertEquals(1, area.getGarbages().size());
 	}
@@ -291,7 +291,7 @@ public class GarbageGeoTest extends GarbageTest {
 		instanceResource = client.resource(geoLocation + "/townArea/"
 				+ townAreaId);
 		TownArea area = instanceBuilder(USER).get(TownArea.class);
-		assertTrue(area.containsPoint(new Point2D.Float(5, 5)));
+		assertTrue(area.containsPoint(new Point2D.Double(5, 5)));
 		// TODO: this this returns ID, thus cannot access the field like this
 		// assertEquals(1, area.getGarbages().size());
 	}

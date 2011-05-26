@@ -93,10 +93,10 @@ public class GeoWebService {
 	@GET
 	@Produces({ "application/json", "application/xml" })
 	@Path("chartedArea/count")
-	public String countChartedAreas(@QueryParam("topLeftX") float topLeftX,
-			@QueryParam("topLeftY") float topLeftY,
-			@QueryParam("bottomRightX") float bottomRightX,
-			@QueryParam("bottomRightY") float bottomRightY) {
+	public String countChartedAreas(@QueryParam("topLeftX") double topLeftX,
+			@QueryParam("topLeftY") double topLeftY,
+			@QueryParam("bottomRightX") double bottomRightX,
+			@QueryParam("bottomRightY") double bottomRightY) {
 		List<ChartedArea> chartedAreas = geoManager.getChartedAreas(topLeftX,
 				topLeftY, bottomRightX, bottomRightY);
 		return new Integer(chartedAreas.size()).toString();
@@ -136,10 +136,10 @@ public class GeoWebService {
 	@Produces({ "application/json", "application/xml" })
 	@Path("chartedArea/all")
 	public List<ChartedArea> getChartedAreas(
-			@QueryParam("topLeftX") float topLeftX,
-			@QueryParam("topLeftY") float topLeftY,
-			@QueryParam("bottomRightX") float bottomRightX,
-			@QueryParam("bottomRightY") float bottomRightY) {
+			@QueryParam("topLeftX") double topLeftX,
+			@QueryParam("topLeftY") double topLeftY,
+			@QueryParam("bottomRightX") double bottomRightX,
+			@QueryParam("bottomRightY") double bottomRightY) {
 		List<ChartedArea> chartedAreas = geoManager.getChartedAreas(topLeftX,
 				topLeftY, bottomRightX, bottomRightY);
 		if (chartedAreas.size() > MAX_CHARTAREAS)

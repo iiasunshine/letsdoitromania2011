@@ -47,75 +47,75 @@ public class ClosedAreaTest {
 
 	@BeforeClass
 	public static void setupArrowHead() throws Exception {
-		List<Point2D.Float> points = new ArrayList<Point2D.Float>();
-		points.add(new Point2D.Float(0, 0));
-		points.add(new Point2D.Float(1, 1));
-		points.add(new Point2D.Float(0, 2));
-		points.add(new Point2D.Float(2, 1));
+		List<Point2D.Double> points = new ArrayList<Point2D.Double>();
+		points.add(new Point2D.Double(0, 0));
+		points.add(new Point2D.Double(1, 1));
+		points.add(new Point2D.Double(0, 2));
+		points.add(new Point2D.Double(2, 1));
 		arrowHead.setPolyline(points);
 		arrowHead.setBoundingBox();
 	}
 
 	@BeforeClass
 	public static void setupSquare() throws Exception {
-		List<Point2D.Float> points = new ArrayList<Point2D.Float>();
-		points.add(new Point2D.Float(0, 0));
-		points.add(new Point2D.Float(2, 0));
-		points.add(new Point2D.Float(2, 2));
-		points.add(new Point2D.Float(0, 2));
+		List<Point2D.Double> points = new ArrayList<Point2D.Double>();
+		points.add(new Point2D.Double(0, 0));
+		points.add(new Point2D.Double(2, 0));
+		points.add(new Point2D.Double(2, 2));
+		points.add(new Point2D.Double(0, 2));
 		square.setPolyline(points);
 		square.setBoundingBox();
 	}
 
 	@BeforeClass
 	public static void setupTriangle() throws Exception {
-		List<Point2D.Float> points = new ArrayList<Point2D.Float>();
-		points.add(new Point2D.Float(0, 0));
-		points.add(new Point2D.Float(2, 0));
-		points.add(new Point2D.Float(1, 2));
+		List<Point2D.Double> points = new ArrayList<Point2D.Double>();
+		points.add(new Point2D.Double(0, 0));
+		points.add(new Point2D.Double(2, 0));
+		points.add(new Point2D.Double(1, 2));
 		triangle.setPolyline(points);
 		triangle.setBoundingBox();
 	}
 
 	@Test
 	public void testArrowHead1() {
-		Point2D.Float p = new Point2D.Float((float) 1.5, 1);
+		Point2D.Double p = new Point2D.Double((double) 1.5, 1);
 		assertTrue(arrowHead.containsPoint(p));
 	}
 
 	@Test
 	public void testArrowHead2() {
-		Point2D.Float p = new Point2D.Float(0, 1);
+		Point2D.Double p = new Point2D.Double(0, 1);
 		assertFalse(arrowHead.containsPoint(p));
 	}
 
 	@Test
 	public void testArrowHead3() {
-		Point2D.Float p = new Point2D.Float(1, 0);
+		Point2D.Double p = new Point2D.Double(1, 0);
 		assertFalse(arrowHead.containsPoint(p));
 	}
 
 	@Test
 	public void testSquare1() {
-		Point2D.Float p = new Point2D.Float(1, 1);
+		Point2D.Double p = new Point2D.Double(1, 1);
 		assertTrue(square.containsPoint(p));
 	}
 
 	@Test
 	public void testSquare2() {
-		Point2D.Float p = new Point2D.Float(3, 1);
+		Point2D.Double p = new Point2D.Double(3, 1);
 		assertFalse(square.containsPoint(p));
 	}
 
 	@Test
 	public void testTriangle1() {
-		Point2D.Float p = new Point2D.Float(1, 1);
+		Point2D.Double p = new Point2D.Double(1, 1);
 		assertTrue(triangle.containsPoint(p));
 	}
 
 	@Test
 	public void testTriangle2() {
-		Point2D.Float p = new Point2D.Float(2, 1);
+		Point2D.Double p = new Point2D.Double(2, 1);
 		assertFalse(triangle.containsPoint(p));
 	}
 }

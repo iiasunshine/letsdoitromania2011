@@ -58,10 +58,10 @@ public class MapWebService {
 	@GET
 	@Produces({ "application/vnd.google-earth.kml+xml" })
 	@Path("chartedAreas")
-	public String getChartedAreas(@QueryParam("topLeftX") float topLeftX,
-			@QueryParam("topLeftY") float topLeftY,
-			@QueryParam("bottomRightX") float bottomRightX,
-			@QueryParam("bottomRightY") float bottomRightY) {
+	public String getChartedAreas(@QueryParam("topLeftX") double topLeftX,
+			@QueryParam("topLeftY") double topLeftY,
+			@QueryParam("bottomRightX") double bottomRightX,
+			@QueryParam("bottomRightY") double bottomRightY) {
 		List<ChartedArea> chartedAreas = geoManager.getChartedAreas(topLeftX,
 				topLeftY, bottomRightX, bottomRightY);
 		return new ChartedAreasKMLFormatter(chartedAreas).toString();
@@ -70,10 +70,10 @@ public class MapWebService {
 	@GET
 	@Produces({ "application/vnd.google-earth.kml+xml" })
 	@Path("garbages")
-	public String getGarbages(@QueryParam("topLeftX") float topLeftX,
-			@QueryParam("topLeftY") float topLeftY,
-			@QueryParam("bottomRightX") float bottomRightX,
-			@QueryParam("bottomRightY") float bottomRightY) {
+	public String getGarbages(@QueryParam("topLeftX") double topLeftX,
+			@QueryParam("topLeftY") double topLeftY,
+			@QueryParam("bottomRightX") double bottomRightX,
+			@QueryParam("bottomRightY") double bottomRightY) {
 		List<Garbage> garbages = garbageManager.getGarbages(topLeftX, topLeftY,
 				bottomRightX, bottomRightY);
 		return new GarbagesKMLFormatter(garbages).toString();
