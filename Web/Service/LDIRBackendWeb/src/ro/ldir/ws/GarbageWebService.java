@@ -152,10 +152,10 @@ public class GarbageWebService {
 	@GET
 	@Produces({ "application/json", "application/xml" })
 	@Path("bbox")
-	public List<Garbage> getGarbages(@QueryParam("topLeftX") float topLeftX,
-			@QueryParam("topLeftY") float topLeftY,
-			@QueryParam("bottomRightX") float bottomRightX,
-			@QueryParam("bottomRightY") float bottomRightY) {
+	public List<Garbage> getGarbages(@QueryParam("topLeftX") double topLeftX,
+			@QueryParam("topLeftY") double topLeftY,
+			@QueryParam("bottomRightX") double bottomRightX,
+			@QueryParam("bottomRightY") double bottomRightY) {
 		return garbageManager.getGarbages(topLeftX, topLeftY, bottomRightX,
 				bottomRightY);
 	}

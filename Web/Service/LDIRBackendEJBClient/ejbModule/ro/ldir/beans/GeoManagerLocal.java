@@ -51,7 +51,7 @@ public interface GeoManagerLocal {
 	 *            The point for which the chart area is searched for.
 	 * @return The chart area containing the point.
 	 */
-	public ChartedArea getChartedArea(Point2D.Float point);
+	public ChartedArea getChartedArea(Point2D.Double point);
 
 	/**
 	 * Gets all the charting areas that intersect a bounding box.
@@ -66,8 +66,8 @@ public interface GeoManagerLocal {
 	 *            The bottom right point Y of the bounding box.
 	 * @return A list of charting areas that intersect the bounding box.
 	 */
-	public List<ChartedArea> getChartedAreas(float topLeftX, float topLeftY,
-			float bottomRightX, float bottomRightY);
+	public List<ChartedArea> getChartedAreas(double topLeftX, double topLeftY,
+			double bottomRightX, double bottomRightY);
 
 	/**
 	 * Finds an county area by ID.
@@ -85,7 +85,7 @@ public interface GeoManagerLocal {
 	 *            The point for which the county area is searched for.
 	 * @return The county area containing the point.
 	 */
-	public CountyArea getCountyArea(Point2D.Float point);
+	public CountyArea getCountyArea(Point2D.Double point);
 
 	/**
 	 * Finds an town area by ID.
@@ -103,7 +103,7 @@ public interface GeoManagerLocal {
 	 *            The point for which the town area is searched for.
 	 * @return The town area containing the point.
 	 */
-	public TownArea getTownArea(Point2D.Float point);
+	public TownArea getTownArea(Point2D.Double point);
 
 	/**
 	 * Creates a new chart area.

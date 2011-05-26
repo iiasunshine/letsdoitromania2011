@@ -58,10 +58,10 @@ public abstract class ClosedArea extends FieldAccessBean {
 	private Integer areaId;
 
 	/** The closed polyline defining this closeding area. */
-	private List<Point2D.Float> polyline;
+	private List<Point2D.Double> polyline;
 
 	/** The coordinates of the bounding box, used to speed up queries. */
-	private float topLeftX, bottomRightX, topLeftY, bottomRightY;
+	private double topLeftX, bottomRightX, topLeftY, bottomRightY;
 
 	public ClosedArea() {
 	}
@@ -73,9 +73,9 @@ public abstract class ClosedArea extends FieldAccessBean {
 	 *            The point to test against.
 	 * @return {@code true} if the area encloses the point, false otherwise.
 	 */
-	public boolean containsPoint(Point2D.Float point) {
+	public boolean containsPoint(Point2D.Double point) {
 		boolean inside = false;
-		Point2D.Float pi, pj;
+		Point2D.Double pi, pj;
 		for (int i = 0, j = polyline.size() - 1; i < polyline.size(); j = i++) {
 			pi = polyline.get(i);
 			pj = polyline.get(j);
@@ -115,7 +115,7 @@ public abstract class ClosedArea extends FieldAccessBean {
 	 * @return the bottomRightX
 	 */
 	@XmlTransient
-	public float getBottomRightX() {
+	public double getBottomRightX() {
 		return bottomRightX;
 	}
 
@@ -123,14 +123,14 @@ public abstract class ClosedArea extends FieldAccessBean {
 	 * @return the bottomRightY
 	 */
 	@XmlTransient
-	public float getBottomRightY() {
+	public double getBottomRightY() {
 		return bottomRightY;
 	}
 
 	/**
 	 * @return the polyline
 	 */
-	public List<Point2D.Float> getPolyline() {
+	public List<Point2D.Double> getPolyline() {
 		return polyline;
 	}
 
@@ -138,7 +138,7 @@ public abstract class ClosedArea extends FieldAccessBean {
 	 * @return the topLeftX
 	 */
 	@XmlTransient
-	public float getTopLeftX() {
+	public double getTopLeftX() {
 		return topLeftX;
 	}
 
@@ -146,7 +146,7 @@ public abstract class ClosedArea extends FieldAccessBean {
 	 * @return the topLeftY
 	 */
 	@XmlTransient
-	public float getTopLeftY() {
+	public double getTopLeftY() {
 		return topLeftY;
 	}
 
@@ -162,7 +162,7 @@ public abstract class ClosedArea extends FieldAccessBean {
 	 * @param bottomRightX
 	 *            the bottomRightX to set
 	 */
-	public void setBottomRightX(float bottomRightX) {
+	public void setBottomRightX(double bottomRightX) {
 		this.bottomRightX = bottomRightX;
 	}
 
@@ -170,7 +170,7 @@ public abstract class ClosedArea extends FieldAccessBean {
 	 * @param bottomRightY
 	 *            the bottomRightY to set
 	 */
-	public void setBottomRightY(float bottomRightY) {
+	public void setBottomRightY(double bottomRightY) {
 		this.bottomRightY = bottomRightY;
 	}
 
@@ -178,10 +178,10 @@ public abstract class ClosedArea extends FieldAccessBean {
 	public void setBoundingBox() {
 		if (polyline == null)
 			return;
-		Point2D.Float first = polyline.get(0);
+		Point2D.Double first = polyline.get(0);
 		topLeftX = bottomRightX = first.x;
 		topLeftY = bottomRightY = first.y;
-		for (Point2D.Float point : polyline) {
+		for (Point2D.Double point : polyline) {
 			if (topLeftX > point.x)
 				topLeftX = point.x;
 			if (topLeftY < point.y)
@@ -197,7 +197,7 @@ public abstract class ClosedArea extends FieldAccessBean {
 	 * @param polyline
 	 *            the polyline to set
 	 */
-	public void setPolyline(List<Point2D.Float> polyline) {
+	public void setPolyline(List<Point2D.Double> polyline) {
 		this.polyline = polyline;
 		log.finer("Set bounding box for a closed area.");
 	}
@@ -206,7 +206,7 @@ public abstract class ClosedArea extends FieldAccessBean {
 	 * @param topLeftX
 	 *            the topLeftX to set
 	 */
-	public void setTopLeftX(float topLeftX) {
+	public void setTopLeftX(double topLeftX) {
 		this.topLeftX = topLeftX;
 	}
 
@@ -214,7 +214,7 @@ public abstract class ClosedArea extends FieldAccessBean {
 	 * @param topLeftY
 	 *            the topLeftY to set
 	 */
-	public void setTopLeftY(float topLeftY) {
+	public void setTopLeftY(double topLeftY) {
 		this.topLeftY = topLeftY;
 	}
 }

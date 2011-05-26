@@ -89,8 +89,8 @@ public interface GarbageManagerLocal {
 	 *            The bottom right point Y of the bounding box.
 	 * @return A list of garbages inside the bounding box.
 	 */
-	public List<Garbage> getGarbages(float topLeftX, float topLeftY,
-			float bottomRightX, float bottomRightY);
+	public List<Garbage> getGarbages(double topLeftX, double topLeftY,
+			double bottomRightX, double bottomRightY);
 
 	/**
 	 * Searches a garbage by status.

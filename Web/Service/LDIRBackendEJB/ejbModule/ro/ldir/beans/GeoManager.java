@@ -1,7 +1,7 @@
 package ro.ldir.beans;
 
 import java.awt.geom.Point2D;
-import java.awt.geom.Point2D.Float;
+import java.awt.geom.Point2D.Double;
 import java.util.List;
 
 import javax.annotation.security.DeclareRoles;
@@ -69,11 +69,11 @@ public class GeoManager implements GeoManagerLocal {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * ro.ldir.beans.GeoManagerLocal#getChartedArea(java.awt.geom.Point2D.Float)
+	 * ro.ldir.beans.GeoManagerLocal#getChartedArea(java.awt.geom.Point2D.Double)
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public ChartedArea getChartedArea(Float point) {
+	public ChartedArea getChartedArea(Double point) {
 		Query query = em.createQuery("SELECT ca FROM ChartedArea ca WHERE "
 				+ ":x BETWEEN ca.topLeftX AND ca.bottomRightX AND "
 				+ ":y BETWEEN ca.bottomRightY AND ca.topLeftY");
@@ -99,13 +99,13 @@ public class GeoManager implements GeoManagerLocal {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see ro.ldir.beans.GeoManagerLocal#getChartedAreas(float, float, float,
-	 * float)
+	 * @see ro.ldir.beans.GeoManagerLocal#getChartedAreas(double, double, double,
+	 * double)
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ChartedArea> getChartedAreas(float topLeftX, float topLeftY,
-			float bottomRightX, float bottomRightY) {
+	public List<ChartedArea> getChartedAreas(double topLeftX, double topLeftY,
+			double bottomRightX, double bottomRightY) {
 		Query query = em.createQuery("SELECT ca FROM ChartedArea ca WHERE "
 				+ "(ca.topLeftX BETWEEN :topLeftX AND :bottomRightX OR"
 				+ " ca.bottomRightX BETWEEN :topLeftX AND :bottomRightX OR"
@@ -130,11 +130,11 @@ public class GeoManager implements GeoManagerLocal {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * ro.ldir.beans.GeoManagerLocal#getCountyArea(java.awt.geom.Point2D.Float)
+	 * ro.ldir.beans.GeoManagerLocal#getCountyArea(java.awt.geom.Point2D.Double)
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public CountyArea getCountyArea(Point2D.Float point) {
+	public CountyArea getCountyArea(Point2D.Double point) {
 		Query query = em.createQuery("SELECT aa FROM CountyArea aa WHERE "
 				+ ":x BETWEEN aa.topLeftX AND aa.bottomRightX AND "
 				+ ":y BETWEEN aa.bottomRightY AND aa.topLeftY");
@@ -161,11 +161,11 @@ public class GeoManager implements GeoManagerLocal {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * ro.ldir.beans.GeoManagerLocal#getTownArea(java.awt.geom.Point2D.Float)
+	 * ro.ldir.beans.GeoManagerLocal#getTownArea(java.awt.geom.Point2D.Double)
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public TownArea getTownArea(Point2D.Float point) {
+	public TownArea getTownArea(Point2D.Double point) {
 		Query query = em.createQuery("SELECT aa FROM TownArea aa WHERE "
 				+ ":x BETWEEN aa.topLeftX AND aa.bottomRightX AND "
 				+ ":y BETWEEN aa.bottomRightY AND aa.topLeftY");

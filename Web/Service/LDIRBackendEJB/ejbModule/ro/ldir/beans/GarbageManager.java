@@ -165,13 +165,13 @@ public class GarbageManager implements GarbageManagerLocal {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see ro.ldir.beans.GarbageManagerLocal#getGarbages(float, float, float,
-	 * float)
+	 * @see ro.ldir.beans.GarbageManagerLocal#getGarbages(double, double, double,
+	 * double)
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Garbage> getGarbages(float topLeftX, float topLeftY,
-			float bottomRightX, float bottomRightY) {
+	public List<Garbage> getGarbages(double topLeftX, double topLeftY,
+			double bottomRightX, double bottomRightY) {
 		Query query = em.createQuery("SELECT g FROM Garbage g WHERE "
 				+ "g.x BETWEEN :topLeftX AND :bottomRightX AND "
 				+ "g.y BETWEEN :bottomRightY AND :topLeftY");
@@ -247,7 +247,7 @@ public class GarbageManager implements GarbageManagerLocal {
 		user.getGarbages().add(garbage);
 		garbage.setInsertedBy(user);
 
-		Point2D.Float p = new Point2D.Float(garbage.getX(), garbage.getY());
+		Point2D.Double p = new Point2D.Double(garbage.getX(), garbage.getY());
 
 		ChartedArea ca = geoManager.getChartedArea(p);
 		if (ca != null) {

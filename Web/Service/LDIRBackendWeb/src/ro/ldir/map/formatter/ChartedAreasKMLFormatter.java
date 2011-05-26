@@ -51,7 +51,7 @@ public class ChartedAreasKMLFormatter {
 					+ "</name>\n");
 			buf.append("<description>[DESCRIPTION]</description>\n");
 			buf.append("<Polygon><outerBoundaryIs><LinearRing><coordinates>");
-			for (Point2D.Float point : chartedArea.getPolyline())
+			for (Point2D.Double point : chartedArea.getPolyline())
 				buf.append(point.x + "," + point.y + "\n");
 			buf.append("</coordinates></LinearRing></outerBoundaryIs></Polygon>\n");
 			buf.append("</Placemark>\n");
