@@ -25,17 +25,11 @@ package ro.ldir.tests.garbage;
 
 import static org.junit.Assert.assertEquals;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-
 import javax.ws.rs.core.MediaType;
 
-import org.junit.AfterClass;
 import org.junit.Test;
 
 import ro.ldir.dto.Garbage;
-import ro.ldir.tests.helper.DatabaseHelper;
 
 import com.sun.jersey.api.client.ClientResponse;
 
@@ -57,14 +51,5 @@ public class GarbageInsertTest extends GarbageTest {
 		ClientResponse cr = rootBuilder(USER).entity(garbage,
 				MediaType.APPLICATION_XML).post(ClientResponse.class);
 		assertEquals(200, cr.getStatus());
-	}
-
-	@AfterClass
-	public static void dbCleanup() throws ClassNotFoundException, SQLException {
-		Connection c = DatabaseHelper.getDbConnection();
-		PreparedStatement s = c
-				.prepareStatement("DELETE FROM GARBAGE WHERE INSERTEDBY=?");
-		s.setInt(1, userId);
-		s.executeUpdate();
 	}
 }

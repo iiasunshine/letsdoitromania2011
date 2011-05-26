@@ -26,6 +26,7 @@ package ro.ldir.tests;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
+import ro.ldir.tests.garbage.GarbageGeoTest;
 import ro.ldir.tests.garbage.GarbageInsertTest;
 import ro.ldir.tests.garbage.GarbageOperations;
 
@@ -33,6 +34,7 @@ import ro.ldir.tests.garbage.GarbageOperations;
  * Runs all garbage tests.
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ GarbageInsertTest.class, GarbageOperations.class })
+@Suite.SuiteClasses({ GarbageInsertTest.class, GarbageOperations.class,
+		GarbageGeoTest.class })
 public class GarbageTests {
 }
