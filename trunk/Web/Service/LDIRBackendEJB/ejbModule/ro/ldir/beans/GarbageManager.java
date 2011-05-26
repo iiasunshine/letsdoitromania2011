@@ -33,7 +33,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.ejb.EJB;
@@ -191,20 +190,20 @@ public class GarbageManager implements GarbageManagerLocal {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public Set<Garbage> getGarbages(Garbage.GarbageStatus status) {
+	public List<Garbage> getGarbages(Garbage.GarbageStatus status) {
 		Query query = em
 				.createQuery("SELECT x FROM Garbage x WHERE x.status = :statusParam");
 		query.setParameter("statusParam", status);
-		return (Set<Garbage>) query.getResultList();
+		return query.getResultList();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Set<Garbage> getGarbagesByCounty(String county) {
+	public List<Garbage> getGarbagesByCounty(String county) {
 		Query query = em
 				.createQuery("SELECT x FROM Garbage x WHERE x.county.name = :countyParam");
 		query.setParameter("countyParam", county);
-		return (Set<Garbage>) query.getResultList();
+		return query.getResultList();
 	}
 
 	/*
@@ -215,11 +214,11 @@ public class GarbageManager implements GarbageManagerLocal {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public Set<Garbage> getGarbagesByTown(String town) {
+	public List<Garbage> getGarbagesByTown(String town) {
 		Query query = em
 				.createQuery("SELECT x FROM Garbage x WHERE x.town.name = :townParam");
 		query.setParameter("townParam", town);
-		return (Set<Garbage>) query.getResultList();
+		return query.getResultList();
 	}
 
 	/*

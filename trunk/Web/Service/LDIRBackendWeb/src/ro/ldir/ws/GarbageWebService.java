@@ -27,7 +27,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
-import java.util.Set;
 
 import javax.activation.MimetypesFileTypeMap;
 import javax.ejb.EJBException;
@@ -131,14 +130,14 @@ public class GarbageWebService {
 	@GET
 	@Produces({ "application/json", "application/xml" })
 	@Path("countySearch")
-	public Set<Garbage> getGarbageByCounty(@QueryParam("county") String county) {
+	public List<Garbage> getGarbageByCounty(@QueryParam("county") String county) {
 		return garbageManager.getGarbagesByCounty(county);
 	}
 
 	@GET
 	@Produces({ "application/json", "application/xml" })
 	@Path("statusSearch")
-	public Set<Garbage> getGarbageByStatus(
+	public List<Garbage> getGarbageByStatus(
 			@QueryParam("status") Garbage.GarbageStatus status) {
 		return garbageManager.getGarbages(status);
 	}
@@ -146,7 +145,7 @@ public class GarbageWebService {
 	@GET
 	@Produces({ "application/json", "application/xml" })
 	@Path("townSearch")
-	public Set<Garbage> getGarbageByTown(@QueryParam("town") String town) {
+	public List<Garbage> getGarbageByTown(@QueryParam("town") String town) {
 		return garbageManager.getGarbagesByTown(town);
 	}
 

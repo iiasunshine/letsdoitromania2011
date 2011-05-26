@@ -27,7 +27,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
-import java.util.Set;
 
 import javax.ejb.Local;
 
@@ -101,7 +100,7 @@ public interface GarbageManagerLocal {
 	 * @return a list of garbages having the desired status.
 	 * @see ro.ldir.dto.Garbage.Status
 	 */
-	public Set<Garbage> getGarbages(Garbage.GarbageStatus status);
+	public List<Garbage> getGarbages(Garbage.GarbageStatus status);
 
 	/**
 	 * Searches garbages by county.
@@ -110,7 +109,7 @@ public interface GarbageManagerLocal {
 	 *            The county of interest.
 	 * @return a list of garbages in the given county.
 	 */
-	public Set<Garbage> getGarbagesByCounty(String county);
+	public List<Garbage> getGarbagesByCounty(String county);
 
 	/**
 	 * Searches garbages by town.
@@ -119,7 +118,7 @@ public interface GarbageManagerLocal {
 	 *            The town of interest.
 	 * @return a list of garbages in the given town.
 	 */
-	public Set<Garbage> getGarbagesByTown(String town);
+	public List<Garbage> getGarbagesByTown(String town);
 
 	/**
 	 * Returns the location of a file.
