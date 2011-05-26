@@ -24,6 +24,8 @@
 package ro.ldir.tests.garbage;
 
 import java.nio.charset.Charset;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import javax.ws.rs.core.HttpHeaders;
@@ -32,6 +34,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 
 import ro.ldir.dto.User;
+import ro.ldir.tests.helper.DatabaseHelper;
 import ro.ldir.tests.helper.UserSetup;
 
 import com.sun.jersey.api.client.Client;
@@ -48,6 +51,23 @@ public abstract class GarbageTest {
 	protected static WebResource resource;
 	protected static final String USER = GarbageInsertTest.class.getName();
 	protected static int userId;
+
+	private static void removeAllGarbages() throws ClassNotFoundException,
+			SQLException {
+		Connection c = DatabaseHelper.getDbConnection();
+		PreparedStatement s = c
+				.prepareStatement("DELETE FROM GARBAGE WHERE INSERTEDBY=?");
+		s.setInt(1, userId);
+		s.executeUpdate();
+	}
+
+	protected static Builder resourceBuilder(WebResource resource, String user) {
+		return resource.header(
+				HttpHeaders.AUTHORIZATION,
+				"Basic "
+						+ new String(Base64.encode(user + ":" + user), Charset
+								.forName("ASCII")));
+	}
 
 	protected static Builder rootBuilder(String user) {
 		return resource.header(
@@ -71,6 +91,7 @@ public abstract class GarbageTest {
 	@AfterClass
 	public static void tearDownUser() throws ClassNotFoundException,
 			SQLException {
+		removeAllGarbages();
 		UserSetup.removeTestUser(USER);
 	}
 

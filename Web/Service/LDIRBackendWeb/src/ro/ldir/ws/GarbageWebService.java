@@ -26,6 +26,7 @@ package ro.ldir.ws;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 
 import javax.activation.MimetypesFileTypeMap;
@@ -147,6 +148,17 @@ public class GarbageWebService {
 	@Path("townSearch")
 	public Set<Garbage> getGarbageByTown(@QueryParam("town") String town) {
 		return garbageManager.getGarbagesByTown(town);
+	}
+
+	@GET
+	@Produces({ "application/json", "application/xml" })
+	@Path("bbox")
+	public List<Garbage> getGarbages(@QueryParam("topLeftX") float topLeftX,
+			@QueryParam("topLeftY") float topLeftY,
+			@QueryParam("bottomRightX") float bottomRightX,
+			@QueryParam("bottomRightY") float bottomRightY) {
+		return garbageManager.getGarbages(topLeftX, topLeftY, bottomRightX,
+				bottomRightY);
 	}
 
 	@GET

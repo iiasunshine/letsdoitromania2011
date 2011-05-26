@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.annotation.Resource;
@@ -160,6 +161,26 @@ public class GarbageManager implements GarbageManagerLocal {
 	@Override
 	public Garbage getGarbage(int garbageId) {
 		return em.find(Garbage.class, garbageId);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ro.ldir.beans.GarbageManagerLocal#getGarbages(float, float, float,
+	 * float)
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Garbage> getGarbages(float topLeftX, float topLeftY,
+			float bottomRightX, float bottomRightY) {
+		Query query = em.createQuery("SELECT g FROM Garbage g WHERE "
+				+ "g.x BETWEEN :topLeftX AND :bottomRightX AND "
+				+ "g.y BETWEEN :bottomRightY AND :topLeftY");
+		query.setParameter("topLeftX", topLeftX);
+		query.setParameter("topLeftY", topLeftY);
+		query.setParameter("bottomRightX", bottomRightX);
+		query.setParameter("bottomRightY", bottomRightY);
+		return query.getResultList();
 	}
 
 	/*

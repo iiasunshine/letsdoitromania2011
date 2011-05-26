@@ -26,6 +26,7 @@ package ro.ldir.beans;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 
 import javax.ejb.Local;
@@ -75,6 +76,22 @@ public interface GarbageManagerLocal {
 	 * @return the garbage object.
 	 */
 	public Garbage getGarbage(int garbageId);
+
+	/**
+	 * Gets all the garbages that are located inside a bounding box.
+	 * 
+	 * @param topLeftX
+	 *            The top left point X of the bounding box.
+	 * @param topLeftY
+	 *            The top left point Y of the bounding box.
+	 * @param bottomRightX
+	 *            The bottom right point X of the bounding box.
+	 * @param bottomRightY
+	 *            The bottom right point Y of the bounding box.
+	 * @return A list of garbages inside the bounding box.
+	 */
+	public List<Garbage> getGarbages(float topLeftX, float topLeftY,
+			float bottomRightX, float bottomRightY);
 
 	/**
 	 * Searches a garbage by status.
