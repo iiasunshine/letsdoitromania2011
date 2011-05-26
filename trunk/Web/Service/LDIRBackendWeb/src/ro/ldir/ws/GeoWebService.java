@@ -147,6 +147,20 @@ public class GeoWebService {
 		return chartedAreas;
 	}
 
+	@GET
+	@Produces({ "application/json", "application/xml" })
+	@Path("countyArea/{countyAreaId:[0-9]+}")
+	public CountyArea getCountyArea(@PathParam("countyAreaId") int countyAreaId) {
+		return geoManager.getCountyArea(countyAreaId);
+	}
+
+	@GET
+	@Produces({ "application/json", "application/xml" })
+	@Path("townArea/{townAreaId:[0-9]+}")
+	public TownArea getTownArea(@PathParam("townAreaId") int townAreaId) {
+		return geoManager.getTownArea(townAreaId);
+	}
+
 	@PUT
 	@Consumes({ "application/json", "application/xml" })
 	@Path("chartedArea/{chartedAreaId:[0-9]+}")

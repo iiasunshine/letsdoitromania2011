@@ -37,13 +37,16 @@ import java.util.ArrayList;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import ro.ldir.dto.ChartedArea;
+import ro.ldir.dto.CountyArea;
 import ro.ldir.dto.Garbage;
+import ro.ldir.dto.TownArea;
 import ro.ldir.tests.helper.DatabaseHelper;
 
 import com.sun.jersey.api.client.ClientResponse;
@@ -55,7 +58,7 @@ import com.sun.jersey.core.util.MultivaluedMapImpl;
  */
 public class GarbageGeoTest extends GarbageTest {
 
-	private static int chartAreaId;
+	private static int chartAreaId, townAreaId, countyAreaId;
 	private static final String geoLocation = "http://localhost:8080/LDIRBackend/ws/geo";
 
 	@BeforeClass
@@ -89,10 +92,90 @@ public class GarbageGeoTest extends GarbageTest {
 		assertFalse(rs.next());
 	}
 
+	@BeforeClass
+	public static void insertCountyArea() throws ClassNotFoundException,
+			SQLException {
+		ArrayList<Point2D.Float> polyline = new ArrayList<Point2D.Float>();
+		polyline.add(new Point2D.Float(0, 0));
+		polyline.add(new Point2D.Float(0, 10));
+		polyline.add(new Point2D.Float(10, 10));
+		polyline.add(new Point2D.Float(10, 0));
+
+		CountyArea countyArea = new CountyArea();
+		countyArea.setPolyline(polyline);
+		countyArea.setName("County");
+
+		WebResource resource = client.resource(geoLocation + "/countyArea");
+
+		ClientResponse cr = resourceBuilder(resource, USER).entity(countyArea,
+				MediaType.APPLICATION_XML).post(ClientResponse.class);
+		assertEquals(200, cr.getStatus());
+
+		Connection c = DatabaseHelper.getDbConnection();
+		PreparedStatement s = c
+				.prepareStatement("SELECT * FROM CLOSEDAREA WHERE "
+						+ "AREATYPE = 'CountyArea' AND BOTTOMRIGHTX = 10 "
+						+ "AND BOTTOMRIGHTY = 0 AND TOPLEFTX = 0 "
+						+ "AND TOPLEFTY = 10");
+		ResultSet rs = s.executeQuery();
+		assertTrue(rs.next());
+		countyAreaId = rs.getInt("AREAID");
+		assertFalse(rs.next());
+	}
+
+	@BeforeClass
+	public static void insertTownArea() throws ClassNotFoundException,
+			SQLException {
+		ArrayList<Point2D.Float> polyline = new ArrayList<Point2D.Float>();
+		polyline.add(new Point2D.Float(0, 0));
+		polyline.add(new Point2D.Float(0, 10));
+		polyline.add(new Point2D.Float(10, 10));
+		polyline.add(new Point2D.Float(10, 0));
+
+		TownArea townArea = new TownArea();
+		townArea.setPolyline(polyline);
+		townArea.setName("Town");
+
+		WebResource resource = client.resource(geoLocation + "/townArea");
+
+		ClientResponse cr = resourceBuilder(resource, USER).entity(townArea,
+				MediaType.APPLICATION_XML).post(ClientResponse.class);
+		assertEquals(200, cr.getStatus());
+
+		Connection c = DatabaseHelper.getDbConnection();
+		PreparedStatement s = c
+				.prepareStatement("SELECT * FROM CLOSEDAREA WHERE "
+						+ "AREATYPE = 'TownArea' AND BOTTOMRIGHTX = 10 "
+						+ "AND BOTTOMRIGHTY = 0 AND TOPLEFTX = 0 "
+						+ "AND TOPLEFTY = 10");
+		ResultSet rs = s.executeQuery();
+		assertTrue(rs.next());
+		townAreaId = rs.getInt("AREAID");
+		assertFalse(rs.next());
+	}
+
 	@AfterClass
 	public static void removeChartedArea() {
 		WebResource resource = client.resource(geoLocation + "/chartedArea/"
 				+ chartAreaId);
+		ClientResponse r = resourceBuilder(resource, USER).delete(
+				ClientResponse.class);
+		assertEquals(200, r.getStatus());
+	}
+
+	@AfterClass
+	public static void removeCountyArea() {
+		WebResource resource = client.resource(geoLocation + "/countyArea/"
+				+ countyAreaId);
+		ClientResponse r = resourceBuilder(resource, USER).delete(
+				ClientResponse.class);
+		assertEquals(200, r.getStatus());
+	}
+
+	@AfterClass
+	public static void removeTownArea() {
+		WebResource resource = client.resource(geoLocation + "/townArea/"
+				+ townAreaId);
 		ClientResponse r = resourceBuilder(resource, USER).delete(
 				ClientResponse.class);
 		assertEquals(200, r.getStatus());
@@ -109,14 +192,9 @@ public class GarbageGeoTest extends GarbageTest {
 		assertEquals(200, cr.getStatus());
 	}
 
-	@Test
-	public void testChartedAreaMembership() {
-		instanceResource = client.resource(geoLocation + "/chartedArea/"
-				+ chartAreaId);
-		ChartedArea area = instanceBuilder(USER).get(ChartedArea.class);
-		assertTrue(area.containsPoint(new Point2D.Float(5, 5)));
-		// TODO: this this returns ID, thus cannot access the field like this
-		// assertEquals(1, area.getGarbages().size());
+	@After
+	public void removeGarbage() throws ClassNotFoundException, SQLException {
+		removeAllGarbages();
 	}
 
 	@Test
@@ -134,5 +212,35 @@ public class GarbageGeoTest extends GarbageTest {
 				instanceResource.queryParams(params), USER).get(
 				ClientResponse.class);
 		assertEquals(200, cr.getStatus());
+	}
+
+	@Test
+	public void testChartedAreaMembership() {
+		instanceResource = client.resource(geoLocation + "/chartedArea/"
+				+ chartAreaId);
+		ChartedArea area = instanceBuilder(USER).get(ChartedArea.class);
+		assertTrue(area.containsPoint(new Point2D.Float(5, 5)));
+		// TODO: this this returns ID, thus cannot access the field like this
+		// assertEquals(1, area.getGarbages().size());
+	}
+
+	@Test
+	public void testCountyAreaMembership() {
+		instanceResource = client.resource(geoLocation + "/countyArea/"
+				+ countyAreaId);
+		CountyArea area = instanceBuilder(USER).get(CountyArea.class);
+		assertTrue(area.containsPoint(new Point2D.Float(5, 5)));
+		// TODO: this this returns ID, thus cannot access the field like this
+		// assertEquals(1, area.getGarbages().size());
+	}
+
+	@Test
+	public void testTownAreaMembership() {
+		instanceResource = client.resource(geoLocation + "/townArea/"
+				+ townAreaId);
+		TownArea area = instanceBuilder(USER).get(TownArea.class);
+		assertTrue(area.containsPoint(new Point2D.Float(5, 5)));
+		// TODO: this this returns ID, thus cannot access the field like this
+		// assertEquals(1, area.getGarbages().size());
 	}
 }
