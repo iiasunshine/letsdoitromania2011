@@ -1,0 +1,27 @@
+\section{Map web service}
+\label{sec:call:map}
+
+This section describes the calls required to pull garbage tags and charted areas
+out of the system. These are implemented in the
+\svnweb{ro/ldir/map/MapWebService}{ro.ldir.map.MapWebService} web resource. The
+calls are designed to serve as input for a mapping service, e.g., Google Maps.
+Therefore, they output a KML and are performed in anonymous fashion (no
+authentication is necessary).
+
+\subsection{Obtaining the garbage tags in a bounding box}
+
+\apilocation{get}{map/ws/garbages/?topLeftX=\param{topLeftX}\&\\topLeftY=\param{topLeftY}\&bottomRightX=\param{bottomRightX}\&bottomRightY=\param{bottomRightY}}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyditem{A KML of all the garbages in the bounding box.}
+  \end{datalist}
+\end{apidata}
+
+\subsection{Obtaining the chart areas intersecting a bounding box}
+
+\apilocation{get}{map/ws/chartedAreas/?topLeftX=\param{topLeftX}\&\\topLeftY=\param{topLeftY}\&bottomRightX=\param{bottomRightX}\&bottomRightY=\param{bottomRightY}}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyditem{A KML of all the charted areas intersecting the bounding box.}
+  \end{datalist}
+\end{apidata}

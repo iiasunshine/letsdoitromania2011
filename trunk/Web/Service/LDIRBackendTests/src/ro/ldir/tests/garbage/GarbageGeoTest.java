@@ -60,6 +60,7 @@ public class GarbageGeoTest extends GarbageTest {
 
 	private static int chartAreaId, townAreaId, countyAreaId;
 	private static final String geoLocation = "http://localhost:8080/LDIRBackend/ws/geo";
+	private static final String mapLocation = "http://localhost:8080/LDIRBackend/map/ws";
 
 	@BeforeClass
 	public static void insertChartedArea() throws ClassNotFoundException,
@@ -215,6 +216,25 @@ public class GarbageGeoTest extends GarbageTest {
 	}
 
 	@Test
+	public void testChartedAreaKML() {
+		WebResource r = client.resource(mapLocation + "/chartedAreas");
+
+		MultivaluedMap<String, String> params = new MultivaluedMapImpl();
+		params.add("topLeftX", "0");
+		params.add("topLeftY", "10");
+		params.add("bottomRightX", "10");
+		params.add("bottomRightY", "0");
+
+		ClientResponse cr = r.queryParams(params)
+				.accept("application/vnd.google-earth.kml+xml")
+				.get(ClientResponse.class);
+		assertEquals(200, cr.getStatus());
+
+		String kml = cr.getEntity(String.class);
+		System.out.println(kml);
+	}
+
+	@Test
 	public void testChartedAreaMembership() {
 		instanceResource = client.resource(geoLocation + "/chartedArea/"
 				+ chartAreaId);
@@ -242,6 +262,28 @@ public class GarbageGeoTest extends GarbageTest {
 		ClientResponse cr = resourceBuilder(resource.queryParams(params), USER)
 				.get(ClientResponse.class);
 		assertEquals(200, cr.getStatus());
+
+		String garbages = cr.getEntity(String.class);
+		System.out.println(garbages);
+	}
+
+	@Test
+	public void testGarbageKML() {
+		WebResource r = client.resource(mapLocation + "/garbages");
+
+		MultivaluedMap<String, String> params = new MultivaluedMapImpl();
+		params.add("topLeftX", "0");
+		params.add("topLeftY", "10");
+		params.add("bottomRightX", "10");
+		params.add("bottomRightY", "0");
+
+		ClientResponse cr = r.queryParams(params)
+				.accept("application/vnd.google-earth.kml+xml")
+				.get(ClientResponse.class);
+		assertEquals(200, cr.getStatus());
+
+		String kml = cr.getEntity(String.class);
+		System.out.println(kml);
 	}
 
 	@Test
@@ -262,5 +304,8 @@ public class GarbageGeoTest extends GarbageTest {
 		ClientResponse cr = resourceBuilder(resource.queryParams(params), USER)
 				.get(ClientResponse.class);
 		assertEquals(200, cr.getStatus());
+
+		String garbages = cr.getEntity(String.class);
+		System.out.println(garbages);
 	}
 }
