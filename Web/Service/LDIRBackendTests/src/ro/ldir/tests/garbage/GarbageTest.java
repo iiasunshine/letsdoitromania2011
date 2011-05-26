@@ -52,7 +52,7 @@ public abstract class GarbageTest {
 	protected static final String USER = GarbageInsertTest.class.getName();
 	protected static int userId;
 
-	private static void removeAllGarbages() throws ClassNotFoundException,
+	protected static void removeAllGarbages() throws ClassNotFoundException,
 			SQLException {
 		Connection c = DatabaseHelper.getDbConnection();
 		PreparedStatement s = c
