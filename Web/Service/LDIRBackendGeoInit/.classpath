@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/Users/stefan/glassfish3/glassfish/modules/jersey-client.jar"/>
+	<classpathentry kind="lib" path="/Users/stefan/glassfish3/glassfish/modules/jersey-core.jar"/>
+	<classpathentry kind="lib" path="/Users/stefan/glassfish3/glassfish/modules/jersey-gf-server.jar"/>
+	<classpathentry kind="lib" path="/Users/stefan/glassfish3/glassfish/modules/jersey-gf-statsproviders.jar"/>
+	<classpathentry kind="lib" path="/Users/stefan/glassfish3/glassfish/modules/jersey-json.jar"/>
+	<classpathentry kind="lib" path="/Users/stefan/glassfish3/glassfish/modules/jersey-multipart.jar"/>
+	<classpathentry kind="lib" path="/LDIRBackendEJBClient/build/classes"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
