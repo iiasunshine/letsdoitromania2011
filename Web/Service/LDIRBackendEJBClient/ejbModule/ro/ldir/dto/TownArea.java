@@ -43,10 +43,26 @@ import ro.ldir.dto.helper.NonTransferableField;
 @XmlRootElement
 @DiscriminatorValue("TownArea")
 public class TownArea extends ClosedArea {
+	private double area;
+	private String county;
 	private Set<Garbage> garbages = new HashSet<Garbage>();
 	private String name;
 
 	public TownArea() {
+	}
+
+	/**
+	 * @return the area
+	 */
+	public double getArea() {
+		return area;
+	}
+
+	/**
+	 * @return the county
+	 */
+	public String getCounty() {
+		return county;
 	}
 
 	/**
@@ -64,6 +80,20 @@ public class TownArea extends ClosedArea {
 	 */
 	public String getName() {
 		return name;
+	}
+
+	/**
+	 * @param area the area to set
+	 */
+	public void setArea(double area) {
+		this.area = area;
+	}
+
+	/**
+	 * @param county the county to set
+	 */
+	public void setCounty(String county) {
+		this.county = county;
 	}
 
 	/**
