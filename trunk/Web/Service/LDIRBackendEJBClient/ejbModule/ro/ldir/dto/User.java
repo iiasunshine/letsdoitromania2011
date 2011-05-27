@@ -38,6 +38,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlID;
@@ -48,6 +49,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import ro.ldir.dto.adapters.EncryptAdapter;
 import ro.ldir.dto.adapters.IntegerAdapter;
 import ro.ldir.dto.helper.FieldAccessBean;
+import ro.ldir.dto.helper.NonComparableField;
 import ro.ldir.dto.helper.NonTransferableField;
 import ro.ldir.dto.helper.SHA256Encrypt;
 
@@ -84,12 +86,14 @@ public class User extends FieldAccessBean implements Serializable {
 	private String email;
 	private String firstName;
 	private Set<Garbage> garbages;
+	private Date lastAccess;
 	private String lastName;
 	private List<Team> managedTeams;
 	private Team memberOf;
 	private List<Organization> organizations;
 	private String passwd;
 	private String phone;
+	private Date recordDate;
 	private String registrationToken;
 	private String role;
 	private String town;
@@ -122,7 +126,7 @@ public class User extends FieldAccessBean implements Serializable {
 	/**
 	 * @return the birthday
 	 */
-	@Temporal(TemporalType.TIME)
+	@Temporal(TemporalType.DATE)
 	public Date getBirthday() {
 		return birthday;
 	}
@@ -155,6 +159,15 @@ public class User extends FieldAccessBean implements Serializable {
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "insertedBy", orphanRemoval = true)
 	public Set<Garbage> getGarbages() {
 		return garbages;
+	}
+
+	/**
+	 * @return the lastAccess
+	 */
+	@Temporal(TemporalType.TIMESTAMP)
+	@NonComparableField
+	public Date getLastAccess() {
+		return lastAccess;
 	}
 
 	/**
@@ -206,6 +219,15 @@ public class User extends FieldAccessBean implements Serializable {
 	 */
 	public String getPhone() {
 		return phone;
+	}
+
+	/**
+	 * @return the recordDate
+	 */
+	@Temporal(TemporalType.TIMESTAMP)
+	@NonComparableField
+	public Date getRecordDate() {
+		return recordDate;
 	}
 
 	/**
@@ -301,6 +323,14 @@ public class User extends FieldAccessBean implements Serializable {
 	}
 
 	/**
+	 * @param lastAccess
+	 *            the lastAccess to set
+	 */	@NonTransferableField
+	public void setLastAccess(Date lastAccess) {
+		this.lastAccess = lastAccess;
+	}
+
+	/**
 	 * @param lastName
 	 *            the lastName to set
 	 */
@@ -352,6 +382,14 @@ public class User extends FieldAccessBean implements Serializable {
 	}
 
 	/**
+	 * @param recordDate
+	 *            the recordDate to set
+	 */	@NonTransferableField
+	public void setRecordDate(Date recordDate) {
+		this.recordDate = recordDate;
+	}
+
+	/**
 	 * @param registrationToken
 	 *            the registrationToken to set
 	 */
@@ -394,5 +432,12 @@ public class User extends FieldAccessBean implements Serializable {
 	 */
 	public boolean testPassword(String rawPassword) {
 		return this.passwd.equals(SHA256Encrypt.encrypt(rawPassword));
+	}
+
+	/** Set up the recordDate timestamp. */
+	@PrePersist
+	public void timestampRecord() {
+		if (recordDate == null)
+			recordDate = new Date();
 	}
 }

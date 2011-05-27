@@ -87,8 +87,9 @@ public class UserWebService {
 
 	@GET
 	public String getId(@Context SecurityContext sc) {
-		return new Integer(userManager.getUser(sc.getUserPrincipal().getName())
-				.getUserId()).toString();
+		User user = userManager.getUser(sc.getUserPrincipal().getName());
+		userManager.timestampLastAccess(user);
+		return new Integer(user.getUserId()).toString();
 	}
 
 	@GET

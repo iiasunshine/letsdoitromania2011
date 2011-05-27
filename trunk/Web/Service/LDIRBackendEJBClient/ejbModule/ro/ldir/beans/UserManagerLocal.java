@@ -140,6 +140,13 @@ public interface UserManagerLocal {
 	public void setUserRole(int userId, SecurityRole role);
 
 	/**
+	 * Timestamps the last access property of the provided user.
+	 * 
+	 * @param user
+	 */
+	public void timestampLastAccess(User user);
+
+	/**
 	 * Updates a user with a new object. All previous fields of the user are
 	 * overwritten.
 	 * 
