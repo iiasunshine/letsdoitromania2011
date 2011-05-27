@@ -237,6 +237,17 @@ public class UserManager implements UserManagerLocal {
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see ro.ldir.beans.UserManagerLocal#timestampLastAccess(ro.ldir.dto.User)
+	 */
+	@Override
+	public void timestampLastAccess(User user) {
+		user.setLastAccess(new Date());
+		em.merge(user);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see ro.ldir.beans.UserManagerLocal#updateUser(int, ro.ldir.dto.User)
 	 */
 	@Override
