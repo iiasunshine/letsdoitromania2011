@@ -3,6 +3,7 @@ package ro.ldir.beans;
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.RolesAllowed;
@@ -23,6 +24,9 @@ import ro.ldir.dto.TownArea;
 @LocalBean
 @DeclareRoles({ "ADMIN", "ORGANIZER", "ORGANIZER_MULTI" })
 public class GeoManager implements GeoManagerLocal {
+	private static Logger logger = Logger.getLogger(GeoManagerLocal.class
+			.getName());
+
 	@PersistenceContext(unitName = "ldir")
 	private EntityManager em;
 
@@ -69,7 +73,8 @@ public class GeoManager implements GeoManagerLocal {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * ro.ldir.beans.GeoManagerLocal#getChartedArea(java.awt.geom.Point2D.Double)
+	 * ro.ldir.beans.GeoManagerLocal#getChartedArea(java.awt.geom.Point2D.Double
+	 * )
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
@@ -99,8 +104,8 @@ public class GeoManager implements GeoManagerLocal {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see ro.ldir.beans.GeoManagerLocal#getChartedAreas(double, double, double,
-	 * double)
+	 * @see ro.ldir.beans.GeoManagerLocal#getChartedAreas(double, double,
+	 * double, double)
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
@@ -141,6 +146,16 @@ public class GeoManager implements GeoManagerLocal {
 		query.setParameter("x", point.x);
 		query.setParameter("y", point.y);
 		List<CountyArea> areas = query.getResultList();
+
+		if (areas.size() > 1) {
+			logger.info("Multiple counties found for " + point);
+			// TODO fix hack for MUNICIPIUL BUCURESTI contained within ILFOV
+			for (CountyArea a : areas)
+				if (a.containsPoint(point)
+						&& a.getName().equals("MUNICIPIUL BUCURESTI"))
+					return a;
+		}
+		
 		for (CountyArea a : areas)
 			if (a.containsPoint(point))
 				return a;
