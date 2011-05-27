@@ -46,11 +46,23 @@ import ro.ldir.dto.helper.NonTransferableField;
 @XmlRootElement
 @DiscriminatorValue("ChartedArea")
 public class ChartedArea extends ClosedArea {
+	private double area;
 	private Set<Team> chartedBy;
+	private String county;
+	private String description;
 	private Set<Garbage> garbages = new HashSet<Garbage>();
+	private String name;
+	private double perimeter;
 	private int score;
 
 	public ChartedArea() {
+	}
+
+	/**
+	 * @return the area
+	 */
+	public double getArea() {
+		return area;
 	}
 
 	/**
@@ -64,6 +76,20 @@ public class ChartedArea extends ClosedArea {
 	}
 
 	/**
+	 * @return the county
+	 */
+	public String getCounty() {
+		return county;
+	}
+
+	/**
+	 * @return the description
+	 */
+	public String getDescription() {
+		return description;
+	}
+
+	/**
 	 * @return the garbages
 	 */
 	@OneToMany(cascade = { CascadeType.MERGE, CascadeType.PERSIST,
@@ -74,10 +100,32 @@ public class ChartedArea extends ClosedArea {
 	}
 
 	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @return the perimeter
+	 */
+	public double getPerimeter() {
+		return perimeter;
+	}
+
+	/**
 	 * @return the score
 	 */
 	public int getScore() {
 		return score;
+	}
+
+	/**
+	 * @param area
+	 *            the area to set
+	 */
+	public void setArea(double area) {
+		this.area = area;
 	}
 
 	/**
@@ -89,12 +137,42 @@ public class ChartedArea extends ClosedArea {
 	}
 
 	/**
+	 * @param county
+	 *            the county to set
+	 */
+	public void setCounty(String county) {
+		this.county = county;
+	}
+
+	/**
+	 * @param description the description to set
+	 */
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	/**
 	 * @param garbages
 	 *            the garbages to set
 	 */
 	@NonTransferableField
 	public void setGarbages(Set<Garbage> garbages) {
 		this.garbages = garbages;
+	}
+
+	/**
+	 * @param name the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	/**
+	 * @param perimeter
+	 *            the perimeter to set
+	 */
+	public void setPerimeter(double perimeter) {
+		this.perimeter = perimeter;
 	}
 
 	/**
