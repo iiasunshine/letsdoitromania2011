@@ -24,6 +24,7 @@
 package ro.ldir.dto;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -34,6 +35,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlID;
@@ -44,6 +48,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import ro.ldir.dto.adapters.IntegerAdapter;
 import ro.ldir.dto.helper.FieldAccessBean;
+import ro.ldir.dto.helper.NonComparableField;
 import ro.ldir.dto.helper.NonTransferableField;
 
 /**
@@ -56,21 +61,42 @@ public class Garbage extends FieldAccessBean {
 		CLEANED, IDENTIFIED
 	}
 
+	private int bagCount;
+	private String bigComponentsDescription;
 	private ChartedArea chartedArea;
 	private CountyArea county;
 	private String description;
 	private String details;
+	private boolean dispersed;
 	private List<Team> enrolledCleaners;
 	private Integer garbageId;
 	private User insertedBy;
+	private int percentageGlass;
+	private int percentageMetal;
+	private int percentagePlastic;
+	private int percentageWaste;
 	private List<String> pictures = new ArrayList<String>();
+	private Date recordDate;
 	private GarbageStatus status;
 	private TownArea town;
-	private int volume;
 	private double x;
 	private double y;
 
 	public Garbage() {
+	}
+
+	/**
+	 * @return the bagCount
+	 */
+	public int getBagCount() {
+		return bagCount;
+	}
+
+	/**
+	 * @return the bigComponentsDescription
+	 */
+	public String getBigComponentsDescription() {
+		return bigComponentsDescription;
 	}
 
 	/**
@@ -139,6 +165,34 @@ public class Garbage extends FieldAccessBean {
 	}
 
 	/**
+	 * @return the percentageGlass
+	 */
+	public int getPercentageGlass() {
+		return percentageGlass;
+	}
+
+	/**
+	 * @return the percentageMetal
+	 */
+	public int getPercentageMetal() {
+		return percentageMetal;
+	}
+
+	/**
+	 * @return the percentagePlastic
+	 */
+	public int getPercentagePlastic() {
+		return percentagePlastic;
+	}
+
+	/**
+	 * @return the percentageWaste
+	 */
+	public int getPercentageWaste() {
+		return percentageWaste;
+	}
+
+	/**
 	 * Returns the number of pictures stored by this garbage.
 	 * 
 	 * @return The number of pictures.
@@ -155,6 +209,15 @@ public class Garbage extends FieldAccessBean {
 	@XmlTransient
 	public List<String> getPictures() {
 		return pictures;
+	}
+
+	/**
+	 * @return the recordDate
+	 */
+	@Temporal(TemporalType.TIMESTAMP)
+	@NonComparableField
+	public Date getRecordDate() {
+		return recordDate;
 	}
 
 	/**
@@ -175,13 +238,6 @@ public class Garbage extends FieldAccessBean {
 	}
 
 	/**
-	 * @return the volume
-	 */
-	public int getVolume() {
-		return volume;
-	}
-
-	/**
 	 * @return the x
 	 */
 	public double getX() {
@@ -193,6 +249,29 @@ public class Garbage extends FieldAccessBean {
 	 */
 	public double getY() {
 		return y;
+	}
+
+	/**
+	 * @return the dispersed
+	 */
+	public boolean isDispersed() {
+		return dispersed;
+	}
+
+	/**
+	 * @param bagCount
+	 *            the bagCount to set
+	 */
+	public void setBagCount(int bagCount) {
+		this.bagCount = bagCount;
+	}
+
+	/**
+	 * @param bigComponentsDescription
+	 *            the bigComponentsDescription to set
+	 */
+	public void setBigComponentsDescription(String bigComponentsDescription) {
+		this.bigComponentsDescription = bigComponentsDescription;
 	}
 
 	/**
@@ -230,6 +309,14 @@ public class Garbage extends FieldAccessBean {
 	}
 
 	/**
+	 * @param dispersed
+	 *            the dispersed to set
+	 */
+	public void setDispersed(boolean dispersed) {
+		this.dispersed = dispersed;
+	}
+
+	/**
 	 * @param enrolledCleaners
 	 *            the enrolledCleaners to set
 	 */
@@ -257,12 +344,49 @@ public class Garbage extends FieldAccessBean {
 	}
 
 	/**
+	 * @param percentageGlass the percentageGlass to set
+	 */
+	public void setPercentageGlass(int percentageGlass) {
+		this.percentageGlass = percentageGlass;
+	}
+
+	/**
+	 * @param percentageMetal the percentageMetal to set
+	 */
+	public void setPercentageMetal(int percentageMetal) {
+		this.percentageMetal = percentageMetal;
+	}
+
+	/**
+	 * @param percentagePlastic the percentagePlastic to set
+	 */
+	public void setPercentagePlastic(int percentagePlastic) {
+		this.percentagePlastic = percentagePlastic;
+	}
+
+	/**
+	 * @param percentageWaste the percentageWaste to set
+	 */
+	public void setPercentageWaste(int percentageWaste) {
+		this.percentageWaste = percentageWaste;
+	}
+
+	/**
 	 * @param pictures
 	 *            the pictures to set
 	 */
 	@NonTransferableField
 	public void setPictures(List<String> pictures) {
 		this.pictures = pictures;
+	}
+
+	/**
+	 * @param recordDate
+	 *            the recordDate to set
+	 */
+	@NonTransferableField
+	public void setRecordDate(Date recordDate) {
+		this.recordDate = recordDate;
 	}
 
 	/**
@@ -283,14 +407,6 @@ public class Garbage extends FieldAccessBean {
 	}
 
 	/**
-	 * @param volume
-	 *            the volume to set
-	 */
-	public void setVolume(int volume) {
-		this.volume = volume;
-	}
-
-	/**
 	 * @param x
 	 *            the x to set
 	 */
@@ -304,5 +420,12 @@ public class Garbage extends FieldAccessBean {
 	 */
 	public void setY(double y) {
 		this.y = y;
+	}
+
+	/** Set up the recordDate timestamp. */
+	@PrePersist
+	public void timestampRecord() {
+		if (recordDate == null)
+			recordDate = new Date();
 	}
 }
