@@ -14,7 +14,7 @@ All calls described throughout this section are sent without authentication.
 
 \subsection{Submitting new user details}
 
-\apilocation{post}{registration/ws}
+\apilocation{post}{reg/ws}
 \begin{apidata}{content}
   A \texttt{user} entity containing the user to register.
 \end{apidata}
@@ -27,7 +27,7 @@ All calls described throughout this section are sent without authentication.
 \end{apidata}
 
 \subsection{Validating the user's email}
-\apilocation{get}{registration/ws/\param{userId}/\param{key}}
+\apilocation{get}{reg/ws/\param{userId}/\param{key}}
 \begin{apidata}{returns}
   \begin{datalist}
     \replyitem{200}{if the operation succeeds.}
