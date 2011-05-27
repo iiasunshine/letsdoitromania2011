@@ -38,6 +38,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import ro.ldir.beans.security.SecurityHelper;
+import ro.ldir.dto.Team;
 import ro.ldir.dto.User;
 import ro.ldir.dto.User.Activity;
 import ro.ldir.dto.User.SecurityRole;
@@ -84,6 +85,13 @@ public class UserManager implements UserManagerLocal {
 		if (!existing.getRole().equals(SecurityRole.PENDING.toString()))
 			throw new InvalidUserException("The user is not pending.");
 		existing.setRole(SecurityRole.VOLUNTEER.toString());
+
+		Team userTeam = new Team();
+		userTeam.setTeamName(existing.getLastName() + " "
+				+ existing.getEmail().hashCode());
+		userTeam.setTeamManager(existing);
+		existing.getManagedTeams().add(userTeam);
+
 		em.merge(existing);
 	}
 
