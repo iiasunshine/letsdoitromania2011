@@ -104,7 +104,6 @@ public class Garbage extends FieldAccessBean {
 	 */
 	@ManyToOne
 	@JoinColumn(name = "CHARTAREAID")
-	@XmlIDREF
 	public ChartedArea getChartedArea() {
 		return chartedArea;
 	}
@@ -114,7 +113,6 @@ public class Garbage extends FieldAccessBean {
 	 */
 	@ManyToOne
 	@JoinColumn(name = "COUNTYID")
-	@XmlIDREF
 	public CountyArea getCounty() {
 		return county;
 	}
@@ -232,7 +230,6 @@ public class Garbage extends FieldAccessBean {
 	 */
 	@ManyToOne
 	@JoinColumn(name = "TOWNID")
-	@XmlIDREF
 	public TownArea getTown() {
 		return town;
 	}
