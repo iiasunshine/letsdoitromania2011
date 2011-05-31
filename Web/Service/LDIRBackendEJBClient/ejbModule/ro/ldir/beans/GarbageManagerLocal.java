@@ -31,6 +31,7 @@ import java.util.List;
 import javax.ejb.Local;
 
 import ro.ldir.dto.Garbage;
+import ro.ldir.exceptions.NoCountyException;
 
 /**
  * The local business interface of the bean managing garbages.
@@ -136,10 +137,15 @@ public interface GarbageManagerLocal {
 	/**
 	 * Inserts a new garbage in the database.
 	 * 
+	 * The operation fails if the coordinates of the garbage are not contained
+	 * within a county of the database.
+	 * 
 	 * @param garbage
 	 *            The garbage to insert.
+	 * @throws NoCountyException
+	 *             If there is no county containing the garbage.
 	 */
-	public void insertGarbage(Garbage garbage);
+	public void insertGarbage(Garbage garbage) throws NoCountyException;
 
 	/**
 	 * Sets a garbage status.

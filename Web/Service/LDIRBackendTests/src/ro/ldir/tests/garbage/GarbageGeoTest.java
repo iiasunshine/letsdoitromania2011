@@ -58,7 +58,7 @@ import com.sun.jersey.core.util.MultivaluedMapImpl;
  */
 public class GarbageGeoTest extends GarbageTest {
 
-	private static int chartAreaId, townAreaId, countyAreaId;
+	private static int chartAreaId, townAreaId;
 	private static final String geoLocation = "http://localhost:8080/LDIRBackend/ws/geo";
 	private static final String mapLocation = "http://localhost:8080/LDIRBackend/map/ws";
 
@@ -90,37 +90,6 @@ public class GarbageGeoTest extends GarbageTest {
 		ResultSet rs = s.executeQuery();
 		assertTrue(rs.next());
 		chartAreaId = rs.getInt("AREAID");
-		assertFalse(rs.next());
-	}
-
-	@BeforeClass
-	public static void insertCountyArea() throws ClassNotFoundException,
-			SQLException {
-		ArrayList<Point2D.Double> polyline = new ArrayList<Point2D.Double>();
-		polyline.add(new Point2D.Double(0, 0));
-		polyline.add(new Point2D.Double(0, 10));
-		polyline.add(new Point2D.Double(10, 10));
-		polyline.add(new Point2D.Double(10, 0));
-
-		CountyArea countyArea = new CountyArea();
-		countyArea.setPolyline(polyline);
-		countyArea.setName("County");
-
-		WebResource resource = client.resource(geoLocation + "/countyArea");
-
-		ClientResponse cr = resourceBuilder(resource, USER).entity(countyArea,
-				MediaType.APPLICATION_XML).post(ClientResponse.class);
-		assertEquals(200, cr.getStatus());
-
-		Connection c = DatabaseHelper.getDbConnection();
-		PreparedStatement s = c
-				.prepareStatement("SELECT * FROM CLOSEDAREA WHERE "
-						+ "AREATYPE = 'CountyArea' AND BOTTOMRIGHTX = 10 "
-						+ "AND BOTTOMRIGHTY = 0 AND TOPLEFTX = 0 "
-						+ "AND TOPLEFTY = 10");
-		ResultSet rs = s.executeQuery();
-		assertTrue(rs.next());
-		countyAreaId = rs.getInt("AREAID");
 		assertFalse(rs.next());
 	}
 
@@ -159,15 +128,6 @@ public class GarbageGeoTest extends GarbageTest {
 	public static void removeChartedArea() {
 		WebResource resource = client.resource(geoLocation + "/chartedArea/"
 				+ chartAreaId);
-		ClientResponse r = resourceBuilder(resource, USER).delete(
-				ClientResponse.class);
-		assertEquals(200, r.getStatus());
-	}
-
-	@AfterClass
-	public static void removeCountyArea() {
-		WebResource resource = client.resource(geoLocation + "/countyArea/"
-				+ countyAreaId);
 		ClientResponse r = resourceBuilder(resource, USER).delete(
 				ClientResponse.class);
 		assertEquals(200, r.getStatus());

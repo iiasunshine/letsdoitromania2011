@@ -63,6 +63,8 @@ public class GarbageOperations extends GarbageTest {
 	@Before
 	public void insertGarbage() throws ClassNotFoundException, SQLException {
 		insertedGarbage = new Garbage();
+		insertedGarbage.setX(5);
+		insertedGarbage.setY(5);
 		ClientResponse cr = rootBuilder(USER).entity(insertedGarbage,
 				MediaType.APPLICATION_XML).post(ClientResponse.class);
 		assertEquals(200, cr.getStatus());
