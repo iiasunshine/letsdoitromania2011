@@ -34,6 +34,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
 import ro.ldir.beans.UserManagerLocal;
@@ -80,11 +81,11 @@ public class RegistrationWebService {
 			@PathParam("key") String key) {
 		try {
 			userManager.activateUser(userId, key);
+		} catch (InvalidUserException e) {
+			return Response.status(Status.CONFLICT)
+					.entity(e.getCausedByException().getMessage())
+					.type("text/plain").build();
 		} catch (EJBException e) {
-			if (e.getCausedByException() instanceof InvalidUserException)
-				return Response.status(Responses.CONFLICT)
-						.entity(e.getCausedByException().getMessage())
-						.type("text/plain").build();
 			throw new WebApplicationException(404);
 		}
 		return Response.ok().build();
