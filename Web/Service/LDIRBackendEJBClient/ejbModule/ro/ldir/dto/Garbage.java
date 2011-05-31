@@ -344,28 +344,32 @@ public class Garbage extends FieldAccessBean {
 	}
 
 	/**
-	 * @param percentageGlass the percentageGlass to set
+	 * @param percentageGlass
+	 *            the percentageGlass to set
 	 */
 	public void setPercentageGlass(int percentageGlass) {
 		this.percentageGlass = percentageGlass;
 	}
 
 	/**
-	 * @param percentageMetal the percentageMetal to set
+	 * @param percentageMetal
+	 *            the percentageMetal to set
 	 */
 	public void setPercentageMetal(int percentageMetal) {
 		this.percentageMetal = percentageMetal;
 	}
 
 	/**
-	 * @param percentagePlastic the percentagePlastic to set
+	 * @param percentagePlastic
+	 *            the percentagePlastic to set
 	 */
 	public void setPercentagePlastic(int percentagePlastic) {
 		this.percentagePlastic = percentagePlastic;
 	}
 
 	/**
-	 * @param percentageWaste the percentageWaste to set
+	 * @param percentageWaste
+	 *            the percentageWaste to set
 	 */
 	public void setPercentageWaste(int percentageWaste) {
 		this.percentageWaste = percentageWaste;
@@ -393,6 +397,7 @@ public class Garbage extends FieldAccessBean {
 	 * @param status
 	 *            the status to set
 	 */
+	@NonTransferableField
 	public void setStatus(GarbageStatus status) {
 		this.status = status;
 	}

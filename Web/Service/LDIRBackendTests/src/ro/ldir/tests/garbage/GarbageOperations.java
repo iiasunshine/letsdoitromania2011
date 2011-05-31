@@ -126,4 +126,23 @@ public class GarbageOperations extends GarbageTest {
 		s.setInt(1, userId);
 		s.executeUpdate();
 	}
+
+	@Test
+	public void updateCoordinates() {
+		instanceResource = client.resource(location + "/" + garbageId);
+		System.out.println("updated " + location + "/" + garbageId);
+		insertedGarbage.setX(4);
+		ClientResponse cr = rootBuilder(USER).entity(insertedGarbage,
+				MediaType.APPLICATION_XML).post(ClientResponse.class);
+		assertEquals(200, cr.getStatus());
+	}
+
+	@Test
+	public void updateNoCounty() {
+		instanceResource = client.resource(location + "/" + garbageId);
+		insertedGarbage.setX(100);
+		ClientResponse cr = rootBuilder(USER).entity(insertedGarbage,
+				MediaType.APPLICATION_XML).post(ClientResponse.class);
+		assertEquals(400, cr.getStatus());
+	}
 }

@@ -158,4 +158,17 @@ public interface GarbageManagerLocal {
 	 * @see ro.ldir.dto.Garbage.Status
 	 */
 	public void setGarbageStatus(int garbageId, Garbage.GarbageStatus status);
+
+	/**
+	 * Updates a garbage.
+	 * 
+	 * @param garbageId
+	 *            The ID of the garbage to update.
+	 * @param garbage
+	 *            The new garbage settings. * @throws NoCountyException If there
+	 *            is no county containing the updated coordinates of the
+	 *            garbage.
+	 */
+	public void updateGarbage(Integer garbageId, Garbage garbage)
+			throws NoCountyException;
 }
