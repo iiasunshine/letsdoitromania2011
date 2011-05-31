@@ -42,6 +42,21 @@ in the database.
   \end{datalist}
 \end{apidata}
 
+\subsection{Updating a garbage tag}
+
+\apilocation{post}{ws/garbage/\param{garbageId}}
+\begin{apidata}{contents}
+  A \texttt{garbage} entity describing the new garbage tag.
+\end{apidata}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyitem{200}{if the operation succeeds.}
+    \replyitem{400}{if the garbage coordinates are wrong, i.e., they do not
+    belong to any county.}
+    \replyitem{500}{if another error occurs.}
+  \end{datalist}
+\end{apidata}
+
 
 % \subsection{Deleting a garbage tag}
 % 
