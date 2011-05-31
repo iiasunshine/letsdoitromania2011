@@ -240,36 +240,14 @@ public class GarbageManager implements GarbageManagerLocal {
 	 */
 	@Override
 	public void insertGarbage(Garbage garbage) throws NoCountyException {
-		Point2D.Double p = new Point2D.Double(garbage.getX(), garbage.getY());
 		User user = SecurityHelper.getUser(userManager, ctx);
 
-		CountyArea county = geoManager.getCountyArea(p);
-		// If no county is found, the garbage is being inserted in an area not
-		// covered by the system.
-		if (county == null)
-			throw new NoCountyException();
-		garbage.setCounty(county);
-		county.getGarbages().add(garbage);
-		em.merge(county);
+		setGeoFeatures(garbage);
 
 		if (user.getGarbages() == null)
 			user.setGarbages(new HashSet<Garbage>());
 		user.getGarbages().add(garbage);
 		garbage.setInsertedBy(user);
-
-		ChartedArea ca = geoManager.getChartedArea(p);
-		if (ca != null) {
-			garbage.setChartedArea(ca);
-			ca.getGarbages().add(garbage);
-			em.merge(ca);
-		}
-
-		TownArea town = geoManager.getTownArea(p);
-		if (town != null) {
-			garbage.setTown(town);
-			town.getGarbages().add(garbage);
-			em.merge(town);
-		}
 
 		em.persist(garbage);
 		em.merge(user);
@@ -286,5 +264,122 @@ public class GarbageManager implements GarbageManagerLocal {
 		Garbage garbage = em.find(Garbage.class, garbageId);
 		garbage.setStatus(status);
 		em.merge(garbage);
+	}
+
+	/**
+	 * Sets the geographical features, i.e., the charted area, town and county
+	 * this garbage is located.
+	 * 
+	 * @param garbage
+	 *            The garbage to set.
+	 * @throws NoCountyException
+	 *             If there is no county containing this garbage.
+	 */
+	private void setGeoFeatures(Garbage garbage) throws NoCountyException {
+		Point2D.Double p = new Point2D.Double(garbage.getX(), garbage.getY());
+
+		CountyArea county = geoManager.getCountyArea(p);
+		// If no county is found, the garbage is being inserted in an area not
+		// covered by the system.
+		if (county == null)
+			throw new NoCountyException();
+		garbage.setCounty(county);
+		county.getGarbages().add(garbage);
+		em.merge(county);
+
+		ChartedArea ca = geoManager.getChartedArea(p);
+		if (ca != null) {
+			garbage.setChartedArea(ca);
+			ca.getGarbages().add(garbage);
+			em.merge(ca);
+		}
+
+		TownArea town = geoManager.getTownArea(p);
+		if (town != null) {
+			garbage.setTown(town);
+			town.getGarbages().add(garbage);
+			em.merge(town);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ro.ldir.beans.GarbageManagerLocal#updateGarbage(java.lang.Integer,
+	 * ro.ldir.dto.Garbage)
+	 */
+	@Override
+	public void updateGarbage(Integer garbageId, Garbage garbage)
+			throws NoCountyException {
+		Garbage existing = em.find(Garbage.class, garbageId);
+		updateGeoFeatures(existing, garbage);
+		existing.copyFields(garbage);
+		em.merge(existing);
+	}
+
+	/**
+	 * Updates the geographical features, i.e., the charted area, town and
+	 * county this garbage is located.
+	 * 
+	 * @param garbage
+	 *            The garbage to set.
+	 * @throws NoCountyException
+	 *             If there is no county containing this garbage.
+	 */
+	private void updateGeoFeatures(Garbage existing, Garbage garbage)
+			throws NoCountyException {
+		boolean mustRemove = false, mustSet = false;
+		Point2D.Double p = new Point2D.Double(garbage.getX(), garbage.getY());
+
+		CountyArea existingCounty = existing.getCounty();
+		TownArea oldTown = existing.getTown();
+		ChartedArea oldCa = existing.getChartedArea();
+
+		CountyArea county = geoManager.getCountyArea(p);
+		// If no county is found, the garbage is being inserted in an area not
+		// covered by the system.
+		if (county == null)
+			throw new NoCountyException();
+		if (existingCounty.getAreaId() != county.getAreaId()) {
+			existingCounty.getGarbages().remove(existing);
+			existing.setCounty(county);
+			county.getGarbages().add(existing);
+			em.merge(existingCounty);
+			em.merge(county);
+		}
+
+		ChartedArea newCa = geoManager.getChartedArea(p);
+		mustRemove = oldCa != null
+				&& (newCa == null || (newCa != null && oldCa.getAreaId() != newCa
+						.getAreaId()));
+		mustSet = newCa != null
+				&& (oldCa == null || (oldCa != null && oldCa.getAreaId() != newCa
+						.getAreaId()));
+		if (mustRemove) {
+			oldCa.getGarbages().remove(existing);
+			em.merge(oldCa);
+		}
+		if (mustSet) {
+			existing.setChartedArea(newCa);
+			newCa.getGarbages().add(existing);
+			em.merge(newCa);
+		}
+
+		TownArea newTown = geoManager.getTownArea(p);
+		mustRemove = oldTown != null
+				&& (newTown == null || (newTown != null && oldTown.getAreaId() != newTown
+						.getAreaId()));
+		mustSet = newTown != null
+				&& (oldTown == null || (oldTown != null && oldTown.getAreaId() != newTown
+						.getAreaId()));
+		if (mustRemove) {
+			oldTown.getGarbages().remove(existing);
+			em.merge(oldTown);
+		}
+		if (mustSet) {
+			existing.setTown(newTown);
+			newTown.getGarbages().add(existing);
+			em.merge(newTown);
+		}
 	}
 }

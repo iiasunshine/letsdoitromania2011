@@ -208,4 +208,19 @@ public class GarbageWebService {
 		}
 		return Response.ok().build();
 	}
+
+	@POST
+	@Consumes({ "application/json", "application/xml" })
+	@Path("{garbageId:[0-9]+}")
+	public Response updateGarbage(@PathParam("garbageId") Integer garbageId,
+			Garbage garbage) {
+		try {
+			garbageManager.updateGarbage(garbageId, garbage);
+		} catch (NoCountyException e) {
+			return Response.status(Status.BAD_REQUEST)
+					.entity("No county was found to contain this garbage.")
+					.type("text/plain").build();
+		}
+		return Response.ok().build();
+	}
 }
