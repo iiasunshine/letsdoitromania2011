@@ -104,6 +104,17 @@ public class GarbageWebService {
 	}
 
 	@DELETE
+	@Path("{garbageId:[0-9]+}")
+	public Response deleteGarbage(@PathParam("garbageId") int garbageId) {
+		try {
+			garbageManager.deleteGarbage(garbageId);
+		} catch (EJBException e) {
+			throw new WebApplicationException(500);
+		}
+		return Response.ok().build();
+	}
+
+	@DELETE
 	@Path("{garbageId:[0-9]+}/image/{imageId:[0-9]+}")
 	public Response deleteImage(@PathParam("garbageId") int garbageId,
 			@PathParam("imageId") int imageId) {

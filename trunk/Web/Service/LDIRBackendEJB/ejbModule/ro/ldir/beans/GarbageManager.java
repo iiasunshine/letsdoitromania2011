@@ -47,6 +47,7 @@ import ro.ldir.beans.security.SecurityHelper;
 import ro.ldir.dto.ChartedArea;
 import ro.ldir.dto.CountyArea;
 import ro.ldir.dto.Garbage;
+import ro.ldir.dto.Team;
 import ro.ldir.dto.Garbage.GarbageStatus;
 import ro.ldir.dto.TownArea;
 import ro.ldir.dto.User;
@@ -136,6 +137,45 @@ public class GarbageManager implements GarbageManagerLocal {
 		}
 		in.close();
 		out.close();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ro.ldir.beans.GarbageManagerLocal#deleteGarbage(int)
+	 */
+	@Override
+	public void deleteGarbage(int garbageId) {
+		Garbage garbage = em.find(Garbage.class, garbageId);
+		if (garbage.getPictures() != null)
+			for (String filename : garbage.getPictures()) {
+				File file = new File(filename);
+				file.delete();
+			}
+
+		garbage.getCounty().getGarbages().remove(garbage);
+		em.merge(garbage.getCounty());
+
+		if (garbage.getChartedArea() != null) {
+			garbage.getChartedArea().getGarbages().remove(garbage);
+			em.merge(garbage.getChartedArea());
+		}
+
+		if (garbage.getTown() != null) {
+			garbage.getTown().getGarbages().remove(garbage);
+			em.merge(garbage.getTown());
+		}
+
+		garbage.getInsertedBy().getGarbages().remove(garbage);
+		em.merge(garbage.getInsertedBy());
+
+		if (garbage.getEnrolledCleaners() != null)
+			for (Team team : garbage.getEnrolledCleaners()) {
+				team.getGarbages().remove(garbage);
+				em.merge(garbage);
+			}
+
+		em.remove(garbage);
 	}
 
 	/*
