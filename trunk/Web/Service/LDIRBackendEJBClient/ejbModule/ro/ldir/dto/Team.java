@@ -23,6 +23,7 @@
  */
 package ro.ldir.dto;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -36,6 +37,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -103,6 +105,25 @@ public class Team extends FieldAccessBean {
 	}
 
 	/**
+	 * 
+	 * @return A list of garbages inserted by all team members.
+	 */
+	@Transient
+	@XmlIDREF
+	public List<Garbage> getInsertedGarbages() {
+		ArrayList<Garbage> result = new ArrayList<Garbage>();
+		if (volunteerMembers == null)
+			return result;
+		for (User user : volunteerMembers) {
+			Set<Garbage> userGarbages = user.getGarbages();
+			if (userGarbages == null)
+				continue;
+			result.addAll(userGarbages);
+		}
+		return result;
+	}
+
+	/**
 	 * @return the organizationMembers
 	 */
 	@OneToMany(cascade = CascadeType.MERGE, mappedBy = "memberOf")
@@ -142,6 +163,7 @@ public class Team extends FieldAccessBean {
 	 * @return the volunteerMembers
 	 */
 	@OneToMany(cascade = CascadeType.MERGE, mappedBy = "memberOf")
+	@XmlIDREF
 	public List<User> getVolunteerMembers() {
 		return volunteerMembers;
 	}
