@@ -189,7 +189,7 @@ public class GarbageWebService {
 		} catch (NoCountyException e) {
 			return Response.status(Status.BAD_REQUEST)
 					.entity("No county was found to contain this garbage.")
-					.build();
+					.type("text/plain").build();
 		}
 		return Response.ok().build();
 	}
