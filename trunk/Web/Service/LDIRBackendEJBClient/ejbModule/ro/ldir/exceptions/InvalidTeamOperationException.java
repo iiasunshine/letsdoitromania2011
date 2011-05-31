@@ -23,12 +23,11 @@
  */
 package ro.ldir.exceptions;
 
-import javax.ejb.EJBException;
 
 /**
  *
  */
-public class InvalidTeamOperationException extends EJBException {
+public class InvalidTeamOperationException extends Exception {
 
 	private static final long serialVersionUID = 1L;
 

@@ -42,6 +42,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.Response.Status;
 
 import ro.ldir.beans.TeamManagerLocal;
 import ro.ldir.beans.UserManagerLocal;
@@ -49,6 +50,7 @@ import ro.ldir.dto.Organization;
 import ro.ldir.dto.Team;
 import ro.ldir.dto.User;
 import ro.ldir.dto.User.SecurityRole;
+import ro.ldir.exceptions.InvalidTeamOperationException;
 
 /**
  * The garbage user. Implements queries for users, updates of users information,
@@ -81,6 +83,9 @@ public class UserWebService {
 			if (e.getCausedByException() instanceof NullPointerException)
 				throw new WebApplicationException(404);
 			throw new WebApplicationException(500);
+		} catch (InvalidTeamOperationException e) {
+			return Response.status(Status.CONFLICT).entity(e.getMessage())
+					.type("text/plain").build();
 		}
 		return Response.ok().build();
 	}

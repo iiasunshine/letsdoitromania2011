@@ -23,7 +23,6 @@
  */
 package ro.ldir.exceptions;
 
-import javax.ejb.EJBException;
 
 /**
  * Exception thrown when an user operation cannot be completed.
@@ -32,7 +31,7 @@ import javax.ejb.EJBException;
  * an existing email address.
  * 
  */
-public class InvalidUserException extends EJBException {
+public class InvalidUserException extends Exception {
 
 	private static final long serialVersionUID = 1L;
 

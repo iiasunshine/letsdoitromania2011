@@ -37,12 +37,14 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
 import ro.ldir.beans.OrganizationManagerLocal;
 import ro.ldir.beans.TeamManagerLocal;
 import ro.ldir.dto.Organization;
 import ro.ldir.dto.Team;
+import ro.ldir.exceptions.InvalidTeamOperationException;
 
 /**
  * The organization web service.
@@ -109,6 +111,9 @@ public class OrganizationWebService {
 			if (e.getCausedByException() instanceof NullPointerException)
 				throw new WebApplicationException(404);
 			throw new WebApplicationException(500);
+		} catch (InvalidTeamOperationException e) {
+			return Response.status(Status.CONFLICT).entity(e.getMessage())
+					.type("text/plain").build();
 		}
 		return Response.ok().build();
 	}
