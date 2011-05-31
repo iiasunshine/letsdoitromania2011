@@ -158,6 +158,10 @@ charting and cleaning process. All are derived from an abstract entity called
 \subsection{Garbage tags}
 
 \begin{entitydef}{garbage}
+  \property{bagCount}{An integer denoting the number of bags required to collect
+  this garbage}
+  \property{bigComponentsDescription}{A string describing the components of the
+  garbage.}
   \roproperty{chartedArea}{An integer denoting the ID of the
   \texttt{chartedArea} entity in which this garbage has been tagged. This field
   is automatically filled in by the system based on the geographical coordinates
@@ -167,19 +171,28 @@ charting and cleaning process. All are derived from an abstract entity called
   filled in by the system based on the geographical coordinates of the garbage
   tag at the moment when the tag is inserted in the system.}
   \property{description}{A user-inserted string.}
+  \property{details}{A string giving further details on the garbage.}
+  \property{dispersed}{A boolean indicating whether the garbage is dispersed.}
   \roproperty{enrolledCleaners}{A list of integers denoting the ID of the
   \texttt{team} entities that wish to clean this garbage.}
   \roproperty{garbageId}{An integer denoting the ID of this garbage tag entity
   instance.}
+  \roproperty{insertedBy}{An integer denoting the ID of the user inserting this
+  garbage.}
+  \property{percentageGlass}{An integer.}
+  \property{percentageMetal}{An integer.}
+  \property{percentagePlastic}{An integer.}
+  \property{percentageWaste}{An integer.}
   \roproperty{pictures}{An array of strings, each denoting the location of a
   picture illustrating the tagged garbage.}
+  \roproperty{recordDate}{The timestamp when the garbage has been inserted in
+  the system.}
   \property{status}{A string denoting the garbage tag's status. Can be
   ``CLEANED'' or ``IDENTIFIED''.}
   \roproperty{town}{An integer denoting the ID of the \texttt{townArea}
   entity in which this garbage has been tagged. This field is automatically
   filled in by the system based on the geographical coordinates of the garbage
   tag at the moment when the tag is inserted in the system.}
-  \property{volume}{A user-inserted integer.}
   \property{x}{A float denoting the garbage tag's longitude.}
   \property{y}{A float denoting the garbage tag's latitude.}
 \end{entitydef}
