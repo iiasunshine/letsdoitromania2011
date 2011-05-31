@@ -59,6 +59,14 @@ public interface GarbageManagerLocal {
 			throws FileNotFoundException, IOException;
 
 	/**
+	 * Delets a garbage.
+	 * 
+	 * @param garbageId
+	 *            The ID of the garbage to delete.
+	 */
+	public void deleteGarbage(int garbageId);
+
+	/**
 	 * Deletes an image.
 	 * 
 	 * @param garbageId
