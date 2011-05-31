@@ -65,11 +65,10 @@ public class RegistrationWebService {
 	public Response addNewUser(User user) {
 		try {
 			userManager.addUser(user);
+		} catch (InvalidUserException e) {
+			return Response.status(Responses.CONFLICT).entity(e.getMessage())
+					.type("text/plain").build();
 		} catch (EJBException e) {
-			if (e.getCausedByException() instanceof InvalidUserException)
-				return Response.status(Responses.CONFLICT)
-						.entity(e.getCausedByException().getMessage())
-						.type("text/plain").build();
 			throw new WebApplicationException(500);
 		}
 		return Response.ok().build();
@@ -82,8 +81,7 @@ public class RegistrationWebService {
 		try {
 			userManager.activateUser(userId, key);
 		} catch (InvalidUserException e) {
-			return Response.status(Status.CONFLICT)
-					.entity(e.getCausedByException().getMessage())
+			return Response.status(Status.CONFLICT).entity(e.getMessage())
 					.type("text/plain").build();
 		} catch (EJBException e) {
 			throw new WebApplicationException(404);

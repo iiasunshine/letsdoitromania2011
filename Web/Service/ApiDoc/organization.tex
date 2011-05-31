@@ -90,8 +90,8 @@ The logged in user must be an ``ADMIN'' or the organization's contact.
   \begin{datalist}
     \replyitem{200}{if the operation succeeds.}
     \replyitem{404}{if the organization does not exists.}
+    \replyitem{409}{if the organization is already enrolled in a team.}
     \replyitem{500}{if another error occurs.}
-    \replyitem{TBD}{if the organization is already enrolled in a team.}
   \end{datalist}
 \end{apidata}
 \begin{apidata}{access}
