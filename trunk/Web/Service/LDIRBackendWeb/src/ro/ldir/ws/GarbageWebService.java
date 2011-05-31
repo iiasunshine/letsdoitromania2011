@@ -44,10 +44,12 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
 import ro.ldir.beans.GarbageManagerLocal;
 import ro.ldir.dto.Garbage;
+import ro.ldir.exceptions.NoCountyException;
 
 import com.sun.jersey.api.Responses;
 import com.sun.jersey.core.header.FormDataContentDisposition;
@@ -182,7 +184,13 @@ public class GarbageWebService {
 	@POST
 	@Consumes({ "application/json", "application/xml" })
 	public Response insertGarbage(Garbage garbage) {
-		garbageManager.insertGarbage(garbage);
+		try {
+			garbageManager.insertGarbage(garbage);
+		} catch (NoCountyException e) {
+			return Response.status(Status.BAD_REQUEST)
+					.entity("No county was found to contain this garbage.")
+					.build();
+		}
 		return Response.ok().build();
 	}
 

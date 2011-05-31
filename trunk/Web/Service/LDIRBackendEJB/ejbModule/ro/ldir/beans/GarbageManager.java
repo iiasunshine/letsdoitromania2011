@@ -50,6 +50,7 @@ import ro.ldir.dto.Garbage;
 import ro.ldir.dto.Garbage.GarbageStatus;
 import ro.ldir.dto.TownArea;
 import ro.ldir.dto.User;
+import ro.ldir.exceptions.NoCountyException;
 
 /**
  * Session bean managing garbages.
@@ -165,8 +166,8 @@ public class GarbageManager implements GarbageManagerLocal {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see ro.ldir.beans.GarbageManagerLocal#getGarbages(double, double, double,
-	 * double)
+	 * @see ro.ldir.beans.GarbageManagerLocal#getGarbages(double, double,
+	 * double, double)
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
@@ -238,29 +239,29 @@ public class GarbageManager implements GarbageManagerLocal {
 	 * @see ro.ldir.beans.GarbageManagerLocal#insertGarbage(ro.ldir.dto.Garbage)
 	 */
 	@Override
-	public void insertGarbage(Garbage garbage) {
-
+	public void insertGarbage(Garbage garbage) throws NoCountyException {
+		Point2D.Double p = new Point2D.Double(garbage.getX(), garbage.getY());
 		User user = SecurityHelper.getUser(userManager, ctx);
+
+		CountyArea county = geoManager.getCountyArea(p);
+		// If no county is found, the garbage is being inserted in an area not
+		// covered by the system.
+		if (county == null)
+			throw new NoCountyException();
+		garbage.setCounty(county);
+		county.getGarbages().add(garbage);
+		em.merge(county);
 
 		if (user.getGarbages() == null)
 			user.setGarbages(new HashSet<Garbage>());
 		user.getGarbages().add(garbage);
 		garbage.setInsertedBy(user);
 
-		Point2D.Double p = new Point2D.Double(garbage.getX(), garbage.getY());
-
 		ChartedArea ca = geoManager.getChartedArea(p);
 		if (ca != null) {
 			garbage.setChartedArea(ca);
 			ca.getGarbages().add(garbage);
 			em.merge(ca);
-		}
-
-		CountyArea county = geoManager.getCountyArea(p);
-		if (county != null) {
-			garbage.setCounty(county);
-			county.getGarbages().add(garbage);
-			em.merge(county);
 		}
 
 		TownArea town = geoManager.getTownArea(p);

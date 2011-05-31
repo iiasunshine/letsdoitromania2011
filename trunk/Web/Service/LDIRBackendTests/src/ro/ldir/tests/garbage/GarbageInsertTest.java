@@ -38,18 +38,32 @@ import com.sun.jersey.api.client.ClientResponse;
  */
 public class GarbageInsertTest extends GarbageTest {
 	@Test
+	public void insertGarbage() {
+		Garbage garbage = new Garbage();
+		garbage.setX(5);
+		garbage.setY(5);
+		ClientResponse cr = rootBuilder(USER).entity(garbage,
+				MediaType.APPLICATION_XML).post(ClientResponse.class);
+		assertEquals(200, cr.getStatus());
+	}
+
+	@Test
 	public void unauthorizedInsertGarbage() {
 		Garbage garbage = new Garbage();
+		garbage.setX(5);
+		garbage.setY(5);
 		ClientResponse cr = rootBuilder("blah").entity(garbage,
 				MediaType.APPLICATION_XML).post(ClientResponse.class);
 		assertEquals(401, cr.getStatus());
 	}
 
 	@Test
-	public void insertGarbage() {
+	public void insertNoCounty() {
 		Garbage garbage = new Garbage();
+		garbage.setX(100);
+		garbage.setY(100);
 		ClientResponse cr = rootBuilder(USER).entity(garbage,
 				MediaType.APPLICATION_XML).post(ClientResponse.class);
-		assertEquals(200, cr.getStatus());
+		assertEquals(400, cr.getStatus());
 	}
 }
