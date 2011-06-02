@@ -126,6 +126,20 @@ public class GeoManager implements GeoManagerLocal {
 		return query.getResultList();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * ro.ldir.beans.GeoManagerLocal#getChartedAreasByCounty(java.lang.String)
+	 */
+	@Override
+	public List<ChartedArea> getChartedAreasByCounty(String county) {
+		Query query = em
+				.createQuery("SELECT x FROM ChartedArea x WHERE x.county.name = :countyParam");
+		query.setParameter("countyParam", county);
+		return query.getResultList();
+	}
+
 	@Override
 	public CountyArea getCountyArea(int countyAreaId) {
 		return em.find(CountyArea.class, countyAreaId);

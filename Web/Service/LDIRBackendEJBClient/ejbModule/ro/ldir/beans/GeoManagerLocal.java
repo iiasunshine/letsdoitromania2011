@@ -70,6 +70,12 @@ public interface GeoManagerLocal {
 			double bottomRightX, double bottomRightY);
 
 	/**
+	 * @param county
+	 * @return
+	 */
+	public List<ChartedArea> getChartedAreasByCounty(String county);
+
+	/**
 	 * Finds an county area by ID.
 	 * 
 	 * @param countyAreaId
