@@ -184,6 +184,7 @@ public class GarbageGeoTest extends GarbageTest {
 		params.add("topLeftY", "10");
 		params.add("bottomRightX", "10");
 		params.add("bottomRightY", "0");
+		params.add("cb", "<a href={{{ID}}}>blah</a>");
 
 		ClientResponse cr = r.queryParams(params)
 				.accept("application/vnd.google-earth.kml+xml")
@@ -236,6 +237,7 @@ public class GarbageGeoTest extends GarbageTest {
 		params.add("topLeftY", "10");
 		params.add("bottomRightX", "10");
 		params.add("bottomRightY", "0");
+		params.add("cb", "<a href={{{ID}}}>blah</a>");
 
 		ClientResponse cr = r.queryParams(params)
 				.accept("application/vnd.google-earth.kml+xml")

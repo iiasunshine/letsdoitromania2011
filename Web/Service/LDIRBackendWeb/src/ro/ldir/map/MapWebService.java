@@ -61,27 +61,32 @@ public class MapWebService {
 	public String getChartedAreas(@QueryParam("topLeftX") double topLeftX,
 			@QueryParam("topLeftY") double topLeftY,
 			@QueryParam("bottomRightX") double bottomRightX,
-			@QueryParam("bottomRightY") double bottomRightY) {
+			@QueryParam("bottomRightY") double bottomRightY,
+			@QueryParam("cb") String callbackPattern) {
 		List<ChartedArea> chartedAreas = geoManager.getChartedAreas(topLeftX,
 				topLeftY, bottomRightX, bottomRightY);
-		return new ChartedAreasKMLFormatter(chartedAreas).toString();
+		return new ChartedAreasKMLFormatter(chartedAreas, callbackPattern)
+				.toString();
 	}
 
 	@GET
 	@Produces({ "application/vnd.google-earth.kml+xml" })
 	@Path("countySearch/chartedAreas")
-	public String getChartedAreasByCounty(@QueryParam("county") String county) {
+	public String getChartedAreasByCounty(@QueryParam("county") String county,
+			@QueryParam("cb") String callbackPattern) {
 		List<ChartedArea> chartedAreas = geoManager
 				.getChartedAreasByCounty(county);
-		return new ChartedAreasKMLFormatter(chartedAreas).toString();
+		return new ChartedAreasKMLFormatter(chartedAreas, callbackPattern)
+				.toString();
 	}
 
 	@GET
 	@Produces({ "application/vnd.google-earth.kml+xml" })
 	@Path("countySearch/garbages")
-	public String getGarbageByCounty(@QueryParam("county") String county) {
+	public String getGarbageByCounty(@QueryParam("county") String county,
+			@QueryParam("cb") String callbackPattern) {
 		List<Garbage> garbages = garbageManager.getGarbagesByCounty(county);
-		return new GarbagesKMLFormatter(garbages).toString();
+		return new GarbagesKMLFormatter(garbages, callbackPattern).toString();
 	}
 
 	@GET
@@ -90,9 +95,10 @@ public class MapWebService {
 	public String getGarbages(@QueryParam("topLeftX") double topLeftX,
 			@QueryParam("topLeftY") double topLeftY,
 			@QueryParam("bottomRightX") double bottomRightX,
-			@QueryParam("bottomRightY") double bottomRightY) {
+			@QueryParam("bottomRightY") double bottomRightY,
+			@QueryParam("cb") String callbackPattern) {
 		List<Garbage> garbages = garbageManager.getGarbages(topLeftX, topLeftY,
 				bottomRightX, bottomRightY);
-		return new GarbagesKMLFormatter(garbages).toString();
+		return new GarbagesKMLFormatter(garbages, callbackPattern).toString();
 	}
 }
