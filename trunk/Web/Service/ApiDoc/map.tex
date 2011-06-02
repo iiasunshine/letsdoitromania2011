@@ -25,3 +25,22 @@ authentication is necessary).
     \replyditem{A KML of all the charted areas intersecting the bounding box.}
   \end{datalist}
 \end{apidata}
+
+\subsection{Obtaining the chart areas in a county}
+
+\apilocation{get}{map/ws/countySearch/chartedAreas/\\?county=\param{countyName}}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyditem{A KML of all the charted areas in the county.}
+  \end{datalist}
+\end{apidata}
+
+\subsection{Obtaining the garbage tags in a county}
+\apilocation{get}{map/ws/countySearch/garbages/\\?county=\param{countyName}}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyditem{A KML of all the garbages in the county.}
+  \end{datalist}
+\end{apidata}
+
+

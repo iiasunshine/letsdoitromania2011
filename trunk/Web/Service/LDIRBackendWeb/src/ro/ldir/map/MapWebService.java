@@ -69,6 +69,23 @@ public class MapWebService {
 
 	@GET
 	@Produces({ "application/vnd.google-earth.kml+xml" })
+	@Path("countySearch/chartedAreas")
+	public String getChartedAreasByCounty(@QueryParam("county") String county) {
+		List<ChartedArea> chartedAreas = geoManager
+				.getChartedAreasByCounty(county);
+		return new ChartedAreasKMLFormatter(chartedAreas).toString();
+	}
+
+	@GET
+	@Produces({ "application/vnd.google-earth.kml+xml" })
+	@Path("countySearch/garbages")
+	public String getGarbageByCounty(@QueryParam("county") String county) {
+		List<Garbage> garbages = garbageManager.getGarbagesByCounty(county);
+		return new GarbagesKMLFormatter(garbages).toString();
+	}
+
+	@GET
+	@Produces({ "application/vnd.google-earth.kml+xml" })
 	@Path("garbages")
 	public String getGarbages(@QueryParam("topLeftX") double topLeftX,
 			@QueryParam("topLeftY") double topLeftY,
