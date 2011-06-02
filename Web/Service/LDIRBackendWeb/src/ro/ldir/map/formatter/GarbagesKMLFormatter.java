@@ -38,7 +38,6 @@ public class GarbagesKMLFormatter {
 	public GarbagesKMLFormatter(List<Garbage> garbages, String linkPattern) {
 		this.garbages = garbages;
 		this.linkPattern = linkPattern;
-		System.out.println("lllllllllllink " + linkPattern);
 		buf = new StringBuffer();
 		appendHeader();
 		appendGarbages();
