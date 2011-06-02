@@ -138,6 +138,16 @@ public class GarbageOperations extends GarbageTest {
 	}
 
 	@Test
+	public void getGarbage() {
+		instanceResource = client.resource(location + "/" + garbageId);
+		ClientResponse cr = instanceBuilder(USER).accept(
+				MediaType.APPLICATION_XML).get(ClientResponse.class);
+		assertEquals(200, cr.getStatus());
+		Garbage garbage = cr.getEntity(Garbage.class);
+		assertEquals(garbage.getInsertedBy().getEmail(), USER);
+	}
+
+	@Test
 	public void updateNoCounty() {
 		instanceResource = client.resource(location + "/" + garbageId);
 		insertedGarbage.setX(100);
