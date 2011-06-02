@@ -50,6 +50,8 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.WebResource.Builder;
+import com.sun.jersey.api.client.config.ClientConfig;
+import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.core.util.Base64;
 
 /**
@@ -60,6 +62,7 @@ public abstract class GarbageTest {
 	protected static int countyAreaId;
 	private static final String geoLocation = "http://localhost:8080/LDIRBackend/ws/geo";
 	protected static final String location = "http://localhost:8080/LDIRBackend/ws/garbage";
+	protected static final String baseLocation = "http://localhost:8080/LDIRBackend/";
 	protected static WebResource resource;
 	protected static final String USER = GarbageInsertTest.class.getName();
 	protected static int userId;
@@ -131,7 +134,9 @@ public abstract class GarbageTest {
 
 	@BeforeClass
 	public static void setupClient() throws Exception {
-		client = Client.create();
+		ClientConfig cc = new DefaultClientConfig();
+		cc.getClasses().add(GarbageContextProvider.class);
+		client = Client.create(cc);
 		resource = client.resource(location);
 	}
 
