@@ -34,9 +34,13 @@ import ro.ldir.dto.ChartedArea;
 public class ChartedAreasKMLFormatter {
 	private StringBuffer buf;
 	private List<ChartedArea> chartedAreas;
+	private String linkPattern = null;
 
-	public ChartedAreasKMLFormatter(List<ChartedArea> chartedAreas) {
+	public ChartedAreasKMLFormatter(List<ChartedArea> chartedAreas,
+			String linkPattern) {
 		this.chartedAreas = chartedAreas;
+
+		this.linkPattern = linkPattern;
 		buf = new StringBuffer();
 		appendHeader();
 		appendChartedAreas();
@@ -49,7 +53,12 @@ public class ChartedAreasKMLFormatter {
 			buf.append("<styleUrl>#chartedAreaStyle</styleUrl>\n");
 			buf.append("<name>Charted Area " + chartedArea.getAreaId()
 					+ "</name>\n");
-			buf.append("<description>[DESCRIPTION]</description>\n");
+			if (linkPattern != null) {
+				buf.append("<description><![CDATA[");
+				buf.append(linkPattern.replaceAll("\\{\\{\\{ID\\}\\}\\}",
+						chartedArea.getAreaId().toString()));
+				buf.append("]]</description>\n");
+			}
 			buf.append("<Polygon><outerBoundaryIs><LinearRing><coordinates>");
 			for (Point2D.Double point : chartedArea.getPolyline())
 				buf.append(point.x + "," + point.y + "\n");

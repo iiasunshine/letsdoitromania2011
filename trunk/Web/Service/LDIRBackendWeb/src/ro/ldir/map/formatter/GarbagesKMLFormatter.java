@@ -33,9 +33,12 @@ import ro.ldir.dto.Garbage;
 public class GarbagesKMLFormatter {
 	private StringBuffer buf;
 	private List<Garbage> garbages;
+	private String linkPattern = null;
 
-	public GarbagesKMLFormatter(List<Garbage> garbages) {
+	public GarbagesKMLFormatter(List<Garbage> garbages, String linkPattern) {
 		this.garbages = garbages;
+		this.linkPattern = linkPattern;
+		System.out.println("lllllllllllink " + linkPattern);
 		buf = new StringBuffer();
 		appendHeader();
 		appendGarbages();
@@ -50,8 +53,14 @@ public class GarbagesKMLFormatter {
 		for (Garbage garbage : garbages) {
 			buf.append("<Placemark>\n");
 			buf.append("<name>Garbage " + garbage.getGarbageId() + "</name>\n");
-			buf.append("<description>" + garbage.getDescription()
-					+ "</description>\n");
+			buf.append("<description><![CDATA[");
+			buf.append("<p>" + garbage.getDescription() + "</p>\n");
+			if (linkPattern != null) {
+				buf.append("<p>"
+						+ linkPattern.replaceAll("\\{\\{\\{ID\\}\\}\\}",
+								garbage.getGarbageId().toString()) + "</p>");
+			}
+			buf.append("]]</description>\n");
 			buf.append("<Point><coordinates>" + garbage.getX() + ","
 					+ garbage.getY() + "</coordinates></Point>\n");
 			buf.append("</Placemark>\n");
