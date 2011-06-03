@@ -132,10 +132,11 @@ public class GeoManager implements GeoManagerLocal {
 	 * @see
 	 * ro.ldir.beans.GeoManagerLocal#getChartedAreasByCounty(java.lang.String)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<ChartedArea> getChartedAreasByCounty(String county) {
 		Query query = em
-				.createQuery("SELECT x FROM ChartedArea x WHERE x.county.name = :countyParam");
+				.createQuery("SELECT x FROM ChartedArea x WHERE x.county = :countyParam");
 		query.setParameter("countyParam", county);
 		return query.getResultList();
 	}
@@ -169,7 +170,7 @@ public class GeoManager implements GeoManagerLocal {
 						&& a.getName().equals("MUNICIPIUL BUCURESTI"))
 					return a;
 		}
-		
+
 		for (CountyArea a : areas)
 			if (a.containsPoint(point))
 				return a;
