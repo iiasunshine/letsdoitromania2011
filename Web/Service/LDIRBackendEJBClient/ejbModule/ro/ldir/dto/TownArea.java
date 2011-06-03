@@ -68,8 +68,7 @@ public class TownArea extends ClosedArea {
 	/**
 	 * @return the garbages
 	 */
-	@OneToMany(cascade = { CascadeType.MERGE, CascadeType.PERSIST,
-			CascadeType.REFRESH }, fetch = FetchType.EAGER, mappedBy = "town")
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "town")
 	@XmlIDREF
 	public Set<Garbage> getGarbages() {
 		return garbages;
