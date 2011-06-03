@@ -49,6 +49,7 @@ public class OrganizationManager implements OrganizationManagerLocal {
 		user.getOrganizations().add(organization);
 		organization.setContactUser(user);
 		em.merge(user);
+		em.persist(organization);
 	}
 
 	/*
