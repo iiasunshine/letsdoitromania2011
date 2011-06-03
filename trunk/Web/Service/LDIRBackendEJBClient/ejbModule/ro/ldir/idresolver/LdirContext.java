@@ -34,6 +34,7 @@ import com.sun.xml.bind.IDResolver;
 /**
  * A custom context to use the LDIR ID resolver.
  */
+@SuppressWarnings("deprecation")
 public class LdirContext extends JAXBContext {
 	/**
 	 * Tests whether a given class is served by this context.
