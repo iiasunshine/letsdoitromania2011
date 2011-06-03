@@ -101,7 +101,6 @@ public class LdirContext extends JAXBContext {
 	 * 
 	 * @see javax.xml.bind.JAXBContext#createValidator()
 	 */
-	@SuppressWarnings("deprecation")
 	@Override
 	public Validator createValidator() throws JAXBException {
 		return context.createValidator();
