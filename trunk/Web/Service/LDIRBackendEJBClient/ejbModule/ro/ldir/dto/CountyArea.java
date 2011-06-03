@@ -53,8 +53,7 @@ public class CountyArea extends ClosedArea {
 	/**
 	 * @return the garbages
 	 */
-	@OneToMany(cascade = { CascadeType.MERGE, CascadeType.PERSIST,
-			CascadeType.REFRESH }, fetch = FetchType.EAGER, mappedBy = "county")
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "county")
 	@XmlIDREF
 	public Set<Garbage> getGarbages() {
 		return garbages;
