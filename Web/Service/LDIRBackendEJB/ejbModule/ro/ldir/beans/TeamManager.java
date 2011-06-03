@@ -86,6 +86,7 @@ public class TeamManager implements TeamManagerLocal {
 		team.setTeamManager(user);
 		user.getManagedTeams().add(team);
 		em.merge(user);
+		em.persist(team);
 	}
 
 	/*
@@ -132,6 +133,7 @@ public class TeamManager implements TeamManagerLocal {
 		organization.setMemberOf(team);
 		team.getOrganizationMembers().add(organization);
 		em.merge(team);
+		em.merge(organization);
 	}
 
 	/*
@@ -151,6 +153,7 @@ public class TeamManager implements TeamManagerLocal {
 		user.setMemberOf(team);
 		team.getVolunteerMembers().add(user);
 		em.merge(team);
+		em.merge(user);
 	}
 
 	/*
@@ -235,6 +238,7 @@ public class TeamManager implements TeamManagerLocal {
 		organization.setMemberOf(null);
 		team.getOrganizationMembers().remove(organization);
 		em.merge(organization);
+		em.merge(team);
 	}
 
 	/*
@@ -250,5 +254,6 @@ public class TeamManager implements TeamManagerLocal {
 		user.setMemberOf(null);
 		team.getVolunteerMembers().remove(user);
 		em.merge(team);
+		em.merge(user);
 	}
 }
