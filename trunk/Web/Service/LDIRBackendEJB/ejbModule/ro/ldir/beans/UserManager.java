@@ -23,6 +23,7 @@
  */
 package ro.ldir.beans;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -90,8 +91,13 @@ public class UserManager implements UserManagerLocal {
 		userTeam.setTeamName(existing.getLastName() + " "
 				+ existing.getEmail().hashCode());
 		userTeam.setTeamManager(existing);
-		existing.getManagedTeams().add(userTeam);
+		userTeam.setVolunteerMembers(new ArrayList<User>());
+		userTeam.getVolunteerMembers().add(existing);
 
+		existing.getManagedTeams().add(userTeam);
+		existing.setMemberOf(userTeam);
+
+		em.persist(userTeam);
 		em.merge(existing);
 	}
 
