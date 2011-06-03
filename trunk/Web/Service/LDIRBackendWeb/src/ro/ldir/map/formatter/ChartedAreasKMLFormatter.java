@@ -57,7 +57,7 @@ public class ChartedAreasKMLFormatter {
 				buf.append("<description><![CDATA[");
 				buf.append(linkPattern.replaceAll("\\{\\{\\{ID\\}\\}\\}",
 						chartedArea.getAreaId().toString()));
-				buf.append("]]</description>\n");
+				buf.append("]]></description>\n");
 			}
 			buf.append("<Polygon><outerBoundaryIs><LinearRing><coordinates>");
 			for (Point2D.Double point : chartedArea.getPolyline())

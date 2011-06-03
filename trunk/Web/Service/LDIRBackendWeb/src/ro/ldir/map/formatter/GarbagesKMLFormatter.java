@@ -59,7 +59,7 @@ public class GarbagesKMLFormatter {
 						+ linkPattern.replaceAll("\\{\\{\\{ID\\}\\}\\}",
 								garbage.getGarbageId().toString()) + "</p>");
 			}
-			buf.append("]]</description>\n");
+			buf.append("]]></description>\n");
 			buf.append("<Point><coordinates>" + garbage.getX() + ","
 					+ garbage.getY() + "</coordinates></Point>\n");
 			buf.append("</Placemark>\n");
