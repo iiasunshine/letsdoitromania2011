@@ -112,6 +112,20 @@ public class UserWebService {
 
 	@GET
 	@Produces({ "application/json", "application/xml" })
+	@Path("{userId:[0-9]+}/managedTeams")
+	public List<Team> getManagedTeams(@PathParam("userId") Integer userId) {
+		return userManager.getUser(userId).getManagedTeams();
+	}
+
+	@GET
+	@Produces({ "application/json", "application/xml" })
+	@Path("{userId:[0-9]+}/memberOf")
+	public Team getMemberOf(@PathParam("userId") Integer userId) {
+		return userManager.getUser(userId).getMemberOf();
+	}
+
+	@GET
+	@Produces({ "application/json", "application/xml" })
 	@Path("{userId:[0-9]+}/organizations")
 	public Collection<Organization> getOrganizations(
 			@PathParam("userId") int userId) {

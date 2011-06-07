@@ -44,6 +44,7 @@ import ro.ldir.beans.OrganizationManagerLocal;
 import ro.ldir.beans.TeamManagerLocal;
 import ro.ldir.dto.Organization;
 import ro.ldir.dto.Team;
+import ro.ldir.dto.User;
 import ro.ldir.exceptions.InvalidTeamOperationException;
 
 /**
@@ -81,25 +82,6 @@ public class OrganizationWebService {
 		return Response.ok().build();
 	}
 
-	@GET
-	@Produces({ "application/json", "application/xml" })
-	@Path("{organizationId:[0-9]+}/")
-	public Organization getOrganization(
-			@PathParam("organizationId") int organizationId) {
-		return orgManager.getOrganization(organizationId);
-
-	}
-
-	@PUT
-	@Consumes({ "application/json", "application/xml" })
-	@Path("{organizationId:[0-9]+}/")
-	public Response updateOrganization(
-			@PathParam("organizationId") int organizationId,
-			Organization organization) {
-		orgManager.updateOrganization(organizationId, organization);
-		return Response.ok().build();
-	}
-
 	@POST
 	@Consumes({ "application/json", "application/xml" })
 	@Path("{organizationId:[0-9]+}/team")
@@ -115,6 +97,38 @@ public class OrganizationWebService {
 			return Response.status(Status.CONFLICT).entity(e.getMessage())
 					.type("text/plain").build();
 		}
+		return Response.ok().build();
+	}
+
+	@GET
+	@Produces({ "application/json", "application/xml" })
+	@Path("{organizationId:[0-9]+}/contactUser")
+	public User getContactUser(@PathParam("organizationId") int organizationId) {
+		return orgManager.getOrganization(organizationId).getContactUser();
+	}
+
+	@GET
+	@Produces({ "application/json", "application/xml" })
+	@Path("{organizationId:[0-9]+}/memberOf")
+	public Team getMemberOf(@PathParam("organizationId") int organizationId) {
+		return orgManager.getOrganization(organizationId).getMemberOf();
+	}
+
+	@GET
+	@Produces({ "application/json", "application/xml" })
+	@Path("{organizationId:[0-9]+}/")
+	public Organization getOrganization(
+			@PathParam("organizationId") int organizationId) {
+		return orgManager.getOrganization(organizationId);
+	}
+
+	@PUT
+	@Consumes({ "application/json", "application/xml" })
+	@Path("{organizationId:[0-9]+}/")
+	public Response updateOrganization(
+			@PathParam("organizationId") int organizationId,
+			Organization organization) {
+		orgManager.updateOrganization(organizationId, organization);
 		return Response.ok().build();
 	}
 }

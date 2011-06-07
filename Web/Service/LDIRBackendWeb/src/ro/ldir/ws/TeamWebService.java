@@ -133,6 +133,13 @@ public class TeamWebService {
 
 	@GET
 	@Produces({ "application/json", "application/xml" })
+	@Path("{teamId:[0-9]+}/teamManager")
+	public User getTeamManager(@PathParam("teamId") int teamId) {
+		return teamManager.getTeam(teamId).getTeamManager();
+	}
+
+	@GET
+	@Produces({ "application/json", "application/xml" })
 	@Path("{teamId:[0-9]+}/organizationMembers")
 	public List<Organization> getTeamOrganizationMembers(
 			@PathParam("teamId") int teamId) {
