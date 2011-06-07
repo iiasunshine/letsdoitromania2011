@@ -25,6 +25,7 @@ package ro.ldir.ws;
 
 import java.util.List;
 
+import javax.ejb.EJBException;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.ws.rs.Consumes;
@@ -36,6 +37,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
@@ -135,7 +137,11 @@ public class TeamWebService {
 	@Produces({ "application/json", "application/xml" })
 	@Path("{teamId:[0-9]+}/teamManager")
 	public User getTeamManager(@PathParam("teamId") int teamId) {
-		return teamManager.getTeam(teamId).getTeamManager();
+		try {
+			return teamManager.getTeam(teamId).getTeamManager();
+		} catch (NullPointerException e) {
+			throw new WebApplicationException(404);
+		}
 	}
 
 	@GET
@@ -143,14 +149,22 @@ public class TeamWebService {
 	@Path("{teamId:[0-9]+}/organizationMembers")
 	public List<Organization> getTeamOrganizationMembers(
 			@PathParam("teamId") int teamId) {
-		return teamManager.getTeam(teamId).getOrganizationMembers();
+		try {
+			return teamManager.getTeam(teamId).getOrganizationMembers();
+		} catch (NullPointerException e) {
+			throw new WebApplicationException(404);
+		}
 	}
 
 	@GET
 	@Produces({ "application/json", "application/xml" })
 	@Path("{teamId:[0-9]+}/volunteerMembers")
 	public List<User> getTeamVolunteerMembers(@PathParam("teamId") int teamId) {
-		return teamManager.getTeam(teamId).getVolunteerMembers();
+		try {
+			return teamManager.getTeam(teamId).getVolunteerMembers();
+		} catch (NullPointerException e) {
+			throw new WebApplicationException(404);
+		}
 	}
 
 	@DELETE

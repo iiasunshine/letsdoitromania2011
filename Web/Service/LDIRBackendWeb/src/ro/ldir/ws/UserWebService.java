@@ -112,16 +112,15 @@ public class UserWebService {
 
 	@GET
 	@Produces({ "application/json", "application/xml" })
-	@Path("{userId:[0-9]+}/managedTeams")
-	public List<Team> getManagedTeams(@PathParam("userId") Integer userId) {
-		return userManager.getUser(userId).getManagedTeams();
-	}
-
-	@GET
-	@Produces({ "application/json", "application/xml" })
 	@Path("{userId:[0-9]+}/memberOf")
 	public Team getMemberOf(@PathParam("userId") Integer userId) {
-		return userManager.getUser(userId).getMemberOf();
+		try {
+			return userManager.getUser(userId).getMemberOf();
+		} catch (EJBException e) {
+			if (e.getCausedByException() instanceof NullPointerException)
+				throw new WebApplicationException(404);
+			throw new WebApplicationException(500);
+		}
 	}
 
 	@GET

@@ -104,14 +104,22 @@ public class OrganizationWebService {
 	@Produces({ "application/json", "application/xml" })
 	@Path("{organizationId:[0-9]+}/contactUser")
 	public User getContactUser(@PathParam("organizationId") int organizationId) {
-		return orgManager.getOrganization(organizationId).getContactUser();
+		try {
+			return orgManager.getOrganization(organizationId).getContactUser();
+		} catch (NullPointerException e) {
+			throw new WebApplicationException(404);
+		}
 	}
 
 	@GET
 	@Produces({ "application/json", "application/xml" })
 	@Path("{organizationId:[0-9]+}/memberOf")
 	public Team getMemberOf(@PathParam("organizationId") int organizationId) {
-		return orgManager.getOrganization(organizationId).getMemberOf();
+		try {
+			return orgManager.getOrganization(organizationId).getMemberOf();
+		} catch (NullPointerException e) {
+			throw new WebApplicationException(404);
+		}
 	}
 
 	@GET
@@ -119,7 +127,11 @@ public class OrganizationWebService {
 	@Path("{organizationId:[0-9]+}/")
 	public Organization getOrganization(
 			@PathParam("organizationId") int organizationId) {
-		return orgManager.getOrganization(organizationId);
+		try {
+			return orgManager.getOrganization(organizationId);
+		} catch (NullPointerException e) {
+			throw new WebApplicationException(404);
+		}
 	}
 
 	@PUT
