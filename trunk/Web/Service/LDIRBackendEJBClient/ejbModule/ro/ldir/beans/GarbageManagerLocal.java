@@ -143,6 +143,32 @@ public interface GarbageManagerLocal {
 	public String getImagePath(int garbageId, int imageId);
 
 	/**
+	 * Returns the location of the thumbnail of a file.
+	 * 
+	 * @param garbageId
+	 *            The ID of the garbage that the image belongs to.
+	 * @param imageId
+	 *            The ID of the image.
+	 * @return The full path where the image file can be located.
+	 * @throws ArrayIndexOutOfBoundsException
+	 *             if the imageId is an invalid image for the given garbage.
+	 */
+	public String getImageThumbnailPath(int garbageId, int imageId);
+
+	/**
+	 * Returns the location of the display image.
+	 * 
+	 * @param garbageId
+	 *            The ID of the garbage that the image belongs to.
+	 * @param imageId
+	 *            The ID of the image.
+	 * @return The full path where the image file can be located.
+	 * @throws ArrayIndexOutOfBoundsException
+	 *             if the imageId is an invalid image for the given garbage.
+	 */
+	public String getImageDisplayPath(int garbageId, int imageId);
+
+	/**
 	 * Inserts a new garbage in the database.
 	 * 
 	 * The operation fails if the coordinates of the garbage are not contained

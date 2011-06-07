@@ -17,6 +17,30 @@
 				<description>ImageLocation</description>
 				<env-entry-name>ro.ldir.beans.GarbageManager/imgLocation</env-entry-name>
 				<env-entry-type>java.lang.String</env-entry-type>
+				<env-entry-value>/Users/stefan/tmp/ldir</env-entry-value>
+			</env-entry>
+			<env-entry>
+				<description>Size of the displayed images</description>
+				<env-entry-name>ro.ldir.beans.GarbageManager/displayHeight</env-entry-name>
+				<env-entry-type>java.lang.Integer</env-entry-type>
+				<env-entry-value>600</env-entry-value>
+			</env-entry>
+			<env-entry>
+				<description>Size of the displayed images</description>
+				<env-entry-name>ro.ldir.beans.GarbageManager/displayWidth</env-entry-name>
+				<env-entry-type>java.lang.Integer</env-entry-type>
+				<env-entry-value>800</env-entry-value>
+			</env-entry>
+			<env-entry>
+				<description>Size of the thumbnail images</description>
+				<env-entry-name>ro.ldir.beans.GarbageManager/thumbWidth</env-entry-name>
+				<env-entry-type>java.lang.Integer</env-entry-type>
+				<env-entry-value>100</env-entry-value>
+			</env-entry>
+			<env-entry>
+				<description>Quality of the resized images</description>
+				<env-entry-name>ro.ldir.beans.GarbageManager/resizedQuality</env-entry-name>
+				<env-entry-type>java.lang.Float</env-entry-type>
                 <env-entry-value>/home/glassfish/ldir_data/pics</env-entry-value>
 			</env-entry>
 		</session>

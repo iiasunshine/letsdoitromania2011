@@ -192,6 +192,45 @@ public class GarbageWebService {
 		return Response.ok(f, mt).build();
 	}
 
+	@GET
+	@Path("{garbageId:[0-9]+}/image/{imageId:[0-9]+}/display")
+	public Response getImageDisplay(@PathParam("garbageId") int garbageId,
+			@PathParam("imageId") int imageId) {
+		File f;
+		try {
+			f = new File(garbageManager.getImageDisplayPath(garbageId, imageId));
+		} catch (EJBException e) {
+			if (e.getCausedByException() instanceof NullPointerException
+					|| e.getCausedByException() instanceof ArrayIndexOutOfBoundsException)
+				throw new WebApplicationException(404);
+			throw new WebApplicationException(500);
+		}
+		if (!f.exists())
+			throw new WebApplicationException(404);
+		String mt = new MimetypesFileTypeMap().getContentType(f);
+		return Response.ok(f, mt).build();
+	}
+
+	@GET
+	@Path("{garbageId:[0-9]+}/image/{imageId:[0-9]+}/thumb")
+	public Response getImageThumbnail(@PathParam("garbageId") int garbageId,
+			@PathParam("imageId") int imageId) {
+		File f;
+		try {
+			f = new File(garbageManager.getImageThumbnailPath(garbageId,
+					imageId));
+		} catch (EJBException e) {
+			if (e.getCausedByException() instanceof NullPointerException
+					|| e.getCausedByException() instanceof ArrayIndexOutOfBoundsException)
+				throw new WebApplicationException(404);
+			throw new WebApplicationException(500);
+		}
+		if (!f.exists())
+			throw new WebApplicationException(404);
+		String mt = new MimetypesFileTypeMap().getContentType(f);
+		return Response.ok(f, mt).build();
+	}
+
 	@POST
 	@Consumes({ "application/json", "application/xml" })
 	public Response insertGarbage(Garbage garbage) {
