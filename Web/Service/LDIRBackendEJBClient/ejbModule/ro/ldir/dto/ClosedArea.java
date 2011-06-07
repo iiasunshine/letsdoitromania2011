@@ -114,7 +114,6 @@ public abstract class ClosedArea extends FieldAccessBean {
 	/**
 	 * @return the bottomRightX
 	 */
-	@XmlTransient
 	public double getBottomRightX() {
 		return bottomRightX;
 	}
@@ -122,7 +121,6 @@ public abstract class ClosedArea extends FieldAccessBean {
 	/**
 	 * @return the bottomRightY
 	 */
-	@XmlTransient
 	public double getBottomRightY() {
 		return bottomRightY;
 	}
@@ -137,7 +135,6 @@ public abstract class ClosedArea extends FieldAccessBean {
 	/**
 	 * @return the topLeftX
 	 */
-	@XmlTransient
 	public double getTopLeftX() {
 		return topLeftX;
 	}
@@ -145,7 +142,6 @@ public abstract class ClosedArea extends FieldAccessBean {
 	/**
 	 * @return the topLeftY
 	 */
-	@XmlTransient
 	public double getTopLeftY() {
 		return topLeftY;
 	}
