@@ -57,8 +57,70 @@ public class GarbageOperations extends GarbageTest {
 	private static final String GARBAGE_PIC = "P1050120.JPG";
 	/** The ID of the inserted garbage at each test. */
 	private int garbageId = -1;
+	private int imageIndex = 0;
+
 	/** The inserted garbage at each test. */
 	private Garbage insertedGarbage = null;
+
+	@Test
+	public void getGarbage() {
+		instanceResource = client.resource(location + "/" + garbageId);
+		ClientResponse cr = instanceBuilder(USER).accept(
+				MediaType.APPLICATION_XML).get(ClientResponse.class);
+		assertEquals(200, cr.getStatus());
+		Garbage garbage = cr.getEntity(Garbage.class);
+		assertEquals(garbage.getInsertedBy().getEmail(), USER);
+	}
+
+	@Test
+	public void imageDisplay() throws IOException {
+		File picture = new File(GARBAGE_PIC);
+		if (!picture.exists()) {
+			System.err.println(GARBAGE_PIC + " does not exist, skipping test!");
+			return;
+		}
+		FormDataMultiPart fdmp = new FormDataMultiPart();
+		fdmp.bodyPart(new FileDataBodyPart("file", picture));
+
+		instanceResource = client.resource(location + "/" + garbageId
+				+ "/image");
+
+		ClientResponse cr = instanceBuilder(USER).type(
+				MediaType.MULTIPART_FORM_DATA_TYPE).post(ClientResponse.class,
+				fdmp);
+		assertEquals(200, cr.getStatus());
+
+		instanceResource = client.resource(location + "/" + garbageId
+				+ "/image/" + imageIndex + "/display");
+		imageIndex++;
+		cr = instanceBuilder(USER).get(ClientResponse.class);
+		assertEquals(200, cr.getStatus());
+	}
+
+	@Test
+	public void imageThumb() throws IOException {
+		File picture = new File(GARBAGE_PIC);
+		if (!picture.exists()) {
+			System.err.println(GARBAGE_PIC + " does not exist, skipping test!");
+			return;
+		}
+		FormDataMultiPart fdmp = new FormDataMultiPart();
+		fdmp.bodyPart(new FileDataBodyPart("file", picture));
+
+		instanceResource = client.resource(location + "/" + garbageId
+				+ "/image");
+
+		ClientResponse cr = instanceBuilder(USER).type(
+				MediaType.MULTIPART_FORM_DATA_TYPE).post(ClientResponse.class,
+				fdmp);
+		assertEquals(200, cr.getStatus());
+
+		instanceResource = client.resource(location + "/" + garbageId
+				+ "/image/" + imageIndex + "/thumb");
+		imageIndex++;
+		cr = instanceBuilder(USER).get(ClientResponse.class);
+		assertEquals(200, cr.getStatus());
+	}
 
 	@Before
 	public void insertGarbage() throws ClassNotFoundException, SQLException {
@@ -98,10 +160,9 @@ public class GarbageOperations extends GarbageTest {
 				fdmp);
 		assertEquals(200, cr.getStatus());
 
-		// It's the first image of the garbage the one just inserted
 		instanceResource = client.resource(location + "/" + garbageId
-				+ "/image/0");
-
+				+ "/image/" + imageIndex);
+		imageIndex++;
 		cr = instanceBuilder(USER).get(ClientResponse.class);
 		assertEquals(200, cr.getStatus());
 
@@ -135,16 +196,6 @@ public class GarbageOperations extends GarbageTest {
 		ClientResponse cr = rootBuilder(USER).entity(insertedGarbage,
 				MediaType.APPLICATION_XML).post(ClientResponse.class);
 		assertEquals(200, cr.getStatus());
-	}
-
-	@Test
-	public void getGarbage() {
-		instanceResource = client.resource(location + "/" + garbageId);
-		ClientResponse cr = instanceBuilder(USER).accept(
-				MediaType.APPLICATION_XML).get(ClientResponse.class);
-		assertEquals(200, cr.getStatus());
-		Garbage garbage = cr.getEntity(Garbage.class);
-		assertEquals(garbage.getInsertedBy().getEmail(), USER);
 	}
 
 	@Test
