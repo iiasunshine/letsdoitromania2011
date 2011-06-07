@@ -23,9 +23,13 @@
  */
 package ro.ldir.registration;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import javax.ejb.EJBException;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.servlet.ServletConfig;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -51,6 +55,8 @@ public class RegistrationWebService {
 	@SuppressWarnings("unused")
 	@Context
 	private UriInfo context;
+	@Context
+	private ServletConfig sc;
 
 	private UserManagerLocal userManager;
 
@@ -81,11 +87,25 @@ public class RegistrationWebService {
 		try {
 			userManager.activateUser(userId, key);
 		} catch (InvalidUserException e) {
-			return Response.status(Status.CONFLICT).entity(e.getMessage())
-					.type("text/plain").build();
+			try {
+				return Response
+						.seeOther(
+								new URI(
+										sc.getInitParameter("ro.ldir.registration.already-validated")))
+						.build();
+			} catch (URISyntaxException e1) {
+				e1.printStackTrace();
+			}
 		} catch (EJBException e) {
 			throw new WebApplicationException(404);
 		}
-		return Response.ok().build();
+		try {
+			return Response.seeOther(
+					new URI(sc.getInitParameter("ro.ldir.registration.ok")))
+					.build();
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
+		return Response.status(Status.NOT_FOUND).build();
 	}
 }

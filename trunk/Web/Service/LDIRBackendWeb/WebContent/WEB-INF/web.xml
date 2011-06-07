@@ -36,6 +36,14 @@
 			<param-name>com.sun.jersey.config.property.packages</param-name>
 			<param-value>ro.ldir.registration</param-value>
 		</init-param>
+		<init-param>
+			<param-name>ro.ldir.registration.ok-link</param-name>
+			<param-value>http://www.yahoo.com</param-value>
+		</init-param>
+		<init-param>
+			<param-name>ro.ldir.registration.already-validated</param-name>
+			<param-value>http://www.google.com</param-value>
+		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet-mapping>
