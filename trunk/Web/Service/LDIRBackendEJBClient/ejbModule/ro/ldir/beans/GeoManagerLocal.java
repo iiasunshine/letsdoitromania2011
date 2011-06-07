@@ -36,6 +36,13 @@ public interface GeoManagerLocal {
 	public void deleteTownArea(int townAreaId);
 
 	/**
+	 * Gets a list of all counties.
+	 * 
+	 * @return A list of all counties.
+	 */
+	public List<CountyArea> getAllCounties();
+
+	/**
 	 * Finds a chart area by ID.
 	 * 
 	 * @param chartedAreaId

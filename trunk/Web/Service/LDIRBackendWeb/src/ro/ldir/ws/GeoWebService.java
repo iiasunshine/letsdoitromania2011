@@ -126,6 +126,13 @@ public class GeoWebService {
 
 	@GET
 	@Produces({ "application/json", "application/xml" })
+	@Path("countyArea/all")
+	public List<CountyArea> getAllCounties() {
+		return geoManager.getAllCounties();
+	}
+
+	@GET
+	@Produces({ "application/json", "application/xml" })
 	@Path("chartedArea/{chartedAreaId:[0-9]+}")
 	public ChartedArea getChartedArea(
 			@PathParam("chartedAreaId") int chartedAreaId) {

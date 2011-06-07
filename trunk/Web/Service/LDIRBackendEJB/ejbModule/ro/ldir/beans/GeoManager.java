@@ -72,6 +72,19 @@ public class GeoManager implements GeoManagerLocal {
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see ro.ldir.beans.GeoManagerLocal#getAllCounties()
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<CountyArea> getAllCounties() {
+		Query query = em
+				.createQuery("SELECT ca FROM CountyArea ca ORDER BY ca.name");
+		return (List<CountyArea>) query.getResultList();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see
 	 * ro.ldir.beans.GeoManagerLocal#getChartedArea(java.awt.geom.Point2D.Double
 	 * )
@@ -291,9 +304,5 @@ public class GeoManager implements GeoManagerLocal {
 		existing.copyFields(townArea);
 		existing.setBoundingBox();
 		em.merge(existing);
-	} /*
-	 * (non-Javadoc)
-	 * 
-	 * @see ro.ldir.beans.GeoManagerLocal#deleteCountyArea(int)
-	 */
+	}
 }
