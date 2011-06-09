@@ -21,18 +21,12 @@
         <item>peste 200 l</item>
     </string-array>
     
-    <string-array name="chks_array">
-    	<item>Menajer</item>
-    	<item>Menajer2</item>
-    </string-array>
-    
-	<string name="chk_1">menajer</string>
-	<string name="chk_2">metal</string>
-	<string name="chk_3">sticlă</string>
-	<string name="chk_4">plastic</string>
-	<string name="chk_5">mat. de construcții</string>
-	<string name="chk_6">biologic</string>
-
+    <string name="seekbar1">plastic</string>
+	<string name="seekbar2">metal</string>
+	<string name="seekbar3">sticlă</string>
+	<string name="seekbar4">nereciclabil</string>
+	<string name="chk_1">dispersat</string>
+	
 	<string name="autentificare">autentificare</string>
 	
 	
