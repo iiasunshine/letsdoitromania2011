@@ -154,6 +154,11 @@ public class GeoManager implements GeoManagerLocal {
 		return query.getResultList();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ro.ldir.beans.GeoManagerLocal#getCountyArea(int)
+	 */
 	@Override
 	public CountyArea getCountyArea(int countyAreaId) {
 		return em.find(CountyArea.class, countyAreaId);
