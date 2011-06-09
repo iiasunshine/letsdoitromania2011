@@ -16,25 +16,84 @@
         android:layout_height="wrap_content"
         android:prompt="@string/volum_morman"
     />
-    <CheckBox android:id="@+id/checkbox_1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/chk_1" />
-     <CheckBox android:id="@+id/checkbox_2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/chk_2" />
-     <CheckBox android:id="@+id/checkbox_3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/chk_3" />
-     <CheckBox android:id="@+id/checkbox_4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/chk_4" />
-     <CheckBox android:id="@+id/checkbox_5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/chk_5" />
-    <Button android:text="@string/button_morman_add" android:id="@+id/ButtonMorman" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
+    <TextView 
+   		android:layout_width="fill_parent"
+   		android:layout_height="wrap_content"
+   		android:text="@string/seekbar1"
+   />
+    <SeekBar
+   		android:layout_width="fill_parent"
+   		android:layout_height="wrap_content"
+   		android:layout_margin="10px"
+   		android:id="@+id/seekbar1"
+   		android:max="100"
+   		android:progress="10"
+   />
+   <TextView 
+   		android:layout_width="fill_parent"
+   		android:layout_height="wrap_content"
+   		android:text="@string/seekbar2"
+   />
+    <SeekBar
+   		android:layout_width="fill_parent"
+   		android:layout_height="wrap_content"
+   		android:layout_margin="10px"
+   		android:id="@+id/seekbar2"
+   		android:max="100"
+   		android:progress="10"
+   />
+   
+    <TextView 
+   		android:layout_width="fill_parent"
+   		android:layout_height="wrap_content"
+   		android:text="@string/seekbar3"
+   />
+    <SeekBar
+   		android:layout_width="fill_parent"
+   		android:layout_height="wrap_content"
+   		android:layout_margin="10px"
+   		android:id="@+id/seekbar3"
+   		android:max="100"
+   		android:progress="15"
+   />
+   <TextView 
+   		android:layout_width="fill_parent"
+   		android:layout_height="wrap_content"
+   		android:text="@string/seekbar4"
+   />
+    <SeekBar
+   		android:layout_width="fill_parent"
+   		android:layout_height="wrap_content"
+   		android:layout_margin="10px"
+   		android:id="@+id/seekbar4"
+   		android:max="100"
+   		android:progress="65"
+   />
+	<TableLayout 
+    	android:orientation="horizontal"
+    	android:layout_width="fill_parent"
+    	android:layout_height="fill_parent"
+    	android:layout_alignParentTop="true"
+    	>
+    	<TableRow>
+    	
+    	<CheckBox android:id="@+id/checkbox_1"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+            android:layout_column="1"
+	        android:text="@string/chk_1" />
+	    <TextView 
+	   		android:layout_width="fill_parent"
+	   		android:layout_height="wrap_content"
+	   		android:text="                                    "
+	   		android:layout_column="2"
+	   />
+	        
+	    <Button android:text="@string/button_morman_add" 
+	    		android:id="@+id/ButtonMorman" 
+	    		android:layout_width="wrap_content" 
+	    		android:layout_height="wrap_content"
+	    		android:layout_column="4"/>
+    	</TableRow>
+	</TableLayout>
 </LinearLayout>
