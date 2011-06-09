@@ -38,12 +38,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import ro.ldir.dto.adapters.IntegerAdapter;
@@ -191,20 +188,8 @@ public class Garbage extends FieldAccessBean {
 	}
 
 	/**
-	 * Returns the number of pictures stored by this garbage.
-	 * 
-	 * @return The number of pictures.
-	 */
-	@Transient
-	@XmlElement
-	public int getPictureCount() {
-		return pictures.size();
-	}
-
-	/**
 	 * @return the pictures
 	 */
-	@XmlTransient
 	public List<String> getPictures() {
 		return pictures;
 	}

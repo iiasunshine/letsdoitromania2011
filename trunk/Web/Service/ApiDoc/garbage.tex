@@ -125,10 +125,9 @@ The logged in user must be an ``ADMIN'' or the garbage tag's owner.
 
 The following  calls retrieves an image associated to a garbage. All garbage
 tags have an array of images, and new images are pushed to the tail of the
-array. The array length can be obtained through the \texttt{pictureCount} field
-of the \texttt{garbage} entity.  To make any of the following calls, a valid
-image index must be known. Valid indexes are from 0 to \texttt{pictureCount} -
-1.
+array. The array length can be obtained through the \texttt{pictures} field of
+the \texttt{garbage} entity.  To make any of the following calls, a valid image
+index must be known. Valid indexes are from 0 to \texttt{pictureCount} - 1.
 
 To get an image in its original size, call:
 \apilocation{get}{ws/garbage/\param{garbageId}/image/\param{image\_index}}
