@@ -46,6 +46,7 @@ import javax.ws.rs.core.UriInfo;
 import ro.ldir.beans.GeoManagerLocal;
 import ro.ldir.dto.ChartedArea;
 import ro.ldir.dto.CountyArea;
+import ro.ldir.dto.Garbage;
 import ro.ldir.dto.Team;
 import ro.ldir.dto.TownArea;
 
@@ -156,9 +157,24 @@ public class GeoWebService {
 		try {
 			return new ArrayList<Team>(geoManager.getChartedArea(chartedAreaId)
 					.getChartedBy());
+		} catch (NullPointerException e) {
+			throw new WebApplicationException(404);
 		} catch (EJBException e) {
-			if (e.getCausedByException() instanceof NullPointerException)
-				throw new WebApplicationException(404);
+			throw new WebApplicationException(500);
+		}
+	}
+
+	@GET
+	@Produces({ "application/json", "application/xml" })
+	@Path("chartedArea/{chartedAreaId:[0-9]+}/garbages")
+	public List<Garbage> getChartedAreaGarbages(
+			@PathParam("chartedAreaId") int chartedAreaId) {
+		try {
+			return new ArrayList<Garbage>(geoManager.getChartedArea(
+					chartedAreaId).getGarbages());
+		} catch (NullPointerException e) {
+			throw new WebApplicationException(404);
+		} catch (EJBException e) {
 			throw new WebApplicationException(500);
 		}
 	}
@@ -187,9 +203,39 @@ public class GeoWebService {
 
 	@GET
 	@Produces({ "application/json", "application/xml" })
+	@Path("countyArea/{countyAreaId:[0-9]+}/garbages")
+	public ArrayList<Garbage> getCountyAreaGarbages(
+			@PathParam("countyAreaId") int countyAreaId) {
+		try {
+			return new ArrayList<Garbage>(geoManager
+					.getCountyArea(countyAreaId).getGarbages());
+		} catch (NullPointerException e) {
+			throw new WebApplicationException(404);
+		} catch (EJBException e) {
+			throw new WebApplicationException(500);
+		}
+	}
+
+	@GET
+	@Produces({ "application/json", "application/xml" })
 	@Path("townArea/{townAreaId:[0-9]+}")
 	public TownArea getTownArea(@PathParam("townAreaId") int townAreaId) {
 		return geoManager.getTownArea(townAreaId);
+	}
+
+	@GET
+	@Produces({ "application/json", "application/xml" })
+	@Path("townArea/{townAreaId:[0-9]+}/garbages")
+	public ArrayList<Garbage> getTownAreaGarbages(
+			@PathParam("townAreaId") int townAreaId) {
+		try {
+			return new ArrayList<Garbage>(geoManager.getTownArea(townAreaId)
+					.getGarbages());
+		} catch (NullPointerException e) {
+			throw new WebApplicationException(404);
+		} catch (EJBException e) {
+			throw new WebApplicationException(500);
+		}
 	}
 
 	@PUT

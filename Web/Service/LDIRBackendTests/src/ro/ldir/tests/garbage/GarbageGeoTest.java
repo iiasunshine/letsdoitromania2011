@@ -229,6 +229,30 @@ public class GarbageGeoTest extends GarbageTest {
 	}
 
 	@Test
+	public void testGarbageInChartedArea() {
+		instanceResource = client.resource(geoLocation + "/chartedArea/"
+				+ chartAreaId + "/garbages");
+		Garbage garbages[] = instanceBuilder(USER).get(Garbage[].class);
+		assertTrue(garbages.length != 0);
+	}
+
+	@Test
+	public void testGarbageInCountyArea() {
+		instanceResource = client.resource(geoLocation + "/countyArea/"
+				+ countyAreaId + "/garbages");
+		Garbage garbages[] = instanceBuilder(USER).get(Garbage[].class);
+		assertTrue(garbages.length != 0);
+	}
+
+	@Test
+	public void testGarbageInTownArea() {
+		instanceResource = client.resource(geoLocation + "/townArea/"
+				+ townAreaId + "/garbages");
+		Garbage garbages[] = instanceBuilder(USER).get(Garbage[].class);
+		assertTrue(garbages.length != 0);
+	}
+
+	@Test
 	public void testGarbageKML() {
 		WebResource r = client.resource(mapLocation + "/garbages");
 
