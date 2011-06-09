@@ -23,6 +23,7 @@
  */
 package ro.ldir.ws;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.EJBException;
@@ -128,6 +129,18 @@ public class TeamWebService {
 
 	@GET
 	@Produces({ "application/json", "application/xml" })
+	@Path("{teamId:[0-9]+}/chartArea")
+	public List<ChartedArea> getChartedAreas(@PathParam("teamId") int teamId) {
+		try {
+			return new ArrayList<ChartedArea>(teamManager.getTeam(teamId)
+					.getChartedAreas());
+		} catch (NullPointerException e) {
+			throw new WebApplicationException(404);
+		}
+	}
+
+	@GET
+	@Produces({ "application/json", "application/xml" })
 	@Path("{teamId:[0-9]+}")
 	public Team getTeam(@PathParam("teamId") int teamId) {
 		return teamManager.getTeam(teamId);
@@ -171,7 +184,13 @@ public class TeamWebService {
 	@Path("{teamId:[0-9]+}/chartArea/{chartAreaId:[0-9]+}")
 	public Response removeChartAreaAssignment(@PathParam("teamId") int teamId,
 			@PathParam("chartAreaId") int chartAreaId) {
-		teamManager.assignChartArea(teamId, chartAreaId);
+		try {
+			teamManager.removeChartAreaAssignment(teamId, chartAreaId);
+		} catch (EJBException e) {
+			if (e.getCausedByException() instanceof NullPointerException)
+				throw new WebApplicationException(404);
+			throw new WebApplicationException(500);
+		}
 		return Response.ok().build();
 	}
 
