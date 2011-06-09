@@ -43,6 +43,7 @@
 		<java classname="org.junit.runner.JUnitCore">
 			<arg value="ro.ldir.tests.ClosedAreaTest" />
 			<arg value="ro.ldir.tests.GarbageTests" />
+			<arg value="ro.ldir.tests.UserTests" />
 			<classpath refid="tests.classpath" />
 		</java>
 	</target>

@@ -23,8 +23,10 @@
  */
 package ro.ldir.ws;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.ejb.EJBException;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.ws.rs.Consumes;
@@ -44,6 +46,7 @@ import javax.ws.rs.core.UriInfo;
 import ro.ldir.beans.GeoManagerLocal;
 import ro.ldir.dto.ChartedArea;
 import ro.ldir.dto.CountyArea;
+import ro.ldir.dto.Team;
 import ro.ldir.dto.TownArea;
 
 /**
@@ -136,7 +139,28 @@ public class GeoWebService {
 	@Path("chartedArea/{chartedAreaId:[0-9]+}")
 	public ChartedArea getChartedArea(
 			@PathParam("chartedAreaId") int chartedAreaId) {
-		return geoManager.getChartedArea(chartedAreaId);
+		try {
+			return geoManager.getChartedArea(chartedAreaId);
+		} catch (EJBException e) {
+			if (e.getCausedByException() instanceof NullPointerException)
+				throw new WebApplicationException(404);
+			throw new WebApplicationException(500);
+		}
+	}
+
+	@GET
+	@Produces({ "application/json", "application/xml" })
+	@Path("chartedArea/{chartedAreaId:[0-9]+}/chartedBy")
+	public List<Team> getChartedAreaChartedBy(
+			@PathParam("chartedAreaId") int chartedAreaId) {
+		try {
+			return new ArrayList<Team>(geoManager.getChartedArea(chartedAreaId)
+					.getChartedBy());
+		} catch (EJBException e) {
+			if (e.getCausedByException() instanceof NullPointerException)
+				throw new WebApplicationException(404);
+			throw new WebApplicationException(500);
+		}
 	}
 
 	@GET
