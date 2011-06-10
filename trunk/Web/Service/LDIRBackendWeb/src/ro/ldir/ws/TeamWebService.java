@@ -51,6 +51,7 @@ import ro.ldir.dto.Organization;
 import ro.ldir.dto.Team;
 import ro.ldir.dto.TransportEquipment;
 import ro.ldir.dto.User;
+import ro.ldir.map.formatter.ChartedAreasKMLFormatter;
 
 /**
  * The team web service.
@@ -137,6 +138,22 @@ public class TeamWebService {
 		} catch (NullPointerException e) {
 			throw new WebApplicationException(404);
 		}
+	}
+
+	@GET
+	@Produces({ "application/vnd.google-earth.kml+xml" })
+	@Path("{teamId:[0-9]+}/chartArea")
+	public String getChartedAreasAsKML(@PathParam("teamId") int teamId,
+			@QueryParam("cb") String callbackPattern) {
+		List<ChartedArea> chartedAreas;
+		try {
+			chartedAreas = new ArrayList<ChartedArea>(teamManager.getTeam(
+					teamId).getChartedAreas());
+		} catch (NullPointerException e) {
+			throw new WebApplicationException(404);
+		}
+		return new ChartedAreasKMLFormatter(chartedAreas, callbackPattern,
+				ChartedAreasKMLFormatter.Type.ASSIGNED).toString();
 	}
 
 	@GET
