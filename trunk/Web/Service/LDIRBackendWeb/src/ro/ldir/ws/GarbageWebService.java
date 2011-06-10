@@ -193,6 +193,17 @@ public class GarbageWebService {
 	}
 
 	@GET
+	@Path("{garbageId:[0-9]+}/imageCount")
+	public String getImageCount(@PathParam("garbageId") int garbageId) {
+		try {
+			return new Integer(garbageManager.getGarbage(garbageId)
+					.getPictures().size()).toString();
+		} catch (NullPointerException e) {
+			throw new WebApplicationException(Status.NOT_FOUND);
+		}
+	}
+
+	@GET
 	@Path("{garbageId:[0-9]+}/image/{imageId:[0-9]+}/display")
 	public Response getImageDisplay(@PathParam("garbageId") int garbageId,
 			@PathParam("imageId") int imageId) {
