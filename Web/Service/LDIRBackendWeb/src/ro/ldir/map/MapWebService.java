@@ -23,7 +23,6 @@
  */
 package ro.ldir.map;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.EJBException;
