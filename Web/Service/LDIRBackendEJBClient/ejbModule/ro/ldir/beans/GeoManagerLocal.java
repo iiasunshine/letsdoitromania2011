@@ -77,6 +77,14 @@ public interface GeoManagerLocal {
 			double bottomRightX, double bottomRightY);
 
 	/**
+	 * Gets all charted areas assigned to a team.
+	 * 
+	 * @param teamId
+	 * @return
+	 */
+	public List<ChartedArea> getChartedAreasByChartedBy(int teamId);
+
+	/**
 	 * @param county
 	 * @return
 	 */
