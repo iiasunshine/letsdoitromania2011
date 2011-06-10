@@ -65,8 +65,8 @@ public class MapWebService {
 			@QueryParam("cb") String callbackPattern) {
 		List<ChartedArea> chartedAreas = geoManager.getChartedAreas(topLeftX,
 				topLeftY, bottomRightX, bottomRightY);
-		return new ChartedAreasKMLFormatter(chartedAreas, callbackPattern)
-				.toString();
+		return new ChartedAreasKMLFormatter(chartedAreas, callbackPattern,
+				ChartedAreasKMLFormatter.Type.GENERIC).toString();
 	}
 
 	@GET
@@ -76,8 +76,8 @@ public class MapWebService {
 			@QueryParam("cb") String callbackPattern) {
 		List<ChartedArea> chartedAreas = geoManager
 				.getChartedAreasByCounty(county);
-		return new ChartedAreasKMLFormatter(chartedAreas, callbackPattern)
-				.toString();
+		return new ChartedAreasKMLFormatter(chartedAreas, callbackPattern,
+				ChartedAreasKMLFormatter.Type.GENERIC).toString();
 	}
 
 	@GET
