@@ -2,6 +2,7 @@ package ro.ldir.beans;
 
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -15,6 +16,7 @@ import javax.persistence.Query;
 
 import ro.ldir.dto.ChartedArea;
 import ro.ldir.dto.CountyArea;
+import ro.ldir.dto.Team;
 import ro.ldir.dto.TownArea;
 
 /**
@@ -137,6 +139,17 @@ public class GeoManager implements GeoManagerLocal {
 		query.setParameter("bottomRightX", bottomRightX);
 		query.setParameter("bottomRightY", bottomRightY);
 		return query.getResultList();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ro.ldir.beans.GeoManagerLocal#getChartedAreasByChartedBy(int)
+	 */
+	@Override
+	public List<ChartedArea> getChartedAreasByChartedBy(int teamId) {
+		Team team = em.find(Team.class, teamId);
+		return new ArrayList<ChartedArea>(team.getChartedAreas());
 	}
 
 	/*

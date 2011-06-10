@@ -23,14 +23,18 @@
  */
 package ro.ldir.map;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.ejb.EJBException;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
 
 import ro.ldir.beans.GarbageManagerLocal;
 import ro.ldir.beans.GeoManagerLocal;
@@ -67,6 +71,23 @@ public class MapWebService {
 				topLeftY, bottomRightX, bottomRightY);
 		return new ChartedAreasKMLFormatter(chartedAreas, callbackPattern,
 				ChartedAreasKMLFormatter.Type.GENERIC).toString();
+	}
+
+	@GET
+	@Produces({ "application/vnd.google-earth.kml+xml" })
+	@Path("team/{teamId:[0-9]+}/chartedAreas")
+	public String getChartedAreasByChartedBy(@PathParam("teamId") int teamId,
+			@QueryParam("cb") String callbackPattern) {
+		List<ChartedArea> chartedAreas;
+		try {
+			chartedAreas = geoManager.getChartedAreasByChartedBy(teamId);
+		} catch (EJBException e) {
+			if (e.getCausedByException() instanceof NullPointerException)
+				throw new WebApplicationException(404);
+			throw new WebApplicationException(500);
+		}
+		return new ChartedAreasKMLFormatter(chartedAreas, callbackPattern,
+				ChartedAreasKMLFormatter.Type.ASSIGNED).toString();
 	}
 
 	@GET
