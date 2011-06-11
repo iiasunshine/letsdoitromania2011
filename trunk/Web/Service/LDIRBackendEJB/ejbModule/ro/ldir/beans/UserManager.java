@@ -32,11 +32,15 @@ import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
+import javax.ejb.Schedule;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.TemporalType;
+
+import com.sun.istack.logging.Logger;
 
 import ro.ldir.beans.security.SecurityHelper;
 import ro.ldir.dto.Team;
@@ -63,6 +67,13 @@ import ro.ldir.exceptions.InvalidUserException;
 @LocalBean
 @DeclareRoles("ADMIN")
 public class UserManager implements UserManagerLocal {
+	private static Logger log = Logger.getLogger(UserManager.class);
+	/**
+	 * After this timeout, users that have not activated their account are
+	 * deleted.
+	 */
+	@Resource
+	private Integer activateTimeout;
 	@Resource
 	private SessionContext ctx;
 	@PersistenceContext(unitName = "ldir")
@@ -195,6 +206,20 @@ public class UserManager implements UserManagerLocal {
 				.createQuery("SELECT x FROM User x WHERE x.role = :roleParam");
 		query.setParameter("roleParam", role);
 		return (List<User>) query.getResultList();
+	}
+
+	/**
+	 * Runs every hour to delete users that have not activated their account.
+	 */
+	@Schedule(hour = "*/6")
+	public void prunePendingUsers() {
+		Date threshold = new Date(System.currentTimeMillis() - activateTimeout
+				* 3600 * 1000);
+		Query query = em.createQuery("DELETE FROM User x WHERE "
+				+ "x.role = 'PENDING' AND x.recordDate < :threshold");
+		query.setParameter("threshold", threshold, TemporalType.TIMESTAMP);
+		int affected = query.executeUpdate();
+		log.info("Pruned " + affected + " pending users");
 	}
 
 	/*
