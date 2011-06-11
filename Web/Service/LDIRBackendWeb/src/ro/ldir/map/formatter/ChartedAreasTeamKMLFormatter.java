@@ -17,7 +17,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- *  Filename: GarbagesKMLFormatter.java
+ *  Filename: ChartedAreasTeamKMLFormatter.java
  *  Author(s): Stefan Guna, svguna@gmail.com
  *
  */
@@ -27,41 +27,32 @@ import java.awt.geom.Point2D;
 import java.util.List;
 
 import ro.ldir.dto.ChartedArea;
+import ro.ldir.dto.Team;
 
 /**
- * Formats a list of charted areas in KML.
+ * Formats a list of areas in KML format. Charted areas assigned to a team
+ * appear in a different color.
  */
-public class ChartedAreasKMLFormatter {
-	public enum Type {
-		ASSIGNED("assignedStyle"), GENERIC("genericStyle");
-		private String styleName;
+public class ChartedAreasTeamKMLFormatter extends ChartedAreasKMLFormatter {
+	private int teamId;
 
-		Type(String styleName) {
-			this.styleName = styleName;
-		}
-
-		public String getStyleName() {
-			return styleName;
-		}
+	public ChartedAreasTeamKMLFormatter(int teamId,
+			List<ChartedArea> chartedAreas, String linkPattern) {
+		super(chartedAreas, linkPattern, Type.GENERIC);
+		this.teamId = teamId;
 	}
 
-	protected StringBuffer buf;
-	protected List<ChartedArea> chartedAreas;
-	protected String linkPattern = null;
-
-	protected Type type;
-
-	public ChartedAreasKMLFormatter(List<ChartedArea> chartedAreas,
-			String linkPattern, Type type) {
-		this.type = type;
-		this.chartedAreas = chartedAreas;
-		this.linkPattern = linkPattern;
-	}
-
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ro.ldir.map.formatter.ChartedAreasKMLFormatter#appendChartedAreas()
+	 */
+	@Override
 	protected void appendChartedAreas() {
 		for (ChartedArea chartedArea : chartedAreas) {
 			buf.append("<Placemark>\n");
-			buf.append("<styleUrl>#" + type.getStyleName() + "</styleUrl>\n");
+			buf.append("<styleUrl>#" + getStyleName(chartedArea)
+					+ "</styleUrl>\n");
 			buf.append("<name>Charted Area " + chartedArea.getAreaId()
 					+ "</name>\n");
 			if (linkPattern != null) {
@@ -78,42 +69,17 @@ public class ChartedAreasKMLFormatter {
 		}
 	}
 
-	protected void appendFooter() {
-		buf.append("</Document>\n</kml>\n");
-	}
-
-	protected void appendHeader() {
-		buf.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-		buf.append("<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n");
-		buf.append("<Document>\n");
-		buf.append("<Style id=\"genericStyle\">\n");
-		buf.append("  <LineStyle>\n");
-		buf.append("    <color>CC000000</color>\n");
-		buf.append("    <width>1</width>\n");
-		buf.append("  </LineStyle>\n");
-		buf.append("  <PolyStyle>\n");
-		buf.append("    <color>1AFF0000</color>\n");
-		buf.append("    <fill>1</fill>\n");
-		buf.append("    <outline>1</outline>\n");
-		buf.append("  </PolyStyle>\n");
-		buf.append("</Style>\n");
-		buf.append("<Style id=\"assignedStyle\">\n");
-		buf.append("  <LineStyle>\n");
-		buf.append("    <color>CC0000FF</color>\n");
-		buf.append("    <width>2</width>\n");
-		buf.append("  </LineStyle>\n");
-		buf.append("  <PolyStyle>\n");
-		buf.append("    <color>1A0000FF</color>\n");
-		buf.append("    <fill>1</fill>\n");
-		buf.append("    <outline>1</outline>\n");
-		buf.append("  </PolyStyle>\n");
-		buf.append("</Style>\n");
+	private String getStyleName(ChartedArea chartedArea) {
+		for (Team team : chartedArea.getChartedBy())
+			if (team.getTeamId() == teamId)
+				return Type.ASSIGNED.getStyleName();
+		return Type.GENERIC.getStyleName();
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see java.lang.Object#toString()
+	 * @see ro.ldir.map.formatter.ChartedAreasKMLFormatter#toString()
 	 */
 	@Override
 	public String toString() {
