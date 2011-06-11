@@ -100,8 +100,10 @@ public class RegistrationWebService {
 			throw new WebApplicationException(404);
 		}
 		try {
-			return Response.seeOther(
-					new URI(sc.getInitParameter("ro.ldir.registration.ok")))
+			return Response
+					.seeOther(
+							new URI(
+									sc.getInitParameter("ro.ldir.registration.ok-link")))
 					.build();
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
