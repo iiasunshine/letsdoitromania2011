@@ -40,6 +40,7 @@ import ro.ldir.beans.GeoManagerLocal;
 import ro.ldir.dto.ChartedArea;
 import ro.ldir.dto.Garbage;
 import ro.ldir.map.formatter.ChartedAreasKMLFormatter;
+import ro.ldir.map.formatter.ChartedAreasTeamKMLFormatter;
 import ro.ldir.map.formatter.GarbagesKMLFormatter;
 
 /**
@@ -74,6 +75,21 @@ public class MapWebService {
 
 	@GET
 	@Produces({ "application/vnd.google-earth.kml+xml" })
+	@Path("chartedAreas/team/{teamId:[0-9]+}")
+	public String getChartedAreasAndTeam(@PathParam("teamId") int teamId,
+			@QueryParam("topLeftX") double topLeftX,
+			@QueryParam("topLeftY") double topLeftY,
+			@QueryParam("bottomRightX") double bottomRightX,
+			@QueryParam("bottomRightY") double bottomRightY,
+			@QueryParam("cb") String callbackPattern) {
+		List<ChartedArea> chartedAreas = geoManager.getChartedAreas(topLeftX,
+				topLeftY, bottomRightX, bottomRightY);
+		return new ChartedAreasTeamKMLFormatter(teamId, chartedAreas,
+				callbackPattern).toString();
+	}
+
+	@GET
+	@Produces({ "application/vnd.google-earth.kml+xml" })
 	@Path("team/{teamId:[0-9]+}/chartedAreas")
 	public String getChartedAreasByChartedBy(@PathParam("teamId") int teamId,
 			@QueryParam("cb") String callbackPattern) {
@@ -98,6 +114,19 @@ public class MapWebService {
 				.getChartedAreasByCounty(county);
 		return new ChartedAreasKMLFormatter(chartedAreas, callbackPattern,
 				ChartedAreasKMLFormatter.Type.GENERIC).toString();
+	}
+
+	@GET
+	@Produces({ "application/vnd.google-earth.kml+xml" })
+	@Path("countySearch/team/{teamId:[0-9]+}/chartedAreas")
+	public String getChartedAreasByCountyAndTeam(
+			@PathParam("teamId") int teamId,
+			@QueryParam("county") String county,
+			@QueryParam("cb") String callbackPattern) {
+		List<ChartedArea> chartedAreas = geoManager
+				.getChartedAreasByCounty(county);
+		return new ChartedAreasTeamKMLFormatter(teamId, chartedAreas,
+				callbackPattern).toString();
 	}
 
 	@GET
