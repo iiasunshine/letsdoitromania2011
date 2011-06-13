@@ -38,11 +38,11 @@
 		</init-param>
 		<init-param>
 			<param-name>ro.ldir.registration.ok-link</param-name>
-			<param-value>http://www.yahoo.com</param-value>
+			<param-value>http://app.letsdoitromania.ro/LDIRBackendWebJSF2/good.html</param-value>
 		</init-param>
 		<init-param>
 			<param-name>ro.ldir.registration.already-validated</param-name>
-			<param-value>http://www.google.com</param-value>
+			<param-value>http://app.letsdoitromania.ro/LDIRBackendWebJSF2/bad.html</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
