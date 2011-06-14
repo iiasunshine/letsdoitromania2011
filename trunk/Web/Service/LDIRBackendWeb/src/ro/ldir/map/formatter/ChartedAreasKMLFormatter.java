@@ -62,7 +62,7 @@ public class ChartedAreasKMLFormatter {
 		for (ChartedArea chartedArea : chartedAreas) {
 			buf.append("<Placemark>\n");
 			buf.append("<styleUrl>#" + type.getStyleName() + "</styleUrl>\n");
-			buf.append("<name>Charted Area " + chartedArea.getAreaId()
+			buf.append("<name>Zona de cartare " + chartedArea.getAreaId()
 					+ "</name>\n");
 			if (linkPattern != null) {
 				buf.append("<description><![CDATA[");
