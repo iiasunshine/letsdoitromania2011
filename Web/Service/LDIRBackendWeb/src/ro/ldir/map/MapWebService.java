@@ -23,6 +23,7 @@
  */
 package ro.ldir.map;
 
+import java.util.Arrays;
 import java.util.List;
 
 import javax.ejb.EJBException;
@@ -34,6 +35,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response.Status;
 
 import ro.ldir.beans.GarbageManagerLocal;
 import ro.ldir.beans.GeoManagerLocal;
@@ -42,6 +44,7 @@ import ro.ldir.dto.Garbage;
 import ro.ldir.map.formatter.ChartedAreasKMLFormatter;
 import ro.ldir.map.formatter.ChartedAreasTeamKMLFormatter;
 import ro.ldir.map.formatter.GarbagesKMLFormatter;
+import ro.ldir.map.formatter.ChartedAreasKMLFormatter.Type;
 
 /**
  * The map web service for serving KML.
@@ -57,6 +60,28 @@ public class MapWebService {
 				.lookup("java:global/LDIRBackend/LDIRBackendEJB/GarbageManager!ro.ldir.beans.GarbageManager");
 		geoManager = (GeoManagerLocal) ic
 				.lookup("java:global/LDIRBackend/LDIRBackendEJB/GeoManager!ro.ldir.beans.GeoManager");
+	}
+
+	@GET
+	@Produces({ "application/vnd.google-earth.kml+xml" })
+	@Path("chartedArea/{chartedAreaId:[0-9]+}")
+	public String getChartedArea(@PathParam("chartedAreaId") int chartedAreaId) {
+		ChartedArea ca = geoManager.getChartedArea(chartedAreaId);
+		if (ca == null)
+			throw new WebApplicationException(Status.NOT_FOUND);
+		List<ChartedArea> wrapper = Arrays.asList(ca);
+		return new ChartedAreasKMLFormatter(wrapper, null, Type.GENERIC)
+				.toString();
+	}
+
+	@GET
+	@Produces({ "application/vnd.google-earth.kml+xml" })
+	@Path("chartedAreas/search")
+	public String getChartedAreas(@QueryParam("name") String name) {
+		List<ChartedArea> cas = geoManager.getChartedAreas(name);
+		if (cas.size() == 0)
+			throw new WebApplicationException(Status.NOT_FOUND);
+		return new ChartedAreasKMLFormatter(cas, null, Type.GENERIC).toString();
 	}
 
 	@GET

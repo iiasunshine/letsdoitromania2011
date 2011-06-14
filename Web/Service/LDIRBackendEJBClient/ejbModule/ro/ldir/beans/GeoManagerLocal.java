@@ -77,6 +77,15 @@ public interface GeoManagerLocal {
 			double bottomRightX, double bottomRightY);
 
 	/**
+	 * Gets all charted areas that bear the provided name.
+	 * 
+	 * @param name
+	 *            The name to search for.
+	 * @return A list of charted area that bear the given name.
+	 */
+	public List<ChartedArea> getChartedAreas(String name);
+
+	/**
 	 * Gets all charted areas assigned to a team.
 	 * 
 	 * @param teamId
