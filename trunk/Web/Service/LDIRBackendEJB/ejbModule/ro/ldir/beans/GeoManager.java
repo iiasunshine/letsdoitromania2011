@@ -144,6 +144,20 @@ public class GeoManager implements GeoManagerLocal {
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see ro.ldir.beans.GeoManagerLocal#getChartedAreas(java.lang.String)
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ChartedArea> getChartedAreas(String name) {
+		Query query = em.createQuery("SELECT ca FROM ChartedArea ca WHERE "
+				+ "UPPER(ca.name) LIKE :name ORDER BY ca.name");
+		query.setParameter("name", "%" + name.toUpperCase() + "%");
+		return query.getResultList();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see ro.ldir.beans.GeoManagerLocal#getChartedAreasByChartedBy(int)
 	 */
 	@Override
