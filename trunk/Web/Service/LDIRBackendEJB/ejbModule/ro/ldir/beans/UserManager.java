@@ -26,6 +26,7 @@ package ro.ldir.beans;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.annotation.Resource;
 import javax.annotation.security.DeclareRoles;
@@ -39,8 +40,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TemporalType;
-
-import com.sun.istack.logging.Logger;
 
 import ro.ldir.beans.security.SecurityHelper;
 import ro.ldir.dto.Team;
@@ -67,7 +66,7 @@ import ro.ldir.exceptions.InvalidUserException;
 @LocalBean
 @DeclareRoles("ADMIN")
 public class UserManager implements UserManagerLocal {
-	private static Logger log = Logger.getLogger(UserManager.class);
+	private static Logger log = Logger.getLogger(UserManager.class.getName());
 	/**
 	 * After this timeout, users that have not activated their account are
 	 * deleted.
@@ -93,23 +92,20 @@ public class UserManager implements UserManagerLocal {
 	@Override
 	public void activateUser(int userId, String key)
 			throws InvalidUserException {
-		User existing = em.find(User.class, userId);
-		if (!existing.getRole().equals(SecurityRole.PENDING.toString()))
+		User user = em.find(User.class, userId);
+		if (!user.getRole().equals(SecurityRole.PENDING.toString()))
 			throw new InvalidUserException("The user is not pending.");
-		existing.setRole(SecurityRole.VOLUNTEER.toString());
+		user.setRole(SecurityRole.VOLUNTEER.toString());
 
-		Team userTeam = new Team();
-		userTeam.setTeamName(existing.getLastName() + " "
-				+ existing.getEmail().hashCode());
-		userTeam.setTeamManager(existing);
-		userTeam.setVolunteerMembers(new ArrayList<User>());
-		userTeam.getVolunteerMembers().add(existing);
-
-		existing.getManagedTeams().add(userTeam);
-		existing.setMemberOf(userTeam);
-
-		em.persist(userTeam);
-		em.merge(existing);
+		try {
+			createDefaultTeam(user);
+		} catch (Exception e) {
+			log.warning("Unable to create a default team for user " + userId
+					+ " (" + user.getEmail() + ")\n" + "Exception: "
+					+ e.getClass().getName() + "\nMessage: " + e.getMessage());
+			overwriteTeam(user);
+		}
+		em.merge(user);
 	}
 
 	/*
@@ -134,6 +130,32 @@ public class UserManager implements UserManagerLocal {
 		em.persist(user);
 
 		userMailer.sendWelcomeMessage(user);
+	}
+
+	/**
+	 * Create a default team for the specified user.
+	 * 
+	 * @param user
+	 */
+	private void createDefaultTeam(User user) {
+		Team userTeam = new Team();
+		userTeam.setTeamName(defaultTeamName(user));
+		userTeam.setTeamManager(user);
+		userTeam.setVolunteerMembers(new ArrayList<User>());
+		userTeam.getVolunteerMembers().add(user);
+
+		user.getManagedTeams().add(userTeam);
+		user.setMemberOf(userTeam);
+		em.persist(userTeam);
+	}
+
+	/**
+	 * @param user
+	 * @return
+	 */
+	private String defaultTeamName(User user) {
+		return user.getLastName() + " "
+				+ Integer.toHexString(user.getEmail().hashCode());
 	}
 
 	/*
@@ -206,6 +228,39 @@ public class UserManager implements UserManagerLocal {
 				.createQuery("SELECT x FROM User x WHERE x.role = :roleParam");
 		query.setParameter("roleParam", role);
 		return (List<User>) query.getResultList();
+	}
+
+	/**
+	 * Allocate an existing team to the specified user.
+	 * 
+	 * @param user
+	 */
+	private void overwriteTeam(User user) {
+		// TODO this is a hack to prevent orphan teams.
+		Query query = em.createQuery("SELECT t FROM TEAM t WHERE "
+				+ "t.teamName = :teamName");
+		query.setParameter("teamName", defaultTeamName(user));
+		Team userTeam = (Team) query.getSingleResult();
+
+		if (userTeam == null) {
+			log.warning("Default team (" + defaultTeamName(user)
+					+ ") not found, user " + user.getUserId() + "("
+					+ user.getEmail() + ") will have no team.");
+			return;
+		}
+
+		userTeam.setTeamManager(user);
+		userTeam.setVolunteerMembers(new ArrayList<User>());
+		userTeam.getVolunteerMembers().add(user);
+
+		user.getManagedTeams().add(userTeam);
+		user.setMemberOf(userTeam);
+
+		log.info("Allocated existing team " + defaultTeamName(user)
+				+ ") to user " + user.getUserId() + "(" + user.getEmail()
+				+ ").");
+
+		em.merge(userTeam);
 	}
 
 	/**
