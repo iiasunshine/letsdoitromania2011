@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends Activity implements LocationListener{
 	/** Called when the activity is first created. */
@@ -30,7 +31,7 @@ public class MainActivity extends Activity implements LocationListener{
         _usr = "";
         _pwd = "";
         _usrId = -1;
-        
+        _online = false;
         startActivityForResult(new Intent(this,LogInActivity.class), 1);
         
         //Restore authenticated session - if any
@@ -85,23 +86,28 @@ public class MainActivity extends Activity implements LocationListener{
                  
          _provider = _locationManager.getBestProvider(provCriteria, true);//get best provider
     }
-    public void updateLocation(){
+    public boolean updateLocation(){
     	//get location
-    	
     	Location  loc    = _locationManager.getLastKnownLocation(_provider);
-        //update
+        
+    	//update
     	if (loc != null){
     		try{
     			double lat = loc.getLatitude();
     			double lon = loc.getLongitude();
-    	
-    			_edit_lat.setText(Double.toString(lat));
-    			_edit_long.setText(Double.toString(lon));
+    			if (lat != 0 && lon != 0){
+	    			_edit_lat.setText(Double.toString(lat));
+	    			_edit_long.setText(Double.toString(lon));
+	    			return true;
+    			}
     		}
     		catch(Exception e){
     			
     		}
     	}
+    	
+    	return false;
+    	
     }
     
     /** Register for the updates when Activity is in foreground */
@@ -146,11 +152,20 @@ public class MainActivity extends Activity implements LocationListener{
     		//the login ended
     		if (auth_result == "OK"){
     			Bundle extras = intent.getExtras();
-    			_usr = extras.getString("usr_name");
-    			_pwd = extras.getString("usr_pwd");
-    			_usrId = extras.getLong("userId");
+    			
+    			_usr 	= extras.getString("usr_name");
+    			_pwd 	= extras.getString("usr_pwd");
+    			_usrId 	= extras.getLong("userId");
+    			_online = true;
+    		}
+    		else{
+    			//the authentication failed save the things locally
+    			_online = false;
     		}
     	    setContentView(R.layout.main);
+    	    
+    	    if (!updateLocation())
+    	    	Toast.makeText(this, R.string.main_error_location, 7000).show();
     	}
     	if (param == 2){
     		//adaugarea mormanului a avut loc
@@ -189,6 +204,6 @@ public class MainActivity extends Activity implements LocationListener{
     String              _usr;
     String              _pwd;
     long                _usrId;
-    
+    boolean             _online;
     
 }
