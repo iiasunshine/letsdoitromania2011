@@ -52,6 +52,12 @@
 				<env-entry-type>java.lang.String</env-entry-type>
 				<env-entry-value>/home/glassfish/ldir_data/email_templates</env-entry-value>
 			</env-entry>
+			<env-entry>
+				<description>ErrorNotificationEmail</description>
+				<env-entry-name>ro.ldir.beans.UserMailer/errorRecipient</env-entry-name>
+				<env-entry-type>java.lang.String</env-entry-type>
+				<env-entry-value>stefan.guna@letsdoitromania.ro</env-entry-value>
+			</env-entry>
 		</session>
 		<session>
 			<ejb-name>UserManager</ejb-name>

@@ -18,6 +18,10 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 import ro.ldir.dto.User;
 
@@ -28,17 +32,21 @@ import ro.ldir.dto.User;
 @Stateless
 @Asynchronous
 public class UserMailer {
-
 	/** The buffer size used while reading templates. */
 	private static final int BUF_SIZE = 4096;
-
 	private static Logger log = Logger.getLogger(UserMailer.class.getName());
-
 	/** Generic email subject. */
 	private static final String SUBJECT = "Let's do it!";
 
+	private static final String SUBJECT_ERROR = "server error";
 	/** The name of the welcome email template. */
 	private static final String WELCOME = "welcome.html";
+
+	@PersistenceContext(unitName = "ldir")
+	private EntityManager em;
+
+	@Resource
+	private String errorRecipient;
 
 	@Resource(name = "mail/ldir")
 	private Session mailSession;
@@ -95,14 +103,53 @@ public class UserMailer {
 		return result;
 	}
 
+	public void sendErrorNotification(String data) {
+		Transport transport;
+		try {
+			transport = mailSession.getTransport();
+		} catch (NoSuchProviderException e) {
+			log.warning("Cannot send mail: " + e.getMessage());
+			return;
+		}
+		Message msg = new MimeMessage(mailSession);
+		try {
+			msg.setSubject(SUBJECT_ERROR);
+			msg.setRecipient(RecipientType.TO, new InternetAddress(
+					errorRecipient));
+			msg.setContent(data, "text/plain");
+
+			transport.connect();
+			transport.sendMessage(msg,
+					msg.getRecipients(Message.RecipientType.TO));
+			transport.close();
+			log.info("Sent error email to " + errorRecipient);
+		} catch (MessagingException e) {
+			log.warning("Cannot send mail: " + e.getMessage());
+		}
+	}
+
 	/**
 	 * Sends a welcome email to the user.
 	 * 
-	 * @param user
+	 * @param email
 	 *            The user to notify
 	 */
-	public void sendWelcomeMessage(User user) {
-		log.fine("Sending mail to " + user.getEmail());
+	public void sendWelcomeMessage(String email) {
+		log.fine("Sending mail to " + email);
+		Query query = em
+				.createQuery("SELECT x FROM User x WHERE x.email = :emailParam");
+		query.setParameter("emailParam", email);
+		User user;
+		try {
+			user = (User) query.getSingleResult();
+		} catch (NoResultException e) {
+			String msg = "Unable to send email to " + email
+					+ ". No DB entry found: " + e.getMessage();
+			log.warning(msg);
+			sendErrorNotification(msg);
+			return;
+		}
+
 		Transport transport;
 		try {
 			transport = mailSession.getTransport();

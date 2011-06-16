@@ -129,7 +129,7 @@ public class UserManager implements UserManagerLocal {
 
 		em.persist(user);
 
-		userMailer.sendWelcomeMessage(user);
+		userMailer.sendWelcomeMessage(user.getEmail());
 	}
 
 	/**
