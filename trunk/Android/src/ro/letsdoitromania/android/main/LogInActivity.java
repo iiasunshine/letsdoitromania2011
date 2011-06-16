@@ -64,17 +64,28 @@ public class LogInActivity extends Activity
             if (login()){
                	saveCredentials();
             	returnOK();
-            }	
+            }
+            else{
+            	Toast.makeText(this, R.string.log_error_msg, 7000).show();
+            }
     		
     	}
     	else{
     		//TODO popout să bage ceva
+    		Toast.makeText(this, R.string.log_offline_msg, 7000).show();
     		
     	}
 
-       	saveCredentials();
+       	//saveCredentials();
     	//return
-    	returnOK();
+    	returnOffline();
+    }
+    
+    private void returnOffline(){
+    	Intent resultIntent = new Intent();
+    	resultIntent.putExtra(MainActivity.auth_result, "OFFLINE");
+    	resultIntent.putExtra("userId", -1);
+    	this.finish();
     }
     
     private void returnOK(){

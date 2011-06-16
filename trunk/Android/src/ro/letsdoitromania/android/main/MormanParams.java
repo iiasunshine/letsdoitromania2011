@@ -38,35 +38,40 @@ public class MormanParams extends Activity{
 		});
         
 
-        SeekBar seekBar1 = (SeekBar)findViewById(R.id.seekbar1);
-        setSeekbarListner(seekBar1);
+        _seekBar1 = (SeekBar)findViewById(R.id.seekbar1);
+        setSeekbarListner(_seekBar1);
 
-        SeekBar seekBar2 = (SeekBar)findViewById(R.id.seekbar2);
-        setSeekbarListner(seekBar2);
+        _seekBar2 = (SeekBar)findViewById(R.id.seekbar2);
+        setSeekbarListner(_seekBar2);
 
-        SeekBar seekBar3 = (SeekBar)findViewById(R.id.seekbar3);
-        setSeekbarListner(seekBar3);
+        _seekBar3 = (SeekBar)findViewById(R.id.seekbar3);
+        setSeekbarListner(_seekBar3);
 
-        SeekBar seekBar4 = (SeekBar)findViewById(R.id.seekbar4);
-        setSeekbarListner(seekBar4);
+        _seekBar4 = (SeekBar)findViewById(R.id.seekbar4);
+        setSeekbarListner(_seekBar4);
        
     }
     
     public void setSeekbarListner(SeekBar bar){
+    	bar.setMax(100);
+    	
     	bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
 
     		public void onProgressChanged(SeekBar seekBar, int progress,
     		  boolean fromUser) {
     		 // TODO Auto-generated method stub
-    		 //seekBarValue.setText(String.valueOf(progress));
     		}
 
     		public void onStartTrackingTouch(SeekBar seekBar) {
     		 // TODO Auto-generated method stub
+    			if (_seekBar1.getProgress() + _seekBar2.getProgress() + _seekBar3.getProgress() + _seekBar4.getProgress() >= 100){
+    				seekBar.invalidate();
+    			}
     		}
 
     		public void onStopTrackingTouch(SeekBar seekBar) {
     		 // TODO Auto-generated method stub
+    			
     		}
     	});
     }
@@ -79,4 +84,8 @@ public class MormanParams extends Activity{
     }
     
     static boolean add;//if the status activity wants to add a new one
+    SeekBar _seekBar1;
+    SeekBar _seekBar2;
+    SeekBar _seekBar3;
+    SeekBar _seekBar4;
 }
