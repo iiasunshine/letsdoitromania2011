@@ -76,7 +76,7 @@ public class MapWebService {
 
 	@GET
 	@Produces({ "application/vnd.google-earth.kml+xml" })
-	@Path("chartedAreas/find")
+	@Path("chartedArea/find")
 	public String getChartedArea(@QueryParam("name") String name) {
 		ChartedArea ca = geoManager.getChartedArea(name);
 		if (ca == null)
