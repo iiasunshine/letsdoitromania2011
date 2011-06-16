@@ -61,6 +61,16 @@ public interface GeoManagerLocal {
 	public ChartedArea getChartedArea(Point2D.Double point);
 
 	/**
+	 * Gets the charted area bearing the exact name wrt the one given.
+	 * 
+	 * @param name
+	 *            The name to search for.
+	 * @return The charted area matching the name, {@code null} if none is
+	 *         found.
+	 */
+	public ChartedArea getChartedArea(String name);
+
+	/**
 	 * Gets all the charting areas that intersect a bounding box.
 	 * 
 	 * @param topLeftX
@@ -77,7 +87,7 @@ public interface GeoManagerLocal {
 			double bottomRightX, double bottomRightY);
 
 	/**
-	 * Gets all charted areas that bear the provided name.
+	 * Gets all charted areas that bear a name similar to the provided name.
 	 * 
 	 * @param name
 	 *            The name to search for.
