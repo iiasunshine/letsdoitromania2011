@@ -76,12 +76,13 @@ public class MapWebService {
 
 	@GET
 	@Produces({ "application/vnd.google-earth.kml+xml" })
-	@Path("chartedAreas/search")
-	public String getChartedAreas(@QueryParam("name") String name) {
-		List<ChartedArea> cas = geoManager.getChartedAreas(name);
-		if (cas.size() == 0)
+	@Path("chartedAreas/find")
+	public String getChartedArea(@QueryParam("name") String name) {
+		ChartedArea ca = geoManager.getChartedArea(name);
+		if (ca == null)
 			throw new WebApplicationException(Status.NOT_FOUND);
-		return new ChartedAreasKMLFormatter(cas, null, Type.GENERIC).toString();
+		return new ChartedAreasKMLFormatter(Arrays.asList(ca), null,
+				Type.GENERIC).toString();
 	}
 
 	@GET
@@ -96,6 +97,16 @@ public class MapWebService {
 				topLeftY, bottomRightX, bottomRightY);
 		return new ChartedAreasKMLFormatter(chartedAreas, callbackPattern,
 				ChartedAreasKMLFormatter.Type.GENERIC).toString();
+	}
+
+	@GET
+	@Produces({ "application/vnd.google-earth.kml+xml" })
+	@Path("chartedAreas/search")
+	public String getChartedAreas(@QueryParam("name") String name) {
+		List<ChartedArea> cas = geoManager.getChartedAreas(name);
+		if (cas.size() == 0)
+			throw new WebApplicationException(Status.NOT_FOUND);
+		return new ChartedAreasKMLFormatter(cas, null, Type.GENERIC).toString();
 	}
 
 	@GET
