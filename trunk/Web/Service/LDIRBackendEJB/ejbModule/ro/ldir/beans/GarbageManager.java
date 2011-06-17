@@ -371,7 +371,7 @@ public class GarbageManager implements GarbageManagerLocal {
 	 * @see ro.ldir.beans.GarbageManagerLocal#insertGarbage(ro.ldir.dto.Garbage)
 	 */
 	@Override
-	public void insertGarbage(Garbage garbage) throws NoCountyException {
+	public int insertGarbage(Garbage garbage) throws NoCountyException {
 		User user = SecurityHelper.getUser(userManager, ctx);
 
 		setGeoFeatures(garbage);
@@ -382,7 +382,9 @@ public class GarbageManager implements GarbageManagerLocal {
 		garbage.setInsertedBy(user);
 
 		em.persist(garbage);
-		em.merge(user);
+		em.flush();
+
+		return garbage.getGarbageId().intValue();
 	}
 
 	private InputStream scaleImage(Image image, int width, int height)
@@ -449,22 +451,20 @@ public class GarbageManager implements GarbageManagerLocal {
 		// covered by the system.
 		if (county == null)
 			throw new NoCountyException();
-		garbage.setCounty(county);
-		county.getGarbages().add(garbage);
-		em.merge(county);
 
 		ChartedArea ca = geoManager.getChartedArea(p);
+		TownArea town = geoManager.getTownArea(p);
+
+		garbage.setCounty(county);
+		county.getGarbages().add(garbage);
+
 		if (ca != null) {
 			garbage.setChartedArea(ca);
 			ca.getGarbages().add(garbage);
-			em.merge(ca);
 		}
-
-		TownArea town = geoManager.getTownArea(p);
 		if (town != null) {
 			garbage.setTown(town);
 			town.getGarbages().add(garbage);
-			em.merge(town);
 		}
 	}
 

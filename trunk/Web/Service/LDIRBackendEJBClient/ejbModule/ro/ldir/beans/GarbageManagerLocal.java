@@ -130,6 +130,19 @@ public interface GarbageManagerLocal {
 	public List<Garbage> getGarbagesByTown(String town);
 
 	/**
+	 * Returns the location of the display image.
+	 * 
+	 * @param garbageId
+	 *            The ID of the garbage that the image belongs to.
+	 * @param imageId
+	 *            The ID of the image.
+	 * @return The full path where the image file can be located.
+	 * @throws ArrayIndexOutOfBoundsException
+	 *             if the imageId is an invalid image for the given garbage.
+	 */
+	public String getImageDisplayPath(int garbageId, int imageId);
+
+	/**
 	 * Returns the location of a file.
 	 * 
 	 * @param garbageId
@@ -156,19 +169,6 @@ public interface GarbageManagerLocal {
 	public String getImageThumbnailPath(int garbageId, int imageId);
 
 	/**
-	 * Returns the location of the display image.
-	 * 
-	 * @param garbageId
-	 *            The ID of the garbage that the image belongs to.
-	 * @param imageId
-	 *            The ID of the image.
-	 * @return The full path where the image file can be located.
-	 * @throws ArrayIndexOutOfBoundsException
-	 *             if the imageId is an invalid image for the given garbage.
-	 */
-	public String getImageDisplayPath(int garbageId, int imageId);
-
-	/**
 	 * Inserts a new garbage in the database.
 	 * 
 	 * The operation fails if the coordinates of the garbage are not contained
@@ -176,10 +176,11 @@ public interface GarbageManagerLocal {
 	 * 
 	 * @param garbage
 	 *            The garbage to insert.
+	 * @return The ID of the inserted garbage.
 	 * @throws NoCountyException
 	 *             If there is no county containing the garbage.
 	 */
-	public void insertGarbage(Garbage garbage) throws NoCountyException;
+	public int insertGarbage(Garbage garbage) throws NoCountyException;
 
 	/**
 	 * Sets a garbage status.

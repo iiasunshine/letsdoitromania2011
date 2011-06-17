@@ -244,15 +244,14 @@ public class GarbageWebService {
 
 	@POST
 	@Consumes({ "application/json", "application/xml" })
-	public Response insertGarbage(Garbage garbage) {
+	public String insertGarbage(Garbage garbage) {
+		int insertedId;
 		try {
-			garbageManager.insertGarbage(garbage);
+			insertedId = garbageManager.insertGarbage(garbage);
 		} catch (NoCountyException e) {
-			return Response.status(Status.BAD_REQUEST)
-					.entity("No county was found to contain this garbage.")
-					.type("text/plain").build();
+			throw new WebApplicationException(Status.BAD_REQUEST);
 		}
-		return Response.ok().build();
+		return new Integer(insertedId).toString();
 	}
 
 	@PUT
