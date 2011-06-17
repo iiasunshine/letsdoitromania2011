@@ -128,6 +128,7 @@ public class UserManager implements UserManagerLocal {
 		user.setRegistrationToken(SHA256Encrypt.encrypt(new Date() + email));
 
 		em.persist(user);
+		em.flush();
 
 		userMailer.sendWelcomeMessage(user.getEmail());
 	}
