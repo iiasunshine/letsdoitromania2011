@@ -29,7 +29,6 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -68,7 +67,7 @@ public class TownArea extends ClosedArea {
 	/**
 	 * @return the garbages
 	 */
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "town")
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "town")
 	@XmlIDREF
 	public Set<Garbage> getGarbages() {
 		return garbages;
@@ -82,14 +81,16 @@ public class TownArea extends ClosedArea {
 	}
 
 	/**
-	 * @param area the area to set
+	 * @param area
+	 *            the area to set
 	 */
 	public void setArea(double area) {
 		this.area = area;
 	}
 
 	/**
-	 * @param county the county to set
+	 * @param county
+	 *            the county to set
 	 */
 	public void setCounty(String county) {
 		this.county = county;

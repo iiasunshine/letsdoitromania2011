@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -38,6 +39,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -99,7 +101,7 @@ public class Garbage extends FieldAccessBean {
 	/**
 	 * @return the chartedArea
 	 */
-	@ManyToOne
+	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinColumn(name = "CHARTAREAID")
 	public ChartedArea getChartedArea() {
 		return chartedArea;
@@ -108,8 +110,9 @@ public class Garbage extends FieldAccessBean {
 	/**
 	 * @return the county
 	 */
-	@ManyToOne
+	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinColumn(name = "COUNTYID")
+	@NotNull
 	public CountyArea getCounty() {
 		return county;
 	}
@@ -152,9 +155,10 @@ public class Garbage extends FieldAccessBean {
 	/**
 	 * @return the insertedBy
 	 */
-	@ManyToOne
+	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinColumn(name = "INSERTEDBY")
 	@XmlIDREF
+	@NotNull
 	public User getInsertedBy() {
 		return insertedBy;
 	}
@@ -213,7 +217,7 @@ public class Garbage extends FieldAccessBean {
 	/**
 	 * @return the town
 	 */
-	@ManyToOne
+	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinColumn(name = "TOWNID")
 	public TownArea getTown() {
 		return town;

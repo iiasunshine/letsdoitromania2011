@@ -29,7 +29,6 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -92,7 +91,7 @@ public class ChartedArea extends ClosedArea {
 	/**
 	 * @return the garbages
 	 */
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "chartedArea")
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "chartedArea")
 	@XmlIDREF
 	public Set<Garbage> getGarbages() {
 		return garbages;
@@ -144,7 +143,8 @@ public class ChartedArea extends ClosedArea {
 	}
 
 	/**
-	 * @param description the description to set
+	 * @param description
+	 *            the description to set
 	 */
 	public void setDescription(String description) {
 		this.description = description;
@@ -160,7 +160,8 @@ public class ChartedArea extends ClosedArea {
 	}
 
 	/**
-	 * @param name the name to set
+	 * @param name
+	 *            the name to set
 	 */
 	public void setName(String name) {
 		this.name = name;

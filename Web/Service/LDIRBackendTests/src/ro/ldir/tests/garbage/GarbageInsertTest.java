@@ -45,6 +45,8 @@ public class GarbageInsertTest extends GarbageTest {
 		ClientResponse cr = rootBuilder(USER).entity(garbage,
 				MediaType.APPLICATION_XML).post(ClientResponse.class);
 		assertEquals(200, cr.getStatus());
+		String id = cr.getEntity(String.class);
+		System.out.println("Inserted garbage " + id);
 	}
 
 	@Test
