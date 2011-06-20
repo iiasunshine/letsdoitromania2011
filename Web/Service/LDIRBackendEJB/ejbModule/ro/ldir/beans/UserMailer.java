@@ -35,12 +35,13 @@ public class UserMailer {
 	/** The buffer size used while reading templates. */
 	private static final int BUF_SIZE = 4096;
 	private static Logger log = Logger.getLogger(UserMailer.class.getName());
-	/** Generic email subject. */
-	private static final String SUBJECT = "Let's do it!";
 
 	private static final String SUBJECT_ERROR = "server error";
-	/** The name of the welcome email template. */
-	private static final String WELCOME = "welcome.html";
+	private static final String SUBJECT_PASSWD = "Let's reset your password";
+	private static final String SUBJECT_WELCOME = "Let's do it!";
+
+	private static final String TEMPLATE_PASSWD = "passwd.html";
+	private static final String TEMPLATE_WELCOME = "welcome.html";
 
 	@PersistenceContext(unitName = "ldir")
 	private EntityManager em;
@@ -55,6 +56,27 @@ public class UserMailer {
 	private String mailTemplates;
 
 	public UserMailer() {
+	}
+
+	/**
+	 * @param email
+	 * @return
+	 */
+	private User getUser(String email) {
+		Query query = em
+				.createQuery("SELECT x FROM User x WHERE x.email = :emailParam");
+		query.setParameter("emailParam", email);
+		User user;
+		try {
+			user = (User) query.getSingleResult();
+		} catch (NoResultException e) {
+			String msg = "Unable to send  email to " + email
+					+ ". No DB entry found: " + e.getMessage();
+			log.warning(msg);
+			sendErrorNotification(msg);
+			return null;
+		}
+		return user;
 	}
 
 	/**
@@ -103,6 +125,49 @@ public class UserMailer {
 		return result;
 	}
 
+	/**
+	 * 
+	 * @param user
+	 * @param subject
+	 * @param template
+	 */
+	private void sendEmail(User user, String subject, String template) {
+		Transport transport;
+		try {
+			transport = mailSession.getTransport();
+		} catch (NoSuchProviderException e) {
+			log.warning("Cannot send mail: " + e.getMessage());
+			return;
+		}
+		Message msg = new MimeMessage(mailSession);
+		try {
+			msg.setSubject(subject);
+			msg.setRecipient(RecipientType.TO,
+					new InternetAddress(user.getEmail(), user.getFirstName()
+							+ " " + user.getLastName()));
+			msg.setContent(processTemplate(template, user), "text/html");
+		} catch (MessagingException e) {
+			log.warning("Cannot send mail: " + e.getMessage());
+			return;
+		} catch (UnsupportedEncodingException e) {
+			log.warning("Cannot send mail: " + e.getMessage());
+			return;
+		} catch (IOException e) {
+			log.warning("Cannot send mail: " + e.getMessage());
+			return;
+		}
+
+		try {
+			transport.connect();
+			transport.sendMessage(msg,
+					msg.getRecipients(Message.RecipientType.TO));
+			transport.close();
+			log.info("Sent email to " + user.getEmail());
+		} catch (MessagingException e) {
+			log.warning("Cannot send mail: " + e.getMessage());
+		}
+	}
+
 	public void sendErrorNotification(String data) {
 		Transport transport;
 		try {
@@ -128,6 +193,15 @@ public class UserMailer {
 		}
 	}
 
+	public void sendResetToken(String email) {
+		log.fine("Sending reset mail to " + email);
+		User user = getUser(email);
+		if (user == null)
+			return;
+		sendEmail(user, SUBJECT_PASSWD, TEMPLATE_PASSWD);
+
+	}
+
 	/**
 	 * Sends a welcome email to the user.
 	 * 
@@ -135,54 +209,10 @@ public class UserMailer {
 	 *            The user to notify
 	 */
 	public void sendWelcomeMessage(String email) {
-		log.fine("Sending mail to " + email);
-		Query query = em
-				.createQuery("SELECT x FROM User x WHERE x.email = :emailParam");
-		query.setParameter("emailParam", email);
-		User user;
-		try {
-			user = (User) query.getSingleResult();
-		} catch (NoResultException e) {
-			String msg = "Unable to send email to " + email
-					+ ". No DB entry found: " + e.getMessage();
-			log.warning(msg);
-			sendErrorNotification(msg);
+		log.fine("Sending welcome mail to " + email);
+		User user = getUser(email);
+		if (user == null)
 			return;
-		}
-
-		Transport transport;
-		try {
-			transport = mailSession.getTransport();
-		} catch (NoSuchProviderException e) {
-			log.warning("Cannot send mail: " + e.getMessage());
-			return;
-		}
-		Message msg = new MimeMessage(mailSession);
-		try {
-			msg.setSubject(SUBJECT);
-			msg.setRecipient(RecipientType.TO,
-					new InternetAddress(user.getEmail(), user.getFirstName()
-							+ " " + user.getLastName()));
-			msg.setContent(processTemplate(WELCOME, user), "text/html");
-		} catch (MessagingException e) {
-			log.warning("Cannot send mail: " + e.getMessage());
-			return;
-		} catch (UnsupportedEncodingException e) {
-			log.warning("Cannot send mail: " + e.getMessage());
-			return;
-		} catch (IOException e) {
-			log.warning("Cannot send mail: " + e.getMessage());
-			return;
-		}
-
-		try {
-			transport.connect();
-			transport.sendMessage(msg,
-					msg.getRecipients(Message.RecipientType.TO));
-			transport.close();
-			log.info("Sent welcome email to " + user.getEmail());
-		} catch (MessagingException e) {
-			log.warning("Cannot send mail: " + e.getMessage());
-		}
+		sendEmail(user, SUBJECT_WELCOME, TEMPLATE_WELCOME);
 	}
 }

@@ -37,6 +37,7 @@ import javax.ejb.Schedule;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TemporalType;
@@ -47,6 +48,7 @@ import ro.ldir.dto.User;
 import ro.ldir.dto.User.Activity;
 import ro.ldir.dto.User.SecurityRole;
 import ro.ldir.dto.helper.SHA256Encrypt;
+import ro.ldir.exceptions.InvalidTokenException;
 import ro.ldir.exceptions.InvalidUserException;
 
 /**
@@ -77,6 +79,8 @@ public class UserManager implements UserManagerLocal {
 	private SessionContext ctx;
 	@PersistenceContext(unitName = "ldir")
 	private EntityManager em;
+	@Resource
+	private Integer resetTokenTimeout;
 	@EJB
 	private UserMailer userMailer;
 
@@ -264,6 +268,31 @@ public class UserManager implements UserManagerLocal {
 		em.merge(userTeam);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ro.ldir.beans.UserManagerLocal#passwdResetToken(int)
+	 */
+	@Override
+	public void passwdResetToken(String email) {
+		Query query = em
+				.createQuery("SELECT x FROM User x WHERE x.email = :emailParam");
+		query.setParameter("emailParam", email);
+		User user;
+		try {
+			user = (User) query.getSingleResult();
+		} catch (NoResultException e) {
+			throw new NullPointerException("User not found.");
+		}
+		user.setResetToken(SHA256Encrypt.encrypt(new Date() + user.getEmail()
+				+ user.getUserId()));
+		user.setResetDate(new Date());
+		em.merge(user);
+		em.flush();
+
+		userMailer.sendResetToken(user.getEmail());
+	}
+
 	/**
 	 * Runs every hour to delete users that have not activated their account.
 	 */
@@ -291,6 +320,34 @@ public class UserManager implements UserManagerLocal {
 				.createQuery("SELECT x FROM User x WHERE x.email LIKE :emailParam");
 		query.setParameter("emailParam", "%" + email + "%");
 		return query.getResultList();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ro.ldir.beans.UserManagerLocal#setPassword(int, java.lang.String,
+	 * java.lang.String)
+	 */
+	@Override
+	public void setPassword(int userId, String token, String password)
+			throws InvalidTokenException {
+		User user = em.find(User.class, userId);
+		if (user.getResetToken() == null)
+			throw new InvalidTokenException(
+					"No password reset was requested for this user.");
+		if (!user.getResetToken().equals(token))
+			throw new InvalidTokenException("Reset tokens do not match.");
+
+		Date threshold = new Date(System.currentTimeMillis()
+				- resetTokenTimeout * 3600 * 1000);
+		if (user.getResetDate().before(threshold))
+			throw new InvalidTokenException("Reset token is too old.");
+
+		user.setResetDate(null);
+		user.setResetToken(null);
+		user.setPasswd(SHA256Encrypt.encrypt(password));
+		log.fine("Reset password for " + user.getEmail());
+		em.merge(user);
 	}
 
 	/*

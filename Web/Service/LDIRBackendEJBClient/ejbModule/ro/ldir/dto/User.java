@@ -95,6 +95,8 @@ public class User extends FieldAccessBean implements Serializable {
 	private String phone;
 	private Date recordDate;
 	private String registrationToken;
+	private Date resetDate;
+	private String resetToken;
 	private String role;
 	private String town;
 	private Integer userId;
@@ -239,6 +241,23 @@ public class User extends FieldAccessBean implements Serializable {
 	}
 
 	/**
+	 * @return the resetDate
+	 */
+	@NonComparableField
+	@Temporal(TemporalType.TIMESTAMP)
+	public Date getResetDate() {
+		return resetDate;
+	}
+
+	/**
+	 * @return the resetToken
+	 */
+	@NonComparableField
+	public String getResetToken() {
+		return resetToken;
+	}
+
+	/**
 	 * @return the role
 	 */
 	@Column(nullable = false)
@@ -325,7 +344,8 @@ public class User extends FieldAccessBean implements Serializable {
 	/**
 	 * @param lastAccess
 	 *            the lastAccess to set
-	 */	@NonTransferableField
+	 */
+	@NonTransferableField
 	public void setLastAccess(Date lastAccess) {
 		this.lastAccess = lastAccess;
 	}
@@ -384,7 +404,8 @@ public class User extends FieldAccessBean implements Serializable {
 	/**
 	 * @param recordDate
 	 *            the recordDate to set
-	 */	@NonTransferableField
+	 */
+	@NonTransferableField
 	public void setRecordDate(Date recordDate) {
 		this.recordDate = recordDate;
 	}
@@ -395,6 +416,24 @@ public class User extends FieldAccessBean implements Serializable {
 	 */
 	public void setRegistrationToken(String registrationToken) {
 		this.registrationToken = registrationToken;
+	}
+
+	/**
+	 * @param resetDate
+	 *            the resetDate to set
+	 */
+	@NonTransferableField
+	public void setResetDate(Date resetDate) {
+		this.resetDate = resetDate;
+	}
+
+	/**
+	 * @param resetToken
+	 *            the resetToken to set
+	 */
+	@NonTransferableField
+	public void setResetToken(String resetToken) {
+		this.resetToken = resetToken;
 	}
 
 	/**

@@ -35,6 +35,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
@@ -43,6 +44,7 @@ import javax.ws.rs.core.UriInfo;
 
 import ro.ldir.beans.UserManagerLocal;
 import ro.ldir.dto.User;
+import ro.ldir.exceptions.InvalidTokenException;
 import ro.ldir.exceptions.InvalidUserException;
 
 import com.sun.jersey.api.Responses;
@@ -64,20 +66,6 @@ public class RegistrationWebService {
 		InitialContext ic = new InitialContext();
 		userManager = (UserManagerLocal) ic
 				.lookup("java:global/LDIRBackend/LDIRBackendEJB/UserManager!ro.ldir.beans.UserManager");
-	}
-
-	@POST
-	@Consumes({ "application/json", "application/xml" })
-	public Response addNewUser(User user) {
-		try {
-			userManager.addUser(user);
-		} catch (InvalidUserException e) {
-			return Response.status(Responses.CONFLICT).entity(e.getMessage())
-					.type("text/plain").build();
-		} catch (EJBException e) {
-			throw new WebApplicationException(500);
-		}
-		return Response.ok().build();
 	}
 
 	@GET
@@ -109,5 +97,51 @@ public class RegistrationWebService {
 			e.printStackTrace();
 		}
 		return Response.status(Status.NOT_FOUND).build();
+	}
+
+	@POST
+	@Consumes({ "application/json", "application/xml" })
+	public Response addNewUser(User user) {
+		try {
+			userManager.addUser(user);
+		} catch (InvalidUserException e) {
+			return Response.status(Responses.CONFLICT).entity(e.getMessage())
+					.type("text/plain").build();
+		} catch (EJBException e) {
+			throw new WebApplicationException(500);
+		}
+		return Response.ok().build();
+	}
+
+	@GET
+	@Path("reset")
+	public Response passwdResetToken(@QueryParam("email") String email) {
+		try {
+			userManager.passwdResetToken(email);
+		} catch (EJBException e) {
+			if (e.getCausedByException() instanceof NullPointerException)
+				return Response.status(Status.NOT_FOUND).build();
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e)
+					.build();
+		}
+		return Response.ok().build();
+	}
+
+	@POST
+	@Path("reset/{userId:[0-9]+}/{token}")
+	public Response setPassword(@PathParam("userId") int userId,
+			@PathParam("token") String token, String password) {
+		try {
+			userManager.setPassword(userId, token, password);
+		} catch (InvalidTokenException e) {
+			return Response.status(Status.NOT_ACCEPTABLE)
+					.entity(e.getMessage()).build();
+		} catch (EJBException e) {
+			if (e.getCausedByException() instanceof NullPointerException)
+				return Response.status(Status.NOT_FOUND).build();
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(e)
+					.build();
+		}
+		return Response.ok().build();
 	}
 }

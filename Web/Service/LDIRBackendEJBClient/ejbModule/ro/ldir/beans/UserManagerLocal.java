@@ -30,6 +30,7 @@ import javax.ejb.Local;
 import ro.ldir.dto.User;
 import ro.ldir.dto.User.Activity;
 import ro.ldir.dto.User.SecurityRole;
+import ro.ldir.exceptions.InvalidTokenException;
 import ro.ldir.exceptions.InvalidUserException;
 
 /**
@@ -110,6 +111,15 @@ public interface UserManagerLocal {
 	public List<User> getUsers(User.Activity activity);
 
 	/**
+	 * Generates a password reset token. The token is sent via email to the
+	 * user.
+	 * 
+	 * @param email
+	 *            The email of the user for which the token should be generated.
+	 */
+	public void passwdResetToken(String email);
+
+	/**
 	 * Search for all users whose email match.
 	 * 
 	 * @param email
@@ -117,6 +127,22 @@ public interface UserManagerLocal {
 	 * @return A list of users matching the email
 	 */
 	public List<User> searchByEmail(String email);
+
+	/**
+	 * Updates the password of a user. The token must match the one set in the
+	 * database. It must be set with {@link #passwdResetToken(int)}.
+	 * 
+	 * @param userId
+	 *            The user ID to set the password for.
+	 * @param token
+	 *            The token registered in the database.
+	 * @param password
+	 *            The new password.
+	 * @throws InvalidTokenException
+	 *             if the token doesn't match the DB entry.
+	 */
+	public void setPassword(int userId, String token, String password)
+			throws InvalidTokenException;
 
 	/**
 	 * Configures an user for a given set of activities. The current activities

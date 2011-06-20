@@ -36,5 +36,35 @@ All calls described throughout this section are sent without authentication.
   \end{datalist}
 \end{apidata}
 
+\subsection{Resetting user passwords}
+
+To reset the password of a user, you must first generate a token using the call:
+
+\apilocation{post}{reg/ws/reset?email=\param{email}}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyitem{200}{if the operation succeeds.}
+    \replyitem{404}{if user does not exist.}
+    \replyitem{500}{if another error occurs.}
+  \end{datalist}
+\end{apidata}
+
+The previous call sends a token (valid for a limited amount of time) to the user
+via email. The token must be used in the following call along which you must
+pass the new password:
+
+\apilocation{post}{reg/ws/reset/\param{userId}/\param{token}}
+\begin{apidata}{content}
+  A string containing the new password of the user.
+\end{apidata}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyitem{200}{if the operation succeeds.}
+    \replyitem{404}{if user does not exist.}
+    \replyitem{406}{if the token is invalid.}
+    \replyitem{500}{if another error occurs.}
+  \end{datalist}
+\end{apidata}
+
 
 
