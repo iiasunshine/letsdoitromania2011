@@ -67,6 +67,12 @@
 				<env-entry-type>java.lang.Integer</env-entry-type>
 				<env-entry-value>48</env-entry-value>
 			</env-entry>
+			<env-entry>
+				<description>ResetTokenTimeout</description>
+				<env-entry-name>ro.ldir.beans.UserManager/resetTokenTimeout</env-entry-name>
+				<env-entry-type>java.lang.Integer</env-entry-type>
+				<env-entry-value>12</env-entry-value>
+			</env-entry>
 		</session>
 	</enterprise-beans>
 	<ejb-client-jar>LDIRBackendEJBClient.jar</ejb-client-jar>
