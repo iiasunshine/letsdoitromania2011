@@ -19,6 +19,7 @@ import ro.ldir.dto.Equipment;
 import ro.ldir.dto.Organization;
 import ro.ldir.dto.Team;
 import ro.ldir.dto.User;
+import ro.ldir.exceptions.ChartedAreaAssignmentException;
 import ro.ldir.exceptions.InvalidTeamOperationException;
 
 /**
@@ -33,6 +34,12 @@ public class TeamManager implements TeamManagerLocal {
 
 	@PersistenceContext(unitName = "ldir")
 	private EntityManager em;
+
+	@Resource
+	private Integer maxChartedAreaPerPerson;
+
+	@Resource
+	private Integer maxPersonsPerChartedArea;
 
 	@EJB
 	private UserManager userManager;
@@ -61,7 +68,8 @@ public class TeamManager implements TeamManagerLocal {
 	 * @see ro.ldir.beans.TeamManagerLocal#assignChartArea(int, int)
 	 */
 	@Override
-	public void assignChartArea(int teamId, int chartAreaId) {
+	public void assignChartArea(int teamId, int chartAreaId)
+			throws ChartedAreaAssignmentException {
 		Team team = em.find(Team.class, teamId);
 		SecurityHelper.checkTeamManager(userManager, team, ctx);
 		ChartedArea closedArea = em.find(ChartedArea.class, chartAreaId);
@@ -69,6 +77,16 @@ public class TeamManager implements TeamManagerLocal {
 			team.setChartedAreas(new HashSet<ChartedArea>());
 		if (closedArea.getChartedBy() == null)
 			closedArea.setChartedBy(new HashSet<Team>());
+
+		if (closedArea.countChartingPeople() > maxPersonsPerChartedArea)
+			throw new ChartedAreaAssignmentException(
+					"There are too many people charting this area already!");
+
+		if (team.getChartedAreas().size() > team.countMembers()
+				* maxChartedAreaPerPerson)
+			throw new ChartedAreaAssignmentException(
+					"There are too many charted areas for this team!");
+
 		team.getChartedAreas().add(closedArea);
 		closedArea.getChartedBy().add(team);
 		em.merge(team);

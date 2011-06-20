@@ -6,6 +6,7 @@ import javax.ejb.Local;
 
 import ro.ldir.dto.Equipment;
 import ro.ldir.dto.Team;
+import ro.ldir.exceptions.ChartedAreaAssignmentException;
 import ro.ldir.exceptions.InvalidTeamOperationException;
 
 @Local
@@ -27,8 +28,11 @@ public interface TeamManagerLocal {
 	 *            the team ID to assignment to.
 	 * @param chartAreaId
 	 *            the chart area ID to assign to the team.
+	 * @throws ChartedAreaAssignmentException
+	 *             when the charted area cannot be assigned to a team.
 	 */
-	public void assignChartArea(int teamId, int chartAreaId);
+	public void assignChartArea(int teamId, int chartAreaId)
+			throws ChartedAreaAssignmentException;
 
 	/**
 	 * Create a new team managed by the user {@code userId}. The manager does

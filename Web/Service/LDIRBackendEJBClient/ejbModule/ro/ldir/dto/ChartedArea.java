@@ -57,6 +57,14 @@ public class ChartedArea extends ClosedArea {
 	public ChartedArea() {
 	}
 
+	/** Count the number of people charting this area. */
+	public int countChartingPeople() {
+		int n = 0;
+		for (Team team : chartedBy)
+			n += team.countMembers();
+		return n;
+	}
+
 	/**
 	 * @return the area
 	 */

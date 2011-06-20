@@ -74,6 +74,21 @@
 				<env-entry-value>12</env-entry-value>
 			</env-entry>
 		</session>
+		<session>
+			<ejb-name>TeamManager</ejb-name>
+			<env-entry>
+				<description>MaxPersonsPerChartedArea</description>
+				<env-entry-name>ro.ldir.beans.TeamManager/maxPersonsPerChartedArea</env-entry-name>
+				<env-entry-type>java.lang.Integer</env-entry-type>
+				<env-entry-value>5</env-entry-value>
+			</env-entry>
+			<env-entry>
+				<description>MaxChartedAreaPerPerson</description>
+				<env-entry-name>ro.ldir.beans.TeamManager/maxChartedAreaPerPerson</env-entry-name>
+				<env-entry-type>java.lang.Integer</env-entry-type>
+				<env-entry-value>10</env-entry-value>
+			</env-entry>
+		</session>
 	</enterprise-beans>
 	<ejb-client-jar>LDIRBackendEJBClient.jar</ejb-client-jar>
 </ejb-jar>

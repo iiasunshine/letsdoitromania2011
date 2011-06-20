@@ -175,6 +175,8 @@ The logged in user must be an ``ADMIN'' or the team's manager.
 \begin{apidata}{returns}
   \begin{datalist}
     \replyitem{200}{If the operation succeeds.}
+    \replyitem{406}{An a string if constraints are violated and the assign
+    operations is not accepted.}
   \end{datalist}
 \end{apidata}
 \begin{apidata}{access}

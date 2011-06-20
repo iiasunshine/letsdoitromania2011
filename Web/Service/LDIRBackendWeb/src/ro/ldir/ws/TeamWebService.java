@@ -43,6 +43,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import com.sun.jersey.api.client.ClientResponse.Status;
+
 import ro.ldir.beans.TeamManagerLocal;
 import ro.ldir.dto.ChartedArea;
 import ro.ldir.dto.CleaningEquipment;
@@ -51,6 +53,7 @@ import ro.ldir.dto.Organization;
 import ro.ldir.dto.Team;
 import ro.ldir.dto.TransportEquipment;
 import ro.ldir.dto.User;
+import ro.ldir.exceptions.ChartedAreaAssignmentException;
 
 /**
  * The team web service.
@@ -108,7 +111,12 @@ public class TeamWebService {
 	@Path("{teamId:[0-9]+}/chartArea")
 	public Response assignChartArea(@PathParam("teamId") int teamId,
 			ChartedArea chartedArea) {
-		teamManager.assignChartArea(teamId, chartedArea.getAreaId());
+		try {
+			teamManager.assignChartArea(teamId, chartedArea.getAreaId());
+		} catch (ChartedAreaAssignmentException e) {
+			return Response.status(Status.NOT_ACCEPTABLE)
+					.entity(e.getMessage()).build();
+		}
 		return Response.ok().build();
 	}
 
