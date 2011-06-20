@@ -65,6 +65,17 @@ public class Team extends FieldAccessBean {
 	public Team() {
 	}
 
+	/** Count the number of members belonging to the team. */
+	public int countMembers() {
+		int n = 0;
+		if (volunteerMembers != null)
+			n += volunteerMembers.size();
+		if (organizationMembers != null)
+			for (Organization org : organizationMembers)
+				n += org.getMembersCount();
+		return n;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
