@@ -111,6 +111,14 @@ public interface UserManagerLocal {
 	public List<User> getUsers(User.Activity activity);
 
 	/**
+	 * An invalid access has been detected for the specified user.
+	 * 
+	 * @param email
+	 *            The email of the user with invalid access.
+	 */
+	public void invalidAccess(String email);
+
+	/**
 	 * Generates a password reset token. The token is sent via email to the
 	 * user.
 	 * 

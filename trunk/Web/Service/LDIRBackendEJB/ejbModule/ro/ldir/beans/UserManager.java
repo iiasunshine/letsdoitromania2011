@@ -80,6 +80,8 @@ public class UserManager implements UserManagerLocal {
 	@PersistenceContext(unitName = "ldir")
 	private EntityManager em;
 	@Resource
+	private Integer maxInvalidAccesses;
+	@Resource
 	private Integer resetTokenTimeout;
 	@EJB
 	private UserMailer userMailer;
@@ -235,6 +237,32 @@ public class UserManager implements UserManagerLocal {
 		return (List<User>) query.getResultList();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ro.ldir.beans.UserManagerLocal#invalidAccess(java.lang.String)
+	 */
+	@Override
+	public void invalidAccess(String email) {
+		Query query = em
+				.createQuery("SELECT x FROM User x WHERE x.email = :emailParam");
+		query.setParameter("emailParam", email);
+		User user;
+		try {
+			user = (User) query.getSingleResult();
+		} catch (NoResultException e) {
+			return;
+		}
+		user.setInvalidAccessCount(user.getInvalidAccessCount() + 1);
+		if (user.getInvalidAccessCount().equals(maxInvalidAccesses)) {
+			log.info("Resseting account \"" + user.getEmail() + "\".");
+			user.setPasswd(new Date().toString());
+			user.setInvalidAccessCount(0);
+			userMailer.sendAccountResetMessage(user.getEmail());
+		}
+		em.merge(user);
+	}
+
 	/**
 	 * Allocate an existing team to the specified user.
 	 * 
@@ -386,6 +414,7 @@ public class UserManager implements UserManagerLocal {
 	@Override
 	public void timestampLastAccess(User user) {
 		user.setLastAccess(new Date());
+		user.setInvalidAccessCount(0);
 		em.merge(user);
 	}
 

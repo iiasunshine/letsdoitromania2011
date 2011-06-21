@@ -41,9 +41,11 @@ import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import ro.ldir.dto.adapters.EncryptAdapter;
@@ -86,6 +88,7 @@ public class User extends FieldAccessBean implements Serializable {
 	private String email;
 	private String firstName;
 	private Set<Garbage> garbages;
+	private Integer invalidAccessCount = new Integer(0);
 	private Date lastAccess;
 	private String lastName;
 	private List<Team> managedTeams;
@@ -161,6 +164,17 @@ public class User extends FieldAccessBean implements Serializable {
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "insertedBy", orphanRemoval = true)
 	public Set<Garbage> getGarbages() {
 		return garbages;
+	}
+
+	/**
+	 * @return the invalidAccessCount
+	 */
+	@XmlTransient
+	@NonComparableField
+	@NotNull
+	@Column(nullable = false)
+	public Integer getInvalidAccessCount() {
+		return invalidAccessCount;
 	}
 
 	/**
@@ -339,6 +353,15 @@ public class User extends FieldAccessBean implements Serializable {
 	@NonTransferableField
 	public void setGarbages(Set<Garbage> garbages) {
 		this.garbages = garbages;
+	}
+
+	/**
+	 * @param invalidAccessCount
+	 *            the invalidAccessCount to set
+	 */
+	@NonTransferableField
+	public void setInvalidAccessCount(Integer invalidAccessCount) {
+		this.invalidAccessCount = invalidAccessCount;
 	}
 
 	/**

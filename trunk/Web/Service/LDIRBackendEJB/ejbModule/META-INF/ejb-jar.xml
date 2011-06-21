@@ -73,6 +73,12 @@
 				<env-entry-type>java.lang.Integer</env-entry-type>
 				<env-entry-value>12</env-entry-value>
 			</env-entry>
+			<env-entry>
+				<description>MaxInvalidAccesses</description>
+				<env-entry-name>ro.ldir.beans.UserManager/maxInvalidAccesses</env-entry-name>
+				<env-entry-type>java.lang.Integer</env-entry-type>
+				<env-entry-value>5</env-entry-value>
+			</env-entry>
 		</session>
 		<session>
 			<ejb-name>TeamManager</ejb-name>
