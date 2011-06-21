@@ -101,4 +101,9 @@
 	<security-role>
 		<role-name>VOLUNTEER_MULTI</role-name>
 	</security-role>
+
+	<error-page>
+		<error-code>401</error-code>
+		<location>/error/unauthorized</location>
+	</error-page>
 </web-app>

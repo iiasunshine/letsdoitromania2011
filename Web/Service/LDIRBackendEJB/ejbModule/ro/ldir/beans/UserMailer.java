@@ -38,9 +38,11 @@ public class UserMailer {
 
 	private static final String SUBJECT_ERROR = "server error";
 	private static final String SUBJECT_PASSWD = "Let's reset your password";
+	private static final String SUBJECT_RESET = "Let's reset your account";
 	private static final String SUBJECT_WELCOME = "Let's do it!";
 
 	private static final String TEMPLATE_PASSWD = "passwd.html";
+	private static final String TEMPLATE_RESET = "reset.html";
 	private static final String TEMPLATE_WELCOME = "welcome.html";
 
 	@PersistenceContext(unitName = "ldir")
@@ -123,6 +125,14 @@ public class UserMailer {
 		}
 		log.exiting("UserMailer", "processTemplate", result);
 		return result;
+	}
+
+	public void sendAccountResetMessage(String email) {
+		log.fine("Sending account reset notice to " + email);
+		User user = getUser(email);
+		if (user == null)
+			return;
+		sendEmail(user, SUBJECT_RESET, TEMPLATE_RESET);
 	}
 
 	/**
