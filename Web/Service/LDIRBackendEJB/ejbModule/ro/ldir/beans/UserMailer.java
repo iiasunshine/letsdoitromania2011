@@ -203,11 +203,10 @@ public class UserMailer {
 		}
 	}
 
-	public void sendResetToken(String email) {
-		log.fine("Sending reset mail to " + email);
-		User user = getUser(email);
+	public void sendResetToken(User user) {
 		if (user == null)
 			return;
+		log.fine("Sending reset mail to " + user.getEmail());
 		sendEmail(user, SUBJECT_PASSWD, TEMPLATE_PASSWD);
 
 	}

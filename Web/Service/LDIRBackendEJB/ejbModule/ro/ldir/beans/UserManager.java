@@ -318,7 +318,7 @@ public class UserManager implements UserManagerLocal {
 		em.merge(user);
 		em.flush();
 
-		userMailer.sendResetToken(user.getEmail());
+		userMailer.sendResetToken(user);
 	}
 
 	/**
