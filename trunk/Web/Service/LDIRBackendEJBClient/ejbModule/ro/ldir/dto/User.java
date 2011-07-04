@@ -82,6 +82,7 @@ public class User extends FieldAccessBean implements Serializable {
 	}
 
 	private static final long serialVersionUID = 1L;
+	private boolean acceptsMoreInfo;
 	private List<Activity> activities;
 	private Date birthday;
 	private String county;
@@ -119,6 +120,14 @@ public class User extends FieldAccessBean implements Serializable {
 		if (userId == null)
 			return super.equals(obj);
 		return userId.equals(((User) obj).userId);
+	}
+
+	/**
+	 * @return the acceptsMoreInfo
+	 */
+	@Column(nullable = false, columnDefinition = "DEFAULT '0' NOT NULL")
+	public boolean getAcceptsMoreInfo() {
+		return acceptsMoreInfo;
 	}
 
 	/**
@@ -303,6 +312,14 @@ public class User extends FieldAccessBean implements Serializable {
 			if (role.equals(sr.toString()))
 				return true;
 		return false;
+	}
+
+	/**
+	 * @param acceptsMoreInfo
+	 *            the acceptsMoreInfo to set
+	 */
+	public void setAcceptsMoreInfo(boolean acceptsMoreInfo) {
+		this.acceptsMoreInfo = acceptsMoreInfo;
 	}
 
 	/**

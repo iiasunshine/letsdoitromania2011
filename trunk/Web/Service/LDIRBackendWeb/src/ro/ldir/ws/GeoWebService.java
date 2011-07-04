@@ -238,6 +238,21 @@ public class GeoWebService {
 		}
 	}
 
+	@GET
+	@Consumes({ "application/json", "application/xml" })
+	@Path("chartedArea/{chartedAreaId:[0-9]+}/percentageCompleted")
+	public Response setChartedAreaCompleted(
+			@PathParam("chartedAreaId") int chartedAreaId, int percentage) {
+		try {
+			geoManager.setPercentageCompleted(chartedAreaId, percentage);
+		} catch (EJBException e) {
+			if (e.getCausedByException() instanceof NullPointerException)
+				throw new WebApplicationException(404);
+			throw new WebApplicationException(500);
+		}
+		return Response.ok().build();
+	}
+
 	@PUT
 	@Consumes({ "application/json", "application/xml" })
 	@Path("chartedArea/{chartedAreaId:[0-9]+}")

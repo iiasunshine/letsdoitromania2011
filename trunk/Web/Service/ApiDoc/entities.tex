@@ -35,6 +35,8 @@ The following lists all properties of the \texttt{user} entity. All read-only
 properties are immutable with respect to the user update call described in
 Section~\ref{sec:user:update}.
 \begin{entitydef}{user}
+  \property{acceptsMoreInfo}{A boolean stating whether the users has given its
+  approval to receive more information via email.}
   \roproperty{activities}{A set of string describing the activities that the
   user is enrolled in. Valid activities are ``CHART'' and ``CLEAN''.}
   \property{birthday}{A string containing the user's birthday, formatted as
@@ -225,6 +227,8 @@ vertexes expressed as geographical coordinates.
   charting this area.}
   \roproperty{garbages}{A list of integers denoting the IDs of the garbage tags
   inserted in this area.}
+  \property{percentageCompleted}{A percentage denoting how much of this area has
+  been charted.}
   \property{score}{An integer denoting the score of the charted area.}
 \end{entitydef}
 

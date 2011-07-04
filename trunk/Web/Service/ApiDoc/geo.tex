@@ -7,3 +7,23 @@ users have access and therefore are not documented. This is implemented in the
 \svnweb{ro/ldir/ws/GeoWebService}{ro.ldir.ws.GeoWebService} web resource.
 
 Documentation will be provided on a per ``need-to-know'' basis.
+
+\subsection{Setting the percentage completed of a charted area}
+
+\apilocation{put}{ws/geo/chartedArea/\param{chartedAreaId}/\\percentageCompleted}
+\begin{apidata}{content}
+  A \texttt{user} entity containing update information.
+\end{apidata}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyitem{200}{if the operation succeeds.}
+    \replyitem{403}{if the access policy if violated.}
+    \replyitem{404}{if the charted area does not exists.}
+    \replyitem{500}{if another error occurs.}
+  \end{datalist}
+\end{apidata}
+\begin{apidata}{access}
+The logged in user must be an ``ADMIN'' or charting the area.
+\end{apidata}
+
+

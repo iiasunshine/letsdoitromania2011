@@ -6,14 +6,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import javax.annotation.Resource;
 import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.RolesAllowed;
+import javax.ejb.EJB;
 import javax.ejb.LocalBean;
+import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import ro.ldir.beans.security.SecurityHelper;
 import ro.ldir.dto.ChartedArea;
 import ro.ldir.dto.CountyArea;
 import ro.ldir.dto.Team;
@@ -28,9 +32,14 @@ import ro.ldir.dto.TownArea;
 public class GeoManager implements GeoManagerLocal {
 	private static Logger logger = Logger.getLogger(GeoManagerLocal.class
 			.getName());
+	@Resource
+	private SessionContext ctx;
 
 	@PersistenceContext(unitName = "ldir")
 	private EntityManager em;
+
+	@EJB
+	private UserManager userManager;
 
 	/** Default constructor. */
 	public GeoManager() {
@@ -304,6 +313,21 @@ public class GeoManager implements GeoManagerLocal {
 		// TODO make a check whether it intersects other town areas
 		townArea.setBoundingBox();
 		em.persist(townArea);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ro.ldir.beans.GeoManagerLocal#setPercentageCompleted(int, int)
+	 */
+	@Override
+	public void setPercentageCompleted(int chartedAreaId, int percentage) {
+		if (percentage < 0 || percentage > 100)
+			return;
+		ChartedArea ca = em.find(ChartedArea.class, chartedAreaId);
+		SecurityHelper.checkIsCharting(userManager, ctx, ca);
+		ca.setPercentageCompleted(percentage);
+		em.merge(ca);
 	}
 
 	/*
