@@ -170,6 +170,14 @@ public interface GeoManagerLocal {
 	public void newTownArea(TownArea townArea);
 
 	/**
+	 * Sets the percentage completed of a charted area.
+	 * 
+	 * @param chartedAreaId
+	 * @param percentage
+	 */
+	public void setPercentageCompleted(int chartedAreaId, int percentage);
+
+	/**
 	 * Updates a chart area.
 	 * 
 	 * @param chartedAreaId

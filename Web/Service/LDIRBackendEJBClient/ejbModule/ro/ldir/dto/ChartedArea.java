@@ -27,6 +27,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -51,6 +52,7 @@ public class ChartedArea extends ClosedArea {
 	private String description;
 	private Set<Garbage> garbages = new HashSet<Garbage>();
 	private String name;
+	private int percentageCompleted;
 	private double perimeter;
 	private int score;
 
@@ -110,6 +112,14 @@ public class ChartedArea extends ClosedArea {
 	 */
 	public String getName() {
 		return name;
+	}
+
+	/**
+	 * @return the percentageCompleted
+	 */
+	@Column(nullable = false, columnDefinition = "DEFAULT '0' NOT NULL")
+	public int getPercentageCompleted() {
+		return percentageCompleted;
 	}
 
 	/**
@@ -173,6 +183,14 @@ public class ChartedArea extends ClosedArea {
 	 */
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	/**
+	 * @param percentageCompleted
+	 *            the percentageCompleted to set
+	 */
+	public void setPercentageCompleted(int percentageCompleted) {
+		this.percentageCompleted = percentageCompleted;
 	}
 
 	/**

@@ -27,6 +27,7 @@ import javax.ejb.SessionContext;
 
 import ro.ldir.beans.UserManager;
 import ro.ldir.beans.UserManagerLocal;
+import ro.ldir.dto.ChartedArea;
 import ro.ldir.dto.Organization;
 import ro.ldir.dto.Team;
 import ro.ldir.dto.User;
@@ -67,6 +68,31 @@ public class SecurityHelper {
 				if (team.getOrganizationMembers().contains(org))
 					return;
 		throw new SecurityException("Access to this user is denied.");
+	}
+
+	/**
+	 * Checks whether the logged in user charts the given area.
+	 * 
+	 * @param um
+	 * @param ctx
+	 * @param chartedArea
+	 */
+	public static void checkIsCharting(UserManagerLocal um, SessionContext ctx,
+			ChartedArea chartedArea) {
+		if (ctx.isCallerInRole(User.SecurityRole.ADMIN.toString()))
+			return;
+		String email = ctx.getCallerPrincipal().getName();
+		User user = um.getUser(email);
+		for (Team area_team : chartedArea.getChartedBy()) {
+			if (user.getMemberOf().equals(area_team))
+				return;
+			if (user.getManagedTeams().contains(area_team))
+				return;
+			for (Organization org : user.getOrganizations())
+				if (org.getMemberOf().equals(area_team))
+					return;
+		}
+		throw new SecurityException("The user is not charting this area.");
 	}
 
 	/**
