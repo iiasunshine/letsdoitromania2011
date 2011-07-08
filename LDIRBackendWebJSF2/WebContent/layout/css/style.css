@@ -1,0 +1,95 @@
+/* CSS Document */
+@charset "utf-8";
+
+
+
+/* General settings */
+
+body { margin: 0px 0px 0px 0px; background-color: #fefefe; font: Tahoma; }
+
+
+
+/* Header settings */
+
+#headerContainer { width: 100%; height: 137px; border-bottom: 5px solid #447428; margin: 10px 0px 0px 0px; }
+#header { width: 935px; height: 137px; display: block; }
+#logo { width: 200px; height: 90px; border: 0px; display: inline-block; }
+#topAdvertisement { width: 730px; height: 90px; display: inline-block; }
+
+#topMenu { float: left; width: 935px; overflow: hidden; margin: 10px 0px 0px 0px; display: inline; }
+#topMenu ul { margin: 0px 0px 0px 0px; padding: 0px 0px 0px 0px; list-style: none; }
+#topMenu li { display: inline; margin: 0px 0px 0px 0px; padding: 0px 0px 0px 0px; }
+#topMenu a { float: left; background: url(../images/tab_a.gif) no-repeat left top; margin: 0px 0px 0px 0px; padding: 0px 0px 0px 6px; text-decoration: none;  font: bold 12px Tahoma; }
+#topMenu a span { float:left; display: block; background: url(../images/tab_b.gif) no-repeat right top; padding: 10px 11px 8px 6px; margin-right: 5px; color: #4d751f; }
+#topMenu a:hover { background-position: 0% -42px; color: #ffffff; }
+#topMenu a:hover span { background-position: 100% -42px; color: #ffffff; }
+#topMenu a.active { background-position: 0% -42px; color: #ffffff; }
+#topMenu a.active span { background-position: 100% -42px; color: #ffffff; }
+
+
+
+/* Content settings */
+
+#pageContainer { width: 100%; border-bottom: 1px solid #447428; margin: 10px 0px 10px 0px; padding: 0px 0px 10px 0px; }
+#content { width: 935px; font: 11px Tahoma; }
+#leftColumn { width: 190px; display: inline-block; text-align: left; vertical-align: top; padding: 0px 10px 0px 0px; }
+#leftColumn a { color: #4d751f; text-decoration: none; }
+#leftColumn a:hover { text-decoration: underline; }
+#rightColumn { width: 710px; display: inline-block; text-align: left; vertical-align: top; border-left: 1px solid #e1e1e1; padding: 0px 0px 0px 20px; }
+
+h3 a { color: #4d751f; text-decoration: none; }
+h3 a:hover { text-decoration: underline; }
+
+.hartaLDIR { width: 710px; height: 600px; background-color: #e1e1e1; text-align: center; vertical-align: middle; }
+
+.entryLeft { margin: 0px 0px 10px 0px; }
+.listENtryRight { width: 52px; margin: 0px 5px 0px 0px; padding: 5px 5px 5px 5px; display: inline-block; }
+.listENtryRightTitle { width: 52px; margin: 0px 5px 0px 0px; padding: 5px 5px 5px 5px; display: inline-block; background-color: #e1e1e1;  }
+
+/* Footer settings */
+
+#footerContainer { width: 100%; margin: 25px 0px 10px 0px; padding: 0px 0px 10px 0px; }
+#footer { width: 935px; text-align: left; }
+#footer p { font: 11px Tahoma; color: #999999; border-bottom: 1px solid #e1e1e1; border-top: 1px solid #e1e1e1; margin: 0px 0px 0px 0px; padding: 10px 0px 10px 0px; }
+#copyright { width: 465px; display: inline-block; text-align: left; vertical-align: top; font: 10px Tahoma; color: #999999; margin: 10px 0px 10px 0px; }
+#poweredBy { width: 465px; display: inline-block; text-align: right; vertical-align: top; font: 10px Tahoma; color: #999999; margin: 10px 0px 10px 0px; }
+#footer a { color: #4d751f; text-decoration: none; }
+#footer a:hover { text-decoration: underline; }
+
+
+
+/* Text settings */
+
+h1 { font: bold 17px Tahoma; color: #4d751f; margin: 0px 0px 10px 0px; }
+h2 { font: bold 14px Tahoma; color: #4d751f; margin: 0px 0px 10px 0px; }
+h3 { font: bold 12px Tahoma; color: #4d751f; margin: 0px 0px 10px 0px; }
+
+.important { color: #ff0000; }
+
+.registerMessageOk { font: 14px Tahoma; color: #4d751f; margin: 0px 0px 10px 0px; }
+.registerMessageError { font: 14px Tahoma; color: #ff0000; margin: 0px 0px 10px 0px; }
+
+/* Image settings */
+
+img { border: 0px; }
+
+.galerie { margin: 2px; padding: 2px; border: 1px solid #e1e1e1; }
+
+/* Form settings */
+
+.form { font: bold 11px Tahoma; color: #4d751f; }
+.label { width: 130px; display: inline-block; height: 40px; vertical-align: top; }
+.labelSmall{ width: 23px; display: inline-block; height: 40px; vertical-align: top; }
+.labelLeft { width: 180px; text-align: left; display: inline-block; vertical-align: top; margin: 10px 0px 0px 0px; }
+.formTextfield { border: 1px solid #e1e1e1; width: 250px; height: 25px; font: 11px Tahoma; color: #333333; margin: 0px 0px 0px 10px; vertical-align: top; }
+.formTextfieldSmall { border: 1px solid #e1e1e1; width: 50px; height: 25px; font: 11px Tahoma; color: #333333; margin: 0px 0px 0px 10px; vertical-align: top; }
+.formFilefield { font: 11px Tahoma; color: #333333; margin: 0px 0px 0px 10px; vertical-align: top; }
+.formTextfieldLeft { border: 1px solid #e1e1e1; width: 190px; height: 25px; font: 11px Tahoma; color: #333333; margin: 0px 0px 5px 0px; vertical-align: top; }
+.formDropdown  { border: 1px solid #e1e1e1; width: 252px; height: 25px; font: 11px Tahoma; color: #333333; margin: 0px 0px 0px 10px; vertical-align: top; }
+.formDropdownLeft  { border: 1px solid #e1e1e1; width: 192px; height: 25px; font: 11px Tahoma; color: #333333; margin: 0px 0px 0px 0px; vertical-align: top; }
+.formDate  { border: 1px solid #e1e1e1; height: 25px; font: 11px Tahoma; color: #333333; margin: 0px 0px 0px 10px; vertical-align: top; }
+.formTextarea { border: 1px solid #e1e1e1; width: 250px; font: 11px Tahoma; color: #333333; margin: 0px 0px 0px 10px; vertical-align: top; }
+.formButton  { border: 1px solid #666666; background-color: #e1e1e1; height: 25px; vertical-align: middle; font: bold 11px Tahoma; color: #4d751f; margin: -10px 10px 0px 0px; cursor: hand; }
+.formButtonLeft  { border: 1px solid #666666; background-color: #e1e1e1; height: 25px; font: bold 11px Tahoma; color: #4d751f; margin: 0px 10px 0px 0px; cursor: hand; }
+.formCheckbox { font: 11px Tahoma; color: #333333; }
+.formCaptchaImage { margin: 10px 0px 10px 130px; }

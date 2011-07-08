@@ -1,0 +1,88 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<!-- =========== FULL CONFIGURATION FILE ================================== -->
+
+<faces-config version="2.0"
+    xmlns="http://java.sun.com/xml/ns/javaee" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>login_success</from-outcome>
+            <to-view-id>/home.jsp</to-view-id>
+            <redirect/>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>login_fail</from-outcome>
+            <to-view-id>/user-login.jsp</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>register_success</from-outcome>
+            <to-view-id>/user-register.jsp</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>register_fail</from-outcome>
+            <to-view-id>/user-register.jsp</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>morman_add_success</from-outcome>
+            <to-view-id>/users/cartare-mormane-editare.jsp</to-view-id>
+            <redirect/>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>morman_add_fail</from-outcome>
+            <to-view-id>/users/cartare-mormane-editare.jsp</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>morman_delete_success</from-outcome>
+            <to-view-id>/users/cartare-mormane-lista.jsp</to-view-id>
+            <redirect/>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>morman_delete_fail</from-outcome>
+            <to-view-id>/users/cartare-mormane-detalii.jsp</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <from-view-id>/users/cartare-zone-vizualizare.jsp</from-view-id>
+        <navigation-case>
+            <from-outcome>area_assign_success</from-outcome>
+            <to-view-id>/users/cartare-zone-lista.jsp</to-view-id>
+            <redirect/>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>area_assign_fail</from-outcome>
+            <to-view-id>/users/cartare-zone-vizualizare.jsp</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+
+
+    <navigation-rule>
+        <from-view-id>/reset-password.jsp</from-view-id>
+        <navigation-case>
+            <from-outcome>reset_success</from-outcome>
+            <to-view-id>/reset-password.jsp</to-view-id>
+            <redirect/>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>reset_fail</from-outcome>
+            <to-view-id>/reset-password.jsp</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+
+    <navigation-rule>
+        <from-view-id>/new-password.jsp</from-view-id>
+        <navigation-case>
+            <from-outcome>new_pass_success</from-outcome>
+            <to-view-id>/user-login.jsp</to-view-id>
+            <redirect/>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>new_pass_fail</from-outcome>
+            <to-view-id>/new-password.jsp</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+
+
+</faces-config>
