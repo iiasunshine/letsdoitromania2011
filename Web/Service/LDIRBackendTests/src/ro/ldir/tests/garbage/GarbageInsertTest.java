@@ -50,16 +50,6 @@ public class GarbageInsertTest extends GarbageTest {
 	}
 
 	@Test
-	public void unauthorizedInsertGarbage() {
-		Garbage garbage = new Garbage();
-		garbage.setX(5);
-		garbage.setY(5);
-		ClientResponse cr = rootBuilder("blah").entity(garbage,
-				MediaType.APPLICATION_XML).post(ClientResponse.class);
-		assertEquals(401, cr.getStatus());
-	}
-
-	@Test
 	public void insertNoCounty() {
 		Garbage garbage = new Garbage();
 		garbage.setX(100);
@@ -67,5 +57,35 @@ public class GarbageInsertTest extends GarbageTest {
 		ClientResponse cr = rootBuilder(USER).entity(garbage,
 				MediaType.APPLICATION_XML).post(ClientResponse.class);
 		assertEquals(400, cr.getStatus());
+	}
+
+	@Test
+	/* This must be executed after loading all Romanian counties */
+	public void insertTimis() {
+		Garbage garbage = new Garbage();
+		garbage.setX(21.26648);
+		garbage.setY(45.80465);
+		garbage.setDispersed(true);
+		garbage.setDescription("descrierea");
+		garbage.setBagCount(2);
+		garbage.setPercentagePlastic(80);
+		garbage.setPercentageMetal(5);
+		garbage.setPercentageGlass(5);
+		garbage.setPercentageWaste(10);
+		ClientResponse cr = rootBuilder(USER).entity(garbage,
+				MediaType.APPLICATION_XML).post(ClientResponse.class);
+		assertEquals(200, cr.getStatus());
+		String id = cr.getEntity(String.class);
+		System.out.println("Inserted Timis garbage " + id);
+	}
+
+	@Test
+	public void unauthorizedInsertGarbage() {
+		Garbage garbage = new Garbage();
+		garbage.setX(5);
+		garbage.setY(5);
+		ClientResponse cr = rootBuilder("blah").entity(garbage,
+				MediaType.APPLICATION_XML).post(ClientResponse.class);
+		assertEquals(401, cr.getStatus());
 	}
 }

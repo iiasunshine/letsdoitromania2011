@@ -23,6 +23,8 @@
  */
 package ro.ldir.exceptions;
 
+import ro.ldir.dto.Garbage;
+
 /**
  * Class used to denote that there is no county containing a given pair of
  * geographical coordinates.
@@ -32,6 +34,11 @@ public class NoCountyException extends Exception {
 	private static final long serialVersionUID = 1L;
 
 	public NoCountyException() {
+	}
+
+	public NoCountyException(Garbage garbage) {
+		super("No county found for X=" + garbage.getX() + ", Y="
+				+ garbage.getY());
 	}
 
 	/**
