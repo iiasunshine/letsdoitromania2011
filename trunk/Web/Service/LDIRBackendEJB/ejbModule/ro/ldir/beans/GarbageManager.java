@@ -40,6 +40,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashSet;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.annotation.Resource;
 import javax.ejb.EJB;
@@ -85,6 +86,8 @@ import com.sun.image.codec.jpeg.JPEGImageEncoder;
 public class GarbageManager implements GarbageManagerLocal {
 	private static final String DISPLAY_PREFIX = "display";
 	private static final String IMAGE_JPG = "JPEG";
+	private static Logger logger = Logger.getLogger(GarbageManagerLocal.class
+			.getName());
 	private static final String THUMB_PREFIX = "thumb";
 
 	@Resource
@@ -449,8 +452,10 @@ public class GarbageManager implements GarbageManagerLocal {
 		CountyArea county = geoManager.getCountyArea(p);
 		// If no county is found, the garbage is being inserted in an area not
 		// covered by the system.
-		if (county == null)
-			throw new NoCountyException();
+		if (county == null) {
+			logger.info("Unable to find county for " + p);
+			throw new NoCountyException(garbage);
+		}
 
 		ChartedArea ca = geoManager.getChartedArea(p);
 		TownArea town = geoManager.getTownArea(p);
