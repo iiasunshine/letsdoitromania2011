@@ -155,10 +155,10 @@ public class Garbage extends FieldAccessBean {
 	/**
 	 * @return the insertedBy
 	 */
-	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE,
+			CascadeType.DETACH, CascadeType.REFRESH })
 	@JoinColumn(name = "INSERTEDBY")
 	@XmlIDREF
-	@NotNull
 	public User getInsertedBy() {
 		return insertedBy;
 	}
