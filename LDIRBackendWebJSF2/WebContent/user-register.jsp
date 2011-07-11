@@ -103,7 +103,6 @@
                                 <h:inputText value="#{registerBean.regiterUser.phone}" id="telefon" styleClass="formTextfield"/>
                                 <br />
                                 <!-- TERMENI -->
-                                <div class="label"><span class="important">*</span></div>
                                 <h:selectBooleanCheckbox value="#{registerBean.acceptTerms}" id="conditii"/>
                                 <label class="formCheckbox">
                                     <h:outputText value="#{msg.register_terms} "/>
@@ -111,6 +110,7 @@
                                        onclick="popup(this, 'Termene si conditii');return false;"
                                        style="color: #4D751F; ext-decoration: none;">conditiile</a>
                                 </label>
+                                <div class="label"><span class="important">*</span></div>
                                 <br />
                                 <!-- ANTISPAM -->
                                 <div class="label"><h:outputText value="#{msg.register_antispam} "/><span class="important">*</span></div>
