@@ -3,6 +3,8 @@
 	<name>LDIRBackendWebJSF2</name>
 	<comment></comment>
 	<projects>
+		<project>LDIRBackend</project>
+		<project>LDIRBackendEJB</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

@@ -87,8 +87,8 @@ public class MormanManagerBean {
                 Garbage g = iterator.next();
                 if (g.getGarbageId() == garbageId) {
                     myGarbage = new MyGarbage(g);
-                    latitudine = "" + g.getX();
-                    longitudine = "" + g.getY();
+                    longitudine = "" + g.getX();
+                    latitudine = "" + g.getY();
 
                     /* obtinere numar poze */
                     for (int i = 0; i < g.getPictures().size(); i++) {
