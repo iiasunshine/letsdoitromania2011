@@ -112,6 +112,13 @@
                                 </label>
                                 <div class="label"><span class="important">*</span></div>
                                 <br />
+                                <!-- Accepta si alte informari -->
+                                <h:selectBooleanCheckbox value="#{registerBean.acceptReceiveNotifications}" id="acceptReceiveNotifications"/>
+                                <label class="formCheckbox">
+                                    <h:outputText value="#{msg.register_acceptNotifications} "/>
+                                </label>
+                                <div class="label"><span class="important">*</span></div>
+                                <br />                                
                                 <!-- ANTISPAM -->
                                 <div class="label"><h:outputText value="#{msg.register_antispam} "/><span class="important">*</span></div>
                                 <h:inputText value="#{registerBean.antispam}" id="captcha_code" styleClass="formTextfield"/>
