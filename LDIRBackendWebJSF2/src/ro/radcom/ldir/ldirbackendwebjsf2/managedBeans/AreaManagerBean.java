@@ -48,6 +48,7 @@ public class AreaManagerBean {
     private JSONObject selectedCounty = null;
     private String dummyCounty = "";
 
+
     /** Creates a new instance of AreaManagerBean */
     public AreaManagerBean() {
         /**
@@ -280,6 +281,10 @@ public class AreaManagerBean {
 
         return NavigationValues.AREA_ASSIGN_FAIL;
     }
+    
+    public String actionSetChartedArea(){
+    	return NavigationValues.AREA_SET_CHARTED_PERCENT_FAIL;
+    }
 
     /*public List<SelectItem> getCountyItems(){
     List<SelectItem> items = new ArrayList<SelectItem>();
@@ -389,5 +394,4 @@ public class AreaManagerBean {
         this.dummyCounty = dummyCounty;
     }
 
-    
 }
