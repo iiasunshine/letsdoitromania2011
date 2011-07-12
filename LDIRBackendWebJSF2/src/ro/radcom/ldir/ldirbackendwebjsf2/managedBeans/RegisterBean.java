@@ -43,6 +43,7 @@ public class RegisterBean {
     private boolean cartare = false;
     private boolean curatenie = false;
     private boolean acceptTerms = false;
+    private boolean acceptReceiveNotifications = true;
     private String antispam;
 
     /** Creates a new instance of RegisterBean */
@@ -110,6 +111,8 @@ public class RegisterBean {
             regiterUser.setBirthday(birthDay);
             log4j.debug("---> BirthDay: " + new SimpleDateFormat("dd/MM/yyyy").format(birthDay));
         }
+        
+        regiterUser.setAcceptsMoreInfo(acceptReceiveNotifications);
 
         /* trimiterea datelor utilizatorui */
         String location = JsfUtils.getInitParameter("webservice.url") + "/LDIRBackend/reg/ws";
@@ -227,7 +230,7 @@ public class RegisterBean {
     public List<SelectItem> getYearsItems() {
         List<SelectItem> years = new ArrayList<SelectItem>();
 
-        for (int i = 2010; i >= 1910; i--) {
+        for (int i = 1993; i >= 1930; i--) {
             years.add(new SelectItem(i, "" + i));
         }
 
@@ -289,4 +292,18 @@ public class RegisterBean {
     public void setAcceptTerms(boolean acceptTerms) {
         this.acceptTerms = acceptTerms;
     }
+
+	/**
+	 * @param acceptReceiveNotifications the acceptReceiveNotifications to set
+	 */
+	public void setAcceptReceiveNotifications(boolean acceptReceiveNotifications) {
+		this.acceptReceiveNotifications = acceptReceiveNotifications;
+	}
+
+	/**
+	 * @return the acceptReceiveNotifications
+	 */
+	public boolean isAcceptReceiveNotifications() {
+		return acceptReceiveNotifications;
+	}
 }
