@@ -19,5 +19,7 @@
 			<attribute name="owner.project.facets" value="jst.jsf"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry combineaccessrules="false" kind="src" path="/LDIRBackendEJB"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/LDIRBackendEJBClient"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

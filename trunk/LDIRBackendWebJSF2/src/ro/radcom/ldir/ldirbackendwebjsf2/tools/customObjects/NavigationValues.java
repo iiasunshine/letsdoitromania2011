@@ -29,4 +29,6 @@ public class NavigationValues {
 
     public static final String AREA_ASSIGN_FAIL = "area_assign_fail";
     public static final String AREA_ASSIGN_SUCCESS = "area_assign_success";
+    public static final String AREA_SET_CHARTED_PERCENT_FAIL = "failed to set charted percent";
+    public static final String AREA_SET_CHARTED_PERCENT_SUCCESS = "succesefuly changed charted percent";
 }

@@ -5,6 +5,7 @@
 	<projects>
 		<project>LDIRBackend</project>
 		<project>LDIRBackendEJB</project>
+		<project>LDIRBackendEJBClient</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
