@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 
 <project basedir="." default="build" name="LDIRBackendGeoInit">
-	<include file="../build-common.xml" as="build-common" />
+	<include file="../../../build-common.xml" as="build-common" />
 
 	<path id="geoinit.classpath">
 		<pathelement location="bin" />

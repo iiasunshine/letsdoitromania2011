@@ -1,22 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 
-<project name="LDIRBackend-common" basedir=".">
-	<dirname property="common.basedir" file="${ant.file.LDIRBackend-common}" />
+<project name="LDIR-common" basedir=".">
+	<dirname property="common.basedir" file="${ant.file.LDIR-common}" />
 	<property environment="env" />
 	<property name="glassfish.home" value="${env.GLASSFISH_HOME}" />
-	<property name="glassfish.domain" value="domain1"/>
+	<property name="glassfish.domain" value="domain1" />
 
-	<property name="app.location" value="${common.basedir}/LDIRBackend" />
+	<property name="service.location" value="${common.basedir}/Web/Service" />
+
+	<property name="app.location" value="${common.basedir}/Web/Service/LDIRBackend" />
 	<property name="app.ear" value="${app.location}/LDIRBackend.ear" />
 
-	<property name="ejb.location" value="${common.basedir}/LDIRBackendEJB" />
+	<property name="ejb.location" value="${common.basedir}/Web/Service/LDIRBackendEJB" />
 	<property name="ejb.jar" value="${ejb.location}/LDIRBackendEJB.jar" />
-	
-	<property name="ejbclient.location" value="${common.basedir}/LDIRBackendEJBClient" />
+
+	<property name="ejbclient.location" value="${common.basedir}/Web/Service/LDIRBackendEJBClient" />
 	<property name="ejbclient.jar" value="${ejbclient.location}/LDIRBackendEJBClient.jar" />
-	
-	<property name="webservice.location" value="${common.basedir}/LDIRBackendWeb" />
+
+	<property name="webservice.location" value="${common.basedir}/Web/Service/LDIRBackendWeb" />
 	<property name="webservice.war" value="${webservice.location}/LDIRBackendWeb.war" />
+
+	<property name="jsf.location" value="${common.basedir}/LDIRBackendWebJSF2" />
+	<property name="jsf.war" value="${jsf.location}/LDIRBackendWebJSF2.war" />
 
 	<path id="EAR Libraries.libraryclasspath">
 		<pathelement location="${ejbclient.jar}" />

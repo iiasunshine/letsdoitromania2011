@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<project basedir="." default="build" name="LDIR">
+	<include file="build-common.xml" as="build-common" />
+
+	<target name="clean">
+		<ant dir="${service.location}" target="clean" />
+		<ant dir="${jsf.location}" target="clean" />
+	</target>
+
+	<target name="build">
+		<ant dir="${service.location}" target="ear" />
+		<ant dir="${jsf.location}" target="war" />
+	</target>
+
+	<target name="deploy">
+		<ant dir="${service.location}" target="deploy" />
+		<ant dir="${jsf.location}" target="deploy" />
+	</target>
+</project>
