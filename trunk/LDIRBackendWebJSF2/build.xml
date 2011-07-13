@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 
-<project basedir="." default="build" name="LDIRBackendWeb">
-	<include file="../../../build-common.xml" as="build-common" />
+<project basedir="." default="build" name="LDIRBackendWebJSF2">
+	<include file="../build-common.xml" as="build-common" />
 
-	<property name="war.file" value="${webservice.war}" />
+	<property name="war.file" value="${jsf.war}" />
 
 	<path id="Web App Libraries.libraryclasspath">
+		<pathelement location="WebContent/WEB-INF/lib/log4j-1.2.16.jar" />
+		<pathelement location="WebContent/WEB-INF/lib/gmaps4jsf-1.1.4.jar" />
+		<pathelement location="WebContent/WEB-INF/lib/simplecaptcha-1.1.1.jar" />
+		<pathelement location="WebContent/WEB-INF/lib/tomahawk-1.1.10.jar" />
 	</path>
-
 
 	<path id="LDIRBackendWeb.classpath">
 		<pathelement location="build/classes" />
@@ -20,7 +23,11 @@
 		<ant dir="${ejbclient.location}" target="jar" />
 	</target>
 
-	<target depends="build-ejbclient" name="init">
+	<target name="copy-ejbclient" depends="build-ejbclient">
+		<copy file="${ejbclient.jar}" todir="WebContent/WEB-INF/lib" />
+	</target>
+
+	<target depends="copy-ejbclient" name="init">
 		<mkdir dir="build/classes" />
 		<copy includeemptydirs="false" todir="build/classes">
 			<fileset dir="src">
@@ -33,6 +40,7 @@
 
 	<target name="clean">
 		<delete dir="build/classes" />
+		<delete file="WebContent/WEB-INF/lib/${ejbclient.jar}" />
 		<delete file="${war.file}" />
 	</target>
 
@@ -48,8 +56,12 @@
 		<war destfile="${war.file}" filesetmanifest="merge" needxmlfile="false">
 			<classes dir="build/classes" />
 			<webinf dir="WebContent/WEB-INF" />
-            <metainf dir="WebContent/META-INF" />
-            <fileset dir="WebContent" />
+			<metainf dir="WebContent/META-INF" />
+			<fileset dir="WebContent" />
 		</war>
+	</target>
+
+	<target depends="war" name="deploy">
+		<copy file="${war.file}" todir="${glassfish.home}/glassfish/domains/${glassfish.domain}/autodeploy" />
 	</target>
 </project>
