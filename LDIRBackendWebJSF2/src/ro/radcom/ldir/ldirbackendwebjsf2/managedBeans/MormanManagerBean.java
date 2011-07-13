@@ -242,6 +242,13 @@ public class MormanManagerBean {
             log4j.debug("---> Garbage Add statusCode: " + statusCode + " (" + cr.getClientResponseStatus() + ")");
             if (statusCode == 200) {
                 /* adaugare imagini */
+            	
+            	try {
+					garbage.setGarbageId(new Integer(cr.getEntity(String.class)));
+				} catch (NumberFormatException e) {
+
+				}
+            	
                 String warn_text = "";
                 if (uploadedFile1 != null) {
                     if (!uploadImage(uploadedFile1, garbage, 1)) {
