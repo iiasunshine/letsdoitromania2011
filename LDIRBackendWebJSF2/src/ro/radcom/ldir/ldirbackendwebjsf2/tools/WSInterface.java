@@ -67,6 +67,21 @@ public class WSInterface {
         ClientResponse cr = builder.entity(chartedArea, MediaType.APPLICATION_XML).post(ClientResponse.class);
         return cr;
     }
+    
+    /*
+     * 
+     */
+    public ClientResponse setChartedPercent(int areaId, int percent){
+        String location = WS_URL + "/LDIRBackend/ws/geo/chartedArea/" + areaId + "/percentageCompleted";
+        WebResource resource = client.resource(location);
+        Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(JsfUtils.getInitParameter("admin.user"),
+                JsfUtils.getInitParameter("admin.password")));
+
+        Integer percentInteger = new Integer (percent);
+        
+        ClientResponse cr = builder.entity(percentInteger, MediaType.APPLICATION_XML).post(ClientResponse.class);
+        return cr;    	
+    }
 
     public ClientResponse removeChartedArea(User user, int teamId, int areaId) {
         String location = WS_URL + "/LDIRBackend/ws/team/" + teamId + "/chartArea/" + areaId;
