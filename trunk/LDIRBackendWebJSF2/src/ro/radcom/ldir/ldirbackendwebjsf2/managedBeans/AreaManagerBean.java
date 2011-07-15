@@ -40,6 +40,7 @@ public class AreaManagerBean {
     private List<ChartedArea> chartedAreasList = new ArrayList<ChartedArea>();
     private Team userTeam = null;
     private ChartedArea seletedArea = null;
+
     private JSONObject areaJsonBouns = null;
     private List<Garbage> areaGarbages = new ArrayList<Garbage>();
     private List<Team> areaTeams = new ArrayList<Team>();
@@ -54,6 +55,7 @@ public class AreaManagerBean {
         /**
          * obtinere detalii utilizator
          */
+    	
         userDetails = (User) JsfUtils.getHttpSession().getAttribute("USER_DETAILS");
 
         /**
@@ -82,7 +84,6 @@ public class AreaManagerBean {
                 return;
             } else {
                 seletedArea = cr.getEntity(ChartedArea.class);
-
                 /* obtinere nr echipe care au mai cartat aceasta zona*/
                 cr = wsi.getTeamsOfChartedArea(userDetails, areaId);
                 if (cr.getStatus() != 200) {
@@ -282,10 +283,32 @@ public class AreaManagerBean {
         return NavigationValues.AREA_ASSIGN_FAIL;
     }
     
+    /**
+     * @return
+     
     public String actionSetChartedArea(){
+       int cpAreaId = AppUtils.parseToInt(JsfUtils.getRequestParameter("cpAreaId"));
+        int cpPercent= AppUtils.parseToInt(JsfUtils.getRequestParameter("cpPercentageCompleted"));
+        if (cpAreaId > 0 && userTeam != null) {
+            ClientResponse cr = wsi.setChartedPercent(cpAreaId, cpPercent);
+            if (cr.getStatus() == 403) {
+//
+                }
+            else if (cr.getStatus() != 200) {
+                log4j.fatal("nu s-a reusit selectarea procentului");
+                JsfUtils.addWarnBundleMessage("internal_err");
+            } else {
+                log4j.debug("s-a reusit selectarea procentului" + cpPercent);
+
+                String infoText = JsfUtils.getBundleMessage("area_add_confirm").replaceAll("\\{0\\}", "");
+                JsfUtils.getHttpSession().setAttribute("INFO_MESSAGE", infoText);
+                return NavigationValues.AREA_ASSIGN_SUCCESS;
+            }
+        }
+
     	return NavigationValues.AREA_SET_CHARTED_PERCENT_FAIL;
     }
-
+*/
     /*public List<SelectItem> getCountyItems(){
     List<SelectItem> items = new ArrayList<SelectItem>();
 
@@ -393,5 +416,6 @@ public class AreaManagerBean {
     public void setDummyCounty(String dummyCounty) {
         this.dummyCounty = dummyCounty;
     }
+
 
 }
