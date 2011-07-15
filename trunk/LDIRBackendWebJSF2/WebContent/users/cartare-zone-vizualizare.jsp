@@ -101,13 +101,13 @@
                                     <h3><h:outputText value="» #{msg.area_link_remove}"/></h3>
                                 </h:commandLink>
                             </h:form>
-                        <!-- charted area percent -->
-                        
+                            
+                            
+                        <!-- charted area percent 
                            <h:form  rendered="#{areaManager.assigned}">
                                 <h:commandLink action="#{areaManager.actionSetChartedArea}">
                                     <f:param name="cpAreaId" value="#{areaManager.seletedArea.areaId}"/>
-                                    <f:param name="cpAreaName" value="#{areaManager.seletedArea.name}"/>
-                                    <f:param name="cpAreaCounty" value="#{areaManager.seletedArea.county}"/>
+                                    <f:param name="cpPercentageCompleted" value="#{areaManager.seletedArea.percentageCompleted}"/>
                                     <h3><h:outputText value="» #{msg.area_grid_charted}"/></h3>
                                 </h:commandLink>
                             </h:form> 
@@ -118,6 +118,7 @@
                             </h:selectOneMenu>
 
                                 <br />
+                                -->
 						</div>
                         
                         <%-- Right Column (harta) --%>
