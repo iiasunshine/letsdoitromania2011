@@ -238,7 +238,7 @@ public class GeoWebService {
 		}
 	}
 
-	@GET
+	@POST
 	@Consumes({ "application/json", "application/xml" })
 	@Path("chartedArea/{chartedAreaId:[0-9]+}/percentageCompleted")
 	public Response setChartedAreaCompleted(
