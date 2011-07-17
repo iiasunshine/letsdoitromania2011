@@ -25,7 +25,9 @@ package ro.ldir.beans;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import javax.annotation.Resource;
@@ -41,6 +43,12 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TemporalType;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaBuilder.In;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 import ro.ldir.beans.security.SecurityHelper;
 import ro.ldir.dto.Team;
@@ -66,7 +74,7 @@ import ro.ldir.exceptions.InvalidUserException;
  */
 @Stateless
 @LocalBean
-@DeclareRoles("ADMIN")
+@DeclareRoles({ "ADMIN", "ORGANIZER", "ORGANIZER_MULTI" })
 public class UserManager implements UserManagerLocal {
 	private static Logger log = Logger.getLogger(UserManager.class.getName());
 	/**
@@ -333,6 +341,59 @@ public class UserManager implements UserManagerLocal {
 		query.setParameter("threshold", threshold, TemporalType.TIMESTAMP);
 		int affected = query.executeUpdate();
 		log.info("Pruned " + affected + " pending users");
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ro.ldir.beans.UserManagerLocal#report(java.util.Set, java.util.Set,
+	 * java.util.Set, java.lang.Integer, java.lang.Integer)
+	 */
+	@Override
+	@RolesAllowed({ "ADMIN", "ORGANIZER", "ORGANIZER_MULTI" })
+	public List<User> report(Set<String> counties, Set<Integer> birthYears,
+			Set<String> roles, Integer minGarbages, Integer maxGarbages) {
+
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<User> cq = cb.createQuery(User.class);
+		Root<User> user = cq.from(User.class);
+
+		Predicate p = cb.conjunction();
+		if (counties != null && counties.size() > 0) {
+			In<Object> countyExpression = cb.in(user.get("county"));
+			for (String county : counties)
+				countyExpression = countyExpression.value(county);
+			p = cb.and(p, countyExpression);
+		}
+
+		if (birthYears != null && birthYears.size() > 0) {
+			Predicate dp = cb.disjunction();
+			for (Integer year : birthYears) {
+				Date start = new GregorianCalendar(year, 1, 1, 0, 0).getTime();
+				Date stop = new GregorianCalendar(year, 12, 31, 23, 59)
+						.getTime();
+				dp = cb.or(dp,
+						cb.between(user.<Date> get("birthday"), start, stop));
+			}
+			p = cb.and(p, dp);
+		}
+
+		if (roles != null && roles.size() > 0) {
+			In<Object> roleExpression = cb.in(user.get("role"));
+			for (String role : roles)
+				roleExpression = roleExpression.value(role);
+			p = cb.and(p, roleExpression);
+		}
+
+		if (minGarbages != null)
+			p = cb.and(p, cb.gt(cb.count(user.get("garbages")), minGarbages));
+
+		if (maxGarbages != null)
+			p = cb.and(p, cb.lt(cb.count(user.get("garbages")), maxGarbages));
+
+		cq.where(p);
+		TypedQuery<User> tq = em.createQuery(cq);
+		return tq.getResultList();
 	}
 
 	/*

@@ -139,3 +139,23 @@ The logged in user must be an ``ADMIN'' or the user being changed.
 The logged in user must be an ``ADMIN''.
 \end{apidata}
 
+\subsection{User report}
+
+\apilocation{get}{ws/user/report?county=\param{county}\&birthyear=\param{year}\&\\role=\param{role}\&minGarbages=\param{min}\&maxGarbages=\param{max}}
+\begin{apidata}{params}
+  Omitting a query parameter behaves like a wildcard in the query. The
+  \texttt{county}, \texttt{year} and \texttt{role} parameters can be repeated to
+  obtain the result oh a disjunction.
+\end{apidata}
+\begin{apidata}{returns}
+  A user list matching the query criteria. The list can be formatted using XML,
+  JSON, CSV, XLS or XLSX. To this end, you need to setup the appropriate MIME
+  types in the HTTP Accept headers, i.e., ``application/json'',
+  ``application/xml'', ``text/csv'', ``application/vnd.ms-excel'', respectively
+  ``application/vnd.openxmlformats-officedocument.spreadsheetml.sheet''.
+\end{apidata}
+\begin{apidata}{access}
+The logged in user must be an ``ADMIN'', ``ORGANIZER'', ``ORGANIZER\_MULTI''. 
+\end{apidata}
+
+
