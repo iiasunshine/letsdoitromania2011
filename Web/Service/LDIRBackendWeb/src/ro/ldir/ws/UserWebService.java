@@ -25,6 +25,7 @@ package ro.ldir.ws;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import javax.ejb.EJBException;
 import javax.naming.InitialContext;
@@ -40,9 +41,9 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
-import javax.ws.rs.core.Response.Status;
 
 import ro.ldir.beans.TeamManagerLocal;
 import ro.ldir.beans.UserManagerLocal;
@@ -51,6 +52,9 @@ import ro.ldir.dto.Team;
 import ro.ldir.dto.User;
 import ro.ldir.dto.User.SecurityRole;
 import ro.ldir.exceptions.InvalidTeamOperationException;
+import ro.ldir.report.formatter.UserCsvFormatter;
+import ro.ldir.report.formatter.UserXlsFormatter;
+import ro.ldir.report.formatter.UserXlsxFormatter;
 
 /**
  * The garbage user. Implements queries for users, updates of users information,
@@ -180,6 +184,62 @@ public class UserWebService {
 	}
 
 	@GET
+	@Produces({ "application/json", "application/xml" })
+	@Path("report")
+	public List<User> report(@QueryParam("county") Set<String> counties,
+			@QueryParam("birthyear") Set<Integer> birthYears,
+			@QueryParam("role") Set<String> roles,
+			@QueryParam("minGarbages") Integer minGarbages,
+			@QueryParam("maxGarbages") Integer maxGarbages) {
+		return userManager.report(counties, birthYears, roles, minGarbages,
+				maxGarbages);
+	}
+
+	@GET
+	@Produces({ "text/csv" })
+	@Path("report")
+	public String reportCsv(@QueryParam("county") Set<String> counties,
+			@QueryParam("birthyear") Set<Integer> birthYears,
+			@QueryParam("role") Set<String> roles,
+			@QueryParam("minGarbages") Integer minGarbages,
+			@QueryParam("maxGarbages") Integer maxGarbages) {
+		return new UserCsvFormatter(userManager.report(counties, birthYears,
+				roles, minGarbages, maxGarbages)).toString();
+	}
+
+	@GET
+	@Produces({ "application/vnd.ms-excel" })
+	@Path("report")
+	public Response reportXls(@QueryParam("county") Set<String> counties,
+			@QueryParam("birthyear") Set<Integer> birthYears,
+			@QueryParam("role") Set<String> roles,
+			@QueryParam("minGarbages") Integer minGarbages,
+			@QueryParam("maxGarbages") Integer maxGarbages) {
+		byte report[] = new UserXlsFormatter(userManager.report(counties,
+				birthYears, roles, minGarbages, maxGarbages)).getBytes();
+		return Response
+				.ok(report)
+				.header("Content-Disposition",
+						"attachment; filename=userreport.xls").build();
+	}
+
+	@GET
+	@Produces({ "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" })
+	@Path("report")
+	public Response reportXlsx(@QueryParam("county") Set<String> counties,
+			@QueryParam("birthyear") Set<Integer> birthYears,
+			@QueryParam("role") Set<String> roles,
+			@QueryParam("minGarbages") Integer minGarbages,
+			@QueryParam("maxGarbages") Integer maxGarbages) {
+		byte report[] = new UserXlsxFormatter(userManager.report(counties,
+				birthYears, roles, minGarbages, maxGarbages)).getBytes();
+		return Response
+				.ok(report)
+				.header("Content-Disposition",
+						"attachment; filename=userreport.xls").build();
+	}
+
+	@GET
 	@Path("emailSearch")
 	public List<User> searchUserByEmail(@QueryParam("email") String email) {
 		return userManager.searchByEmail(email);
@@ -237,4 +297,5 @@ public class UserWebService {
 		}
 		return Response.ok().build();
 	}
+
 }

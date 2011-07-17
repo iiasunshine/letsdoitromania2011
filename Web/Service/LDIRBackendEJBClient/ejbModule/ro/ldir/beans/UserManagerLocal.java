@@ -24,6 +24,7 @@
 package ro.ldir.beans;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.ejb.Local;
 
@@ -126,6 +127,27 @@ public interface UserManagerLocal {
 	 *            The email of the user for which the token should be generated.
 	 */
 	public void passwdResetToken(String email);
+
+	/**
+	 * Lists all users that match the given parameters. Use {@code null} if you
+	 * do not want to use any of the query parameters.
+	 * 
+	 * @param counties
+	 *            Returns all users that live in one of the specified counties.
+	 * 
+	 * @param birthYears
+	 *            Returns all users that were born in one of the specified
+	 *            years.
+	 * @param roles
+	 *            Returns all users that are in the specified role.
+	 * @param minGarbages
+	 *            Returns all users that inserted a minimum amount of garbages.
+	 * @param maxGarbages
+	 *            Returns all users that inserted a maximal amount of garbagee.
+	 * @return The list of users matching the provided criteria.
+	 */
+	public List<User> report(Set<String> counties, Set<Integer> birthYears,
+			Set<String> roles, Integer minGarbages, Integer maxGarbages);
 
 	/**
 	 * Search for all users whose email match.
