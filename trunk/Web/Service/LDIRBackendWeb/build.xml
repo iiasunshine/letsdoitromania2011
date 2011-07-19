@@ -14,6 +14,7 @@
 		<path refid="GlassFish 3.1 [GlassFish 3.1].libraryclasspath" />
 		<path refid="Web App Libraries.libraryclasspath" />
 		<path refid="EAR Libraries.libraryclasspath" />
+		<fileset dir="WebContent/WEB-INF/lib" includes="**/*.jar" />
 	</path>
 
 	<target name="build-ejbclient">
@@ -48,8 +49,8 @@
 		<war destfile="${war.file}" filesetmanifest="merge" needxmlfile="false">
 			<classes dir="build/classes" />
 			<webinf dir="WebContent/WEB-INF" />
-            <metainf dir="WebContent/META-INF" />
-            <fileset dir="WebContent" />
+			<metainf dir="WebContent/META-INF" />
+			<fileset dir="WebContent" />
 		</war>
 	</target>
 </project>
