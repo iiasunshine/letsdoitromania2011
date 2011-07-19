@@ -38,7 +38,7 @@ public class ChartedAreasTeamKMLFormatter extends ChartedAreasKMLFormatter {
 
 	public ChartedAreasTeamKMLFormatter(int teamId,
 			List<ChartedArea> chartedAreas, String linkPattern) {
-		super(chartedAreas, linkPattern, Type.GENERIC);
+		super(chartedAreas, linkPattern);
 		this.teamId = teamId;
 	}
 
@@ -73,7 +73,7 @@ public class ChartedAreasTeamKMLFormatter extends ChartedAreasKMLFormatter {
 		for (Team team : chartedArea.getChartedBy())
 			if (team.getTeamId() == teamId)
 				return Type.ASSIGNED.getStyleName();
-		return Type.GENERIC.getStyleName();
+		return Type.getStyleName(chartedArea);
 	}
 
 	/*

@@ -33,7 +33,27 @@ import ro.ldir.dto.ChartedArea;
  */
 public class ChartedAreasKMLFormatter {
 	public enum Type {
-		ASSIGNED("assignedStyle"), GENERIC("genericStyle");
+		ASSIGNED("assignedStyle"), GENERIC("genericStyle"), HIGH_ASSIGNED(
+				"highAssigned"), HIGH_UNASSIGNED("highUnassigned"), LOW_ASSIGNED(
+				"lowAssigned"), LOW_UNASSIGNED("lowUnassigned");
+		public static String getStyleName(ChartedArea chartedArea) {
+			switch (chartedArea.getScore()) {
+			case 3:
+			case 2:
+				if (chartedArea.getChartedBy() != null
+						&& chartedArea.getChartedBy().size() > 0)
+					return HIGH_ASSIGNED.styleName;
+				return HIGH_UNASSIGNED.styleName;
+			case 1:
+			case 0:
+				if (chartedArea.getChartedBy() != null
+						&& chartedArea.getChartedBy().size() > 0)
+					return LOW_ASSIGNED.styleName;
+				return LOW_UNASSIGNED.styleName;
+			}
+			return GENERIC.styleName;
+		}
+
 		private String styleName;
 
 		Type(String styleName) {
@@ -41,7 +61,7 @@ public class ChartedAreasKMLFormatter {
 		}
 
 		public String getStyleName() {
-			return styleName;
+			return this.styleName;
 		}
 	}
 
@@ -49,11 +69,8 @@ public class ChartedAreasKMLFormatter {
 	protected List<ChartedArea> chartedAreas;
 	protected String linkPattern = null;
 
-	protected Type type;
-
 	public ChartedAreasKMLFormatter(List<ChartedArea> chartedAreas,
-			String linkPattern, Type type) {
-		this.type = type;
+			String linkPattern) {
 		this.chartedAreas = chartedAreas;
 		this.linkPattern = linkPattern;
 	}
@@ -61,7 +78,8 @@ public class ChartedAreasKMLFormatter {
 	protected void appendChartedAreas() {
 		for (ChartedArea chartedArea : chartedAreas) {
 			buf.append("<Placemark>\n");
-			buf.append("<styleUrl>#" + type.getStyleName() + "</styleUrl>\n");
+			buf.append("<styleUrl>#" + Type.getStyleName(chartedArea)
+					+ "</styleUrl>\n");
 			buf.append("<name>Zona de cartare " + chartedArea.getName()
 					+ "</name>\n");
 			if (linkPattern != null) {
@@ -86,6 +104,7 @@ public class ChartedAreasKMLFormatter {
 		buf.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
 		buf.append("<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n");
 		buf.append("<Document>\n");
+
 		buf.append("<Style id=\"genericStyle\">\n");
 		buf.append("  <LineStyle>\n");
 		buf.append("    <color>CC000000</color>\n");
@@ -97,13 +116,62 @@ public class ChartedAreasKMLFormatter {
 		buf.append("    <outline>1</outline>\n");
 		buf.append("  </PolyStyle>\n");
 		buf.append("</Style>\n");
+
 		buf.append("<Style id=\"assignedStyle\">\n");
 		buf.append("  <LineStyle>\n");
-		buf.append("    <color>CC0000FF</color>\n");
+		buf.append("    <color>CC000000</color>\n");
 		buf.append("    <width>2</width>\n");
 		buf.append("  </LineStyle>\n");
 		buf.append("  <PolyStyle>\n");
+		buf.append("    <color>1AFFFFFF</color>\n");
+		buf.append("    <fill>1</fill>\n");
+		buf.append("    <outline>1</outline>\n");
+		buf.append("  </PolyStyle>\n");
+		buf.append("</Style>\n");
+
+		buf.append("<Style id=\"highUnassigned\">\n");
+		buf.append("  <LineStyle>\n");
+		buf.append("    <color>CC000000</color>\n");
+		buf.append("    <width>1</width>\n");
+		buf.append("  </LineStyle>\n");
+		buf.append("  <PolyStyle>\n");
 		buf.append("    <color>1A0000FF</color>\n");
+		buf.append("    <fill>1</fill>\n");
+		buf.append("    <outline>1</outline>\n");
+		buf.append("  </PolyStyle>\n");
+		buf.append("</Style>\n");
+
+		buf.append("<Style id=\"highAssigned\">\n");
+		buf.append("  <LineStyle>\n");
+		buf.append("    <color>CC000000</color>\n");
+		buf.append("    <width>1</width>\n");
+		buf.append("  </LineStyle>\n");
+		buf.append("  <PolyStyle>\n");
+		buf.append("    <color>1A000090</color>\n");
+		buf.append("    <fill>1</fill>\n");
+		buf.append("    <outline>1</outline>\n");
+		buf.append("  </PolyStyle>\n");
+		buf.append("</Style>\n");
+
+		buf.append("<Style id=\"lowUnassigned\">\n");
+		buf.append("  <LineStyle>\n");
+		buf.append("    <color>CC000000</color>\n");
+		buf.append("    <width>1</width>\n");
+		buf.append("  </LineStyle>\n");
+		buf.append("  <PolyStyle>\n");
+		buf.append("    <color>1A00FF00</color>\n");
+		buf.append("    <fill>1</fill>\n");
+		buf.append("    <outline>1</outline>\n");
+		buf.append("  </PolyStyle>\n");
+		buf.append("</Style>\n");
+
+		buf.append("<Style id=\"lowAssigned\">\n");
+		buf.append("  <LineStyle>\n");
+		buf.append("    <color>CC000000</color>\n");
+		buf.append("    <width>1</width>\n");
+		buf.append("  </LineStyle>\n");
+		buf.append("  <PolyStyle>\n");
+		buf.append("    <color>1A009000</color>\n");
 		buf.append("    <fill>1</fill>\n");
 		buf.append("    <outline>1</outline>\n");
 		buf.append("  </PolyStyle>\n");
