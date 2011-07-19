@@ -123,7 +123,7 @@ public class ChartedAreasKMLFormatter {
 		buf.append("    <width>2</width>\n");
 		buf.append("  </LineStyle>\n");
 		buf.append("  <PolyStyle>\n");
-		buf.append("    <color>1AFFFFFF</color>\n");
+		buf.append("    <color>50FFB4FF</color>\n");
 		buf.append("    <fill>1</fill>\n");
 		buf.append("    <outline>1</outline>\n");
 		buf.append("  </PolyStyle>\n");
@@ -135,7 +135,7 @@ public class ChartedAreasKMLFormatter {
 		buf.append("    <width>1</width>\n");
 		buf.append("  </LineStyle>\n");
 		buf.append("  <PolyStyle>\n");
-		buf.append("    <color>1A0000FF</color>\n");
+		buf.append("    <color>50000040</color>\n");
 		buf.append("    <fill>1</fill>\n");
 		buf.append("    <outline>1</outline>\n");
 		buf.append("  </PolyStyle>\n");
@@ -147,7 +147,7 @@ public class ChartedAreasKMLFormatter {
 		buf.append("    <width>1</width>\n");
 		buf.append("  </LineStyle>\n");
 		buf.append("  <PolyStyle>\n");
-		buf.append("    <color>1A000090</color>\n");
+		buf.append("    <color>1A0000FF</color>\n");
 		buf.append("    <fill>1</fill>\n");
 		buf.append("    <outline>1</outline>\n");
 		buf.append("  </PolyStyle>\n");
@@ -159,7 +159,7 @@ public class ChartedAreasKMLFormatter {
 		buf.append("    <width>1</width>\n");
 		buf.append("  </LineStyle>\n");
 		buf.append("  <PolyStyle>\n");
-		buf.append("    <color>1A00FF00</color>\n");
+		buf.append("    <color>50004000</color>\n");
 		buf.append("    <fill>1</fill>\n");
 		buf.append("    <outline>1</outline>\n");
 		buf.append("  </PolyStyle>\n");
@@ -171,7 +171,7 @@ public class ChartedAreasKMLFormatter {
 		buf.append("    <width>1</width>\n");
 		buf.append("  </LineStyle>\n");
 		buf.append("  <PolyStyle>\n");
-		buf.append("    <color>1A009000</color>\n");
+		buf.append("    <color>1A00FF00</color>\n");
 		buf.append("    <fill>1</fill>\n");
 		buf.append("    <outline>1</outline>\n");
 		buf.append("  </PolyStyle>\n");
