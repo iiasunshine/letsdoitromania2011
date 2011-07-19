@@ -44,7 +44,6 @@ import ro.ldir.dto.Garbage;
 import ro.ldir.map.formatter.ChartedAreasKMLFormatter;
 import ro.ldir.map.formatter.ChartedAreasTeamKMLFormatter;
 import ro.ldir.map.formatter.GarbagesKMLFormatter;
-import ro.ldir.map.formatter.ChartedAreasKMLFormatter.Type;
 
 /**
  * The map web service for serving KML.
@@ -70,8 +69,7 @@ public class MapWebService {
 		if (ca == null)
 			throw new WebApplicationException(Status.NOT_FOUND);
 		List<ChartedArea> wrapper = Arrays.asList(ca);
-		return new ChartedAreasKMLFormatter(wrapper, null, Type.GENERIC)
-				.toString();
+		return new ChartedAreasKMLFormatter(wrapper, null).toString();
 	}
 
 	@GET
@@ -81,8 +79,7 @@ public class MapWebService {
 		ChartedArea ca = geoManager.getChartedArea(name);
 		if (ca == null)
 			throw new WebApplicationException(Status.NOT_FOUND);
-		return new ChartedAreasKMLFormatter(Arrays.asList(ca), null,
-				Type.GENERIC).toString();
+		return new ChartedAreasKMLFormatter(Arrays.asList(ca), null).toString();
 	}
 
 	@GET
@@ -95,8 +92,8 @@ public class MapWebService {
 			@QueryParam("cb") String callbackPattern) {
 		List<ChartedArea> chartedAreas = geoManager.getChartedAreas(topLeftX,
 				topLeftY, bottomRightX, bottomRightY);
-		return new ChartedAreasKMLFormatter(chartedAreas, callbackPattern,
-				ChartedAreasKMLFormatter.Type.GENERIC).toString();
+		return new ChartedAreasKMLFormatter(chartedAreas, callbackPattern)
+				.toString();
 	}
 
 	@GET
@@ -106,7 +103,7 @@ public class MapWebService {
 		List<ChartedArea> cas = geoManager.getChartedAreas(name);
 		if (cas.size() == 0)
 			throw new WebApplicationException(Status.NOT_FOUND);
-		return new ChartedAreasKMLFormatter(cas, null, Type.GENERIC).toString();
+		return new ChartedAreasKMLFormatter(cas, null).toString();
 	}
 
 	@GET
@@ -137,8 +134,8 @@ public class MapWebService {
 				throw new WebApplicationException(404);
 			throw new WebApplicationException(500);
 		}
-		return new ChartedAreasKMLFormatter(chartedAreas, callbackPattern,
-				ChartedAreasKMLFormatter.Type.ASSIGNED).toString();
+		return new ChartedAreasKMLFormatter(chartedAreas, callbackPattern)
+				.toString();
 	}
 
 	@GET
@@ -148,8 +145,8 @@ public class MapWebService {
 			@QueryParam("cb") String callbackPattern) {
 		List<ChartedArea> chartedAreas = geoManager
 				.getChartedAreasByCounty(county);
-		return new ChartedAreasKMLFormatter(chartedAreas, callbackPattern,
-				ChartedAreasKMLFormatter.Type.GENERIC).toString();
+		return new ChartedAreasKMLFormatter(chartedAreas, callbackPattern)
+				.toString();
 	}
 
 	@GET
