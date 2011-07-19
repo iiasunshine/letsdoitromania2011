@@ -119,11 +119,11 @@ public class ChartedAreasKMLFormatter {
 
 		buf.append("<Style id=\"assignedStyle\">\n");
 		buf.append("  <LineStyle>\n");
-		buf.append("    <color>CC000000</color>\n");
+		buf.append("    <color>CCFFB4FF</color>\n");
 		buf.append("    <width>2</width>\n");
 		buf.append("  </LineStyle>\n");
 		buf.append("  <PolyStyle>\n");
-		buf.append("    <color>50FFB4FF</color>\n");
+		buf.append("    <color>A0FFB4FF</color>\n");
 		buf.append("    <fill>1</fill>\n");
 		buf.append("    <outline>1</outline>\n");
 		buf.append("  </PolyStyle>\n");
