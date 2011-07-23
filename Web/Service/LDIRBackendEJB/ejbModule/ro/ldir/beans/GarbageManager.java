@@ -38,11 +38,16 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import javax.annotation.Resource;
+import javax.annotation.security.DeclareRoles;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.SessionContext;
@@ -51,6 +56,12 @@ import javax.imageio.ImageIO;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import javax.persistence.criteria.CriteriaBuilder.In;
 
 import ro.ldir.beans.security.SecurityHelper;
 import ro.ldir.dto.ChartedArea;
@@ -83,6 +94,7 @@ import com.sun.image.codec.jpeg.JPEGImageEncoder;
  */
 @Stateless
 @LocalBean
+@DeclareRoles({ "ADMIN", "ORGANIZER", "ORGANIZER_MULTI" })
 public class GarbageManager implements GarbageManagerLocal {
 	private static final String DISPLAY_PREFIX = "display";
 	private static final String IMAGE_JPG = "JPEG";
@@ -388,6 +400,56 @@ public class GarbageManager implements GarbageManagerLocal {
 		em.flush();
 
 		return garbage.getGarbageId().intValue();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ro.ldir.beans.GarbageManagerLocal#report(java.util.Set,
+	 * java.util.Set, java.util.Set, java.util.Set)
+	 */
+	@Override
+	@RolesAllowed({ "ADMIN", "ORGANIZER", "ORGANIZER_MULTI" })
+	public List<Garbage> report(Set<String> counties,
+			Set<String> chartedAreaNames, Set<Integer> userIds,
+			Set<Date> insertDates) {
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<Garbage> cq = cb.createQuery(Garbage.class);
+		Root<Garbage> garbage = cq.from(Garbage.class);
+
+		Predicate p = cb.conjunction();
+		if (counties != null && counties.size() > 0) {
+			In<Object> countyExpression = cb.in(garbage.get("county"));
+			for (String county : counties)
+				countyExpression = countyExpression.value(county);
+			p = cb.and(p, countyExpression);
+		}
+
+		if (chartedAreaNames != null && chartedAreaNames.size() > 0) {
+			In<Object> caExpression = cb.in(garbage.get("chartedArea.name"));
+			for (String ca : chartedAreaNames)
+				caExpression = caExpression.value(ca);
+			p = cb.and(p, caExpression);
+		}
+
+		if (userIds != null && userIds.size() > 0) {
+			In<Object> userIdExpression = cb.in(garbage
+					.get("insertedBy.userId"));
+			for (Integer userId : userIds)
+				userIdExpression = userIdExpression.value(userId);
+			p = cb.and(p, userIdExpression);
+		}
+
+		if (insertDates != null && insertDates.size() > 0) {
+			In<Object> dateExpression = cb.in(garbage.get("recordDate"));
+			for (Date date : insertDates)
+				dateExpression = dateExpression.value(date);
+			p = cb.and(p, dateExpression);
+		}
+
+		cq.where(p);
+		TypedQuery<Garbage> tq = em.createQuery(cq);
+		return tq.getResultList();
 	}
 
 	private InputStream scaleImage(Image image, int width, int height)

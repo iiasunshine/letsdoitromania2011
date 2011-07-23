@@ -26,7 +26,9 @@ package ro.ldir.ws;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.activation.MimetypesFileTypeMap;
 import javax.ejb.EJBException;
@@ -50,6 +52,9 @@ import javax.ws.rs.core.UriInfo;
 import ro.ldir.beans.GarbageManagerLocal;
 import ro.ldir.dto.Garbage;
 import ro.ldir.exceptions.NoCountyException;
+import ro.ldir.report.formatter.GarbageCsvFormatter;
+import ro.ldir.report.formatter.GarbageXlsFormatter;
+import ro.ldir.report.formatter.GarbageXlsxFormatter;
 
 import com.sun.jersey.api.Responses;
 import com.sun.jersey.core.header.FormDataContentDisposition;
@@ -254,6 +259,58 @@ public class GarbageWebService {
 		return new Integer(insertedId).toString();
 	}
 
+	@GET
+	@Produces({ "application/json", "application/xml" })
+	@Path("report")
+	public List<Garbage> report(@QueryParam("county") Set<String> counties,
+			@QueryParam("chartedArea") Set<String> chartedAreaNames,
+			@QueryParam("userId") Set<Integer> userIds,
+			@QueryParam("insertDate") Set<Date> insertDates) {
+		return garbageManager.report(counties, chartedAreaNames, userIds,
+				insertDates);
+	}
+
+	@GET
+	@Produces({ "text/csv" })
+	@Path("report")
+	public String reportCsv(@QueryParam("county") Set<String> counties,
+			@QueryParam("chartedArea") Set<String> chartedAreaNames,
+			@QueryParam("userId") Set<Integer> userIds,
+			@QueryParam("insertDate") Set<Date> insertDates) {
+		return new GarbageCsvFormatter(garbageManager.report(counties,
+				chartedAreaNames, userIds, insertDates)).toString();
+	}
+
+	@GET
+	@Produces({ "application/vnd.ms-excel" })
+	@Path("report")
+	public Response reportXls(@QueryParam("county") Set<String> counties,
+			@QueryParam("chartedArea") Set<String> chartedAreaNames,
+			@QueryParam("userId") Set<Integer> userIds,
+			@QueryParam("insertDate") Set<Date> insertDates) {
+		byte report[] = new GarbageXlsFormatter(garbageManager.report(counties,
+				chartedAreaNames, userIds, insertDates)).getBytes();
+		return Response
+				.ok(report)
+				.header("Content-Disposition",
+						"attachment; filename=userreport.xls").build();
+	}
+
+	@GET
+	@Produces({ "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" })
+	@Path("report")
+	public Response reportXlsx(@QueryParam("county") Set<String> counties,
+			@QueryParam("chartedArea") Set<String> chartedAreaNames,
+			@QueryParam("userId") Set<Integer> userIds,
+			@QueryParam("insertDate") Set<Date> insertDates) {
+		byte report[] = new GarbageXlsxFormatter(garbageManager.report(
+				counties, chartedAreaNames, userIds, insertDates)).getBytes();
+		return Response
+				.ok(report)
+				.header("Content-Disposition",
+						"attachment; filename=userreport.xls").build();
+	}
+
 	@PUT
 	@Consumes({ "application/json", "application/xml" })
 	@Path("{garbageId:[0-9]+}/status")
@@ -283,4 +340,5 @@ public class GarbageWebService {
 		}
 		return Response.ok().build();
 	}
+
 }

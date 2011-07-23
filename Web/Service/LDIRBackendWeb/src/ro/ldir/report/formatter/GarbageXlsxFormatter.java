@@ -31,24 +31,21 @@ import java.util.logging.Logger;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import ro.ldir.dto.User;
+import ro.ldir.dto.Garbage;
 
-/** Converts a list of users to XLSX format. */
-public class UserXlsxFormatter extends UserExcelFormatter {
-	private static Logger log = Logger.getLogger(UserXlsxFormatter.class
+/** Converts a list of garbages to XLSX format. */
+public class GarbageXlsxFormatter extends GarbageExcelFormatter {
+	private static Logger log = Logger.getLogger(GarbageXlsxFormatter.class
 			.getName());
 
-	/**
-	 * @param users
-	 */
-	public UserXlsxFormatter(List<User> users) {
-		super(users);
+	public GarbageXlsxFormatter(List<Garbage> garbages) {
+		super(garbages);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see ro.ldir.report.formatter.UserExcelFormatter#getBytes()
+	 * @see ro.ldir.report.formatter.GarbageExcelFormatter#getBytes()
 	 */
 	public byte[] getBytes() {
 		Workbook wb = convert(new XSSFWorkbook());

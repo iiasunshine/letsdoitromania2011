@@ -43,7 +43,7 @@ public abstract class UserExcelFormatter {
 	}
 
 	protected final Workbook convert(Workbook wb) {
-		Sheet sheet = wb.createSheet("Users");
+		Sheet sheet = wb.createSheet("Utilizatori");
 		CreationHelper createHelper = wb.getCreationHelper();
 
 		Row row = sheet.createRow(0);
