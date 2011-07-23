@@ -57,8 +57,20 @@ import ro.ldir.dto.helper.NonTransferableField;
 @XmlRootElement
 public class Garbage extends FieldAccessBean {
 	public enum GarbageStatus {
-		CLEANED, IDENTIFIED
+		CLEANED("Curățat"), IDENTIFIED("Identificat");
+		private String translation;
+
+		GarbageStatus(String translation) {
+			this.translation = translation;
+		}
+
+		public String getTranslation() {
+			return translation;
+		}
 	}
+
+	public static final int DESCRIPTION_LENGTH = 20;
+	public static final int DETAILS_LENGTH = 30;
 
 	private int bagCount;
 	private String bigComponentsDescription;

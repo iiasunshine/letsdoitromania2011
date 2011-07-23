@@ -28,30 +28,27 @@ import java.io.IOException;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import ro.ldir.dto.User;
+import ro.ldir.dto.Garbage;
 
-/** Converts a list of users to XLSX format. */
-public class UserXlsxFormatter extends UserExcelFormatter {
-	private static Logger log = Logger.getLogger(UserXlsxFormatter.class
+/** Converts a list of garbages to XLS format. */
+public class GarbageXlsFormatter extends GarbageExcelFormatter {
+	private static Logger log = Logger.getLogger(GarbageXlsFormatter.class
 			.getName());
 
-	/**
-	 * @param users
-	 */
-	public UserXlsxFormatter(List<User> users) {
-		super(users);
+	public GarbageXlsFormatter(List<Garbage> garbages) {
+		super(garbages);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see ro.ldir.report.formatter.UserExcelFormatter#getBytes()
+	 * @see ro.ldir.report.formatter.GarbageExcelFormatter#getBytes()
 	 */
 	public byte[] getBytes() {
-		Workbook wb = convert(new XSSFWorkbook());
+		Workbook wb = convert(new HSSFWorkbook());
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		try {
 			wb.write(out);

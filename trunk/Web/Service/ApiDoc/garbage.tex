@@ -220,3 +220,23 @@ The logged in user must be an ``ADMIN'' or the garbage tag's owner.
     the provided bounding box.}
   \end{datalist}
 \end{apidata}
+
+\subsection{Garbage report}
+
+\apilocation{get}{ws/garbage/report?county=\param{county}\&chartedArea=\param{name}\&\\userId=\param{ID}\&insertDate=\param{date}}
+\begin{apidata}{params}
+  Omitting a query parameter behaves like a wildcard in the query. All
+  parameters can be repeated to obtain the result of a disjunction.
+\end{apidata}
+\begin{apidata}{returns}
+  A garbage list matching the query criteria. The list can be formatted using
+  XML, JSON, CSV, XLS or XLSX. To this end, you need to setup the appropriate
+  MIME types in the HTTP Accept headers, i.e., ``application/json'',
+  ``application/xml'', ``text/csv'', ``application/vnd.ms-excel'', respectively
+  ``application/vnd.openxmlformats-officedocument.spreadsheetml.sheet''.
+\end{apidata}
+\begin{apidata}{access}
+The logged in user must be an ``ADMIN'', ``ORGANIZER'', ``ORGANIZER\_MULTI''. 
+\end{apidata}
+
+

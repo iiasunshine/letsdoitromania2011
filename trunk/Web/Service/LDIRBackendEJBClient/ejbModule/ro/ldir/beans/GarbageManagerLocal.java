@@ -26,7 +26,9 @@ package ro.ldir.beans;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.ejb.Local;
 
@@ -181,6 +183,24 @@ public interface GarbageManagerLocal {
 	 *             If there is no county containing the garbage.
 	 */
 	public int insertGarbage(Garbage garbage) throws NoCountyException;
+
+	/**
+	 * Lists all garbages matching the specified query parameters. Use
+	 * {@code null} if you do not want to use any of the query parameters.
+	 * 
+	 * @param counties
+	 *            A set of county names where to search.
+	 * @param chartedAreaNames
+	 *            A set of charted area names where to search.
+	 * @param userIds
+	 *            A set of the ID of the users that inserted the garbages.
+	 * @param insertDates
+	 *            A set of garbage insertion dates.
+	 * @return A list of garbages matching the specified query criteria.
+	 */
+	public List<Garbage> report(Set<String> counties,
+			Set<String> chartedAreaNames, Set<Integer> userIds,
+			Set<Date> insertDates);
 
 	/**
 	 * Sets a garbage status.
