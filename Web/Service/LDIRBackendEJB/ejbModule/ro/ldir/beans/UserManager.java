@@ -393,7 +393,7 @@ public class UserManager implements UserManagerLocal {
 
 		cq.where(p);
 		TypedQuery<User> tq = em.createQuery(cq);
-		return tq.getResultList();
+		return SecurityHelper.filterUserReport(this, ctx, tq.getResultList());
 	}
 
 	/*

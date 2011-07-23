@@ -134,7 +134,6 @@ public interface UserManagerLocal {
 	 * 
 	 * @param counties
 	 *            Returns all users that live in one of the specified counties.
-	 * 
 	 * @param birthYears
 	 *            Returns all users that were born in one of the specified
 	 *            years.
