@@ -23,6 +23,8 @@
  */
 package ro.ldir.beans.security;
 
+import java.util.List;
+
 import javax.ejb.SessionContext;
 
 import ro.ldir.beans.UserManager;
@@ -191,6 +193,32 @@ public class SecurityHelper {
 		if (user.getEmail().equals(ctx.getCallerPrincipal().getName()))
 			return;
 		throw new SecurityException("Access to this user is denied.");
+	}
+
+	/**
+	 * Filters the report on system users according to the security role of the
+	 * caller.
+	 * 
+	 * @param userManager
+	 * @param ctx
+	 * @param report
+	 *            The original report.
+	 * @return A filtered report.
+	 */
+	public static List<User> filterUserReport(UserManager userManager,
+			SessionContext ctx, List<User> report) {
+		String email = ctx.getCallerPrincipal().getName();
+		User user = userManager.getUser(email);
+
+		if (user.getRole().equals(User.SecurityRole.ADMIN.toString()))
+			return report;
+		for (User reportedUser : report) {
+			reportedUser.setEmail("N/A");
+			reportedUser.setPhone("N/A");
+			reportedUser
+					.setLastName(reportedUser.getLastName().substring(0, 1));
+		}
+		return report;
 	}
 
 	/**
