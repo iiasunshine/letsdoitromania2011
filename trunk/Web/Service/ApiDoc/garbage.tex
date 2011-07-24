@@ -157,6 +157,7 @@ the \texttt{garbage} entity.  To make any of the following calls, a valid image
 index must be known. Valid indexes are from 0 to \texttt{pictureCount} - 1.
 
 To get an image in its original size, call:
+
 \apilocation{get}{ws/garbage/\param{garbageId}/image/\param{image\_index}}
 \begin{apidata}{returns}
   \begin{datalist}
@@ -166,6 +167,7 @@ To get an image in its original size, call:
 \end{apidata}
 
 To get a lower resolution file, call:
+
 \apilocation{get}{ws/garbage/\param{garbageId}/image/\param{image\_index}/display}
 \begin{apidata}{returns}
   \begin{datalist}
@@ -175,6 +177,7 @@ To get a lower resolution file, call:
 \end{apidata}
 
 To get a thumbnail, call:
+
 \apilocation{get}{ws/garbage/\param{garbageId}/image/\param{image\_index}/thumb}
 \begin{apidata}{returns}
   \begin{datalist}
@@ -240,9 +243,14 @@ The logged in user must be an ``ADMIN'' or the garbage tag's owner.
 
 \subsection{Searching for garbages within a bounding box}
 
-\apilocation{get}{ws/garbage/bbox/?topLeftX=\param{topLeftX}\&\\topLeftY=\param{topLeftY}\&bottomRightX=\param{bottomRightX}\&bottomRightY=\param{bottomRightY}}
+\apilocation{get}{ws/garbage/bbox/?topLeftX=\param{topLeftX}\&\\topLeftY=\param{topLeftY}\&bottomRightX=\param{bottomRightX}\&bottomRightY=\param{bottomRightY}\&\\maxResults=\param{maxResults}}
+\begin{apidata}{parameters}
+  \texttt{maxResults} can be omitted if no upper bound is desired.
+\end{apidata}
 \begin{apidata}{returns}
   \begin{datalist}
+    \replyditem{HTTP 406: if the query generates more results than the specified
+    \texttt{maxResults}}
     \replyditem{A list of \texttt{garbage} entities of the garbages within the
     the provided bounding box.}
   \end{datalist}
