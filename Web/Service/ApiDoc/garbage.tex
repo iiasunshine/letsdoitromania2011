@@ -42,6 +42,33 @@ in the database.
   \end{datalist}
 \end{apidata}
 
+\subsection{Getting a garbage tag's charted area}
+
+\apilocation{get}{ws/garbage/\param{garbageId}/chartedArea}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyditem{A \texttt{chartedArea} entity describing the garbage tag.}
+  \end{datalist}
+\end{apidata}
+
+\subsection{Getting a garbage tag's county}
+
+\apilocation{get}{ws/garbage/\param{garbageId}/county}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyditem{A \texttt{countyArea} entity describing the garbage tag.}
+  \end{datalist}
+\end{apidata}
+
+\subsection{Getting a garbage tag's town}
+
+\apilocation{get}{ws/garbage/\param{garbageId}/town}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyditem{A \texttt{townArea} entity describing the garbage tag.}
+  \end{datalist}
+\end{apidata}
+
 \subsection{Updating a garbage tag}
 
 \apilocation{post}{ws/garbage/\param{garbageId}}
