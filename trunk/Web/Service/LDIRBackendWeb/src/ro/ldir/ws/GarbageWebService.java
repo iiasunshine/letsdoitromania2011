@@ -194,7 +194,7 @@ public class GarbageWebService {
 	@GET
 	@Produces({ "application/json", "application/xml" })
 	@Path("bbox")
-	public Response getGarbages(@QueryParam("topLeftX") double topLeftX,
+	public List<Garbage> getGarbages(@QueryParam("topLeftX") double topLeftX,
 			@QueryParam("topLeftY") double topLeftY,
 			@QueryParam("bottomRightX") double bottomRightX,
 			@QueryParam("bottomRightY") double bottomRightY,
@@ -203,8 +203,8 @@ public class GarbageWebService {
 				bottomRightX, bottomRightY);
 		if (maxResults != null && maxResults > 0
 				&& garbages.size() > maxResults)
-			return Response.notAcceptable(null).build();
-		return Response.ok(garbages).build();
+			throw new WebApplicationException(Status.NOT_ACCEPTABLE);
+		return garbages;
 	}
 
 	@GET
