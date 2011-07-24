@@ -201,9 +201,10 @@ public class GarbageWebService {
 			@QueryParam("maxResults") Integer maxResults) {
 		List<Garbage> garbages = garbageManager.getGarbages(topLeftX, topLeftY,
 				bottomRightX, bottomRightY);
-		if (maxResults != null && garbages.size() > maxResults)
-			return Response.ok(garbages).build();
-		return Response.notAcceptable(null).build();
+		if (maxResults != null && maxResults > 0
+				&& garbages.size() > maxResults)
+			return Response.notAcceptable(null).build();
+		return Response.ok(garbages).build();
 	}
 
 	@GET
