@@ -50,7 +50,10 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
 import ro.ldir.beans.GarbageManagerLocal;
+import ro.ldir.dto.ChartedArea;
+import ro.ldir.dto.CountyArea;
 import ro.ldir.dto.Garbage;
+import ro.ldir.dto.TownArea;
 import ro.ldir.exceptions.NoCountyException;
 import ro.ldir.report.formatter.GarbageCsvFormatter;
 import ro.ldir.report.formatter.GarbageXlsFormatter;
@@ -169,6 +172,27 @@ public class GarbageWebService {
 
 	@GET
 	@Produces({ "application/json", "application/xml" })
+	@Path("{garbageId:[0-9]+}/chartedArea")
+	public ChartedArea getGarbageChartedArea(
+			@PathParam("garbageId") Integer garbageId) {
+		Garbage garbage = garbageManager.getGarbage(garbageId);
+		if (garbage == null)
+			throw new WebApplicationException(404);
+		return garbage.getChartedArea();
+	}
+
+	@GET
+	@Produces({ "application/json", "application/xml" })
+	@Path("{garbageId:[0-9]+}/county")
+	public CountyArea getGarbageCounty(@PathParam("garbageId") Integer garbageId) {
+		Garbage garbage = garbageManager.getGarbage(garbageId);
+		if (garbage == null)
+			throw new WebApplicationException(404);
+		return garbage.getCounty();
+	}
+
+	@GET
+	@Produces({ "application/json", "application/xml" })
 	@Path("bbox")
 	public List<Garbage> getGarbages(@QueryParam("topLeftX") double topLeftX,
 			@QueryParam("topLeftY") double topLeftY,
@@ -176,6 +200,16 @@ public class GarbageWebService {
 			@QueryParam("bottomRightY") double bottomRightY) {
 		return garbageManager.getGarbages(topLeftX, topLeftY, bottomRightX,
 				bottomRightY);
+	}
+
+	@GET
+	@Produces({ "application/json", "application/xml" })
+	@Path("{garbageId:[0-9]+}/town")
+	public TownArea getGarbageTown(@PathParam("garbageId") Integer garbageId) {
+		Garbage garbage = garbageManager.getGarbage(garbageId);
+		if (garbage == null)
+			throw new WebApplicationException(404);
+		return garbage.getTown();
 	}
 
 	@GET
