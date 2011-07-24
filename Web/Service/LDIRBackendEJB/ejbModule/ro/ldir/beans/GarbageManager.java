@@ -39,7 +39,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -58,10 +57,11 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaBuilder.In;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import javax.persistence.criteria.CriteriaBuilder.In;
 
 import ro.ldir.beans.security.SecurityHelper;
 import ro.ldir.dto.ChartedArea;
@@ -419,22 +419,26 @@ public class GarbageManager implements GarbageManagerLocal {
 
 		Predicate p = cb.conjunction();
 		if (counties != null && counties.size() > 0) {
-			In<Object> countyExpression = cb.in(garbage.get("county"));
+			Join<Garbage, CountyArea> garbageCounty = garbage.join("county");
+			In<Object> countyExpression = cb.in(garbageCounty.get("name"));
 			for (String county : counties)
 				countyExpression = countyExpression.value(county);
 			p = cb.and(p, countyExpression);
 		}
 
 		if (chartedAreaNames != null && chartedAreaNames.size() > 0) {
-			In<Object> caExpression = cb.in(garbage.get("chartedArea.name"));
+			Join<Garbage, ChartedArea> garbageChartedArea = garbage
+					.join("chartedArea");
+			In<Object> caExpression = cb.in(garbageChartedArea.get("name"));
 			for (String ca : chartedAreaNames)
 				caExpression = caExpression.value(ca);
 			p = cb.and(p, caExpression);
 		}
 
 		if (userIds != null && userIds.size() > 0) {
-			In<Object> userIdExpression = cb.in(garbage
-					.get("insertedBy.userId"));
+			Join<Garbage, User> garbageInsertedBy = garbage.join("insertedBy");
+			In<Object> userIdExpression = cb
+					.in(garbageInsertedBy.get("userId"));
 			for (Integer userId : userIds)
 				userIdExpression = userIdExpression.value(userId);
 			p = cb.and(p, userIdExpression);

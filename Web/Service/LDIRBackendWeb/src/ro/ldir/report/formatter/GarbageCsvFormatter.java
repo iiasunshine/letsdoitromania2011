@@ -44,20 +44,33 @@ public class GarbageCsvFormatter {
 		buf.append("\"Dispersat\",");
 		buf.append("\"Voluminos\",");
 		buf.append("\"Număr saci\",");
-		buf.append("\"X\",");
-		buf.append("\"Y\"\n");
+		buf.append("\"Longitudine\",");
+		buf.append("\"Latitudine\"\n");
 
 		for (Garbage garbage : garbages) {
 			buf.append(garbage.getGarbageId() + ",");
-			buf.append("\"" + garbage.getCounty() + "\",");
-			buf.append("\""
-					+ garbage.getDescription().substring(0,
-							Garbage.DESCRIPTION_LENGTH) + "\",");
-			buf.append("\"" + garbage.getStatus().getTranslation() + "\",");
+			buf.append("\"" + garbage.getCounty().getName() + "\",");
+			if (garbage.getDescription() != null) {
+				int len = garbage.getDescription().length();
+				if (len > Garbage.DESCRIPTION_LENGTH)
+					len = Garbage.DESCRIPTION_LENGTH;
+				buf.append("\"" + garbage.getDescription().substring(0, len)
+						+ "\",");
+			} else
+				buf.append(",");
+			if (garbage.getStatus() != null)
+				buf.append("\"" + garbage.getStatus().getTranslation() + "\",");
+			else
+				buf.append(",");
 			buf.append("\"" + (garbage.isDispersed() ? "da" : "nu") + "\",");
-			buf.append("\""
-					+ garbage.getDetails().substring(0, Garbage.DETAILS_LENGTH)
-					+ "\",");
+			if (garbage.getDetails() != null) {
+				int len = garbage.getDetails().length();
+				if (len > Garbage.DETAILS_LENGTH)
+					len = Garbage.DETAILS_LENGTH;
+				buf.append("\"" + garbage.getDetails().substring(0, len)
+						+ "\",");
+			} else
+				buf.append(",");
 			buf.append(garbage.getBagCount() + ",");
 			buf.append(garbage.getX() + ",");
 			buf.append(garbage.getY() + "\n");

@@ -51,8 +51,8 @@ public abstract class GarbageExcelFormatter {
 		row.createCell(4).setCellValue("Dispersat");
 		row.createCell(5).setCellValue("Voluminos");
 		row.createCell(6).setCellValue("Num\u04d1r saci");
-		row.createCell(7).setCellValue("X");
-		row.createCell(8).setCellValue("Y");
+		row.createCell(7).setCellValue("Longitudine");
+		row.createCell(8).setCellValue("Latitudine");
 
 		for (int i = 0; i < garbages.size(); i++) {
 			row = sheet.createRow(i + 1);
@@ -61,15 +61,25 @@ public abstract class GarbageExcelFormatter {
 			row.createCell(0, Cell.CELL_TYPE_NUMERIC).setCellValue(
 					garbage.getGarbageId());
 			row.createCell(1).setCellValue(garbage.getCounty().getName());
-			row.createCell(2).setCellValue(
-					garbage.getDescription().substring(0,
-							Garbage.DESCRIPTION_LENGTH));
-			row.createCell(3)
-					.setCellValue(garbage.getStatus().getTranslation());
+			if (garbage.getDescription() != null) {
+				int len = garbage.getDescription().length();
+				if (len > Garbage.DESCRIPTION_LENGTH)
+					len = Garbage.DESCRIPTION_LENGTH;
+				row.createCell(2).setCellValue(
+						garbage.getDescription().substring(0, len));
+			}
+			if (garbage.getStatus() != null)
+				row.createCell(3).setCellValue(
+						garbage.getStatus().getTranslation());
 			row.createCell(4, Cell.CELL_TYPE_BOOLEAN).setCellValue(
 					garbage.isDispersed());
-			row.createCell(5).setCellValue(
-					garbage.getDetails().substring(0, Garbage.DETAILS_LENGTH));
+			if (garbage.getDetails() != null) {
+				int len = garbage.getDetails().length();
+				if (len > Garbage.DETAILS_LENGTH)
+					len = Garbage.DETAILS_LENGTH;
+				row.createCell(5).setCellValue(
+						garbage.getDetails().substring(0, len));
+			}
 			row.createCell(6, Cell.CELL_TYPE_NUMERIC).setCellValue(
 					garbage.getBagCount());
 			row.createCell(7, Cell.CELL_TYPE_NUMERIC).setCellValue(
