@@ -261,7 +261,8 @@ The logged in user must be an ``ADMIN'' or the garbage tag's owner.
 \apilocation{get}{ws/garbage/report?county=\param{county}\&chartedArea=\param{name}\&\\userId=\param{ID}\&insertDate=\param{date}}
 \begin{apidata}{params}
   Omitting a query parameter behaves like a wildcard in the query. All
-  parameters can be repeated to obtain the result of a disjunction.
+  parameters can be repeated to obtain the result of a disjunction. Dates will
+  be specified in the \texttt{yyyy-MM-dd} format.
 \end{apidata}
 \begin{apidata}{returns}
   A garbage list matching the query criteria. The list can be formatted using

@@ -367,13 +367,18 @@ public class UserManager implements UserManagerLocal {
 		}
 
 		if (birthYears != null && birthYears.size() > 0) {
-			Predicate dp = cb.disjunction();
+			Predicate dp = null;
 			for (Integer year : birthYears) {
 				Date start = new GregorianCalendar(year, 1, 1, 0, 0).getTime();
 				Date stop = new GregorianCalendar(year, 12, 31, 23, 59)
 						.getTime();
-				dp = cb.or(dp,
-						cb.between(user.<Date> get("birthday"), start, stop));
+				Predicate between = cb.between(user.<Date> get("birthday"),
+						start, stop);
+				if (dp == null) {
+					dp = between;
+					continue;
+				}
+				dp = cb.or(dp, between);
 			}
 			p = cb.and(p, dp);
 		}
