@@ -38,7 +38,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -445,10 +447,29 @@ public class GarbageManager implements GarbageManagerLocal {
 		}
 
 		if (insertDates != null && insertDates.size() > 0) {
-			In<Object> dateExpression = cb.in(garbage.get("recordDate"));
-			for (Date date : insertDates)
-				dateExpression = dateExpression.value(date);
-			p = cb.and(p, dateExpression);
+			Predicate dp = null;
+			for (Date date : insertDates) {
+				Calendar calendar = Calendar.getInstance();
+				calendar.setTime(date);
+				Date start = new GregorianCalendar(
+						calendar.get(java.util.Calendar.YEAR),
+						calendar.get(java.util.Calendar.MONTH),
+						calendar.get(java.util.Calendar.DAY_OF_MONTH), 0, 0, 0)
+						.getTime();
+				Date stop = new GregorianCalendar(
+						calendar.get(java.util.Calendar.YEAR),
+						calendar.get(java.util.Calendar.MONTH),
+						calendar.get(java.util.Calendar.DAY_OF_MONTH), 23, 59,
+						59).getTime();
+				Predicate b = cb.between(garbage.<Date> get("recordDate"),
+						start, stop);
+				if (dp == null) {
+					dp = b;
+					continue;
+				}
+				dp = cb.or(dp, b);
+			}
+			p = cb.and(p, dp);
 		}
 
 		cq.where(p);

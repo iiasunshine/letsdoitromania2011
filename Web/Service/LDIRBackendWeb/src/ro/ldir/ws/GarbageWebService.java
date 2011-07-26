@@ -26,7 +26,11 @@ package ro.ldir.ws;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -298,13 +302,32 @@ public class GarbageWebService {
 		return new Integer(insertedId).toString();
 	}
 
+	/**
+	 * @param unparsedDates
+	 * @return
+	 * @throws WebApplicationException
+	 */
+	private HashSet<Date> parseDates(Set<String> unparsedDates)
+			throws WebApplicationException {
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		HashSet<Date> insertDates = new HashSet<Date>();
+		for (String date : unparsedDates)
+			try {
+				insertDates.add(df.parse(date));
+			} catch (ParseException e) {
+				throw new WebApplicationException(e, Status.NOT_ACCEPTABLE);
+			}
+		return insertDates;
+	}
+
 	@GET
 	@Produces({ "application/json", "application/xml" })
 	@Path("report")
 	public List<Garbage> report(@QueryParam("county") Set<String> counties,
 			@QueryParam("chartedArea") Set<String> chartedAreaNames,
 			@QueryParam("userId") Set<Integer> userIds,
-			@QueryParam("insertDate") Set<Date> insertDates) {
+			@QueryParam("insertDate") Set<String> unparsedDates) {
+		HashSet<Date> insertDates = parseDates(unparsedDates);
 		return garbageManager.report(counties, chartedAreaNames, userIds,
 				insertDates);
 	}
@@ -315,7 +338,8 @@ public class GarbageWebService {
 	public String reportCsv(@QueryParam("county") Set<String> counties,
 			@QueryParam("chartedArea") Set<String> chartedAreaNames,
 			@QueryParam("userId") Set<Integer> userIds,
-			@QueryParam("insertDate") Set<Date> insertDates) {
+			@QueryParam("insertDate") Set<String> unparsedDates) {
+		HashSet<Date> insertDates = parseDates(unparsedDates);
 		return new GarbageCsvFormatter(garbageManager.report(counties,
 				chartedAreaNames, userIds, insertDates)).toString();
 	}
@@ -326,7 +350,8 @@ public class GarbageWebService {
 	public Response reportXls(@QueryParam("county") Set<String> counties,
 			@QueryParam("chartedArea") Set<String> chartedAreaNames,
 			@QueryParam("userId") Set<Integer> userIds,
-			@QueryParam("insertDate") Set<Date> insertDates) {
+			@QueryParam("insertDate") Set<String> unparsedDates) {
+		HashSet<Date> insertDates = parseDates(unparsedDates);
 		byte report[] = new GarbageXlsFormatter(garbageManager.report(counties,
 				chartedAreaNames, userIds, insertDates)).getBytes();
 		return Response
@@ -341,7 +366,8 @@ public class GarbageWebService {
 	public Response reportXlsx(@QueryParam("county") Set<String> counties,
 			@QueryParam("chartedArea") Set<String> chartedAreaNames,
 			@QueryParam("userId") Set<Integer> userIds,
-			@QueryParam("insertDate") Set<Date> insertDates) {
+			@QueryParam("insertDate") Set<String> unparsedDates) {
+		HashSet<Date> insertDates = parseDates(unparsedDates);
 		byte report[] = new GarbageXlsxFormatter(garbageManager.report(
 				counties, chartedAreaNames, userIds, insertDates)).getBytes();
 		return Response
