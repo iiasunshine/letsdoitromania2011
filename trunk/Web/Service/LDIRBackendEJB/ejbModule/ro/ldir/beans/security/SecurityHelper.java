@@ -26,6 +26,7 @@ package ro.ldir.beans.security;
 import java.util.List;
 
 import javax.ejb.SessionContext;
+import javax.persistence.EntityManager;
 
 import ro.ldir.beans.UserManager;
 import ro.ldir.beans.UserManagerLocal;
@@ -199,20 +200,22 @@ public class SecurityHelper {
 	 * Filters the report on system users according to the security role of the
 	 * caller.
 	 * 
+	 * @param em
 	 * @param userManager
 	 * @param ctx
 	 * @param report
 	 *            The original report.
 	 * @return A filtered report.
 	 */
-	public static List<User> filterUserReport(UserManager userManager,
-			SessionContext ctx, List<User> report) {
+	public static List<User> filterUserReport(EntityManager em,
+			UserManager userManager, SessionContext ctx, List<User> report) {
 		String email = ctx.getCallerPrincipal().getName();
 		User user = userManager.getUser(email);
 
 		if (user.getRole().equals(User.SecurityRole.ADMIN.toString()))
 			return report;
 		for (User reportedUser : report) {
+			em.detach(reportedUser);
 			reportedUser.setEmail("N/A");
 			reportedUser.setPhone("N/A");
 			reportedUser
