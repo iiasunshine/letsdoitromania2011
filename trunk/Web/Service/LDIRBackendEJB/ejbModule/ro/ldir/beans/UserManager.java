@@ -43,12 +43,6 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TemporalType;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaBuilder.In;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 
 import ro.ldir.beans.security.SecurityHelper;
 import ro.ldir.dto.Team;
@@ -349,57 +343,78 @@ public class UserManager implements UserManagerLocal {
 	 * @see ro.ldir.beans.UserManagerLocal#report(java.util.Set, java.util.Set,
 	 * java.util.Set, java.lang.Integer, java.lang.Integer)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	@RolesAllowed({ "ADMIN", "ORGANIZER", "ORGANIZER_MULTI" })
 	public List<User> report(Set<String> counties, Set<Integer> birthYears,
 			Set<String> roles, Integer minGarbages, Integer maxGarbages) {
+		StringBuffer buf = new StringBuffer();
 
-		CriteriaBuilder cb = em.getCriteriaBuilder();
-		CriteriaQuery<User> cq = cb.createQuery(User.class);
-		Root<User> user = cq.from(User.class);
+		if (minGarbages != null || maxGarbages != null)
+			buf.append("SELECT u FROM Garbage g INNER JOIN g.insertedBy u ");
+		else
+			buf.append("SELECT u FROM User u ");
 
-		Predicate p = cb.conjunction();
-		if (counties != null && counties.size() > 0) {
-			In<Object> countyExpression = cb.in(user.get("county"));
-			for (String county : counties)
-				countyExpression = countyExpression.value(county);
-			p = cb.and(p, countyExpression);
+		if ((counties != null && counties.size() > 0)
+				|| (birthYears != null && birthYears.size() > 0)
+				|| (roles != null && roles.size() > 0))
+			buf.append("WHERE ");
+		if (counties != null && counties.size() > 0)
+			buf.append("u.county IN :counties ");
+		if (birthYears != null && birthYears.size() > 0) {
+			if (counties != null && counties.size() > 0)
+				buf.append("AND ");
+			buf.append("(");
+			for (int i = 0; i < birthYears.size(); i++) {
+				if (birthYears.size() > 1 && i > 0)
+					buf.append("OR ");
+				buf.append("u.birthday BETWEEN :start" + i + " AND :stop" + i);
+			}
+			buf.append(") ");
+		}
+		if (roles != null && roles.size() > 0) {
+			if ((counties != null && counties.size() > 0)
+					|| (birthYears != null && birthYears.size() > 0))
+				buf.append("AND ");
+			buf.append("u.role in :roles ");
 		}
 
+		if (minGarbages != null || maxGarbages != null)
+			buf.append("GROUP BY u.userId HAVING ");
+
+		if (minGarbages != null) {
+			buf.append("COUNT(g.garbageId) > :minGarbages ");
+			if (maxGarbages != null)
+				buf.append("AND ");
+		}
+		if (maxGarbages != null) {
+			buf.append("COUNT(g.garbageId) < :maxGarbages ");
+		}
+
+		Query query = em.createQuery(buf.toString());
+
+		if (counties != null && counties.size() > 0)
+			query.setParameter("counties", counties);
 		if (birthYears != null && birthYears.size() > 0) {
-			Predicate dp = null;
+			int i = 0;
 			for (Integer year : birthYears) {
 				Date start = new GregorianCalendar(year, 1, 1, 0, 0).getTime();
 				Date stop = new GregorianCalendar(year, 12, 31, 23, 59)
 						.getTime();
-				Predicate between = cb.between(user.<Date> get("birthday"),
-						start, stop);
-				if (dp == null) {
-					dp = between;
-					continue;
-				}
-				dp = cb.or(dp, between);
+				query.setParameter("start" + i, start);
+				query.setParameter("stop" + i, stop);
+				i++;
 			}
-			p = cb.and(p, dp);
 		}
-
-		if (roles != null && roles.size() > 0) {
-			In<Object> roleExpression = cb.in(user.get("role"));
-			for (String role : roles)
-				roleExpression = roleExpression.value(role);
-			p = cb.and(p, roleExpression);
-		}
-
+		if (roles != null && roles.size() > 0)
+			query.setParameter("roles", roles);
 		if (minGarbages != null)
-			p = cb.and(p, cb.gt(cb.count(user.get("garbages")), minGarbages));
-
+			query.setParameter("minGarbages", minGarbages);
 		if (maxGarbages != null)
-			p = cb.and(p, cb.lt(cb.count(user.get("garbages")), maxGarbages));
+			query.setParameter("maxGarbages", maxGarbages);
 
-		cq.where(p);
-		TypedQuery<User> tq = em.createQuery(cq);
-		return SecurityHelper.filterUserReport(em, this, ctx,
-				tq.getResultList());
+		List<User> report = query.getResultList();
+		return SecurityHelper.filterUserReport(em, this, ctx, report);
 	}
 
 	/*
