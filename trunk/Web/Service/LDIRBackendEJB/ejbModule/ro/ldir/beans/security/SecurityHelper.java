@@ -218,6 +218,9 @@ public class SecurityHelper {
 			em.detach(reportedUser);
 			reportedUser.setEmail("N/A");
 			reportedUser.setPhone("N/A");
+			if (reportedUser.getLastName() == null
+					|| reportedUser.getLastName().length() == 0)
+				continue;
 			reportedUser
 					.setLastName(reportedUser.getLastName().substring(0, 1));
 		}
