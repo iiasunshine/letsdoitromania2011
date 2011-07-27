@@ -14,7 +14,7 @@
                 <jsp:directive.include file="/WEB-INF/jspf/popup-grid-loading.jspf"/>
 
                 <%-- page Top --%>
-                <custom:page_top_login selected="zone"/>
+                <custom:page_top_login selected="zone" role="${areaManager.userDetails.role}"/>
 
                 <%-- page Content --%>
                 <div id="pageContainer">
