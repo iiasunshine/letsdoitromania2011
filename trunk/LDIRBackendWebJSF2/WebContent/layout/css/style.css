@@ -32,19 +32,26 @@ body { margin: 0px 0px 0px 0px; background-color: #fefefe; font: Tahoma; }
 
 #pageContainer { width: 100%; border-bottom: 1px solid #447428; margin: 10px 0px 10px 0px; padding: 0px 0px 10px 0px; }
 #content { width: 935px; font: 11px Tahoma; }
+#contentList { font: 11px Tahoma; }
 #leftColumn { width: 190px; display: inline-block; text-align: left; vertical-align: top; padding: 0px 10px 0px 0px; }
 #leftColumn a { color: #4d751f; text-decoration: none; }
 #leftColumn a:hover { text-decoration: underline; }
 #rightColumn { width: 710px; display: inline-block; text-align: left; vertical-align: top; border-left: 1px solid #e1e1e1; padding: 0px 0px 0px 20px; }
-
-h3 a { color: #4d751f; text-decoration: none; }
-h3 a:hover { text-decoration: underline; }
+#rightColumnList { display: inline-block; text-align: left; vertical-align: top; border-left: 1px solid #e1e1e1; padding: 0px 0px 0px 20px; }
 
 .hartaLDIR { width: 710px; height: 600px; background-color: #e1e1e1; text-align: center; vertical-align: middle; }
 
 .entryLeft { margin: 0px 0px 10px 0px; }
 .listENtryRight { width: 52px; margin: 0px 5px 0px 0px; padding: 5px 5px 5px 5px; display: inline-block; }
-.listENtryRightTitle { width: 52px; margin: 0px 5px 0px 0px; padding: 5px 5px 5px 5px; display: inline-block; background-color: #e1e1e1;  }
+
+#listHeaderContainer { padding: 0px 0px 0px 0px; background-color: #e1e1e1; }
+#listHeaderContainer .listHeader { width: 59px; height: 30px; vertical-align: top; margin: 0px 0px 0px 0px; padding: 5px 4px 5px 5px; display: inline-block; font-weight: bold; border-right: 2px solid #ffffff; }
+#listHeaderContainer .listHeaderLarge { width: 119px; height: 30px; vertical-align: top; margin: 0px 0px 0px 0px; padding: 5px 5px 5px 5px; display: inline-block; font-weight: bold; border-right: 2px solid #ffffff; }
+#listEntryContainer { padding: 0px 0px 0px 0px; border-top: 2px solid #ffffff;; background-color: #f5f5f5; }
+#listEntryContainer .listEntry { width: 59px; min-height: 20px; vertical-align: top; margin: 0px 0px 0px 0px; padding: 5px 5px 5px 5px; display: inline-block; border-right: 1px solid #ffffff;  overflow: hidden;}
+#listEntryContainer .listEntryLarge { width: 119px; height: 30px;; vertical-align: top; margin: 0px 0px 0px 0px; padding: 5px 5px 5px 5px; display: inline-block; border-right: 2px solid #ffffff; overflow: hidden;}
+#listEntryContainer a { text-decoration: none; color: #4d751f; }
+#listEntryContainer a:hover { color: #4d751f; }
 
 /* Footer settings */
 
@@ -79,10 +86,8 @@ img { border: 0px; }
 
 .form { font: bold 11px Tahoma; color: #4d751f; }
 .label { width: 130px; display: inline-block; height: 40px; vertical-align: top; }
-.labelSmall{ width: 23px; display: inline-block; height: 40px; vertical-align: top; }
 .labelLeft { width: 180px; text-align: left; display: inline-block; vertical-align: top; margin: 10px 0px 0px 0px; }
 .formTextfield { border: 1px solid #e1e1e1; width: 250px; height: 25px; font: 11px Tahoma; color: #333333; margin: 0px 0px 0px 10px; vertical-align: top; }
-.formTextfieldSmall { border: 1px solid #e1e1e1; width: 50px; height: 25px; font: 11px Tahoma; color: #333333; margin: 0px 0px 0px 10px; vertical-align: top; }
 .formFilefield { font: 11px Tahoma; color: #333333; margin: 0px 0px 0px 10px; vertical-align: top; }
 .formTextfieldLeft { border: 1px solid #e1e1e1; width: 190px; height: 25px; font: 11px Tahoma; color: #333333; margin: 0px 0px 5px 0px; vertical-align: top; }
 .formDropdown  { border: 1px solid #e1e1e1; width: 252px; height: 25px; font: 11px Tahoma; color: #333333; margin: 0px 0px 0px 10px; vertical-align: top; }
@@ -93,3 +98,17 @@ img { border: 0px; }
 .formButtonLeft  { border: 1px solid #666666; background-color: #e1e1e1; height: 25px; font: bold 11px Tahoma; color: #4d751f; margin: 0px 10px 0px 0px; cursor: hand; }
 .formCheckbox { font: 11px Tahoma; color: #333333; }
 .formCaptchaImage { margin: 10px 0px 10px 130px; }
+
+#rightColumnList .rich-panel-body {
+    padding: 0px;
+    margin: 0px;
+    max-height: 30px;
+    overflow: hidden;
+}
+
+#rightColumnList .rich-panel {
+    /*border-style: none;
+    border-width: 0px;
+    border-collapse: collapse;
+    padding: 0px;*/
+}
