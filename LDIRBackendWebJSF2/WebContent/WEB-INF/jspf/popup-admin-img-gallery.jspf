@@ -24,18 +24,18 @@
     <%-- BODY POPUP --%>
     <a4j:outputPanel>
         <h:panelGroup id="selected_image" style=" display:block; text-align: center; height: 565px;">
-            <h:graphicImage value="#{pageContext.servletContext.contextPath}/#{mormanManager.posters[mormanManager.selectedImgIndex]}"
-                            height="#{mormanManager.posterHeights[mormanManager.selectedImgIndex] > 0 ? mormanManager.posterHeights[mormanManager.selectedImgIndex] : ''}"
+            <h:graphicImage value="#{pageContext.servletContext.contextPath}/#{adminGarbageManagerBean.posters[adminGarbageManagerBean.selectedImgIndex]}"
+                            height="#{adminGarbageManagerBean.posterHeights[adminGarbageManagerBean.selectedImgIndex] > 0 ? adminGarbageManagerBean.posterHeights[adminGarbageManagerBean.selectedImgIndex] : ''}"
                             styleClass="galerie"/>
         </h:panelGroup>
         <div style="" />
         <h:panelGroup style="overflow: scroll; width: 800px; max-height: 150px; display:block;">
             <a4j:form>
-                <a4j:repeat value="#{mormanManager.thumbnails}" var="thumbnail" rowKeyVar="index">
-                    <a4j:commandLink actionListener="#{mormanManager.actionSetSelectedImage}"
+                <a4j:repeat value="#{adminGarbageManagerBean.thumbnails}" var="thumbnail" rowKeyVar="index">
+                    <a4j:commandLink actionListener="#{adminGarbageManagerBean.actionSetSelectedImage}"
                                      reRender="selected_image">
                         <f:param name="imgIndex" value="#{index}"/>
-                        <h:graphicImage value="#{pageContext.servletContext.contextPath}/#{mormanManager.thumbnails[index]}" styleClass="galerie"/>
+                        <h:graphicImage value="#{pageContext.servletContext.contextPath}/#{adminGarbageManagerBean.thumbnails[index]}" styleClass="galerie"/>
                     </a4j:commandLink>
                 </a4j:repeat>
             </a4j:form>
