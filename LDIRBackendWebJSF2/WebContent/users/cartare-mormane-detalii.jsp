@@ -1,10 +1,10 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <jsp:directive.include file="/WEB-INF/jspf/page-header.jspf"/>
 <jsp:directive.include file="/WEB-INF/jspf/login-checkpoint.jspf"/>
-<c:if test="${mormanManager.myGarbage eq null}">
-    <custom:page_redirect target="/users/cartare-mormane-lista.jsf"/>
-</c:if>
 <f:view>
+    <c:if test="${mormanManager.myGarbage eq null}">
+        <custom:page_redirect target="/users/cartare-mormane-lista.jsf"/>
+    </c:if>
     <html xmlns="http://www.w3.org/1999/xhtml">
         <head>
             <jsp:directive.include file="/WEB-INF/jspf/page-meta.jspf"/>
@@ -17,7 +17,12 @@
         <body onunload="GUnload()">
             <center>
                 <%-- page Top --%>
-                <custom:page_top_login selected="mormane"/>
+                <h:panelGroup rendered="#{mormanManager.userDetails.role eq 'VOLUNTEER'}">
+                    <custom:page_top_login selected="mormane" role="VOLUNTEER"/>
+                </h:panelGroup>
+                <h:panelGroup rendered="#{not (mormanManager.userDetails.role eq 'VOLUNTEER')}">
+                    <custom:page_top_login selected="mormane" role="ADMIN"/>
+                </h:panelGroup>
 
                 <%-- galerie imagini --%>
                 <a4j:keepAlive beanName="mormanManager"/>

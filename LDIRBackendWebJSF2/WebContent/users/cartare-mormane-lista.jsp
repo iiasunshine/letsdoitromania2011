@@ -14,29 +14,32 @@
         <body>
             <center>
                 <%-- page Top --%>
-                <custom:page_top_login selected="mormane"/>
+                <custom:page_top_login selected="mormane" role="${mormanManager.userDetails.role}"/>
 
                 <%-- page Content --%>
                 <div id="pageContainer">
                     <div id="content">
                         <%-- Left Column --%>
-                        <div id="leftColumn">
+                        <div id="leftColumn" style="">
                             <h:panelGroup rendered="#{fn:length(mormanManager.myGarbageList) eq 0}">
                                 <h1><h:outputText value="#{msg.chart_empty_list}"/></h1>
                             </h:panelGroup>
                             <h:panelGroup rendered="#{fn:length(mormanManager.myGarbageList) gt 0}">
-                                <h1><h:outputText value="#{msg.chart_list_title}"/></h1>
-                                <a4j:repeat value="#{mormanManager.myGarbageList}"
-                                            var="myGarbage">
-                                    <div class="entryLeft">
-                                        <h:outputText value="Morman:"/>
-                                        <strong><h:outputText value="#{myGarbage.garbage.garbageId}"/></strong>
-                                        <br/>
-                                        <h:outputLink value="cartare-mormane-detalii.jsf?garbageId=#{myGarbage.garbage.garbageId}">
-                                            <h:outputText value="#{msg.details_view_link}" escape="false"/>
-                                        </h:outputLink>
-                                    </div>
-                                </a4j:repeat>
+                                <h1><h:outputText value="#{msg.chart_list_title}  (#{fn:length(mormanManager.myGarbageList)})"/></h1>
+                                <h:panelGroup rendered="#{fn:length(mormanManager.myGarbageList) gt 0}"
+                                              style="#{fn:length(mormanManager.myGarbageList) gt 15? 'max-height: 610px; overflow: scroll; display: block;' : ''}">
+                                    <a4j:repeat value="#{mormanManager.myGarbageList}"
+                                                var="myGarbage">
+                                        <div class="entryLeft">
+                                            <h:outputText value="Morman:"/>
+                                            <strong><h:outputText value="#{myGarbage.garbage.garbageId}"/></strong>
+                                            <br/>
+                                            <h:outputLink value="cartare-mormane-detalii.jsf?garbageId=#{myGarbage.garbage.garbageId}">
+                                                <h:outputText value="#{msg.details_view_link}" escape="false"/>
+                                            </h:outputLink>
+                                        </div>
+                                    </a4j:repeat>
+                                </h:panelGroup>
                             </h:panelGroup>
                             <h3>
                                 <a href="${pageContext.servletContext.contextPath}/users/cartare-mormane-editare.jsf">

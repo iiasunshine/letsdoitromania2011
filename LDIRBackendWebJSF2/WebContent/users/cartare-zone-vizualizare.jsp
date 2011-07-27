@@ -14,7 +14,7 @@
         <body onunload="GUnload()">
             <center>
                 <%-- page Top --%>
-                <custom:page_top_login selected="zone"/>
+                <custom:page_top_login selected="zone" role="${areaManager.userDetails.role}"/>
 
                 <%-- page Content --%>
                 <div id="pageContainer">
