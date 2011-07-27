@@ -48,4 +48,14 @@
         <managed-bean-class>ro.radcom.ldir.ldirbackendwebjsf2.managedBeans.ResetBean</managed-bean-class>
         <managed-bean-scope>view</managed-bean-scope>
     </managed-bean>
+    <managed-bean>
+        <managed-bean-name>adminUsersManagerBean</managed-bean-name>
+        <managed-bean-class>ro.radcom.ldir.ldirbackendwebjsf2.managedBeans.AdminUsersManagerBean</managed-bean-class>
+        <managed-bean-scope>view</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>adminGarbageManagerBean</managed-bean-name>
+        <managed-bean-class>ro.radcom.ldir.ldirbackendwebjsf2.managedBeans.AdminGarbageManagerBean</managed-bean-class>
+        <managed-bean-scope>view</managed-bean-scope>
+    </managed-bean>
 </faces-config>
