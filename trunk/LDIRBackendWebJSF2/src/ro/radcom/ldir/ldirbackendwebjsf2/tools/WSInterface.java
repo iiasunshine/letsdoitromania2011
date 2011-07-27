@@ -13,8 +13,11 @@ import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.multipart.FormDataMultiPart;
 import com.sun.jersey.multipart.file.FileDataBodyPart;
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import org.apache.log4j.Logger;
 import ro.ldir.dto.ChartedArea;
 import ro.ldir.dto.Garbage;
 import ro.ldir.dto.User;
@@ -26,6 +29,7 @@ import ro.radcom.ldir.ldirbackendwebjsf2.tools.customObjects.GarbageContextProvi
  */
 public class WSInterface {
 
+    private static final Logger log4j = Logger.getLogger(WSInterface.class.getCanonicalName());
     private Client client = null;
     private String WS_URL = "";
 
@@ -67,20 +71,20 @@ public class WSInterface {
         ClientResponse cr = builder.entity(chartedArea, MediaType.APPLICATION_XML).post(ClientResponse.class);
         return cr;
     }
-    
+
     /*
      * 
      */
-    public ClientResponse setChartedPercent(int areaId, int percent){
+    public ClientResponse setChartedPercent(int areaId, int percent) {
         String location = WS_URL + "/LDIRBackend/ws/geo/chartedArea/" + areaId + "/percentageCompleted";
         WebResource resource = client.resource(location);
         Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(JsfUtils.getInitParameter("admin.user"),
                 JsfUtils.getInitParameter("admin.password")));
 
-        Integer percentInteger = new Integer (percent);
-        
+        Integer percentInteger = new Integer(percent);
+
         ClientResponse cr = builder.entity(percentInteger, MediaType.APPLICATION_XML).post(ClientResponse.class);
-        return cr;    	
+        return cr;
     }
 
     public ClientResponse removeChartedArea(User user, int teamId, int areaId) {
@@ -108,17 +112,17 @@ public class WSInterface {
         return cr;
     }
 
-    public ClientResponse getPicture(User user, Garbage garbage,int imgNr, boolean full) throws Exception {
-        String location = WS_URL + "/LDIRBackend/ws/garbage/" + garbage.getGarbageId() + "/image/"+imgNr+(full ? "/display" : "/thumb");
+    public ClientResponse getPicture(User user, Garbage garbage, int imgNr, boolean full) throws Exception {
+        String location = WS_URL + "/LDIRBackend/ws/garbage/" + garbage.getGarbageId() + "/image/" + imgNr + (full ? "/display" : "/thumb");
         WebResource resource = client.resource(location);
         Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(user.getEmail(), user.getPasswd()));
 
-	ClientResponse cr = builder.get(ClientResponse.class);
+        ClientResponse cr = builder.get(ClientResponse.class);
         return cr;
     }
-    
+
     public ClientResponse countPictures(User user, Garbage garbage) throws Exception {
-        String location = WS_URL + "/LDIRBackend/ws/garbage/"+garbage.getGarbageId()+"/imageCount";
+        String location = WS_URL + "/LDIRBackend/ws/garbage/" + garbage.getGarbageId() + "/imageCount";
         WebResource resource = client.resource(location);
         Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(user.getEmail(), user.getPasswd()));
 
@@ -126,9 +130,6 @@ public class WSInterface {
 
         return cr;
     }
-
-
-
 
     public ClientResponse deleteGarbage(User user, Garbage garbage) {
         String location = WS_URL + "/LDIRBackend/ws/garbage/" + garbage.getGarbageId();
@@ -179,6 +180,31 @@ public class WSInterface {
         return cr;
     }
 
+    public ClientResponse getGarbageListByFilters(User admin, String countyId, int gridId, int userId, Date addDate, String accept) {
+        String location = WS_URL + "/LDIRBackend/ws/garbage/report?";
+        if (countyId != null && countyId.length() > 0) {
+            location += "county=" + countyId + "&";
+        }
+        if (gridId > 0) {
+            location += "chartedArea=" + gridId + "&";
+        }
+        if (userId > 0) {
+            location += "userId=" + userId + "&";
+        }
+        if (addDate != null) {
+            location += "insertDate=" + new SimpleDateFormat("yyyy-MM-dd").format(addDate);
+        }
+        log4j.debug("---> URL: " + location);
+
+        WebResource resource = client.resource(location);
+        Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(admin.getEmail(), admin.getPasswd()));
+        if (accept != null && accept.length() > 0) {
+            builder.accept(accept);
+        }
+        ClientResponse cr = builder.entity(null, MediaType.TEXT_XML_TYPE).get(ClientResponse.class);
+        return cr;
+    }
+
     public ClientResponse getCountyList() {
         String location = WS_URL + "/LDIRBackend/ws/geo/countyArea/all";
         WebResource resource = client.resource(location);
@@ -215,15 +241,15 @@ public class WSInterface {
     }
 
     public ClientResponse resetPassword(String email) {
-        String location = WS_URL + "/LDIRBackend/reg/ws/reset?email="+email;
+        String location = WS_URL + "/LDIRBackend/reg/ws/reset?email=" + email;
         WebResource resource = client.resource(location);
         Builder builder = resource.getRequestBuilder();
         ClientResponse cr = builder.entity(null, MediaType.TEXT_PLAIN).get(ClientResponse.class);
         return cr;
     }
 
-     public ClientResponse setPassword(String newPassword, String userId, String token) {
-        String location = WS_URL + "/LDIRBackend/reg/ws/reset/"+userId+"/"+token;
+    public ClientResponse setPassword(String newPassword, String userId, String token) {
+        String location = WS_URL + "/LDIRBackend/reg/ws/reset/" + userId + "/" + token;
         WebResource resource = client.resource(location);
         Builder builder = resource.getRequestBuilder();
         ClientResponse cr = builder.entity(newPassword, MediaType.APPLICATION_XML).post(ClientResponse.class);
@@ -237,6 +263,37 @@ public class WSInterface {
         ClientResponse cr = builder.entity(null, MediaType.TEXT_PLAIN).get(ClientResponse.class);
 
         return cr;
+    }
+
+    public ClientResponse getUserListByFilters(User admin, String county, int birthYear, String role, int minGarbages, int maxGarbages, String accept) {
+        String location = WS_URL + "/LDIRBackend/ws/user/report?";
+        if (county != null && county.length() > 0) {
+            location += "county=" + county + "&";
+        }
+        if (birthYear > 0) {
+            location += "birthyear=" + birthYear + "&";
+        }
+        if (role != null && role.length() > 0) {
+            location += "role=" + role + "&";
+        }
+        if (minGarbages >= 0) {
+            location += "minGarbages=" + minGarbages + "&";
+        }
+        if (maxGarbages >= 0) {
+            location += "maxGarbages=" + maxGarbages + "&";
+        }
+
+        log4j.debug("---> URL: " + location);
+
+        WebResource resource = client.resource(location);
+        Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(admin.getEmail(), admin.getPasswd()));
+        if (accept != null && accept.length() > 0) {
+            builder.accept(accept);
+        }
+        ClientResponse cr = builder.entity(null, MediaType.TEXT_XML_TYPE).get(ClientResponse.class);
+
+        return cr;
+
     }
 
     public ClientResponse reinitUser(User userDetails) {
