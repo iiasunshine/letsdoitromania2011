@@ -31,10 +31,14 @@ public class AppUtils {
     }
 
     public static int parseToInt(String str) {
+        return parseToInt(str, 0);
+    }
+
+    public static int parseToInt(String str, int defaultValue) {
         try {
             return Integer.parseInt(str);
         } catch (Exception ex) {
-            return 0;
+            return defaultValue;
         }
     }
 
