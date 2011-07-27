@@ -13,7 +13,7 @@
                     <custom:page_top selected="home"/>
                 </h:panelGroup>
                 <h:panelGroup rendered="#{not (sessionScope['USER_DETAILS'] eq null)}">
-                    <custom:page_top_login selected="home"/>
+                    <custom:page_top_login selected="home" role="${sessionScope['USER_DETAILS'].role}"/>
                 </h:panelGroup>
 
                 <%-- page Content --%>
@@ -22,8 +22,8 @@
                         <div id="leftColumn">
                         </div>
 
-                        <div id="rightColumn" style="height: 250px;"">
-                             <br/>
+                        <div id="rightColumn" style="height: 250px;">
+                            <br/>
                             <br/>
                             <h:panelGroup rendered="#{not (sessionScope['USER_DETAILS'] eq null)}">
                                 <h3>
