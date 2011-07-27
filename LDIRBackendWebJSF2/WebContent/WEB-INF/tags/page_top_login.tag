@@ -3,9 +3,9 @@
     Created on : May 25, 2011, 2:37:55 PM
     Author     : dan.grigore
 --%>
-<%@taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
-<%@tag isELIgnored="false" body-content="tagdependent"%>
-<%@attribute name="selected" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@attribute name="selected"%>
+<%@attribute name="role"%>
 
 <div id="headerContainer">
     <div id="header">
@@ -16,7 +16,10 @@
                 <li><a href="${pageContext.servletContext.contextPath}/index.jsf" class="${selected eq 'home' ? 'active' : ''}"><span>${msg.meniu_home}</span></a></li>
                 <li><a href="${pageContext.servletContext.contextPath}/users/cartare-zone-lista.jsf" class="${selected eq 'zone' ? 'active' : ''}"><span>${msg.meniu_zona_cartare}</span></a></li>
                 <li><a href="${pageContext.servletContext.contextPath}/users/cartare-mormane-lista.jsf" class="${selected eq 'mormane' ? 'active' : ''}"><span>${msg.meniu_cartare_mormane}</span></a></li>
-                <!--li><a href="${pageContext.servletContext.contextPath}/map-view.jsf" class="{selected eq 'view' ? 'active' : ''}"><span>{msg.meniu_harta}</span></a></li-->
+                <c:if test="${(role eq 'ADMIN') or (role eq 'ORGANIZER') or (role eq 'ORGANIZER_MULTI')}">
+                    <li><a href="${pageContext.servletContext.contextPath}/admin/admin-lista-voluntari.jsf" class="${selected eq 'lista_utilizatori' ? 'active' : ''}"><span>${msg.meniu_lista_utilizatori}</span></a></li>
+                    <li><a href="${pageContext.servletContext.contextPath}/admin/admin-lista-mormane.jsf" class="${selected eq 'lista_mormane' ? 'active' : ''}"><span>${msg.meniu_lista_mormane}</span></a></li>
+                </c:if>
                 <li><a href="${pageContext.servletContext.contextPath}/logout.jsf"><span>${msg.meniu_logout}</span></a></li>
             </ul>
         </div>
