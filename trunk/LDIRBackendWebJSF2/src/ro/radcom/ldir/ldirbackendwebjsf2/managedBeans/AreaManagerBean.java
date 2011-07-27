@@ -417,5 +417,12 @@ public class AreaManagerBean {
         this.dummyCounty = dummyCounty;
     }
 
+    /**
+     * @return the userDetails
+     */
+    public User getUserDetails() {
+        return userDetails;
+    }
+
 
 }

@@ -17,6 +17,7 @@ import org.apache.myfaces.custom.fileupload.UploadedFile;
 import ro.ldir.dto.Garbage;
 import ro.ldir.dto.User;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.AppUtils;
+import ro.radcom.ldir.ldirbackendwebjsf2.tools.ImageInfo;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.JsfUtils;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.MyGarbage;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.WSInterface;
@@ -46,6 +47,8 @@ public class MormanManagerBean {
     private String long_sec = "0.0";
     private List<String> thumbnails = new ArrayList<String>();
     private List<String> posters = new ArrayList<String>();
+    private List<Integer> posterHeights = new ArrayList<Integer>();
+
     private boolean coord_zecimale = true;
     private boolean coord_grade = false;
     private UploadedFile uploadedFile1 = null;
@@ -85,6 +88,7 @@ public class MormanManagerBean {
             Iterator<Garbage> iterator = userDetails.getGarbages().iterator();
             while (iterator.hasNext()) {
                 Garbage g = iterator.next();
+               
                 if (g.getGarbageId() == garbageId) {
                     myGarbage = new MyGarbage(g);
                     longitudine = "" + g.getX();
@@ -92,6 +96,7 @@ public class MormanManagerBean {
 
                     /* obtinere numar poze */
                     for (int i = 0; i < g.getPictures().size(); i++) {
+                         int height = 0;
                         try {
                             /**
                              * thumbnail
@@ -150,6 +155,11 @@ public class MormanManagerBean {
                                     log4j.warn("nu s-a putut redenumi fisierul temporar: " + tempFile.getAbsolutePath());
                                 } else {
                                     posters.add(relativePath);
+                                    ImageInfo imageInfo = ImageInfo.getImageInfo(previewFile.getAbsolutePath(), false);
+                                    if(imageInfo.getHeight() > 550){
+                                        height = 550;
+                                    }
+                                    posterHeights.add(height);
                                 }
                             } else {
                                 log4j.fatal("Eroare obtinere imagine backend: statusCode=" + cr.getStatus() + " (statusMsg=" + cr.getClientResponseStatus() + ")");
@@ -599,5 +609,12 @@ public class MormanManagerBean {
      */
     public void setUploadedFile3(UploadedFile uploadedFile3) {
         this.uploadedFile3 = uploadedFile3;
+    }
+
+    /**
+     * @return the postersHeights
+     */
+    public List<Integer> getPosterHeights() {
+        return posterHeights;
     }
 }
