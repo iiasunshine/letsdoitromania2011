@@ -125,6 +125,8 @@
                                                 <a4j:commandLink actionListener="#{adminUsersManagerBean.actionSelectUser}"
                                                                  reRender="popup_user_details"
                                                                  ajaxSingle="true"
+                                                                 disabled="#{not(adminUsersManagerBean.userDetails.role eq 'ADMIN')}"
+                                                                 style="#{not(adminUsersManagerBean.userDetails.role eq 'ADMIN') ? 'color: lightgray;' : ''}"
                                                                  oncomplete="#{rich:component('popup_user_details')}.show();">
                                                     <f:param name="userId" value="#{user.userId}"/>
                                                     <strong>EDITEAZA</strong>

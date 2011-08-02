@@ -17,6 +17,7 @@
                     <div id="contentList">
                         <jsp:directive.include file="/WEB-INF/jspf/popup-loading.jspf"/>
                         <jsp:directive.include file="/WEB-INF/jspf/popup-admin-img-gallery.jspf"/>
+                        <jsp:directive.include file="/WEB-INF/jspf/popup-garbage-delete.jspf"/>
 
                         <%-- Left Column --%>
                         <div id="leftColumn">
@@ -149,11 +150,11 @@
                                                 </a4j:commandLink>
                                             </div>
                                             <div class="listEntry">
-                                                <a4j:commandLink actionListener="#{adminGarbageManagerBean.actionDeleteGarbage}"
-                                                                 reRender="lista-gunoaie"
+                                                <a4j:commandLink actionListener="#{adminGarbageManagerBean.actionSelectGarbage}"
+                                                                 reRender="popup_garbage_delete"
+                                                                 id="delete"
                                                                  ajaxSingle="true"
-                                                                 onclick="#{rich:component('popup-loading')}.show();"
-                                                                 oncomplete="#{rich:component('popup-loading')}.hide();">
+                                                                 oncomplete="#{rich:component('popup_garbage_delete')}.show();">
                                                     <f:param name="garbageId" value="#{garbage.garbageId}"/>
                                                     <strong>STERGE</strong>
                                                 </a4j:commandLink>
