@@ -23,13 +23,12 @@
  */
 package ro.ldir.idresolver;
 
-import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.Callable;
 
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 
 import org.xml.sax.SAXException;
@@ -46,61 +45,58 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.WebResource.Builder;
-import com.sun.jersey.core.util.Base64;
 import com.sun.xml.bind.IDResolver;
 
 /**
- * A resolver to fetch entities from the backend WS during the marshalling
- * process.
+ * A resolver to fetch one level referenced entities from the back-end web
+ * service during while marshalling.
  */
 class LdirResolver extends IDResolver {
 
 	/**
 	 * A collection mapping the objects this resolver fetches from the web
-	 * service with the URL suffix used to fetch objects.
+	 * service with the url suffix used to fetch objects.
 	 */
 	@SuppressWarnings("serial")
-	private static final Map<String, String> MANAGED_ENTITIES = Collections
-			.unmodifiableMap(new HashMap<String, String>() {
+	private static final Map<Class<?>, String> ENTITIES_URL = Collections
+			.unmodifiableMap(new HashMap<Class<?>, String>() {
 				{
-					put(ChartedArea.class.getName(), "ws/geo/chartedArea/");
-					put(CountyArea.class.getName(), "ws/geo/countyArea/");
-					put(Garbage.class.getName(), "ws/garbage/");
-					put(Organization.class.getName(), "ws/organization/");
-					put(Team.class.getName(), "ws/team/");
-					put(TownArea.class.getName(), "ws/geo/townArea/");
-					put(User.class.getName(), "ws/user/");
+					put(ChartedArea.class, "ws/geo/chartedArea/");
+					put(CountyArea.class, "ws/geo/countyArea/");
+					put(Garbage.class, "ws/garbage/");
+					put(Organization.class, "ws/organization/");
+					put(Team.class, "ws/team/");
+					put(TownArea.class, "ws/geo/townArea/");
+					put(User.class, "ws/user/");
 				}
 			});
 
-	/** A list of served classes. */
-	@SuppressWarnings("rawtypes")
-	protected static final Class[] SERVED_CLASSES = { ChartedArea.class,
-			CountyArea.class, Garbage.class, Organization.class, Team.class,
-			TownArea.class, User.class };
+	/**
+	 * Returns the set of classes managed by this resolver.
+	 * 
+	 * @return
+	 */
+	public static Set<Class<?>> managedTypes() {
+		return ENTITIES_URL.keySet();
+	}
 
-	private Map<String, Map<String, Object>> objects = new HashMap<String, Map<String, Object>>();
-	private String pass;
-	private String URL;
-
-	private String user;
+	private Client client;
+	private Map<Class<?>, Map<String, Object>> objects = new HashMap<Class<?>, Map<String, Object>>();
+	private String url;
 
 	/**
 	 * Constructs a new ID resolver.
 	 * 
-	 * @param URL
-	 *            The URL where the web service is located.
-	 * @param user
-	 *            The user to connect to the WS.
-	 * @param pass
-	 *            The password.
+	 * @param url
+	 *            The url where the web service is located.
+	 * @param client
+	 *            The Jersey client instance to use during ID resolving.
 	 */
-	public LdirResolver(String URL, String username, String password) {
-		this.URL = URL;
-		this.user = username;
-		this.pass = password;
+	public LdirResolver(String url, Client client) {
+		this.url = url;
+		this.client = client;
 
-		for (String type : MANAGED_ENTITIES.keySet())
+		for (Class<?> type : ENTITIES_URL.keySet())
 			objects.put(type, new HashMap<String, Object>());
 	}
 
@@ -112,30 +108,25 @@ class LdirResolver extends IDResolver {
 	 */
 	@Override
 	public void bind(String id, Object object) throws SAXException {
-		objects.get(object.getClass().getName()).put(id, object);
+		objects.get(object.getClass()).put(id, object);
 	}
 
 	/**
 	 * Fetches an object from the web service.
 	 * 
 	 * @param id
+	 *            The ID of the object.
 	 * @param type
-	 * @return
+	 *            The type of the object.
+	 * @return An object instanced fetched from the web service.
 	 */
 	private Object fetch(String id, Class<?> type) {
-		Client c = Client.create();
-		WebResource r = c.resource(URL + MANAGED_ENTITIES.get(type.getName())
-				+ id);
-		Builder b = r.header(
-				HttpHeaders.AUTHORIZATION,
-				"Basic "
-						+ new String(Base64.encode(user + ":" + pass), Charset
-								.forName("ASCII"))).accept(
-				MediaType.APPLICATION_XML);
+		WebResource r = client.resource(url + ENTITIES_URL.get(type) + id);
+		Builder b = r.accept(MediaType.APPLICATION_XML);
 		ClientResponse cr = b.get(ClientResponse.class);
 		if (cr.getStatus() != 200)
 			throw new RuntimeException("Unable to fetch object type: " + type
-					+ ", ID:" + id + " from URL:" + r + ". Code is "
+					+ ", ID:" + id + " from url:" + r + ". Code is "
 					+ cr.getStatus());
 
 		Object result = cr.getEntity(type);
@@ -151,30 +142,19 @@ class LdirResolver extends IDResolver {
 	@SuppressWarnings("rawtypes")
 	@Override
 	public Callable<?> resolve(String id, Class type) throws SAXException {
-		if (!serves(type))
+
+		if (!ENTITIES_URL.containsKey(type))
 			return null;
-		Object existing = objects.get(type.getName()).get(id);
 
-		if (existing == null)
-			existing = fetch(id, type);
+		Object object = objects.get(type).get(id);
+		if (object == null)
+			object = fetch(id, type);
 
-		final Object result = existing;
+		final Object result = object;
 		return new Callable() {
 			public Object call() {
 				return result;
 			}
 		};
-	}
-
-	/**
-	 * @param type
-	 * @return
-	 */
-	public static boolean serves(Class<?> type) {
-		for (Class<?> c : LdirResolver.SERVED_CLASSES)
-			if (c.equals(type))
-				return true;
-
-		return false;
 	}
 }

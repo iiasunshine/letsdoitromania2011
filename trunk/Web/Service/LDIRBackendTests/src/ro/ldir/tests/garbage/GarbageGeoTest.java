@@ -76,8 +76,7 @@ public class GarbageGeoTest extends GarbageTest {
 		chartedArea.setScore(-10);
 
 		WebResource resource = client.resource(geoLocation + "/chartedArea");
-
-		ClientResponse cr = resourceBuilder(resource, USER).entity(chartedArea,
+		ClientResponse cr = resource.entity(chartedArea,
 				MediaType.APPLICATION_XML).post(ClientResponse.class);
 		assertEquals(200, cr.getStatus());
 
@@ -107,9 +106,9 @@ public class GarbageGeoTest extends GarbageTest {
 		townArea.setName("Town");
 
 		WebResource resource = client.resource(geoLocation + "/townArea");
-
-		ClientResponse cr = resourceBuilder(resource, USER).entity(townArea,
-				MediaType.APPLICATION_XML).post(ClientResponse.class);
+		ClientResponse cr = resource
+				.entity(townArea, MediaType.APPLICATION_XML).post(
+						ClientResponse.class);
 		assertEquals(200, cr.getStatus());
 
 		Connection c = DatabaseHelper.getDbConnection();
@@ -128,8 +127,7 @@ public class GarbageGeoTest extends GarbageTest {
 	public static void removeChartedArea() {
 		WebResource resource = client.resource(geoLocation + "/chartedArea/"
 				+ chartAreaId);
-		ClientResponse r = resourceBuilder(resource, USER).delete(
-				ClientResponse.class);
+		ClientResponse r = resource.delete(ClientResponse.class);
 		assertEquals(200, r.getStatus());
 	}
 
@@ -137,8 +135,7 @@ public class GarbageGeoTest extends GarbageTest {
 	public static void removeTownArea() {
 		WebResource resource = client.resource(geoLocation + "/townArea/"
 				+ townAreaId);
-		ClientResponse r = resourceBuilder(resource, USER).delete(
-				ClientResponse.class);
+		ClientResponse r = resource.delete(ClientResponse.class);
 		assertEquals(200, r.getStatus());
 	}
 
@@ -148,8 +145,8 @@ public class GarbageGeoTest extends GarbageTest {
 		garbage.setX(5);
 		garbage.setY(5);
 
-		ClientResponse cr = rootBuilder(USER).entity(garbage,
-				MediaType.APPLICATION_XML).post(ClientResponse.class);
+		ClientResponse cr = resource.entity(garbage, MediaType.APPLICATION_XML)
+				.post(ClientResponse.class);
 		assertEquals(200, cr.getStatus());
 	}
 
@@ -161,7 +158,7 @@ public class GarbageGeoTest extends GarbageTest {
 	@Test
 	public void testBoundingBox() {
 		String p = location + "/bbox";
-		instanceResource = client.resource(p);
+		WebResource r = client.resource(p);
 
 		MultivaluedMap<String, String> params = new MultivaluedMapImpl();
 		params.add("topLeftX", "0");
@@ -169,9 +166,7 @@ public class GarbageGeoTest extends GarbageTest {
 		params.add("bottomRightX", "10");
 		params.add("bottomRightY", "0");
 
-		ClientResponse cr = resourceBuilder(
-				instanceResource.queryParams(params), USER).get(
-				ClientResponse.class);
+		ClientResponse cr = r.queryParams(params).get(ClientResponse.class);
 		assertEquals(200, cr.getStatus());
 	}
 
@@ -197,9 +192,9 @@ public class GarbageGeoTest extends GarbageTest {
 
 	@Test
 	public void testChartedAreaMembership() {
-		instanceResource = client.resource(geoLocation + "/chartedArea/"
+		WebResource r = client.resource(geoLocation + "/chartedArea/"
 				+ chartAreaId);
-		ChartedArea area = instanceBuilder(USER).get(ChartedArea.class);
+		ChartedArea area = r.get(ChartedArea.class);
 		assertTrue(area.containsPoint(new Point2D.Double(5, 5)));
 		// TODO: this this returns ID, thus cannot access the field like this
 		// assertEquals(1, area.getGarbages().size());
@@ -207,9 +202,9 @@ public class GarbageGeoTest extends GarbageTest {
 
 	@Test
 	public void testCountyAreaMembership() {
-		instanceResource = client.resource(geoLocation + "/countyArea/"
+		WebResource r = client.resource(geoLocation + "/countyArea/"
 				+ countyAreaId);
-		CountyArea area = instanceBuilder(USER).get(CountyArea.class);
+		CountyArea area = r.get(CountyArea.class);
 		assertTrue(area.containsPoint(new Point2D.Double(5, 5)));
 		// TODO: this this returns ID, thus cannot access the field like this
 		// assertEquals(1, area.getGarbages().size());
@@ -217,11 +212,10 @@ public class GarbageGeoTest extends GarbageTest {
 
 	@Test
 	public void testCountySearch() {
-		WebResource resource = client.resource(location + "/countySearch");
+		WebResource r = client.resource(location + "/countySearch");
 		MultivaluedMap<String, String> params = new MultivaluedMapImpl();
 		params.add("county", "County");
-		ClientResponse cr = resourceBuilder(resource.queryParams(params), USER)
-				.get(ClientResponse.class);
+		ClientResponse cr = r.queryParams(params).get(ClientResponse.class);
 		assertEquals(200, cr.getStatus());
 
 		String garbages = cr.getEntity(String.class);
@@ -230,25 +224,25 @@ public class GarbageGeoTest extends GarbageTest {
 
 	@Test
 	public void testGarbageInChartedArea() {
-		instanceResource = client.resource(geoLocation + "/chartedArea/"
+		WebResource r = client.resource(geoLocation + "/chartedArea/"
 				+ chartAreaId + "/garbages");
-		Garbage garbages[] = instanceBuilder(USER).get(Garbage[].class);
+		Garbage garbages[] = r.get(Garbage[].class);
 		assertTrue(garbages.length != 0);
 	}
 
 	@Test
 	public void testGarbageInCountyArea() {
-		instanceResource = client.resource(geoLocation + "/countyArea/"
+		WebResource r = client.resource(geoLocation + "/countyArea/"
 				+ countyAreaId + "/garbages");
-		Garbage garbages[] = instanceBuilder(USER).get(Garbage[].class);
+		Garbage garbages[] = r.get(Garbage[].class);
 		assertTrue(garbages.length != 0);
 	}
 
 	@Test
 	public void testGarbageInTownArea() {
-		instanceResource = client.resource(geoLocation + "/townArea/"
-				+ townAreaId + "/garbages");
-		Garbage garbages[] = instanceBuilder(USER).get(Garbage[].class);
+		WebResource r = client.resource(geoLocation + "/townArea/" + townAreaId
+				+ "/garbages");
+		Garbage garbages[] = r.get(Garbage[].class);
 		assertTrue(garbages.length != 0);
 	}
 
@@ -274,9 +268,9 @@ public class GarbageGeoTest extends GarbageTest {
 
 	@Test
 	public void testTownAreaMembership() {
-		instanceResource = client.resource(geoLocation + "/townArea/"
-				+ townAreaId);
-		TownArea area = instanceBuilder(USER).get(TownArea.class);
+		WebResource r = client
+				.resource(geoLocation + "/townArea/" + townAreaId);
+		TownArea area = r.get(TownArea.class);
 		assertTrue(area.containsPoint(new Point2D.Double(5, 5)));
 		// TODO: this this returns ID, thus cannot access the field like this
 		// assertEquals(1, area.getGarbages().size());
@@ -287,8 +281,8 @@ public class GarbageGeoTest extends GarbageTest {
 		WebResource resource = client.resource(location + "/townSearch");
 		MultivaluedMap<String, String> params = new MultivaluedMapImpl();
 		params.add("town", "Town");
-		ClientResponse cr = resourceBuilder(resource.queryParams(params), USER)
-				.get(ClientResponse.class);
+		ClientResponse cr = resource.queryParams(params).get(
+				ClientResponse.class);
 		assertEquals(200, cr.getStatus());
 
 		String garbages = cr.getEntity(String.class);

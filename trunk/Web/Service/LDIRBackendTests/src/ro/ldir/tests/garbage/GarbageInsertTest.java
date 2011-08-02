@@ -42,8 +42,8 @@ public class GarbageInsertTest extends GarbageTest {
 		Garbage garbage = new Garbage();
 		garbage.setX(5);
 		garbage.setY(5);
-		ClientResponse cr = rootBuilder(USER).entity(garbage,
-				MediaType.APPLICATION_XML).post(ClientResponse.class);
+		ClientResponse cr = resource.entity(garbage, MediaType.APPLICATION_XML)
+				.post(ClientResponse.class);
 		assertEquals(200, cr.getStatus());
 		String id = cr.getEntity(String.class);
 		System.out.println("Inserted garbage " + id);
@@ -54,8 +54,8 @@ public class GarbageInsertTest extends GarbageTest {
 		Garbage garbage = new Garbage();
 		garbage.setX(100);
 		garbage.setY(100);
-		ClientResponse cr = rootBuilder(USER).entity(garbage,
-				MediaType.APPLICATION_XML).post(ClientResponse.class);
+		ClientResponse cr = resource.entity(garbage, MediaType.APPLICATION_XML)
+				.post(ClientResponse.class);
 		assertEquals(400, cr.getStatus());
 	}
 
@@ -72,20 +72,11 @@ public class GarbageInsertTest extends GarbageTest {
 		garbage.setPercentageMetal(5);
 		garbage.setPercentageGlass(5);
 		garbage.setPercentageWaste(10);
-		ClientResponse cr = rootBuilder(USER).entity(garbage,
-				MediaType.APPLICATION_XML).post(ClientResponse.class);
+		ClientResponse cr = resource.entity(garbage, MediaType.APPLICATION_XML)
+				.post(ClientResponse.class);
 		assertEquals(200, cr.getStatus());
 		String id = cr.getEntity(String.class);
 		System.out.println("Inserted Timis garbage " + id);
 	}
 
-	@Test
-	public void unauthorizedInsertGarbage() {
-		Garbage garbage = new Garbage();
-		garbage.setX(5);
-		garbage.setY(5);
-		ClientResponse cr = rootBuilder("blah").entity(garbage,
-				MediaType.APPLICATION_XML).post(ClientResponse.class);
-		assertEquals(401, cr.getStatus());
-	}
 }

@@ -28,14 +28,12 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.awt.geom.Point2D;
-import java.nio.charset.Charset;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 
 import org.junit.AfterClass;
@@ -43,16 +41,13 @@ import org.junit.BeforeClass;
 
 import ro.ldir.dto.CountyArea;
 import ro.ldir.dto.User;
+import ro.ldir.idresolver.LdirClientResolverFactory;
 import ro.ldir.tests.helper.DatabaseHelper;
 import ro.ldir.tests.helper.UserSetup;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.api.client.WebResource.Builder;
-import com.sun.jersey.api.client.config.ClientConfig;
-import com.sun.jersey.api.client.config.DefaultClientConfig;
-import com.sun.jersey.core.util.Base64;
 
 /**
  * Abstract class that provides helper methods for the garbage tests.
@@ -66,6 +61,7 @@ public abstract class GarbageTest {
 	protected static WebResource resource;
 	protected static final String USER = GarbageInsertTest.class.getName();
 	protected static int userId;
+	protected static CountyArea countyArea;
 
 	@BeforeClass
 	public static void insertCountyArea() throws ClassNotFoundException,
@@ -76,13 +72,12 @@ public abstract class GarbageTest {
 		polyline.add(new Point2D.Double(10, 10));
 		polyline.add(new Point2D.Double(10, 0));
 
-		CountyArea countyArea = new CountyArea();
+		countyArea = new CountyArea();
 		countyArea.setPolyline(polyline);
 		countyArea.setName("County");
 
 		WebResource resource = client.resource(geoLocation + "/countyArea");
-
-		ClientResponse cr = resourceBuilder(resource, USER).entity(countyArea,
+		ClientResponse cr = resource.entity(countyArea,
 				MediaType.APPLICATION_XML).post(ClientResponse.class);
 		assertEquals(200, cr.getStatus());
 
@@ -111,32 +106,14 @@ public abstract class GarbageTest {
 	public static void removeCountyArea() {
 		WebResource resource = client.resource(geoLocation + "/countyArea/"
 				+ countyAreaId);
-		ClientResponse r = resourceBuilder(resource, USER).delete(
-				ClientResponse.class);
+		ClientResponse r = resource.delete(ClientResponse.class);
 		assertEquals(200, r.getStatus());
-	}
-
-	protected static Builder resourceBuilder(WebResource resource, String user) {
-		return resource.header(
-				HttpHeaders.AUTHORIZATION,
-				"Basic "
-						+ new String(Base64.encode(user + ":" + user), Charset
-								.forName("ASCII")));
-	}
-
-	protected static Builder rootBuilder(String user) {
-		return resource.header(
-				HttpHeaders.AUTHORIZATION,
-				"Basic "
-						+ new String(Base64.encode(user + ":" + user), Charset
-								.forName("ASCII")));
 	}
 
 	@BeforeClass
 	public static void setupClient() throws Exception {
-		ClientConfig cc = new DefaultClientConfig();
-		cc.getClasses().add(GarbageContextProvider.class);
-		client = Client.create(cc);
+		client = LdirClientResolverFactory.getResolverClient(baseLocation,
+				USER, USER);
 		resource = client.resource(location);
 	}
 
@@ -150,16 +127,5 @@ public abstract class GarbageTest {
 			SQLException {
 		removeAllGarbages();
 		UserSetup.removeTestUser(USER);
-	}
-
-	/** The web resource different for each test. */
-	protected WebResource instanceResource;
-
-	protected Builder instanceBuilder(String user) {
-		return instanceResource.header(
-				HttpHeaders.AUTHORIZATION,
-				"Basic "
-						+ new String(Base64.encode(user + ":" + user), Charset
-								.forName("ASCII")));
 	}
 }
