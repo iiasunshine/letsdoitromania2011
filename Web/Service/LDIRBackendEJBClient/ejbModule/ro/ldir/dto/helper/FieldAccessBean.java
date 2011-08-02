@@ -45,11 +45,11 @@ public abstract class FieldAccessBean {
 		for (Method m : this.getClass().getMethods()) {
 			NonTransferableField a = m
 					.getAnnotation(NonTransferableField.class);
-			if (a != null || !m.getName().startsWith("set"))
+			if (a != null || !m.getName().startsWith("set")
+					|| m.getParameterTypes().length != 1)
 				continue;
 			try {
-				String getterString = "g" + m.getName().substring(1);
-				Method getter = this.getClass().getMethod(getterString);
+				Method getter = getGetter(m);
 				m.invoke(this, getter.invoke(other));
 			} catch (IllegalArgumentException e) {
 				e.printStackTrace();
@@ -99,5 +99,18 @@ public abstract class FieldAccessBean {
 			}
 		}
 		return true;
+	}
+
+	private final Method getGetter(Method m) throws NoSuchMethodException,
+			SecurityException {
+		String getterString = "g" + m.getName().substring(1);
+		Class<?> argType = m.getParameterTypes()[0];
+		// TODO identify subclasses of boolean
+		if (argType.equals(Boolean.class)
+				|| (argType.isPrimitive() && argType.getName()
+						.equals("boolean")))
+			getterString = "is" + m.getName().substring(3);
+		Method getter = this.getClass().getMethod(getterString);
+		return getter;
 	}
 }
