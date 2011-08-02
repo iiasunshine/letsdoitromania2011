@@ -81,6 +81,10 @@ public class AdminGarbageManagerBean {
             }
         }
 
+        if(event.getComponent().getClientId().indexOf("delete") >= 0){
+            return;
+        }
+
         /* resetare parametri folositi */
         posters = new ArrayList<String>();
         thumbnails = new ArrayList<String>();
@@ -170,22 +174,22 @@ public class AdminGarbageManagerBean {
     }
 
     public void actionDeleteGarbage() {
-        int garbageId = AppUtils.parseToInt(JsfUtils.getHttpRequest().getParameter("garbageId"));
+        /*int garbageId = AppUtils.parseToInt(JsfUtils.getHttpRequest().getParameter("garbageId"));*/
 
         /* identificare morman */
-        Garbage garbage = null;
-        for (int i = 0; i < garbageList.length; i++) {
+        Garbage garbage = selectedGarbage;
+        /*for (int i = 0; i < garbageList.length; i++) {
             if (garbageId == garbageList[i].getGarbageId().intValue()) {
                 garbage = garbageList[i];
                 break;
             }
-        }
+        }*/
         if (garbage == null) {
             return;
         }
 
         /* stergere */
-        String location = JsfUtils.getInitParameter("webservice.url") + "/LDIRBackend/ws/garbage/" + garbageId;
+        String location = JsfUtils.getInitParameter("webservice.url") + "/LDIRBackend/ws/garbage/" + selectedGarbage.getGarbageId();
         Client client = Client.create();
         WebResource resource = client.resource(location);
         Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(userDetails.getEmail(), userDetails.getPasswd()));
