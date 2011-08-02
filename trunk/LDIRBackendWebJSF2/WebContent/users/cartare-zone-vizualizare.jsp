@@ -14,7 +14,7 @@
         <body onunload="GUnload()">
             <center>
                 <%-- page Top --%>
-                <custom:page_top_login selected="zone" role="${areaManager.userDetails.role}"/>
+                <custom:page_top_login selected="zone"/>
 
                 <%-- page Content --%>
                 <div id="pageContainer">
@@ -101,26 +101,8 @@
                                     <h3><h:outputText value="» #{msg.area_link_remove}"/></h3>
                                 </h:commandLink>
                             </h:form>
-                            
-                            
-                        <!-- charted area percent 
-                           <h:form  rendered="#{areaManager.assigned}">
-                                <h:commandLink action="#{areaManager.actionSetChartedArea}">
-                                    <f:param name="cpAreaId" value="#{areaManager.seletedArea.areaId}"/>
-                                    <f:param name="cpPercentageCompleted" value="#{areaManager.seletedArea.percentageCompleted}"/>
-                                    <h3><h:outputText value="» #{msg.area_grid_charted}"/></h3>
-                                </h:commandLink>
-                            </h:form> 
-                            <h:selectOneMenu value="#{areaManager.seletedArea.percentageCompleted}" id="percentCharted" styleClass="formDate">
-                                    <f:selectItem itemLabel="0%" itemValue="0"/>
-                                    <f:selectItem itemLabel="50%" itemValue="50"/>
-                                    <f:selectItem itemLabel="100%" itemValue="100"/>
-                            </h:selectOneMenu>
+                        </div>
 
-                                <br />
-                                -->
-						</div>
-                        
                         <%-- Right Column (harta) --%>
                         <div id="rightColumn">
                             <!-- mesaj eroare sau info -->
