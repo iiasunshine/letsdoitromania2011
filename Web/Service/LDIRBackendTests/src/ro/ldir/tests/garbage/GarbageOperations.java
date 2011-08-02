@@ -46,6 +46,7 @@ import ro.ldir.dto.Garbage;
 import ro.ldir.tests.helper.DatabaseHelper;
 
 import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.multipart.FormDataMultiPart;
 import com.sun.jersey.multipart.file.FileDataBodyPart;
 
@@ -64,12 +65,32 @@ public class GarbageOperations extends GarbageTest {
 
 	@Test
 	public void getGarbage() {
-		instanceResource = client.resource(location + "/" + garbageId);
-		ClientResponse cr = instanceBuilder(USER).accept(
-				MediaType.APPLICATION_XML).get(ClientResponse.class);
+		System.out.println("get");
+		WebResource r = client.resource(location + "/" + garbageId);
+		ClientResponse cr = r.accept(MediaType.APPLICATION_XML).get(
+				ClientResponse.class);
 		assertEquals(200, cr.getStatus());
+		assertFalse(cr.getEntity(Garbage.class) == null);
+	}
+
+	@Test
+	public void getGarbageInsertedBy() {
+		System.out.println("get");
+		WebResource r = client.resource(location + "/" + garbageId);
+		ClientResponse cr = r.accept(MediaType.APPLICATION_XML).get(
+				ClientResponse.class);
 		Garbage garbage = cr.getEntity(Garbage.class);
-		assertEquals(garbage.getInsertedBy().getEmail(), USER);
+		assertEquals(USER, garbage.getInsertedBy().getEmail());
+	}
+
+	@Test
+	public void getGarbageCountyArea() {
+		System.out.println("get");
+		WebResource r = client.resource(location + "/" + garbageId);
+		ClientResponse cr = r.accept(MediaType.APPLICATION_XML).get(
+				ClientResponse.class);
+		Garbage garbage = cr.getEntity(Garbage.class);
+		assertEquals(countyArea.getName(), garbage.getCounty().getName());
 	}
 
 	@Test
@@ -82,18 +103,16 @@ public class GarbageOperations extends GarbageTest {
 		FormDataMultiPart fdmp = new FormDataMultiPart();
 		fdmp.bodyPart(new FileDataBodyPart("file", picture));
 
-		instanceResource = client.resource(location + "/" + garbageId
-				+ "/image");
+		WebResource r = client.resource(location + "/" + garbageId + "/image");
 
-		ClientResponse cr = instanceBuilder(USER).type(
-				MediaType.MULTIPART_FORM_DATA_TYPE).post(ClientResponse.class,
-				fdmp);
+		ClientResponse cr = r.type(MediaType.MULTIPART_FORM_DATA_TYPE).post(
+				ClientResponse.class, fdmp);
 		assertEquals(200, cr.getStatus());
 
-		instanceResource = client.resource(location + "/" + garbageId
-				+ "/image/" + imageIndex + "/display");
+		r = client.resource(location + "/" + garbageId + "/image/" + imageIndex
+				+ "/display");
 		imageIndex++;
-		cr = instanceBuilder(USER).get(ClientResponse.class);
+		cr = r.get(ClientResponse.class);
 		assertEquals(200, cr.getStatus());
 	}
 
@@ -107,18 +126,16 @@ public class GarbageOperations extends GarbageTest {
 		FormDataMultiPart fdmp = new FormDataMultiPart();
 		fdmp.bodyPart(new FileDataBodyPart("file", picture));
 
-		instanceResource = client.resource(location + "/" + garbageId
-				+ "/image");
+		WebResource r = client.resource(location + "/" + garbageId + "/image");
 
-		ClientResponse cr = instanceBuilder(USER).type(
-				MediaType.MULTIPART_FORM_DATA_TYPE).post(ClientResponse.class,
-				fdmp);
+		ClientResponse cr = r.type(MediaType.MULTIPART_FORM_DATA_TYPE).post(
+				ClientResponse.class, fdmp);
 		assertEquals(200, cr.getStatus());
 
-		instanceResource = client.resource(location + "/" + garbageId
-				+ "/image/" + imageIndex + "/thumb");
+		r = client.resource(location + "/" + garbageId + "/image/" + imageIndex
+				+ "/thumb");
 		imageIndex++;
-		cr = instanceBuilder(USER).get(ClientResponse.class);
+		cr = r.get(ClientResponse.class);
 		assertEquals(200, cr.getStatus());
 	}
 
@@ -127,7 +144,7 @@ public class GarbageOperations extends GarbageTest {
 		insertedGarbage = new Garbage();
 		insertedGarbage.setX(5);
 		insertedGarbage.setY(5);
-		ClientResponse cr = rootBuilder(USER).entity(insertedGarbage,
+		ClientResponse cr = resource.entity(insertedGarbage,
 				MediaType.APPLICATION_XML).post(ClientResponse.class);
 		assertEquals(200, cr.getStatus());
 
@@ -152,18 +169,16 @@ public class GarbageOperations extends GarbageTest {
 		FormDataMultiPart fdmp = new FormDataMultiPart();
 		fdmp.bodyPart(new FileDataBodyPart("file", picture));
 
-		instanceResource = client.resource(location + "/" + garbageId
-				+ "/image");
+		WebResource r = client.resource(location + "/" + garbageId + "/image");
 
-		ClientResponse cr = instanceBuilder(USER).type(
-				MediaType.MULTIPART_FORM_DATA_TYPE).post(ClientResponse.class,
-				fdmp);
+		ClientResponse cr = r.type(MediaType.MULTIPART_FORM_DATA_TYPE).post(
+				ClientResponse.class, fdmp);
 		assertEquals(200, cr.getStatus());
 
-		instanceResource = client.resource(location + "/" + garbageId
-				+ "/image/" + imageIndex);
+		r = client
+				.resource(location + "/" + garbageId + "/image/" + imageIndex);
 		imageIndex++;
-		cr = instanceBuilder(USER).get(ClientResponse.class);
+		cr = r.get(ClientResponse.class);
 		assertEquals(200, cr.getStatus());
 
 		File received = cr.getEntity(File.class);
@@ -190,20 +205,22 @@ public class GarbageOperations extends GarbageTest {
 
 	@Test
 	public void updateCoordinates() {
-		instanceResource = client.resource(location + "/" + garbageId);
+		WebResource r = client.resource(location + "/" + garbageId);
 		System.out.println("updated " + location + "/" + garbageId);
 		insertedGarbage.setX(4);
-		ClientResponse cr = rootBuilder(USER).entity(insertedGarbage,
-				MediaType.APPLICATION_XML).post(ClientResponse.class);
+		ClientResponse cr = r
+				.entity(insertedGarbage, MediaType.APPLICATION_XML).post(
+						ClientResponse.class);
 		assertEquals(200, cr.getStatus());
 	}
 
 	@Test
 	public void updateNoCounty() {
-		instanceResource = client.resource(location + "/" + garbageId);
+		WebResource r = client.resource(location + "/" + garbageId);
 		insertedGarbage.setX(100);
-		ClientResponse cr = rootBuilder(USER).entity(insertedGarbage,
-				MediaType.APPLICATION_XML).post(ClientResponse.class);
+		ClientResponse cr = r
+				.entity(insertedGarbage, MediaType.APPLICATION_XML).post(
+						ClientResponse.class);
 		assertEquals(400, cr.getStatus());
 	}
 }

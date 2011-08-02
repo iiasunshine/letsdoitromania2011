@@ -29,13 +29,15 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.Validator;
 
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
 import com.sun.xml.bind.IDResolver;
 
 /**
  * A custom context to use the LDIR ID resolver.
  */
 @SuppressWarnings("deprecation")
-public class LdirContext extends JAXBContext {
+class LdirContext extends JAXBContext {
 	/**
 	 * Tests whether a given class is served by this context.
 	 * 
@@ -44,19 +46,16 @@ public class LdirContext extends JAXBContext {
 	 * @return {@code true} if the class is served by this context.
 	 */
 	public static boolean serves(Class<?> type) {
-		return LdirResolver.serves(type);
+		return LdirResolver.managedTypes().contains(type);
 	}
 
 	private JAXBContext context;
-	private String pass;
-	private String URL;
-
-	private String user;
+	private LdirResolver resolver;
 
 	/**
 	 * Constructor of the context.
 	 * 
-	 * @param URL
+	 * @param url
 	 *            The URL where the web service is located.
 	 * @param user
 	 *            The username to connect to the web service.
@@ -65,12 +64,16 @@ public class LdirContext extends JAXBContext {
 	 * 
 	 * @throws JAXBException
 	 */
-	public LdirContext(String URL, String user, String pass)
+	public LdirContext(String url, String user, String pass)
 			throws JAXBException {
-		context = JAXBContext.newInstance(LdirResolver.SERVED_CLASSES);
-		this.URL = URL;
-		this.user = user;
-		this.pass = pass;
+		Class<?>[] servedClasses = new Class<?>[LdirResolver.managedTypes()
+				.size()];
+		LdirResolver.managedTypes().toArray(servedClasses);
+		Client client = Client.create();
+		client.addFilter(new HTTPBasicAuthFilter(user, pass));
+
+		resolver = new LdirResolver(url, client);
+		context = JAXBContext.newInstance(servedClasses);
 	}
 
 	/*
@@ -91,8 +94,7 @@ public class LdirContext extends JAXBContext {
 	@Override
 	public Unmarshaller createUnmarshaller() throws JAXBException {
 		Unmarshaller unmarshaller = context.createUnmarshaller();
-		unmarshaller.setProperty(IDResolver.class.getName(), new LdirResolver(
-				URL, user, pass));
+		unmarshaller.setProperty(IDResolver.class.getName(), resolver);
 		return unmarshaller;
 	}
 
@@ -105,5 +107,4 @@ public class LdirContext extends JAXBContext {
 	public Validator createValidator() throws JAXBException {
 		return context.createValidator();
 	}
-
 }

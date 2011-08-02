@@ -17,32 +17,41 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- *  Filename: GarbageContextProvider.java
+ *  Filename: LdirContextResolver.java
  *  Author(s): Stefan Guna, svguna@gmail.com
  *
  */
-package ro.ldir.tests.garbage;
+package ro.ldir.idresolver;
 
 import javax.ws.rs.ext.ContextResolver;
 import javax.ws.rs.ext.Provider;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
-import ro.ldir.idresolver.LdirContext;
-
 /**
- * A custom context provider to use the LDIR ID resolver. This context provider
+ * A custom context resolver to use the LDIR ID resolver. This context resolver
  * supports only XML serializing.
  * 
  * @see LdirResolver
  */
 @Provider
-public class GarbageContextProvider implements ContextResolver<JAXBContext> {
-	private JAXBContext context;
+class LdirContextResolver implements ContextResolver<JAXBContext> {
+	private JAXBContext ldirContext = null;
 
-	public GarbageContextProvider() throws JAXBException {
-		context = new LdirContext(GarbageTest.baseLocation, GarbageTest.USER,
-				GarbageTest.USER);
+	/**
+	 * Configures this ldirContext provider.
+	 * 
+	 * @param url
+	 *            The URL where the web service is executing.
+	 * @param user
+	 *            The user to connect to the web service.
+	 * @param pass
+	 *            The password to connect to the web service.
+	 * @throws JAXBException
+	 */
+	public LdirContextResolver(String url, String user, String pass)
+			throws JAXBException {
+		ldirContext = new LdirContext(url, user, pass);
 	}
 
 	/*
@@ -52,7 +61,7 @@ public class GarbageContextProvider implements ContextResolver<JAXBContext> {
 	 */
 	public JAXBContext getContext(Class<?> type) {
 		if (LdirContext.serves(type))
-			return context;
+			return ldirContext;
 		return null;
 	}
 }
