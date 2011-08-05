@@ -53,7 +53,7 @@
                                 <h:inputSecret value="#{registerBean.passwordConfirm}" id="confirmare_parola" styleClass="formTextfield"/>
                                 <!-- DATA NASTERE -->
                                 <br />
-                                <div class="label"><h:outputText value="#{msg.register_birthday} "/></div>
+                                <div class="label"><h:outputText value="#{msg.register_birthday} "/><span class="important">*</span></div>
                                 <h:selectOneMenu value="#{registerBean.day}" id="zi_nastere" styleClass="formDate">
                                     <f:selectItem itemLabel="Zi" itemValue=""/>
                                     <f:selectItems value="#{registerBean.daysItems}"/>
@@ -76,7 +76,7 @@
                                 </h:selectOneMenu>
 
                                 <h:selectOneMenu value="#{registerBean.year}" id="an_nastere" styleClass="formDate">
-                                    <f:selectItem itemLabel="An" itemValue=""/>
+                                    <f:selectItem itemLabel="1978" itemValue="1978"/>
                                     <f:selectItems value="#{registerBean.yearsItems}"/>
                                 </h:selectOneMenu>
                                 <br />
