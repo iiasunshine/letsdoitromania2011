@@ -41,6 +41,12 @@ import ro.ldir.dto.User;
 public class SecurityHelper {
 
 	/**
+	 * Set this to {@code true} if you don't want non-admins to see full user
+	 * details.
+	 */
+	private static final boolean FILTER_USER_REPORT = false;
+
+	/**
 	 * Check whether the logged in user has access to the user.
 	 * 
 	 * @param userManager
@@ -212,7 +218,8 @@ public class SecurityHelper {
 		String email = ctx.getCallerPrincipal().getName();
 		User user = userManager.getUser(email);
 
-		if (user.getRole().equals(User.SecurityRole.ADMIN.toString()))
+		if (!FILTER_USER_REPORT
+				|| user.getRole().equals(User.SecurityRole.ADMIN.toString()))
 			return report;
 		for (User reportedUser : report) {
 			em.detach(reportedUser);
