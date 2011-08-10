@@ -25,6 +25,18 @@
             <to-view-id>/user-register.jsp</to-view-id>
         </navigation-case>
         <navigation-case>
+            <from-outcome>user_edit_success</from-outcome>
+            <to-view-id>/users/user-vizualizare.jsp</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>user_edit_fail</from-outcome>
+            <to-view-id>/users/user-editare.jsp</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>user_edit_pass_fail</from-outcome>
+            <to-view-id>/users/user-psw-editare.jsp</to-view-id>
+        </navigation-case>
+        <navigation-case>
             <from-outcome>morman_add_success</from-outcome>
             <to-view-id>/users/cartare-mormane-editare.jsp</to-view-id>
             <redirect/>
