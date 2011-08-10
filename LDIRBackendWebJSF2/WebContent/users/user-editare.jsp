@@ -56,23 +56,23 @@
                                 </h:selectOneMenu>
 
                                 <h:selectOneMenu value="#{userManager.month}" id="luna_nastere" styleClass="formDate">
-                                    <f:selectItem itemLabel="Luna" itemValue="0"/>
-                                    <f:selectItem itemLabel="Ianuarie" itemValue="1"/>
-                                    <f:selectItem itemLabel="Februarie" itemValue="2"/>
-                                    <f:selectItem itemLabel="Martie" itemValue="3"/>
-                                    <f:selectItem itemLabel="Aprilie" itemValue="4"/>
-                                    <f:selectItem itemLabel="Mai" itemValue="5"/>
-                                    <f:selectItem itemLabel="Iunie" itemValue="6"/>
-                                    <f:selectItem itemLabel="Iulie" itemValue="7"/>
-                                    <f:selectItem itemLabel="August" itemValue="8"/>
-                                    <f:selectItem itemLabel="Septembrie" itemValue="9"/>
-                                    <f:selectItem itemLabel="Octombrie" itemValue="10"/>
-                                    <f:selectItem itemLabel="Noiembrie" itemValue="11"/>
-                                    <f:selectItem itemLabel="Decembrie" itemValue="12"/>
+                                    <f:selectItem itemLabel="Luna" itemValue="-1"/>
+                                    <f:selectItem itemLabel="Ianuarie" itemValue="0"/>
+                                    <f:selectItem itemLabel="Februarie" itemValue="1"/>
+                                    <f:selectItem itemLabel="Martie" itemValue="2"/>
+                                    <f:selectItem itemLabel="Aprilie" itemValue="3"/>
+                                    <f:selectItem itemLabel="Mai" itemValue="4"/>
+                                    <f:selectItem itemLabel="Iunie" itemValue="5"/>
+                                    <f:selectItem itemLabel="Iulie" itemValue="6"/>
+                                    <f:selectItem itemLabel="August" itemValue="7"/>
+                                    <f:selectItem itemLabel="Septembrie" itemValue="8"/>
+                                    <f:selectItem itemLabel="Octombrie" itemValue="9"/>
+                                    <f:selectItem itemLabel="Noiembrie" itemValue="10"/>
+                                    <f:selectItem itemLabel="Decembrie" itemValue="11"/>
                                 </h:selectOneMenu>
 
                                 <h:selectOneMenu value="#{userManager.year}" id="an_nastere" styleClass="formDate">
-                                    <f:selectItem itemLabel="1978" itemValue="1978"/>
+                              		<f:selectItem itemLabel="An" itemValue="-1"/>
                                     <f:selectItems value="#{userManager.yearsItems}"/>
                                 </h:selectOneMenu>
                                 <br/>
