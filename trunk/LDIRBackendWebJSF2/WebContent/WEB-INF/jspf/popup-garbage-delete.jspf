@@ -1,0 +1,52 @@
+<%@ include file="/WEB-INF/jspf/page-header.jspf" %>
+
+<!-- create new issue form dialog -->
+<rich:modalPanel id="popup_garbage_delete"
+                 height="170"
+                 width="400"
+                 resizeable="false">
+
+    <%-- HEADER --%>
+    <f:facet name="header">
+        <h:outputText value="Stergere Morman"/>
+    </f:facet>
+
+    <%-- CONTROLS --%>
+    <f:facet name="controls">
+        <h:panelGroup>
+            <h:graphicImage value="/layout/images/close.png" styleClass="hidelink">
+                <rich:componentControl for="popup_garbage_delete" operation="hide" event="onclick"/>
+            </h:graphicImage>
+        </h:panelGroup>
+    </f:facet>
+
+    <%-- BODY POPUP --%>
+    <a4j:outputPanel>
+        <div style="height: 100px; margin-top: 15px; overflow: hidden;" >
+            <h3>
+                <h:outputText value="Esti sigur ca vrei stergi mormanul cu id-ul #{adminGarbageManagerBean.selectedGarbage.garbageId}?"/>
+                <h:outputText value="<br/><br/>(#{adminGarbageManagerBean.selectedGarbage.description})"
+                              escape="false"
+                              rendered="#{fn:length(adminGarbageManagerBean.selectedGarbage.description) gt 0}"/>
+            </h3>
+        </div>
+
+        <!-- BUTOANE -->
+        <div style="text-align: center;">
+            <a4j:form>
+                <a4j:commandButton actionListener="#{adminGarbageManagerBean.actionDeleteGarbage}"
+                                   value="Sterge"
+                                   reRender="lista-gunoaie"
+                                   oncomplete="#{rich:component('popup-loading')}.hide();"
+                                   onclick="#{rich:component('popup_garbage_delete')}.hide(); #{rich:component('popup-loading')}.show();"
+                                   styleClass="formButton"/>
+                <a4j:commandButton value="Renunta"
+                                   onclick="#{rich:component('popup_garbage_delete')}.hide();"
+                                   styleClass="formButton"/>
+            </a4j:form>
+        </div>
+    </a4j:outputPanel>
+</rich:modalPanel>
+
+
+
