@@ -12,6 +12,10 @@ public class NavigationValues {
 
     public static final String REGISTER_FAIL = "register_fail";
     public static final String REGISTER_SUCCESS = "register_success";
+    
+    public static final String USER_EDIT_FAIL = "user_edit_fail";
+    public static final String USER_EDIT_PASS_FAIL = "user_edit_pass_fail";
+    public static final String USER_EDIT_SUCCESS = "user_edit_success";
 
     public static final String LOGIN_FAIL = "login_fail";
     public static final String LOGIN_SUCCESS = "login_success";
