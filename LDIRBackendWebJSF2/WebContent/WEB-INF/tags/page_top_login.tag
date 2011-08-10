@@ -20,6 +20,7 @@
                     <li><a href="${pageContext.servletContext.contextPath}/admin/admin-lista-voluntari.jsf" class="${selected eq 'lista_utilizatori' ? 'active' : ''}"><span>${msg.meniu_lista_utilizatori}</span></a></li>
                     <li><a href="${pageContext.servletContext.contextPath}/admin/admin-lista-mormane.jsf" class="${selected eq 'lista_mormane' ? 'active' : ''}"><span>${msg.meniu_lista_mormane}</span></a></li>
                 </c:if>
+                <li><a href="${pageContext.servletContext.contextPath}/users/user-vizualizare.jsf" class="${selected eq 'user_edit' ? 'active': ''}"><span>${msg.meniu_user_edit}</span></a></li>
                 <li><a href="${pageContext.servletContext.contextPath}/logout.jsf"><span>${msg.meniu_logout}</span></a></li>
             </ul>
         </div>
