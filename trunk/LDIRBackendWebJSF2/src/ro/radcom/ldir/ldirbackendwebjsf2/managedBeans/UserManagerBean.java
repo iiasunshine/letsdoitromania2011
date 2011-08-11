@@ -54,11 +54,12 @@ public class UserManagerBean {
     
     private void populateData() {
 		Date date = userDetails.getBirthday();
-		//set hours to get correct day and not the day before 
-		date.setHours(10);
-		log4j.debug("date:"+date+","+date.getDate()+","+date.getMonth()+","+date.getYear()+","+userDetails.getFirstName()+","+userDetails.getActivities());
-		
+			
 		if(date != null){
+			//set hours to get correct day and not the day before 
+			date.setHours(10);
+			log4j.debug("date:"+date+","+date.getDate()+","+date.getMonth()+","+date.getYear()+","+userDetails.getFirstName()+","+userDetails.getActivities());
+		
 			setDay(date.getDate());
 			setMonth(date.getMonth());
 			setYear(date.getYear());
