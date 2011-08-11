@@ -55,12 +55,12 @@
                                 <br />
                                 <div class="label"><h:outputText value="#{msg.register_birthday} "/><span class="important">*</span></div>
                                 <h:selectOneMenu value="#{registerBean.day}" id="zi_nastere" styleClass="formDate">
-                                    <f:selectItem itemLabel="Zi" itemValue=""/>
+                                    <f:selectItem itemLabel="Zi" itemValue="-1"/>
                                     <f:selectItems value="#{registerBean.daysItems}"/>
                                 </h:selectOneMenu>
 
                                 <h:selectOneMenu value="#{registerBean.month}" id="luna_nastere" styleClass="formDate">
-                                    <f:selectItem itemLabel="Luna" itemValue=""/>
+                                    <f:selectItem itemLabel="Luna" itemValue="-1"/>
                                     <f:selectItem itemLabel="Ianuarie" itemValue="1"/>
                                     <f:selectItem itemLabel="Februarie" itemValue="2"/>
                                     <f:selectItem itemLabel="Martie" itemValue="3"/>
@@ -76,7 +76,7 @@
                                 </h:selectOneMenu>
 
                                 <h:selectOneMenu value="#{registerBean.year}" id="an_nastere" styleClass="formDate">
-                                    <f:selectItem itemLabel="1978" itemValue="1978"/>
+                                    <f:selectItem itemLabel="An" itemValue="-1"/>
                                     <f:selectItems value="#{registerBean.yearsItems}"/>
                                 </h:selectOneMenu>
                                 <br />
@@ -117,8 +117,8 @@
                                 <label class="formCheckbox">
                                     <h:outputText value="#{msg.register_acceptNotifications} "/>
                                 </label>
-                                <div class="label"><span class="important">*</span></div>
-                                <br />                                
+       
+                                <br />  
                                 <!-- ANTISPAM -->
                                 <div class="label"><h:outputText value="#{msg.register_antispam} "/><span class="important">*</span></div>
                                 <h:inputText value="#{registerBean.antispam}" id="captcha_code" styleClass="formTextfield"/>
