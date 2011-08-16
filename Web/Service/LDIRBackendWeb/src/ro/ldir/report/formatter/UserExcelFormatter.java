@@ -94,10 +94,12 @@ public abstract class UserExcelFormatter {
 
 			StringBuffer ab = new StringBuffer();
 			List<User.Activity> activities = user.getActivities();
-			if (activities != null && activities.size() > 0)
+			if (activities != null && activities.size() > 0) {
 				for (User.Activity activity : activities)
 					ab.append(activity.getReportName() + ", ");
-			row.createCell(10).setCellValue(ab.substring(0, ab.length() - 2));
+				row.createCell(10).setCellValue(
+						ab.substring(0, ab.length() - 2));
+			}
 		}
 		return wb;
 	}
