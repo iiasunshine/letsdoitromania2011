@@ -57,7 +57,10 @@ public class UserCsvFormatter {
 			buf.append("\"" + user.getPhone() + "\",");
 			buf.append("\"" + user.getRole() + "\",");
 			buf.append("\"" + user.getCounty() + "\",");
-			buf.append("\"" + user.getRecordDate() + "\",");
+			if (user.getRecordDate() != null)
+				buf.append("\"" + user.getRecordDate() + "\",");
+			else
+				buf.append(",");
 			buf.append(user.getUserId() + ",");
 			if (user.getGarbages() == null)
 				buf.append("0,");
@@ -65,9 +68,9 @@ public class UserCsvFormatter {
 				buf.append(user.getGarbages().size() + ",");
 			if (user.getMemberOf() == null
 					|| user.getMemberOf().getChartedAreas() == null)
-				buf.append("0");
+				buf.append("0,");
 			else
-				buf.append(user.getMemberOf().getChartedAreas().size());
+				buf.append(user.getMemberOf().getChartedAreas().size() + ",");
 			buf.append("\"");
 			StringBuffer ab = new StringBuffer();
 			List<User.Activity> activities = user.getActivities();
