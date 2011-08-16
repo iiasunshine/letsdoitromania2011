@@ -37,7 +37,7 @@
                                     <h:outputText value="Bine ai venit in Let`s Do It, Romania!"/>
                                     <br/>
                                     <br/>
-                                    <h:outputText value="Pentru a putea participa la actiunile noastre, te rugam sa iti creezi un [<a href=\"user-register.jsp\">cont</a>]. " escape="false"/>
+                                    <h:outputText value="Pentru a putea participa la actiunile noastre, te rugam sa iti creezi un [<a href=\"user-register.jsf\">cont</a>]. " escape="false"/>
                                     <h:outputText value="Daca ai deja un cont creat, te rugam sa te loghezi."/>
                                     <br/>
                                     <br/>
