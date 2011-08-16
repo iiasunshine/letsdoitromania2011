@@ -57,7 +57,8 @@ public abstract class UserExcelFormatter {
 		row.createCell(7).setCellValue("ID");
 		row.createCell(8).setCellValue("Nr. mormane");
 		row.createCell(9).setCellValue("Nr. zone");
-		
+		row.createCell(10).setCellValue("Activitate");
+
 		for (int i = 0; i < users.size(); i++) {
 			row = sheet.createRow(i + 1);
 			User user = users.get(i);
@@ -90,6 +91,11 @@ public abstract class UserExcelFormatter {
 			else
 				row.createCell(9, Cell.CELL_TYPE_NUMERIC).setCellValue(
 						user.getMemberOf().getChartedAreas().size());
+
+			StringBuffer ab = new StringBuffer();
+			for (User.Activity activity : user.getActivities())
+				ab.append(activity.getReportName() + ", ");
+			row.createCell(10).setCellValue(ab.substring(0, ab.length() - 2));
 		}
 		return wb;
 	}
