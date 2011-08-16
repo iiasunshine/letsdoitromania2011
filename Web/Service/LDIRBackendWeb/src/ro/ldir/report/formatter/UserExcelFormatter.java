@@ -70,12 +70,14 @@ public abstract class UserExcelFormatter {
 			row.createCell(4).setCellValue(user.getRole());
 			row.createCell(5).setCellValue(user.getCounty());
 
-			CellStyle cellStyle = wb.createCellStyle();
-			cellStyle.setDataFormat(createHelper.createDataFormat().getFormat(
-					"m/d/yy h:mm"));
-			Cell dateCell = row.createCell(6);
-			dateCell.setCellValue(user.getRecordDate());
-			dateCell.setCellStyle(cellStyle);
+			if (user.getRecordDate() != null) {
+				CellStyle cellStyle = wb.createCellStyle();
+				cellStyle.setDataFormat(createHelper.createDataFormat()
+						.getFormat("m/d/yy h:mm"));
+				Cell dateCell = row.createCell(6);
+				dateCell.setCellValue(user.getRecordDate());
+				dateCell.setCellStyle(cellStyle);
+			}
 
 			row.createCell(7, Cell.CELL_TYPE_NUMERIC).setCellValue(
 					user.getUserId());
