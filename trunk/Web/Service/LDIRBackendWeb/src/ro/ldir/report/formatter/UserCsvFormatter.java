@@ -46,7 +46,8 @@ public class UserCsvFormatter {
 		buf.append("\"Data înregistrării\",");
 		buf.append("\"ID\",");
 		buf.append("\"Nr. mormane\",");
-		buf.append("\"Nr. zone\"\n");
+		buf.append("\"Nr. zone\"");
+		buf.append("\"Activitate\"\n");
 
 		for (int i = 0; i < users.size(); i++) {
 			User user = users.get(i);
@@ -64,9 +65,16 @@ public class UserCsvFormatter {
 				buf.append(user.getGarbages().size() + ",");
 			if (user.getMemberOf() == null
 					|| user.getMemberOf().getChartedAreas() == null)
-				buf.append("0\n");
+				buf.append("0");
 			else
-				buf.append(user.getMemberOf().getChartedAreas().size() + "\n");
+				buf.append(user.getMemberOf().getChartedAreas().size());
+			buf.append("\"");
+			StringBuffer ab = new StringBuffer();
+			for (User.Activity activity : user.getActivities())
+				ab.append(activity.getReportName() + ", ");
+			buf.append(ab.substring(0, ab.length() - 2));
+			buf.append("\"");
+			buf.append("\n");
 		}
 		return buf.toString();
 	}

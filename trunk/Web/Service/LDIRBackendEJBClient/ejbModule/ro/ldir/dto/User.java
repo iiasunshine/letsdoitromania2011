@@ -64,7 +64,16 @@ import ro.ldir.dto.helper.SHA256Encrypt;
 public class User extends FieldAccessBean implements Serializable {
 
 	public enum Activity {
-		CHART, CLEAN
+		CHART("cartare"), CLEAN("salubrizare");
+		private String reportName;
+
+		private Activity(String reportName) {
+			this.reportName = reportName;
+		}
+
+		public String getReportName() {
+			return reportName;
+		}
 	}
 
 	public enum SecurityRole {
