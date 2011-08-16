@@ -70,8 +70,10 @@ public class UserCsvFormatter {
 				buf.append(user.getMemberOf().getChartedAreas().size());
 			buf.append("\"");
 			StringBuffer ab = new StringBuffer();
-			for (User.Activity activity : user.getActivities())
-				ab.append(activity.getReportName() + ", ");
+			List<User.Activity> activities = user.getActivities();
+			if (activities != null && activities.size() > 0)
+				for (User.Activity activity : activities)
+					ab.append(activity.getReportName() + ", ");
 			buf.append(ab.substring(0, ab.length() - 2));
 			buf.append("\"");
 			buf.append("\n");
