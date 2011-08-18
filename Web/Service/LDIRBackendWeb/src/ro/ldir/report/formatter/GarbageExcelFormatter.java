@@ -66,7 +66,8 @@ public abstract class GarbageExcelFormatter {
 				if (len > Garbage.DESCRIPTION_LENGTH)
 					len = Garbage.DESCRIPTION_LENGTH;
 				row.createCell(2).setCellValue(
-						garbage.getDescription().substring(0, len));
+						garbage.getDescription().substring(0, len)
+								.replaceAll("\\r\\n|\\r|\\n", " "));
 			}
 			if (garbage.getStatus() != null)
 				row.createCell(3).setCellValue(
@@ -78,7 +79,8 @@ public abstract class GarbageExcelFormatter {
 				if (len > Garbage.DETAILS_LENGTH)
 					len = Garbage.DETAILS_LENGTH;
 				row.createCell(5).setCellValue(
-						garbage.getDetails().substring(0, len));
+						garbage.getDetails().substring(0, len)
+								.replaceAll("\\r\\n|\\r|\\n", " "));
 			}
 			row.createCell(6, Cell.CELL_TYPE_NUMERIC).setCellValue(
 					garbage.getBagCount());

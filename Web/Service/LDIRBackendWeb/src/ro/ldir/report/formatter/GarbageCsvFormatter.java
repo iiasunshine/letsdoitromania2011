@@ -54,8 +54,9 @@ public class GarbageCsvFormatter {
 				int len = garbage.getDescription().length();
 				if (len > Garbage.DESCRIPTION_LENGTH)
 					len = Garbage.DESCRIPTION_LENGTH;
-				buf.append("\"" + garbage.getDescription().substring(0, len)
-						+ "\",");
+				buf.append("\""
+						+ garbage.getDescription().substring(0, len)
+								.replaceAll("\\r\\n|\\r|\\n", " ") + "\",");
 			} else
 				buf.append(",");
 			if (garbage.getStatus() != null)
@@ -67,8 +68,9 @@ public class GarbageCsvFormatter {
 				int len = garbage.getDetails().length();
 				if (len > Garbage.DETAILS_LENGTH)
 					len = Garbage.DETAILS_LENGTH;
-				buf.append("\"" + garbage.getDetails().substring(0, len)
-						+ "\",");
+				buf.append("\""
+						+ garbage.getDetails().substring(0, len)
+								.replaceAll("\\r\\n|\\r|\\n", " ") + "\",");
 			} else
 				buf.append(",");
 			buf.append(garbage.getBagCount() + ",");
