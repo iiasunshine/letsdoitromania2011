@@ -39,6 +39,7 @@ public class GarbageCsvFormatter {
 		StringBuffer buf = new StringBuffer();
 		buf.append("\"ID\",");
 		buf.append("\"Județ\",");
+		buf.append("\"Comună\",");
 		buf.append("\"Descriere\",");
 		buf.append("\"Stare\",");
 		buf.append("\"Dispersat\",");
@@ -50,6 +51,10 @@ public class GarbageCsvFormatter {
 		for (Garbage garbage : garbages) {
 			buf.append(garbage.getGarbageId() + ",");
 			buf.append("\"" + garbage.getCounty().getName() + "\",");
+			if (garbage.getTown() != null)
+				buf.append("\"" + garbage.getTown().getName() + "\",");
+			else
+				buf.append(",");
 			if (garbage.getDescription() != null) {
 				int len = garbage.getDescription().length();
 				if (len > Garbage.DESCRIPTION_LENGTH)

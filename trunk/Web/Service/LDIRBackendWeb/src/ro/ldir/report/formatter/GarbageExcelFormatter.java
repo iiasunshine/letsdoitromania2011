@@ -46,13 +46,14 @@ public abstract class GarbageExcelFormatter {
 		Row row = sheet.createRow(0);
 		row.createCell(0).setCellValue("ID");
 		row.createCell(1).setCellValue("Jude\u0163");
-		row.createCell(2).setCellValue("Descriere");
-		row.createCell(3).setCellValue("Stare");
-		row.createCell(4).setCellValue("Dispersat");
-		row.createCell(5).setCellValue("Voluminos");
-		row.createCell(6).setCellValue("Num\u04d1r saci");
-		row.createCell(7).setCellValue("Longitudine");
-		row.createCell(8).setCellValue("Latitudine");
+		row.createCell(2).setCellValue("Comun\u04d1");
+		row.createCell(3).setCellValue("Descriere");
+		row.createCell(4).setCellValue("Stare");
+		row.createCell(5).setCellValue("Dispersat");
+		row.createCell(6).setCellValue("Voluminos");
+		row.createCell(7).setCellValue("Num\u04d1r saci");
+		row.createCell(8).setCellValue("Longitudine");
+		row.createCell(9).setCellValue("Latitudine");
 
 		for (int i = 0; i < garbages.size(); i++) {
 			row = sheet.createRow(i + 1);
@@ -61,32 +62,34 @@ public abstract class GarbageExcelFormatter {
 			row.createCell(0, Cell.CELL_TYPE_NUMERIC).setCellValue(
 					garbage.getGarbageId());
 			row.createCell(1).setCellValue(garbage.getCounty().getName());
+			if (garbage.getTown() != null)
+				row.createCell(2).setCellValue(garbage.getTown().getName());
 			if (garbage.getDescription() != null) {
 				int len = garbage.getDescription().length();
 				if (len > Garbage.DESCRIPTION_LENGTH)
 					len = Garbage.DESCRIPTION_LENGTH;
-				row.createCell(2).setCellValue(
+				row.createCell(3).setCellValue(
 						garbage.getDescription().substring(0, len)
 								.replaceAll("\\r\\n|\\r|\\n", " "));
 			}
 			if (garbage.getStatus() != null)
-				row.createCell(3).setCellValue(
+				row.createCell(4).setCellValue(
 						garbage.getStatus().getTranslation());
-			row.createCell(4, Cell.CELL_TYPE_BOOLEAN).setCellValue(
+			row.createCell(5, Cell.CELL_TYPE_BOOLEAN).setCellValue(
 					garbage.isDispersed());
 			if (garbage.getDetails() != null) {
 				int len = garbage.getDetails().length();
 				if (len > Garbage.DETAILS_LENGTH)
 					len = Garbage.DETAILS_LENGTH;
-				row.createCell(5).setCellValue(
+				row.createCell(6).setCellValue(
 						garbage.getDetails().substring(0, len)
 								.replaceAll("\\r\\n|\\r|\\n", " "));
 			}
-			row.createCell(6, Cell.CELL_TYPE_NUMERIC).setCellValue(
-					garbage.getBagCount());
 			row.createCell(7, Cell.CELL_TYPE_NUMERIC).setCellValue(
-					garbage.getX());
+					garbage.getBagCount());
 			row.createCell(8, Cell.CELL_TYPE_NUMERIC).setCellValue(
+					garbage.getX());
+			row.createCell(9, Cell.CELL_TYPE_NUMERIC).setCellValue(
 					garbage.getY());
 		}
 		return wb;
