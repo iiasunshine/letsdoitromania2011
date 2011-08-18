@@ -189,7 +189,7 @@ public class AreaManagerBean {
                     }
                 }
             } catch (Exception ex) {
-                log4j.warn("Eroare constructie JSON judet selectat: " + ex);
+                log4j.warn("Eroare constructie JSON judet selectat : " + ex);
             }
         }
     }
@@ -326,7 +326,7 @@ public class AreaManagerBean {
             for (int i = 0; i < countyAreas.length; i++) {
                 CountyArea ca = countyAreas[i];
                 JSONObject jSONObject = new JSONObject();
-                jSONObject.put("name", ca.getName());
+                jSONObject.put("name", ca.getName().replaceAll(" ", "%20"));
                 jSONObject.put("bottomRightX", ca.getBottomRightX());
                 jSONObject.put("bottomRightY", ca.getBottomRightY());
                 jSONObject.put("topLeftX", ca.getTopLeftX());
