@@ -85,6 +85,7 @@ public class UserManager implements UserManagerLocal {
 	private Integer maxInvalidAccesses;
 	@Resource
 	private Integer resetTokenTimeout;
+
 	@EJB
 	private UserMailer userMailer;
 
@@ -148,7 +149,7 @@ public class UserManager implements UserManagerLocal {
 	 */
 	private void createDefaultTeam(User user) {
 		Team userTeam = new Team();
-		userTeam.setTeamName(defaultTeamName(user));
+		userTeam.setTeamName(TeamManager.defaultTeamName(user));
 		userTeam.setTeamManager(user);
 		userTeam.setVolunteerMembers(new ArrayList<User>());
 		userTeam.getVolunteerMembers().add(user);
@@ -156,15 +157,6 @@ public class UserManager implements UserManagerLocal {
 		user.getManagedTeams().add(userTeam);
 		user.setMemberOf(userTeam);
 		em.persist(userTeam);
-	}
-
-	/**
-	 * @param user
-	 * @return
-	 */
-	private String defaultTeamName(User user) {
-		return user.getLastName() + " "
-				+ Integer.toHexString(user.getEmail().hashCode());
 	}
 
 	/*
@@ -274,11 +266,11 @@ public class UserManager implements UserManagerLocal {
 		// TODO this is a hack to prevent orphan teams.
 		Query query = em.createQuery("SELECT t FROM TEAM t WHERE "
 				+ "t.teamName = :teamName");
-		query.setParameter("teamName", defaultTeamName(user));
+		query.setParameter("teamName", TeamManager.defaultTeamName(user));
 		Team userTeam = (Team) query.getSingleResult();
 
 		if (userTeam == null) {
-			log.warning("Default team (" + defaultTeamName(user)
+			log.warning("Default team (" + TeamManager.defaultTeamName(user)
 					+ ") not found, user " + user.getUserId() + "("
 					+ user.getEmail() + ") will have no team.");
 			return;
@@ -291,7 +283,7 @@ public class UserManager implements UserManagerLocal {
 		user.getManagedTeams().add(userTeam);
 		user.setMemberOf(userTeam);
 
-		log.info("Allocated existing team " + defaultTeamName(user)
+		log.info("Allocated existing team " + TeamManager.defaultTeamName(user)
 				+ ") to user " + user.getUserId() + "(" + user.getEmail()
 				+ ").");
 
