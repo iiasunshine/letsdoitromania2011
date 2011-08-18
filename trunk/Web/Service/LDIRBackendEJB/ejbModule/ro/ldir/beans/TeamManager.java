@@ -2,6 +2,7 @@ package ro.ldir.beans;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.annotation.Resource;
 import javax.annotation.security.DeclareRoles;
@@ -10,6 +11,7 @@ import javax.ejb.LocalBean;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
@@ -29,6 +31,20 @@ import ro.ldir.exceptions.InvalidTeamOperationException;
 @LocalBean
 @DeclareRoles("ADMIN")
 public class TeamManager implements TeamManagerLocal {
+	private static Logger log = Logger.getLogger(TeamManager.class.getName());
+
+	/**
+	 * Return the name of the default team for the specified user.
+	 * 
+	 * @param user
+	 *            The user to build the default team name.
+	 * @return The default team name.
+	 */
+	public static String defaultTeamName(User user) {
+		return user.getLastName() + " "
+				+ Integer.toHexString(user.getEmail().hashCode());
+	}
+
 	@Resource
 	private SessionContext ctx;
 
@@ -164,9 +180,17 @@ public class TeamManager implements TeamManagerLocal {
 			throws InvalidTeamOperationException {
 		User user = em.find(User.class, userId);
 		SecurityHelper.checkUser(user, ctx);
-		if (user.getMemberOf() != null)
-			throw new InvalidTeamOperationException(
-					"The user cannot participate in several teams.");
+		Team existingTeam = user.getMemberOf();
+		if (existingTeam != null) {
+			if (!existingTeam.getTeamName().equals(defaultTeamName(user)))
+				throw new InvalidTeamOperationException(
+						"The user cannot participate in several teams.");
+			log.info("Removing " + user.getEmail() + " from default team "
+					+ existingTeam.getTeamName());
+			existingTeam.getVolunteerMembers().remove(user);
+			user.setMemberOf(null);
+			em.merge(existingTeam);
+		}
 		Team team = em.find(Team.class, teamId);
 		user.setMemberOf(team);
 		team.getVolunteerMembers().add(user);
@@ -198,6 +222,13 @@ public class TeamManager implements TeamManagerLocal {
 				.createQuery("SELECT x FROM Team x WHERE x.teamName LIKE :nameParam");
 		query.setParameter("nameParam", "%" + nameParam + "%");
 		return query.getResultList();
+	}
+
+	private Team getTeamByExactName(String nameParam) {
+		Query query = em
+				.createQuery("SELECT x FROM Team x WHERE x.teamName LIKE :nameParam");
+		query.setParameter("nameParam", nameParam);
+		return (Team) query.getSingleResult();
 	}
 
 	/*
@@ -269,8 +300,24 @@ public class TeamManager implements TeamManagerLocal {
 		User user = em.find(User.class, userId);
 		Team team = em.find(Team.class, teamId);
 		SecurityHelper.checkTeamManagerOrMember(userManager, team, user, ctx);
-		user.setMemberOf(null);
+
+		Team defaultTeam = null;
+		try {
+			defaultTeam = getTeamByExactName(defaultTeamName(user));
+		} catch (NoResultException e) {
+			log.info("The default team (" + defaultTeamName(user) + ") for "
+					+ user.getEmail() + "was not found");
+		}
+
+		user.setMemberOf(defaultTeam);
 		team.getVolunteerMembers().remove(user);
+		if (defaultTeam != null) {
+			log.info("Moving " + user.getEmail()
+					+ " back to the default team (" + defaultTeam.getTeamName()
+					+ ")");
+			defaultTeam.getVolunteerMembers().add(user);
+			em.merge(defaultTeam);
+		}
 		em.merge(team);
 		em.merge(user);
 	}
