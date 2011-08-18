@@ -33,14 +33,14 @@ import org.apache.poi.ss.usermodel.Workbook;
 import ro.ldir.dto.Garbage;
 
 /** Converts a list of garbage to an Excel workbook. */
-public abstract class GarbageExcelFormatter {
+public class GarbageExcelFormatter implements ExcelFormatter{
 	private List<Garbage> garbages;
 
 	public GarbageExcelFormatter(List<Garbage> garbages) {
 		this.garbages = garbages;
 	}
 
-	protected final Workbook convert(Workbook wb) {
+	public final Workbook convert(Workbook wb) {
 		Sheet sheet = wb.createSheet("Mormane gunoi");
 
 		Row row = sheet.createRow(0);
@@ -94,7 +94,4 @@ public abstract class GarbageExcelFormatter {
 		}
 		return wb;
 	}
-
-	/** Return the report in a binary form. */
-	public abstract byte[] getBytes();
 }

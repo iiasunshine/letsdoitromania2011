@@ -2,10 +2,12 @@ package ro.ldir.beans;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import javax.annotation.Resource;
 import javax.annotation.security.DeclareRoles;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.SessionContext;
@@ -29,7 +31,7 @@ import ro.ldir.exceptions.InvalidTeamOperationException;
  */
 @Stateless
 @LocalBean
-@DeclareRoles("ADMIN")
+@DeclareRoles({ "ADMIN", "ORGANIZER", "ORGANIZER_MULTI" })
 public class TeamManager implements TeamManagerLocal {
 	private static Logger log = Logger.getLogger(TeamManager.class.getName());
 
@@ -210,6 +212,13 @@ public class TeamManager implements TeamManagerLocal {
 		return team;
 	}
 
+	private Team getTeamByExactName(String nameParam) {
+		Query query = em
+				.createQuery("SELECT x FROM Team x WHERE x.teamName LIKE :nameParam");
+		query.setParameter("nameParam", nameParam);
+		return (Team) query.getSingleResult();
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -222,13 +231,6 @@ public class TeamManager implements TeamManagerLocal {
 				.createQuery("SELECT x FROM Team x WHERE x.teamName LIKE :nameParam");
 		query.setParameter("nameParam", "%" + nameParam + "%");
 		return query.getResultList();
-	}
-
-	private Team getTeamByExactName(String nameParam) {
-		Query query = em
-				.createQuery("SELECT x FROM Team x WHERE x.teamName LIKE :nameParam");
-		query.setParameter("nameParam", nameParam);
-		return (Team) query.getSingleResult();
 	}
 
 	/*
@@ -258,6 +260,47 @@ public class TeamManager implements TeamManagerLocal {
 		Equipment equipment = em.find(Equipment.class, equipmentId);
 		team.getEquipments().remove(equipment);
 		em.merge(team);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * ro.ldir.beans.TeamManagerLocal#reportAssignedChartedAreas(java.util.Set,
+	 * java.util.Set, java.util.Set)
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	@RolesAllowed({ "ADMIN", "ORGANIZER", "ORGANIZER_MULTI" })
+	public List<Team> reportAssignedChartedAreas(Set<String> counties,
+			Set<String> chartedAreaNames, Set<Integer> userIds) {
+		StringBuffer buf = new StringBuffer();
+
+		buf.append("SELECT t FROM Team t INNER JOIN t.chartedAreas ca ");
+		if (userIds != null && userIds.size() > 0)
+			buf.append("INNER JOIN t.teamManager u ");
+		if (counties != null && counties.size() > 0)
+			buf.append("INNER JOIN ca.county c ");
+		if ((userIds != null && userIds.size() > 0)
+				|| (counties != null && counties.size() > 0)
+				|| (chartedAreaNames != null && chartedAreaNames.size() > 0))
+			buf.append("WHERE ");
+		if (chartedAreaNames != null && chartedAreaNames.size() > 0)
+			buf.append("ca.name IN :chartedAreaNames");
+		if (userIds != null && userIds.size() > 0)
+			buf.append("u.userId IN :userIds");
+		if (counties != null && counties.size() > 0)
+			buf.append("ca.county IN :counties");
+
+		Query query = em.createQuery(buf.toString());
+		if (chartedAreaNames != null && chartedAreaNames.size() > 0)
+			query.setParameter("chartedAreaNames", chartedAreaNames);
+		if (userIds != null && userIds.size() > 0)
+			query.setParameter("userIds", userIds);
+		if (counties != null && counties.size() > 0)
+			query.setParameter("counties", counties);
+
+		return query.getResultList();
 	}
 
 	/*

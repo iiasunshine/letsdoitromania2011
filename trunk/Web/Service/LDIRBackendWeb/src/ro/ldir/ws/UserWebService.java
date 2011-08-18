@@ -52,9 +52,11 @@ import ro.ldir.dto.Team;
 import ro.ldir.dto.User;
 import ro.ldir.dto.User.SecurityRole;
 import ro.ldir.exceptions.InvalidTeamOperationException;
+import ro.ldir.report.formatter.ExcelFormatter;
+import ro.ldir.report.formatter.GenericXlsFormatter;
+import ro.ldir.report.formatter.GenericXlsxFormatter;
 import ro.ldir.report.formatter.UserCsvFormatter;
-import ro.ldir.report.formatter.UserXlsFormatter;
-import ro.ldir.report.formatter.UserXlsxFormatter;
+import ro.ldir.report.formatter.UserExcelFormatter;
 
 /**
  * The garbage user. Implements queries for users, updates of users information,
@@ -215,8 +217,9 @@ public class UserWebService {
 			@QueryParam("role") Set<String> roles,
 			@QueryParam("minGarbages") Integer minGarbages,
 			@QueryParam("maxGarbages") Integer maxGarbages) {
-		byte report[] = new UserXlsFormatter(userManager.report(counties,
-				birthYears, roles, minGarbages, maxGarbages)).getBytes();
+		ExcelFormatter fmt = new UserExcelFormatter(userManager.report(
+				counties, birthYears, roles, minGarbages, maxGarbages));
+		byte report[] = new GenericXlsFormatter(fmt).getBytes();
 		return Response
 				.ok(report)
 				.header("Content-Disposition",
@@ -231,8 +234,9 @@ public class UserWebService {
 			@QueryParam("role") Set<String> roles,
 			@QueryParam("minGarbages") Integer minGarbages,
 			@QueryParam("maxGarbages") Integer maxGarbages) {
-		byte report[] = new UserXlsxFormatter(userManager.report(counties,
-				birthYears, roles, minGarbages, maxGarbages)).getBytes();
+		ExcelFormatter fmt = new UserExcelFormatter(userManager.report(
+				counties, birthYears, roles, minGarbages, maxGarbages));
+		byte report[] = new GenericXlsxFormatter(fmt).getBytes();
 		return Response
 				.ok(report)
 				.header("Content-Disposition",

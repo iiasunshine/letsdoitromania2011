@@ -25,6 +25,7 @@ package ro.ldir.ws;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.ejb.EJBException;
 import javax.naming.InitialContext;
@@ -43,8 +44,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import com.sun.jersey.api.client.ClientResponse.Status;
-
 import ro.ldir.beans.TeamManagerLocal;
 import ro.ldir.dto.ChartedArea;
 import ro.ldir.dto.CleaningEquipment;
@@ -53,7 +52,15 @@ import ro.ldir.dto.Organization;
 import ro.ldir.dto.Team;
 import ro.ldir.dto.TransportEquipment;
 import ro.ldir.dto.User;
+import ro.ldir.dto.helper.AssignedChartedAreaFilter;
 import ro.ldir.exceptions.ChartedAreaAssignmentException;
+import ro.ldir.report.formatter.AssignedChartedAreasCsvFormatter;
+import ro.ldir.report.formatter.AssignedChartedAreasExcelFormatter;
+import ro.ldir.report.formatter.ExcelFormatter;
+import ro.ldir.report.formatter.GenericXlsFormatter;
+import ro.ldir.report.formatter.GenericXlsxFormatter;
+
+import com.sun.jersey.api.client.ClientResponse.Status;
 
 /**
  * The team web service.
@@ -200,6 +207,69 @@ public class TeamWebService {
 			throw new WebApplicationException(500);
 		}
 		return Response.ok().build();
+	}
+
+	@GET
+	@Produces({ "application/json", "application/xml" })
+	@Path("reportChartedArea")
+	public List<Team> reportChartedArea(
+			@QueryParam("county") Set<String> counties,
+			@QueryParam("chartedArea") Set<String> chartedAreaNames,
+			@QueryParam("managerId") Set<Integer> userIds) {
+		return teamManager.reportAssignedChartedAreas(counties,
+				chartedAreaNames, userIds);
+	}
+
+	@GET
+	@Produces({ "text/csv" })
+	@Path("reportChartedArea")
+	public String reportChartedAreaCsv(
+			@QueryParam("county") Set<String> counties,
+			@QueryParam("chartedArea") Set<String> chartedAreaNames,
+			@QueryParam("managerId") Set<Integer> userIds) {
+		return new AssignedChartedAreasCsvFormatter(
+				teamManager.reportAssignedChartedAreas(counties,
+						chartedAreaNames, userIds),
+				new AssignedChartedAreaFilter(counties, chartedAreaNames,
+						userIds)).toString();
+	}
+
+	@GET
+	@Produces({ "application/vnd.ms-excel" })
+	@Path("reportChartedArea")
+	public Response reportChartedAreaXls(
+			@QueryParam("county") Set<String> counties,
+			@QueryParam("chartedArea") Set<String> chartedAreaNames,
+			@QueryParam("managerId") Set<Integer> userIds) {
+		ExcelFormatter fmt = new AssignedChartedAreasExcelFormatter(
+				teamManager.reportAssignedChartedAreas(counties,
+						chartedAreaNames, userIds),
+				new AssignedChartedAreaFilter(counties, chartedAreaNames,
+						userIds));
+		byte report[] = new GenericXlsFormatter(fmt).getBytes();
+		return Response
+				.ok(report)
+				.header("Content-Disposition",
+						"attachment; filename=assignedreport.xls").build();
+	}
+
+	@GET
+	@Produces({ "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" })
+	@Path("reportChartedArea")
+	public Response reportChartedAreaXlsx(
+			@QueryParam("county") Set<String> counties,
+			@QueryParam("chartedArea") Set<String> chartedAreaNames,
+			@QueryParam("managerId") Set<Integer> userIds) {
+		ExcelFormatter fmt = new AssignedChartedAreasExcelFormatter(
+				teamManager.reportAssignedChartedAreas(counties,
+						chartedAreaNames, userIds),
+				new AssignedChartedAreaFilter(counties, chartedAreaNames,
+						userIds));
+		byte report[] = new GenericXlsxFormatter(fmt).getBytes();
+		return Response
+				.ok(report)
+				.header("Content-Disposition",
+						"attachment; filename=assignedreport.xlsx").build();
 	}
 
 	@GET

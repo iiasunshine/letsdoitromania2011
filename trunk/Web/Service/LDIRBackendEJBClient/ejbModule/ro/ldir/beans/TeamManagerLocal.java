@@ -1,10 +1,14 @@
 package ro.ldir.beans;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.ejb.Local;
 
+import ro.ldir.dto.ChartedArea;
 import ro.ldir.dto.Equipment;
+import ro.ldir.dto.Garbage;
 import ro.ldir.dto.Team;
 import ro.ldir.exceptions.ChartedAreaAssignmentException;
 import ro.ldir.exceptions.InvalidTeamOperationException;
@@ -126,6 +130,22 @@ public interface TeamManagerLocal {
 	 *            The equipment ID to remove.
 	 */
 	public void removeEquipment(int teamId, int equipmentId);
+
+	/**
+	 * Lists all teams that have an area assigned to be charted and match the
+	 * given parameters. Use {@code null} if you do not want to use any of the
+	 * query parameters.
+	 * 
+	 * @param counties
+	 *            A list of counties where to find the assigned charted areas.
+	 * @param chartedAreaNames
+	 *            The name of the assigned charted areas.
+	 * @param userIds
+	 *            The user IDS of the team managers.
+	 * @return A list of teams matching the specified criteria.
+	 */
+	public List<Team> reportAssignedChartedAreas(Set<String> counties,
+			Set<String> chartedAreaNames, Set<Integer> userIds);
 
 	/**
 	 * Updates a team with existing values.
