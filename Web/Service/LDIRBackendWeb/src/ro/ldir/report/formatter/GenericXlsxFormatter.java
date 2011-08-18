@@ -17,7 +17,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- *  Filename: UserXlsFormatter.java
+ *  Filename: GenericXlsFormatter.java
  *  Author(s): Stefan Guna, svguna@gmail.com
  *
  */
@@ -25,36 +25,30 @@ package ro.ldir.report.formatter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.List;
 import java.util.logging.Logger;
 
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import ro.ldir.dto.Garbage;
-
-/** Converts a list of garbages to XLS format. */
-public class GarbageXlsFormatter extends GarbageExcelFormatter {
-	private static Logger log = Logger.getLogger(GarbageXlsFormatter.class
+/** Converts a list of teams to the XLS format. */
+public class GenericXlsxFormatter {
+	private static Logger log = Logger.getLogger(GenericXlsxFormatter.class
 			.getName());
+	private ExcelFormatter formatter;
 
-	public GarbageXlsFormatter(List<Garbage> garbages) {
-		super(garbages);
+	public GenericXlsxFormatter(ExcelFormatter formatter) {
+		this.formatter = formatter;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see ro.ldir.report.formatter.GarbageExcelFormatter#getBytes()
-	 */
+	/** Return the report in a binary form. */
 	public byte[] getBytes() {
-		Workbook wb = convert(new HSSFWorkbook());
+		Workbook wb = formatter.convert(new XSSFWorkbook());
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		try {
 			wb.write(out);
 			out.close();
 		} catch (IOException e) {
-			log.warning("Unable to save XLS report: " + e.getMessage());
+			log.warning("Unable to save XLSX report: " + e.getMessage());
 		}
 		return out.toByteArray();
 	}

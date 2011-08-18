@@ -59,9 +59,11 @@ import ro.ldir.dto.CountyArea;
 import ro.ldir.dto.Garbage;
 import ro.ldir.dto.TownArea;
 import ro.ldir.exceptions.NoCountyException;
+import ro.ldir.report.formatter.ExcelFormatter;
 import ro.ldir.report.formatter.GarbageCsvFormatter;
-import ro.ldir.report.formatter.GarbageXlsFormatter;
-import ro.ldir.report.formatter.GarbageXlsxFormatter;
+import ro.ldir.report.formatter.GarbageExcelFormatter;
+import ro.ldir.report.formatter.GenericXlsFormatter;
+import ro.ldir.report.formatter.GenericXlsxFormatter;
 
 import com.sun.jersey.api.Responses;
 import com.sun.jersey.core.header.FormDataContentDisposition;
@@ -352,8 +354,9 @@ public class GarbageWebService {
 			@QueryParam("userId") Set<Integer> userIds,
 			@QueryParam("insertDate") Set<String> unparsedDates) {
 		HashSet<Date> insertDates = parseDates(unparsedDates);
-		byte report[] = new GarbageXlsFormatter(garbageManager.report(counties,
-				chartedAreaNames, userIds, insertDates)).getBytes();
+		ExcelFormatter fmt = new GarbageExcelFormatter(garbageManager.report(
+				counties, chartedAreaNames, userIds, insertDates));
+		byte report[] = new GenericXlsFormatter(fmt).getBytes();
 		return Response
 				.ok(report)
 				.header("Content-Disposition",
@@ -368,8 +371,9 @@ public class GarbageWebService {
 			@QueryParam("userId") Set<Integer> userIds,
 			@QueryParam("insertDate") Set<String> unparsedDates) {
 		HashSet<Date> insertDates = parseDates(unparsedDates);
-		byte report[] = new GarbageXlsxFormatter(garbageManager.report(
-				counties, chartedAreaNames, userIds, insertDates)).getBytes();
+		ExcelFormatter fmt = new GarbageExcelFormatter(garbageManager.report(
+				counties, chartedAreaNames, userIds, insertDates));
+		byte report[] = new GenericXlsxFormatter(fmt).getBytes();
 		return Response
 				.ok(report)
 				.header("Content-Disposition",

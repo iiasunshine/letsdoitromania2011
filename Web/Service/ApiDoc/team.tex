@@ -196,5 +196,26 @@ The logged in user must be an ``ADMIN'' or the team's manager.
 The logged in user must be an ``ADMIN'' or the team's manager.
 \end{apidata}
 
+\subsection{Assigned charted area report}
+
+\apilocation{get}{ws/team/reportChartedArea?county=\param{county}\&\\chartedArea=\param{chartedAreaName}\&managerId=\param{managerId}}
+\begin{apidata}{params}
+  Omitting a query parameter behaves like a wildcard. All parameters can be
+  repeated and the query will behave like a disjunction.
+\end{apidata}
+\begin{apidata}{returns}
+  A list of teams matching the query criteria. The list can be formatted using
+  XML, JSON, CSV, XLS or XLSX. To this end, you need to setup the appropriate
+  MIME types in the HTTP Accept headers, i.e., ``application/json'',
+  ``application/xml'', ``text/csv'', ``application/vnd.ms-excel'', respectively
+  ``application/vnd.openxmlformats-officedocument.spreadsheetml.sheet''.
+
+  The \texttt{chartedArea} objects assigned to each team in the result can be
+  further filtered to match the query criteria using the
+  \texttt{ro.ldir.dto.helper.AssignedChartedAreaFilter}. 
+\end{apidata}
+\begin{apidata}{access}
+The logged in user must be an ``ADMIN'', ``ORGANIZER'', ``ORGANIZER\_MULTI''. 
+\end{apidata}
 
 

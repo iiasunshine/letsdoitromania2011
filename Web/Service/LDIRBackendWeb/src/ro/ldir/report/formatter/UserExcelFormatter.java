@@ -35,14 +35,14 @@ import org.apache.poi.ss.usermodel.Workbook;
 import ro.ldir.dto.User;
 
 /** Converts a list of users to an Excel workbook. */
-public abstract class UserExcelFormatter {
+public class UserExcelFormatter implements ExcelFormatter {
 	private List<User> users;
 
 	public UserExcelFormatter(List<User> users) {
 		this.users = users;
 	}
 
-	protected final Workbook convert(Workbook wb) {
+	public final Workbook convert(Workbook wb) {
 		Sheet sheet = wb.createSheet("Utilizatori");
 		CreationHelper createHelper = wb.getCreationHelper();
 
@@ -105,7 +105,4 @@ public abstract class UserExcelFormatter {
 		}
 		return wb;
 	}
-
-	/** Return the report in a binary form. */
-	public abstract byte[] getBytes();
 }
