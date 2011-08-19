@@ -83,8 +83,16 @@ Section~\ref{sec:user:update}.
 
 \begin{entitydef}{organization}
   \property{address}{A string containing the address of the organization.}
-  \roproperty{contactUser}{An integer denoting the ID of the \texttt{user}
-  entity responsible for this organization.}
+  \property{contactEmail}{A string denoting the email address of the contact
+  within this organization.}
+  \property{contactFirstname}{A string denoting the first name of the contact
+  within this organization.}
+  \property{contactLastname}{A string denoting the last name of the contact
+  within this organization.}
+  \property{contactPhone}{A string denoting the phone number of the contact
+  within this organization.}
+  \roproperty{manager}{An integer denoting the ID of the \texttt{user} entity
+  responsible for this organization.}
   \property{county}{A string denoting the county where this organization is
   located.}
   \property{memberOf}{An integer denoting the ID of the \texttt{team} entity

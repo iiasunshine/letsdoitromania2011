@@ -161,7 +161,7 @@ public class TeamManager implements TeamManagerLocal {
 	public void enrollOrganization(int organizationId, int teamId)
 			throws InvalidTeamOperationException {
 		Organization organization = em.find(Organization.class, organizationId);
-		SecurityHelper.checkUser(organization.getContactUser(), ctx);
+		SecurityHelper.checkUser(organization.getManager(), ctx);
 		if (organization.getMemberOf() != null)
 			throw new InvalidTeamOperationException(
 					"The organization cannot participate in several teams.");

@@ -115,10 +115,10 @@ public class OrganizationWebService {
 
 	@GET
 	@Produces({ "application/json", "application/xml" })
-	@Path("{organizationId:[0-9]+}/contactUser")
-	public User getContactUser(@PathParam("organizationId") int organizationId) {
+	@Path("{organizationId:[0-9]+}/manager")
+	public User getManager(@PathParam("organizationId") int organizationId) {
 		try {
-			return orgManager.getOrganization(organizationId).getContactUser();
+			return orgManager.getOrganization(organizationId).getManager();
 		} catch (NullPointerException e) {
 			throw new WebApplicationException(404);
 		}
