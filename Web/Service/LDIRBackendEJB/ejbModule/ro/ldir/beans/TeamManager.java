@@ -131,7 +131,20 @@ public class TeamManager implements TeamManagerLocal {
 	 * @see ro.ldir.beans.TeamManagerLocal#deleteEquipment(int, int)
 	 */
 	@Override
-	public void deleteEquipment(int teamId, int equipmentId) {
+	public void deleteEquipment(int teamId, int equipmentIdx) {
+		Team team = em.find(Team.class, teamId);
+		SecurityHelper.checkTeamManager(userManager, team, ctx);
+		team.getEquipments().remove(equipmentIdx);
+		em.merge(team);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ro.ldir.beans.TeamManagerLocal#deleteEquipment(int, int)
+	 */
+	@Override
+	public void deleteEquipmentById(int teamId, int equipmentId) {
 		Team team = em.find(Team.class, teamId);
 		SecurityHelper.checkTeamManager(userManager, team, ctx);
 		Equipment equipment = em.find(Equipment.class, equipmentId);
