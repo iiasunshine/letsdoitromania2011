@@ -1,14 +1,11 @@
 package ro.ldir.beans;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
 import javax.ejb.Local;
 
-import ro.ldir.dto.ChartedArea;
 import ro.ldir.dto.Equipment;
-import ro.ldir.dto.Garbage;
 import ro.ldir.dto.Team;
 import ro.ldir.exceptions.ChartedAreaAssignmentException;
 import ro.ldir.exceptions.InvalidTeamOperationException;
@@ -50,6 +47,16 @@ public interface TeamManagerLocal {
 	public void createTeam(Team team);
 
 	/**
+	 * Delete the team equipment.
+	 * 
+	 * @param teamId
+	 *            The team ID to delete from.
+	 * @param equipmentIdx
+	 *            The equipment index to delete.
+	 */
+	void deleteEquipment(int teamId, int equipmentIdx);
+
+	/**
 	 * Delete an equipment from a team.
 	 * 
 	 * @param teamId
@@ -57,7 +64,7 @@ public interface TeamManagerLocal {
 	 * @param equipmentId
 	 *            The equipment ID to delete.
 	 */
-	public void deleteEquipment(int teamId, int equipmentId);
+	public void deleteEquipmentById(int teamId, int equipmentId);
 
 	/**
 	 * Delete a team.

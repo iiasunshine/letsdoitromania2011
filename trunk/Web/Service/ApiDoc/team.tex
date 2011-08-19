@@ -103,18 +103,52 @@ The logged in user must be an ``ADMIN'' or the team's manager.
 The logged in user must be an ``ADMIN'' or the team's manager.
 \end{apidata}
 
+\subsection{Getting the team equipment by type}
+\label{sec:team:eq_by_type}
 
-\subsection{Getting team equipment information}
+\apilocation{get}{ws/team/\param{teamId}/\param{equipment\_type}}
+\begin{apidata}{params}
+  The \texttt{\emph{equipment\_type}} path parameter must match the type of the
+  intended equipment. It can be one of the following strings: ``gps'',
+  ``cleaning'' and ``transport''.
+\end{apidata}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyditem{A list of equipments matching the specified type.}
+    \replyitem{404}{If the team is not found.}
+  \end{datalist}
+\end{apidata}
+\begin{apidata}{access}
+The logged in user must be an ``ADMIN'' or the team's manager.
+\end{apidata}
 
-Given an equipment identifier, this call gets information about the equipment.
-The equipment identifiers can be obtained as a field of the \texttt{team}
-entity.
+\subsection{Getting the number of team equipments}
+\label{sec:team:eq_cnt}
+
+\apilocation{get}{ws/team/\param{teamId}/equipmentCount}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyditem{A number describing how many equipments this team has.}
+    \replyitem{404}{If the team is not found.}
+  \end{datalist}
+\end{apidata}
+\begin{apidata}{access}
+The logged in user must be an ``ADMIN'', the team's manager or a team member.
+\end{apidata}
+
+\subsection{Getting team equipment by index}
+\label{sec:team:eq_by_idx}
+
+Given a team equipment index, this call gets information about the equipment.
+Valid indexes are in the range $0 \ldots n$, where $n$ is obtained by the call
+described in Section~\ref{sec:team:eq_cnt}.
 
 \apilocation{get}{ws/team/\param{teamId}/equipment/\param{equipmentId}}
 \begin{apidata}{returns}
   \begin{datalist}
     \replyditem{A \texttt{GpsEquipment}, \texttt{CleaningEquipment} or
     \texttt{TransportEquipment} entity describing the equipment.}
+    \replyitem{404}{If the team or the equipment is not found.}
   \end{datalist}
 \end{apidata}
 \begin{apidata}{access}
@@ -122,13 +156,32 @@ The logged in user must be an ``ADMIN'', the team's manager or a team member.
 \end{apidata}
 
 
-\subsection{Removing team equipment}
+\subsection{Removing team equipment by index}
 
-Given an equipment identifier, this call removes the equipment from a team's
-ownership. The equipment identifiers can be obtained as a field of the
-\texttt{team} entity.
+Given a team equipment index, this call deletes the equipment.
+Valid indexes are in the range $0 \ldots n$, where $n$ is obtained by the call
+described in Section~\ref{sec:team:eq_cnt}.
 
 \apilocation{delete}{ws/team/\param{teamId}/equipment/\param{equipmentId}}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyitem{404}{If the team or the equipment is not found.}
+  \end{datalist}
+\end{apidata}
+\begin{apidata}{access}
+The logged in user must be an ``ADMIN'', the team's manager or a team member.
+\end{apidata}
+
+
+\subsection{Removing team equipment by ID}
+
+Given an equipment identifier, this call removes the equipment from a team's
+ownership. The equipment identifiers are a property of the \texttt{equipment}
+entity (i.e., \texttt{equipmentId}). The latter must be obtained through one of
+the calls described in Section~\ref{sec:team:eq_by_type} or
+Section~\ref{sec:team:eq_by_idx}.
+
+\apilocation{delete}{ws/team/\param{teamId}/equipmentId/\param{equipmentId}}
 \begin{apidata}{returns}
   \begin{datalist}
     \replyitem{200}{If the operation succeeds.}

@@ -47,6 +47,7 @@ import javax.ws.rs.core.UriInfo;
 import ro.ldir.beans.TeamManagerLocal;
 import ro.ldir.dto.ChartedArea;
 import ro.ldir.dto.CleaningEquipment;
+import ro.ldir.dto.Equipment;
 import ro.ldir.dto.GpsEquipment;
 import ro.ldir.dto.Organization;
 import ro.ldir.dto.Team;
@@ -128,10 +129,26 @@ public class TeamWebService {
 	}
 
 	@DELETE
-	@Path("{teamId:[0-9]+}/equipment/{equipmentId:[0-9]+}")
-	public Response deleteEquipment(@PathParam("teamId") int teamId,
+	@Path("{teamId:[0-9]+}/equipmentId/{equipmentId:[0-9]+}")
+	public Response deleteEquipmentById(@PathParam("teamId") int teamId,
 			@PathParam("equipmentId") int equipmentId) {
-		teamManager.deleteEquipment(teamId, equipmentId);
+		teamManager.deleteEquipmentById(teamId, equipmentId);
+		return Response.ok().build();
+	}
+
+	@DELETE
+	@Path("{teamId:[0-9]+}/equipment/{equipmentIdx:[0-9]+}")
+	public Response deleteEquipment(@PathParam("teamId") int teamId,
+			@PathParam("equipmentIdx") int equipmentIdx) {
+		try {
+			teamManager.deleteEquipment(teamId, equipmentIdx);
+		} catch (EJBException e) {
+			if (e.getCausedByException() instanceof NullPointerException
+					|| e.getCausedByException() instanceof IndexOutOfBoundsException)
+				return Response.status(Status.NOT_FOUND).build();
+			return Response.status(Status.INTERNAL_SERVER_ERROR)
+					.entity(e.getCausedByException().getMessage()).build();
+		}
 		return Response.ok().build();
 	}
 
@@ -152,6 +169,64 @@ public class TeamWebService {
 		} catch (NullPointerException e) {
 			throw new WebApplicationException(404);
 		}
+	}
+
+	@GET
+	@Produces({ "application/json", "application/xml" })
+	@Path("{teamId:[0-9]+}/cleaning")
+	public List<CleaningEquipment> getCleaningEquipment(
+			@PathParam("teamId") int teamId) {
+		List<CleaningEquipment> result = new ArrayList<CleaningEquipment>();
+		Team team = teamManager.getTeam(teamId);
+		if (team == null)
+			throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());
+		for (Equipment e : team.getEquipments())
+			if (e instanceof CleaningEquipment)
+				result.add((CleaningEquipment) e);
+		return result;
+	}
+
+	@GET
+	@Produces({ "application/json", "application/xml" })
+	@Path("{teamId:[0-9]+}/equipment/{equipmentIdx:[0-9]+}")
+	public Equipment getEquipment(@PathParam("teamId") int teamId,
+			@PathParam("equipmentIdx") int equipmentIdx) {
+		Team team = teamManager.getTeam(teamId);
+		if (team == null)
+			throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());
+		Equipment result;
+		try {
+			result = team.getEquipments().get(equipmentIdx);
+		} catch (IndexOutOfBoundsException e) {
+			throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());
+		}
+		return result;
+	}
+
+	@GET
+	@Produces({ "application/json", "application/xml" })
+	@Path("{teamId:[0-9]+}/equipmentCount")
+	public String getEquipmentCount(@PathParam("teamId") int teamId) {
+		Team team = teamManager.getTeam(teamId);
+		if (team == null)
+			throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());
+		if (team.getEquipments() == null)
+			return "0";
+		return new Integer(team.getEquipments().size()).toString();
+	}
+
+	@GET
+	@Produces({ "application/json", "application/xml" })
+	@Path("{teamId:[0-9]+}/gps")
+	public List<GpsEquipment> getGpsEquipment(@PathParam("teamId") int teamId) {
+		List<GpsEquipment> result = new ArrayList<GpsEquipment>();
+		Team team = teamManager.getTeam(teamId);
+		if (team == null)
+			throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());
+		for (Equipment e : team.getEquipments())
+			if (e instanceof GpsEquipment)
+				result.add((GpsEquipment) e);
+		return result;
 	}
 
 	@GET
@@ -193,6 +268,21 @@ public class TeamWebService {
 		} catch (NullPointerException e) {
 			throw new WebApplicationException(404);
 		}
+	}
+
+	@GET
+	@Produces({ "application/json", "application/xml" })
+	@Path("{teamId:[0-9]+}/transport")
+	public List<TransportEquipment> getTransportEquipment(
+			@PathParam("teamId") int teamId) {
+		List<TransportEquipment> result = new ArrayList<TransportEquipment>();
+		Team team = teamManager.getTeam(teamId);
+		if (team == null)
+			throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());
+		for (Equipment e : team.getEquipments())
+			if (e instanceof TransportEquipment)
+				result.add((TransportEquipment) e);
+		return result;
 	}
 
 	@DELETE
