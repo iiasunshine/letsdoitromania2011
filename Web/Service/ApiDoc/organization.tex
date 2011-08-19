@@ -17,6 +17,25 @@ the HTTP headers must match a user's email whose state is not ``PENDING'' or
 ``SUSPENDED''.
 
 
+\subsection{Enrolling a new organization}
+
+This call inserts a new organization in the system. The contact person for the
+new organization will be set to match the authenticated user. The organization
+will be made member of the user's \emph{only} managed team, if this exists.
+Otherwise, the call fails.
+
+\apilocation{post}{ws/organization/addEnroll}
+\begin{apidata}{contents}
+  A \texttt{organization} entity describing the new organization.
+\end{apidata}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyitem{200}{if the operation succeeds.}
+    \replyitem{409}{if the user manages 0 or more than 1 team.}
+    \replyitem{500}{if another error occurs.}
+  \end{datalist}
+\end{apidata}
+
 \subsection{Registering a new organization}
 
 This call inserts a new organization in the system. The contact person for the

@@ -5,9 +5,22 @@ import java.util.List;
 import javax.ejb.Local;
 
 import ro.ldir.dto.Organization;
+import ro.ldir.exceptions.InvalidTeamOperationException;
 
 @Local
 public interface OrganizationManagerLocal {
+	/**
+	 * Adds a new organization in the database and enrolls it in the user's
+	 * <b>only</b> team.
+	 * 
+	 * @param organization
+	 *            The organization to add in the database.
+	 * @throws InvalidTeamOperationException
+	 *             If the user manages 0 or more than one team.
+	 */
+	public void addEnrollOrganization(Organization organization)
+			throws InvalidTeamOperationException;
+
 	/**
 	 * Add a new organization in the database.
 	 * 
