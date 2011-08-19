@@ -233,7 +233,7 @@ public class User extends FieldAccessBean implements Serializable {
 	/**
 	 * @return the organizations
 	 */
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "contactUser", orphanRemoval = true)
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "manager", orphanRemoval = true)
 	@XmlIDREF
 	public List<Organization> getOrganizations() {
 		return organizations;

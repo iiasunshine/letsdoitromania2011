@@ -61,7 +61,7 @@ public class OrganizationManager implements OrganizationManagerLocal {
 		if (user.getOrganizations() == null)
 			user.setOrganizations(new ArrayList<Organization>());
 		user.getOrganizations().add(organization);
-		organization.setContactUser(user);
+		organization.setManager(user);
 
 		if (team.getOrganizationMembers() == null)
 			team.setOrganizationMembers(new ArrayList<Organization>());
@@ -85,7 +85,7 @@ public class OrganizationManager implements OrganizationManagerLocal {
 		if (user.getOrganizations() == null)
 			user.setOrganizations(new ArrayList<Organization>());
 		user.getOrganizations().add(organization);
-		organization.setContactUser(user);
+		organization.setManager(user);
 		em.merge(user);
 		em.persist(organization);
 	}
@@ -98,7 +98,7 @@ public class OrganizationManager implements OrganizationManagerLocal {
 	@Override
 	public void deleteOrganization(int organizationId) {
 		Organization existing = em.find(Organization.class, organizationId);
-		User user = existing.getContactUser();
+		User user = existing.getManager();
 		SecurityHelper.checkUser(user, ctx);
 		user.getOrganizations().remove(existing);
 		em.remove(existing);
@@ -114,7 +114,7 @@ public class OrganizationManager implements OrganizationManagerLocal {
 	public Organization getOrganization(int organizationId) {
 		Organization org = em.find(Organization.class, organizationId);
 		SecurityHelper
-				.checkAccessToUser(userManager, org.getContactUser(), ctx);
+				.checkAccessToUser(userManager, org.getManager(), ctx);
 		return org;
 	}
 
@@ -138,7 +138,7 @@ public class OrganizationManager implements OrganizationManagerLocal {
 	@Override
 	public void updateOrganization(int organizationId, Organization organization) {
 		Organization existing = em.find(Organization.class, organizationId);
-		SecurityHelper.checkUser(existing.getContactUser(), ctx);
+		SecurityHelper.checkUser(existing.getManager(), ctx);
 		existing.copyFields(organization);
 		em.merge(existing);
 		em.flush();

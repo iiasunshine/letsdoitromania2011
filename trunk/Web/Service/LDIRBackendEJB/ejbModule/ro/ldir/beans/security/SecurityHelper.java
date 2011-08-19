@@ -183,7 +183,7 @@ public class SecurityHelper {
 		if (!team.getVolunteerMembers().contains(user))
 			return;
 		for (Organization org : team.getOrganizationMembers())
-			if (org.getContactUser().equals(user))
+			if (org.getManager().equals(user))
 				return;
 		throw new SecurityException("The user is not member of this team.");
 	}

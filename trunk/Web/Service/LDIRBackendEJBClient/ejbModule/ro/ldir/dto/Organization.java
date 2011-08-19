@@ -53,8 +53,12 @@ public class Organization extends FieldAccessBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;;
 	private String address;
-	private User contactUser;
+	private String contactEmail;
+	private String contactFirstname;
+	private String contactLastname;
+	private String contactPhone;
 	private String county;
+	private User manager;
 	private Team memberOf;
 	private Integer membersCount;
 	private String name;
@@ -85,14 +89,20 @@ public class Organization extends FieldAccessBean implements Serializable {
 		return address;
 	}
 
-	/**
-	 * @return the contactUser
-	 */
-	@ManyToOne(optional = false)
-	@XmlIDREF
-	@JoinColumn(nullable = false)
-	public User getContactUser() {
-		return contactUser;
+	public String getContactEmail() {
+		return contactEmail;
+	}
+
+	public String getContactFirstname() {
+		return contactFirstname;
+	}
+
+	public String getContactLastname() {
+		return contactLastname;
+	}
+
+	public String getContactPhone() {
+		return contactPhone;
 	}
 
 	/**
@@ -100,6 +110,16 @@ public class Organization extends FieldAccessBean implements Serializable {
 	 */
 	public String getCounty() {
 		return county;
+	}
+
+	/**
+	 * @return the manager
+	 */
+	@ManyToOne(optional = false)
+	@XmlIDREF
+	@JoinColumn(nullable = false)
+	public User getManager() {
+		return manager;
 	}
 
 	/**
@@ -159,13 +179,20 @@ public class Organization extends FieldAccessBean implements Serializable {
 		this.address = address;
 	}
 
-	/**
-	 * @param contactUser
-	 *            the contactUser to set
-	 */
-	@NonTransferableField
-	public void setContactUser(User contactUser) {
-		this.contactUser = contactUser;
+	public void setContactEmail(String contactEmail) {
+		this.contactEmail = contactEmail;
+	}
+
+	public void setContactFirstname(String contactFirstname) {
+		this.contactFirstname = contactFirstname;
+	}
+
+	public void setContactLastname(String contactLastname) {
+		this.contactLastname = contactLastname;
+	}
+
+	public void setContactPhone(String contactPhone) {
+		this.contactPhone = contactPhone;
 	}
 
 	/**
@@ -174,6 +201,15 @@ public class Organization extends FieldAccessBean implements Serializable {
 	 */
 	public void setCounty(String county) {
 		this.county = county;
+	}
+
+	/**
+	 * @param manager
+	 *            the manager to set
+	 */
+	@NonTransferableField
+	public void setManager(User contactUser) {
+		this.manager = contactUser;
 	}
 
 	/**
