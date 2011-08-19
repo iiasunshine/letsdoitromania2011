@@ -14,7 +14,9 @@ import javax.persistence.PersistenceContext;
 
 import ro.ldir.beans.security.SecurityHelper;
 import ro.ldir.dto.Organization;
+import ro.ldir.dto.Team;
 import ro.ldir.dto.User;
+import ro.ldir.exceptions.InvalidTeamOperationException;
 
 /**
  * Session Bean implementation class OrganizationManager
@@ -23,16 +25,52 @@ import ro.ldir.dto.User;
 @LocalBean
 @DeclareRoles("ADMIN")
 public class OrganizationManager implements OrganizationManagerLocal {
+	@Resource
+	private SessionContext ctx;
+
 	@PersistenceContext(unitName = "ldir")
 	private EntityManager em;
 
 	@EJB
 	private UserManager userManager;
 
-	@Resource
-	private SessionContext ctx;
-
 	public OrganizationManager() {
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * ro.ldir.beans.OrganizationManagerLocal#addEnrollOrganization(ro.ldir.
+	 * dto.Organization)
+	 */
+	@Override
+	public void addEnrollOrganization(Organization organization)
+			throws InvalidTeamOperationException {
+		User user = userManager.getUser(ctx.getCallerPrincipal().getName());
+		if (user.getManagedTeams() == null
+				|| user.getManagedTeams().size() == 0)
+			throw new InvalidTeamOperationException("User " + user.getEmail()
+					+ " does not manage any teams.");
+		if (user.getManagedTeams().size() > 1)
+			throw new InvalidTeamOperationException("User " + user.getEmail()
+					+ " manages " + user.getManagedTeams().size() + " teams");
+
+		Team team = user.getManagedTeams().get(0);
+
+		if (user.getOrganizations() == null)
+			user.setOrganizations(new ArrayList<Organization>());
+		user.getOrganizations().add(organization);
+		organization.setContactUser(user);
+
+		if (team.getOrganizationMembers() == null)
+			team.setOrganizationMembers(new ArrayList<Organization>());
+		team.getOrganizationMembers().add(organization);
+		organization.setMemberOf(team);
+
+		em.merge(user);
+		em.merge(team);
+		em.persist(organization);
 	}
 
 	/*

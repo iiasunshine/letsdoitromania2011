@@ -69,6 +69,19 @@ public class OrganizationWebService {
 
 	@POST
 	@Consumes({ "application/json", "application/xml" })
+	@Path("addEnroll")
+	public Response addEnrollOrganization(Organization organization) {
+		try {
+			orgManager.addEnrollOrganization(organization);
+		} catch (InvalidTeamOperationException e) {
+			return Response.status(Status.CONFLICT).entity(e.getMessage())
+					.build();
+		}
+		return Response.ok().build();
+	}
+
+	@POST
+	@Consumes({ "application/json", "application/xml" })
 	public Response addOrganization(Organization organization) {
 		orgManager.addOrganization(organization);
 		return Response.ok().build();
