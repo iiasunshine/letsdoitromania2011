@@ -39,6 +39,7 @@ public class WSInterface {
             ClientConfig cc = new DefaultClientConfig();
             cc.getClasses().add(GarbageContextProvider.class);
             client = Client.create(cc);
+       // 	client = LdirClientResolverFactory.getResolverClient("http://app.letsdoitromania.ro/LDIRBackend/", username introdus de utilizator, parola introdusa de utilizator);
         } else {
             client = Client.create();
         }
