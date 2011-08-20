@@ -29,6 +29,11 @@
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
     <managed-bean>
+        <managed-bean-name>teamBean</managed-bean-name>
+        <managed-bean-class>ro.radcom.ldir.ldirbackendwebjsf2.managedBeans.TeamManagerBean</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
         <managed-bean-name>mormanManager</managed-bean-name>
         <managed-bean-class>ro.radcom.ldir.ldirbackendwebjsf2.managedBeans.MormanManagerBean</managed-bean-class>
         <managed-bean-scope>view</managed-bean-scope>

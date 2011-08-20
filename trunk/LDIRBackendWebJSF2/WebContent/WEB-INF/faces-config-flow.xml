@@ -33,6 +33,18 @@
             <to-view-id>/users/user-editare.jsp</to-view-id>
         </navigation-case>
         <navigation-case>
+            <from-outcome>user_add_team_fail</from-outcome>
+            <to-view-id>/users/echipa-add-editare.jsp</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>user_rem_team_fail</from-outcome>
+            <to-view-id>/users/echipa-del-editare.jsp</to-view-id>  
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>team_add_org_fail</from-outcome>
+            <to-view-id>/users/echipa-org-detalii.jsp</to-view-id>
+        </navigation-case>
+        <navigation-case>
             <from-outcome>user_edit_pass_fail</from-outcome>
             <to-view-id>/users/user-psw-editare.jsp</to-view-id>
         </navigation-case>
