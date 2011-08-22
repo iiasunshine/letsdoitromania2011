@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item type="integer" name="min_nr_of_bags" format="integer">1</item>
+    <item type="fraction" name="min_latitude" format="float">43.0</item>
+    <item type="fraction" name="max_latitude" format="float">49.0</item>
+    <item type="fraction" name="min_longitude" format="float">20.0</item>
+    <item type="fraction" name="max_longitude" format="float">30.0</item>
+    <!-- TODO - investigate the right number -->
+    <item type="integer" name="min_accuracy" format="integer">10</item>
+    
+</resources>

@@ -8,7 +8,13 @@ import ro.ldir.android.util.LDIRApplication;
 import ro.ldir.android.util.LLog;
 import ro.ldir.android.util.Utils;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.LocationManager;
+import android.location.LocationProvider;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,6 +28,11 @@ public class AddGarbageActivity extends Activity
 {
 	private static final String SAVED_GARBAGE = "ro.ldir.android.views.saved.garbage";
 	protected static final String SAVED_GARBAGE_ID = "ro.ldir.android.views.saved.garbage.id";
+	
+	private static final int DLG_NO_GPS = 10;
+	private static final int DLG_GPS_DISABLED = 11;
+	
+	private static final int REQUEST_ENABLE_GPS = 100;
 	/**
 	 * This object is received by the activity. it it is set, then the object is changed and updated to the local database
 	 * If it is null, then the object is credated and added to the local database
@@ -62,6 +73,18 @@ public class AddGarbageActivity extends Activity
         btnGPS.setOnClickListener(new OnClickListener() {
 			
 			public void onClick(View v) {
+				if (!hasGPSAntenna())
+				{
+					// phone doesn't have GPS antenna
+					showDialog(DLG_NO_GPS);
+					return; 
+				}
+				if (!isGPSEnabled())
+				{
+					// show dialog that asks the user if he wants to enable GPS
+					showDialog(DLG_GPS_DISABLED);
+					return;
+				}
 				locationGetter = new LocationGetter(AddGarbageActivity.this);
 				locationGetter.execute();
 			}
@@ -69,6 +92,39 @@ public class AddGarbageActivity extends Activity
 	}
 	
 	
+
+	@Override
+	protected Dialog onCreateDialog(int id) {
+		switch(id)
+		{
+		case DLG_NO_GPS:
+			return Utils.displayDialog(this, R.string.details_no_gps);
+		case DLG_GPS_DISABLED:
+		{
+			AlertDialog.Builder builder = new AlertDialog.Builder(AddGarbageActivity.this);
+			builder.setMessage(R.string.details_gps_disabled);
+			DialogInterface.OnClickListener clickListener = new DialogInterface.OnClickListener() {
+				
+				public void onClick(DialogInterface dialog, int which) {
+					if (which == DialogInterface.BUTTON_NEGATIVE)
+					{
+						dialog.dismiss();
+					}
+					else if(which == DialogInterface.BUTTON_POSITIVE)
+					{
+						AddGarbageActivity.this.startActivityForResult(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS), REQUEST_ENABLE_GPS);
+					}
+				}
+			};
+			builder.setNegativeButton(R.string.details_cancel, clickListener);
+			builder.setPositiveButton(R.string.details_ok, clickListener);
+			return builder.create();
+		}
+		}
+		return super.onCreateDialog(id);
+	}
+
+
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
@@ -227,14 +283,18 @@ public class AddGarbageActivity extends Activity
 			return false;
 		}
 		double coordinate = garbage.getxLatitude();
-		if (coordinate < 43d || coordinate > 49d)// TODO - generalize for other countries
+		double minLatitude = getResources().getFraction(R.fraction.min_latitude, 10, 10);
+		double maxLatitude = getResources().getFraction(R.fraction.max_latitude, 10, 10);
+		if (coordinate < minLatitude || coordinate > maxLatitude)
 		{
 			Utils.displayDialog(this, R.string.chart_err_latitude);
 			return false;
 		}
 		
 		coordinate = garbage.getyLongitude();
-		if (coordinate < 20d || coordinate > 30d)// TODO - generalize for other countries
+		double minLongitude = getResources().getFraction(R.fraction.min_longitude, 10, 10);
+		double maxLongitude = getResources().getFraction(R.fraction.max_longitude, 10, 10);
+		if (coordinate < minLongitude || coordinate > maxLongitude)
 		{
 			Utils.displayDialog(this, R.string.chart_err_longitude);
 			return false;
@@ -267,5 +327,38 @@ public class AddGarbageActivity extends Activity
 		return true;
 	}
 	
+	private boolean hasGPSAntenna()
+	{
+		LocationManager manager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+		LocationProvider gpsProvider = manager.getProvider(LocationManager.GPS_PROVIDER);
+		return gpsProvider != null;
+	}
+	
+	private boolean isGPSEnabled()
+	{
+		LocationManager manager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+		return manager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+	}
 
+
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == REQUEST_ENABLE_GPS)
+		{
+			if (isGPSEnabled())
+			{
+				locationGetter = new LocationGetter(AddGarbageActivity.this);
+				locationGetter.execute();
+			}
+			else
+			{
+				showDialog(DLG_GPS_DISABLED);
+				
+			}
+		}
+		super.onActivityResult(requestCode, resultCode, data);
+	}
+
+	
 }

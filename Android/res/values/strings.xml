@@ -213,4 +213,6 @@
 	<string name="details_no_gps">Acest telefon nu are antena GPS. Va rog sa introduceti coordonatele manual.</string>
 	<string name="details_getting_location">Se updateaza coordonatele...</string>
 	<string name="details_stop_getting_location">Stop</string>
+	<string name="details_gps_disabled">Antena GPS este dezactivata. Activati?</string>
+	<string name="details_ok">Bine</string>
 </resources>
