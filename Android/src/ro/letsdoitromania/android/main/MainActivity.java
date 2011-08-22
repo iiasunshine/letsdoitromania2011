@@ -1,20 +1,16 @@
 package ro.letsdoitromania.android.main;
 
-import ro.letsdoitromania.android.helpers.*;
-import ro.letsdoitromania.android.structuri.*;
-
+import ro.ldir.R;
+import ro.letsdoitromania.android.helpers.Connection;
+import ro.letsdoitromania.android.structuri.Morman;
 import android.app.Activity;
-import android.content.Intent;
-import android.os.Bundle;
-
-//Location
 import android.content.Context;
-import android.location.Location;
-//import android.location.LocationListener;
-import android.location.LocationManager;
+import android.content.Intent;
 import android.location.Criteria;
+import android.location.Location;
 import android.location.LocationListener;
-
+import android.location.LocationManager;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;

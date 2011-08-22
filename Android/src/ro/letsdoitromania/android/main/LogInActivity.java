@@ -3,16 +3,17 @@
  */
 package ro.letsdoitromania.android.main;
 
-import ro.letsdoitromania.android.helpers.*;
-
+import ro.ldir.R;
+import ro.letsdoitromania.android.helpers.Connection;
 import android.app.Activity;
-import android.text.*;
-import android.os.Bundle;
-import android.widget.Button;
-import android.widget.*;
-import android.view.View;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.text.Editable;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 /**
  * @author tudor

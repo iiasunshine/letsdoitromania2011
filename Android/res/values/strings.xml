@@ -1,40 +1,216 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Lets Do It România!</string>
-    <string name="EditText02">0.0</string>
-    <string name="EditText01">0.0</string>
-    <string name="EditText01Label">latitudinea:</string>
-    <string name="EditText02Label">longitudinea:</string>
-    <string name="button_add">adaugă un morman la aceste coordonate</string>
-    
-    <string name="name_label">nume:</string>
-	<string name="name_text"></string>
-	<string name="pass_label">parola:</string>
-	<string name="pass_text"></string>
-	
-	<string name="volum_morman">volumul estimat:</string>
-    <string-array name="volum_array">
-        <item>5 - 20  l</item>
-        <item>20 - 50 l</item>
-        <item>50 - 100 l</item>
-        <item>100 - 200 l</item>
-        <item>peste 200 l</item>
-    </string-array>
-    
-    <string name="seekbar1">plastic</string>
-	<string name="seekbar2">metal</string>
-	<string name="seekbar3">sticlă</string>
-	<string name="seekbar4">nereciclabil</string>
+
+	<!-- Messages from the J2EE application -->
+	<string name="meniu_inscriere_voluntar">Inscrie-te ca voluntar</string>
+	<string name="meniu_harta">Vezi Harta</string>
+	<string name="register_password_confirm">Cofirmare parola:</string>
+	<string name="chart_add_plastic">Procent plastic:</string>
+	<string name="area_label_county">Judetul %s</string>
+	<string name="chart_err_overflow_percents">Suma procentelor de plastic, metal, sticla si gunoi
+		nereciclabil trebuie sa fie 100%.</string>
+	<string name="chart_add_latitudine">Coordonate (latitudine):</string>
+	<string name="login_title">User login</string>
+	<string name="area_label_score">Scorul zonei este %s</string>
+	<string name="chart_add_coord_degrees">grade/minute/secunde</string>
+	<string name="details_delete_link">Sterge morman</string>
+	<string name="admin_users_loading">Va rugam asteptati, operatie in curs de desfasurare
+	</string>
+	<string name="chart_add_coord_types">Reprezentare coordonate</string>
+	<string name="area_label_area">Suprafata zonei este de</string>
+	<string name="reset_button_submit">Reseteaza</string>
+	<string name="area_list_title">Ai alocate urmatoarele zone de cartare:</string>
+	<string name="register_surname">Prenume:</string>
+	<string name="area_empty_list">Nu ai alocata nici o zona de cartare</string>
+	<string name="chart_empty_list">Nu ai cartat nici un morman pana in prezent.
+	</string>
+	<string name="details_percent_plastic">Procent plastic:</string>
+	<string name="register_err_terms">Trebuie sa bifati acceptarea conditiilor ca sa va
+		puteti inregistra!</string>
+	<string name="area_select_intsuctions">Pentru alocarea unei alte zone alege de pe harta
+		din judetul selectat si confirma.</string>
+	<string name="area_add_err_limit2">A fost atins numarul maxim de zone (10) pe care le
+		puteti carta</string>
+	<string name="chart_add_dispersat">Gunoi dispersat:</string>
+	<string name="area_add_err_limit1">A fost atins numarul maxim de echipe (5) ce pot
+		carta zona selectata (%s)</string>
+	<string name="details_description">Descriere:</string>
+	<string name="newpass_message_expired">Dreptul de schimbare a parolei a expirat sau
+		aceasta a fost schimbata deja! Pentru a continua resetati-o din nou si
+		veti primi un nou link pe mail pentru schimbarea parolei,</string>
+	<string name="map_select_county">Selecteaza un judet pentru a vedea mormanele
+		cartate pana acum pe teritoriul lui.</string>
+	<string name="register_password">Parola:</string>
+	<string name="chart_err_description2">Descrierea componentelor voluminoase nu trebuie sa
+		fie mai lunge de 1000 de carcatere.</string>
+	<string name="register_city">Orasul de resedinta:</string>
+	<string name="area_link_remove">Renunta la zona</string>
+	<string name="chart_js_err_plastic">Procentul de plastic trebuie sa fie o valoare
+		intreaga intre 0 si 100.</string>
+	<string name="chart_add_image3">Incarca imagine 3:</string>
+	<string name="chart_list_title">Ai cartat urmatoarele mormane:</string>
+	<string name="details_coords_longitude">Coordonate (longitudine):</string>
+	<string name="chart_add_image2">Incarca imagine 2:</string>
+	<string name="chart_add_image1">Incarca imagine 1:</string>
+	<string name="details_morman">Morman:</string>
+	<string name="chart_add_description2">Descriere componente voluminoase:</string>
+	<string name="newpass_button_new_pass">Seteaza parola</string>
+	<string name="newpass_message_invalid_user">Voluntarul pentru care incercati schimbarea parolei
+		este invalid!</string>
+	<string name="area_label_volunteers">Un numar de %s s-au inscris la cartare in aceasta
+		zona.</string>
+	<string name="details_modify_confirm">Mormanul %s a fost modificat</string>
+	<string name="register_phone">Telefon:</string>
+	<string name="area_label_garbages">In zona selectata au fost identificate %s</string>
+	<string name="chart_add_description">Descriere:</string>
+	<string name="reset_message_not_found">Nu a fost gasit nici un voluntar inregistrat cu
+		aceasta adreasa de mail!</string>
+	<string name="meniu_lista_utilizatori">Listeaza Utilizatori</string>
+	<string name="login_button_submit">Login</string>
+	<string name="register_err_duplicate_mail">Ne pare rau, mai este un voluntar inscris cu aceasi
+		adresa de email!</string>
+	<string name="chart_add_volum">Volumul mormanului:</string>
+	<string name="details_volume">Volum:</string>
+	<string name="register_activities_curatenie">Curatenie</string>
+	<string name="register_acceptNotifications">Sunt de acord sa fiu contactat prin email despre
+		activitatile din cadrul proiectului</string>
+	<string name="chart_add_morman_link">Adauga morman</string>
+	<string name="area_label_garbage">In zona selectata a fost identificat %s</string>
+	<string name="details_lista_link">Lista mormane</string>
+	<string name="register_area">Judetul de resedinta:</string>
+	<string name="details_area">Zona de cartare:</string>
+	<string name="chart_add_sticla">Procent sticla:</string>
+	<string name="register_terms">Sunt de acord cu</string>
+	<string name="details_components">Componenta gunoi:</string>
+	<string name="chart_add_bags_nr">Numar saci:</string>
+	<string name="chart_add_longitudine">Coordonate (longitudine):</string>
+	<string name="area_link_add">Adauga la zonele mele</string>
+	<string name="register_birthday">Data nasterii:</string>
+	<string name="meniu_logout">Logout</string>
+	<string name="details_state">Starea:</string>
+	<string name="register_err_antispam">Completati campul antispam cu textul din imagine!
+	</string>
+	<string name="register_antispam">Verificare antispam:</string>
+	<string name="register_activities_cartare">Cartare</string>
+	<string name="chart_add_nereciclabile">Procent nereciclabile:</string>
+	<string name="reset_link">» reseteaza parola</string>
+	<string name="details_view_link">vizualizeaza</string>
+	<string name="chart_err_degrees">gradele, minutele si secundele pot avea numai
+		valori numerice.</string>
+	<string name="admin_users_title">Lista utilizatori</string>
+	<string name="newpass_message_confirm">Parola a fost schimbata!</string>
+	<string name="details_bags">Numar saci:</string>
+	<string name="register_activities">Vreau sa particip la:</string>
+	<string name="details_add_img_err">Imaginea numarul %s nu a putut fi adaugata
+	</string>
+	<string name="area_details_title">Acum vezi</string>
+	<string name="err_mandatory_fields">Completati toate campurile obligatorii va rugam
+		(cele marcate cu *)!</string>
+	<string name="area_grid_loading">Asteptati, se incarca zonele de cartare</string>
+	<string name="details_description_title">Descrierea mormanului:</string>
+	<string name="reset_mail">Adresa e-mail:</string>
+	<string name="details_modify_link">Modifica morman</string>
+	<string name="chart_err_longitude">Introduceti longitudinea intre 20.0 si 30.0.
+	</string>
+	<string name="register_message">Un email a fost trimis pentru validare. Dupa
+		validare contul tau de voluntar este active. Echipa Let’s do it
+		Romania iti multumeste.</string>
+	<string name="meniu_lista_mormane">Listeaza Mormane</string>
+	<string name="area_grid_charted">Am cartat </string>
+	<string name="register_err_pass">Cele doua parole introduse nu sunt identice!
+	</string>
+	<string name="meniu_zona_cartare">Zona de Cartare</string>
+	<string name="area_add_confirm">Zona de cartare %s v-a fost alocata</string>
+	<string name="meniu_login">Login</string>
+	<string name="area_label_id">Zona de cartare %s</string>
+	<string name="details_add_confirm">Mormanul %s a fost adugat</string>
+	<string name="details_county">Judetul:</string>
+	<string name="register_email">Adresa e-mail:</string>
+	<string name="details_all_photos">vezi toata galeria foto</string>
+	<string name="login_fail">Datele de autentificare nu sunt valide!</string>
+	<string name="chart_err_description">Descrierea mormanului nu trebuie sa fie mai lunge
+		de 1000 de carcatere.</string>
+	<string name="register_title">User register</string>
+	<string name="chart_add_err">test!</string>
+	<string name="details_photo_gallery">Galerie foto</string>
+	<string name="chart_err_latitude">Introduceti latitudinea intre 43.0 si 49.0.
+	</string>
+	<string name="chart_add_metal">Procent metal:</string>
+	<string name="details_coords_latitude">Coordonate (latitudine):</string>
+	<string name="area_remove_confirm">Zona de cartare %s v-a fost dezalocata</string>
+	<string name="details_percent_glass">Procent sticla:</string>
+	<string name="reset_title">Resetare Parola</string>
+	<string name="login_link">» login</string>
+	<string name="reset_message_confirm">In curand veti primi un mail cu link-ul catre
+		pagina de resetare parola!</string>
+	<string name="chart_err_exists">Ati cartat deja un morman cu aceste coordonate.
+	</string>
+	<string name="details_dispersed">Dispersat:</string>
+	<string name="details_percent_waste">Procent nereciclabile:</string>
+	<string name="details_percent_metal">Procent metale:</string>
+	<string name="internal_err">Eroare interna, va rugam contactati administratorul
+		site-ului si incercati mai tarziu!</string>
+	<string name="chart_js_err_glass">Procentul de sticla trebuie sa fie o valoare
+		intreaga intre 0 si 100.</string>
+	<string name="register_button_confirm">Confirma inregistrarea</string>
+	<string name="login_mail">Adresa e-mail:</string>
+	<string name="chart_js_err_waste">Procentul de waste trebuie sa fie o valoare
+		intreaga intre 0 si 100.</string>
+	<string name="chart_js_err_metal">Procentul de metal trebuie sa fie o valoare
+		intreaga intre 0 si 100.</string>
+	<string name="meniu_cartare_mormane">Cartare Mormane</string>
+	<string name="login_passowrd">Parola:</string>
+	<string name="meniu_home">Home</string>
+	<string name="chart_modify_morman">Modifica morman</string>
+	<string name="register_antispam_info">Introdu textul din imaginea de mai jos.</string>
+	<string name="area_label_volunteer">%s s-a inscris la cartare in aceasta zona.
+	</string>
+	<string name="chart_add_coord_decimals">zecimale</string>
+	<string name="details_big_components">Componente voluminoase:</string>
+	<string name="home_text_2">Bine ai venit la aplicatia de gestiune mormane. Te
+		rog sa te loghezi daca ai cont.</string>
+	<string name="home_text_1">
+		Pentru a carta mormanele de gunoaie prima data trebuie sa-ti aloci o
+		zona de cartare. Zona de cartare reprezinta o suprafata ce trebuie
+		parcusa pentru a identifica mormanele de gunoi. Daca nu ti-ai ales o
+		zona de cartare te rog apasa [%s] sau acceseaza meniul “Zona de
+		cartare”.
+		<br />
+		<br />
+		Pentru a introduce mormanele de gunoi trebuie sa accesezi meniul
+		“Cartare Mormane”.
+	</string>
+	<string name="details_add_date">Data introducerii:</string>
+	<string name="register_name">Nume:</string>
+	<string name="chart_err_coords">Coordonatele introduse nu sunt localizate in
+		nici-un judet din Romania. Va rugam sa verificati.</string>
+
+	<!-- Messages for Mobile app only -->
+	<string name="adaugat_nok">mormanul nu a putut fi adãugat</string>
+	<string name="iesire">ie?ire</string>
 	<string name="chk_1">dispersat</string>
-	
+	<string name="log_offline_msg">NT_log_offline_msg</string>
+	<string name="main_error_location">NT_main_error_location</string>
+	<string name="seekbar4">nereciclabil</string>
+	<string name="details_picture_nr">%d imagini atasate</string>
+	<string name="chart_upload_morman_link">Upload</string>
+	<string name="seekbar3">sticlã</string>
+	<string name="seekbar2">metal</string>
+	<string name="seekbar1">plastic</string>
+	<string name="details_save">Salveaza</string>
+	<string name="button_morman_add">adaugã	</string>
+	<string name="incaunu">adaugã încã un morman</string>
+	<string name="app_name">Lets Do It România!</string>
+	<string name="details_btn_GPS">GPS</string>
+	<string name="details_cancel">Anuleaza</string>
+	<string name="listamormane">vezi mormanele adãugate</string>
+	<string name="logout_button_submit">Logout</string>
 	<string name="autentificare">autentificare</string>
-	
-	
-	<string name="button_morman_add">adaugă</string>	
-	
-	<string name="adaugat_ok">mormanul a fost adăugat cu succes</string>
-	<string name="adaugat_nok">mormanul nu a putut fi adăugat</string>
-	<string name="iesire">ieșire</string>
-	<string name="incaunu">adaugă încă un morman</string>
-	<string name="listamormane">vezi mormanele adăugate</string>
+	<string name="key_settings">Setari</string>
+	<string name="details_add_picture">Adauga imagine</string>
+	<string name="log_error_msg">NT_log_error_msg</string>
+	<string name="adaugat_ok">mormanul a fost adãugat cu succes</string>
+	<string name="details_no_gps">Acest telefon nu are antena GPS. Va rog sa introduceti coordonatele manual.</string>
+	<string name="details_getting_location">Se updateaza coordonatele...</string>
+	<string name="details_stop_getting_location">Stop</string>
 </resources>

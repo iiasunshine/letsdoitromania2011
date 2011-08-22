@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="ro.letsdoitromania.android.main"
       android:versionCode="1"
-      android:versionName="1.0">
-    <application android:icon="@drawable/icon" android:label="@string/app_name">
-        <activity android:name=".MainActivity"
-                  android:label="@string/app_name">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity android:launchMode="standard" android:name="LogInActivity" android:allowTaskReparenting="false" android:screenOrientation="unspecified" android:finishOnTaskLaunch="false"></activity>
-        <activity android:launchMode="standard" android:name="MormanParams" android:allowTaskReparenting="false" android:screenOrientation="unspecified" android:finishOnTaskLaunch="false"></activity>
-         <activity android:launchMode="standard" android:name="ListaMormane" android:allowTaskReparenting="false" android:screenOrientation="unspecified" android:finishOnTaskLaunch="false"></activity>	
-    </application>
+      android:versionName="1.0" package="ro.ldir">
 	<uses-permission android:name="android.permission.INTERNET"></uses-permission>
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"></uses-permission>
     <uses-sdk android:minSdkVersion="4" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"></uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"></uses-permission>
+    <application android:icon="@drawable/icon" android:label="@string/app_name" android:name=".android.util.LDIRApplication">
+        <activity android:name=".android.views.SettingsActivity"></activity>
+        <activity android:name=".android.views.GarbageListActivity"></activity>
+        <activity android:name=".android.views.CentralActivity">
+        	<intent-filter>
+        		<action android:name="android.intent.action.MAIN" />
+        		<category android:name="android.intent.category.LAUNCHER"/>
+        	</intent-filter>
+        </activity>
+        <activity android:name=".android.views.AddGarbageActivity"></activity>
+    </application>
 
 </manifest> 

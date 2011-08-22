@@ -64,7 +64,7 @@ public class Connection {
 	
 	String getWsAddress(String action){
 		//"http://app.letsdoitromania.ro:8080/LDIRBackend/ws/garbage");
-		return _ldir_proto + "://" + _ldir_host + ":" + Integer.toString(_ldir_port) + "/" + _ldir_ws_auth + "/" + action;
+		return _ldir_proto + "://" + _ldir_host + ":" + _ldir_port + "/" + _ldir_ws_auth + "/" + action;
 	}
 	
 	DefaultHttpClient getHttpConn(String user, String password){
