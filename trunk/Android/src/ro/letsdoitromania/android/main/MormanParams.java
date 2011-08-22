@@ -2,17 +2,15 @@ package ro.letsdoitromania.android.main;
 
 //import ro.letsdoitromania.android.structuri.*;
 
+import ro.ldir.R;
 import android.app.Activity;
-import android.widget.Spinner;
-import android.widget.CheckBox;
-import android.widget.Button;
-import android.os.Bundle;
-import android.widget.ArrayAdapter;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.View;
-
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.SeekBar;
-import android.widget.SeekBar.*;
+import android.widget.Spinner;
 
 public class MormanParams extends Activity{
 	/** Called when the activity is first created. */

@@ -1,9 +1,10 @@
 package ro.letsdoitromania.android.main;
 
+import ro.ldir.R;
 import android.app.Activity;
 import android.os.Bundle;
-import android.widget.Button;
 import android.view.View;
+import android.widget.Button;
 //TODO - de văzut dacă trebuie clasa asta până la urmă
 public class Final extends Activity {
 	/** Called when the activity is first created. */
