@@ -1,10 +1,8 @@
 package ro.ldir.android.location;
 
 import ro.ldir.R;
-import ro.ldir.android.util.Utils;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
@@ -12,20 +10,18 @@ import android.content.DialogInterface.OnClickListener;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.location.LocationProvider;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.TextView;
 
 public class LocationGetter extends AsyncTask<Void, Void, Location>  implements LocationListener
 {
-	private static final int MIN_ACCURACY = 10;//meters - TODO - investigate the right number
-	private Location location;
-	private Context context;
-	private AlertDialog dialog;
+	protected Location location;
+	protected Activity context;
+	protected ProgressDialog dialog;
 	
 	
-	public LocationGetter(Context context) {
+	public LocationGetter(Activity context) {
 		super();
 		this.context = context;
 	}
@@ -42,8 +38,11 @@ public class LocationGetter extends AsyncTask<Void, Void, Location>  implements 
 	
 	@Override
 	protected void onPreExecute() {
-		Builder builder = new Builder(context);
-		builder.setMessage(R.string.details_getting_location);
+		dialog = new ProgressDialog(context);
+		dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		
+		CharSequence text = context.getResources().getString(R.string.details_getting_location);
+		dialog.setMessage(text);
 		
 		OnClickListener arg1 = new OnClickListener() {
 			
@@ -52,16 +51,16 @@ public class LocationGetter extends AsyncTask<Void, Void, Location>  implements 
 				LocationGetter.this.cancel(true);
 			}
 		};
-		builder.setNegativeButton(R.string.details_stop_getting_location, arg1);
+		text = context.getResources().getString(R.string.details_stop_getting_location);
+		dialog.setButton(ProgressDialog.BUTTON_NEGATIVE, text, arg1);
 		
-		builder.setCancelable(true);
-		builder.setOnCancelListener(new OnCancelListener() {
+		dialog.setCancelable(true);
+		dialog.setOnCancelListener(new OnCancelListener() {
 			
 			public void onCancel(DialogInterface dialog) {
 				LocationGetter.this.cancel(true);
 			}
 		});
-		dialog = builder.create();
 		dialog.show();
 		super.onPreExecute();
 	}
@@ -117,34 +116,21 @@ public class LocationGetter extends AsyncTask<Void, Void, Location>  implements 
 		super.onCancelled();
 	}
 
-	private void startGPS(Context context)
+	private void startGPS(Activity activity)
 	{
-		LocationManager manager = (LocationManager)context.getSystemService(Context.LOCATION_SERVICE);
-		LocationProvider gpsProvider = manager.getProvider(LocationManager.GPS_PROVIDER);
-		if (gpsProvider == null)
-		{
-			// phone doesn't have GPS antenna
-			Utils.displayDialog(context, R.string.details_no_gps);
-			return; 
-		}
-		
-		// if gps disable enable or return
-		if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER))
-		{
-			// TODO show dialog that asks the user if he wants to enable GPS
-		}
-
-		manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this, context.getApplicationContext().getMainLooper());
+		LocationManager manager = (LocationManager)activity.getSystemService(Context.LOCATION_SERVICE);
+		manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this, activity.getApplicationContext().getMainLooper());
 	}
 	
-	private void stopGPS(Context context)
+	private void stopGPS(Activity context)
 	{
 		LocationManager manager = (LocationManager)context.getSystemService(Context.LOCATION_SERVICE);
 		manager.removeUpdates(this);
 	}
 	
 	public void onLocationChanged(Location location) {
-		if (location.getAccuracy() <= MIN_ACCURACY)
+		int minAccuracy = context.getResources().getInteger(R.integer.min_accuracy);
+		if (location.getAccuracy() <= minAccuracy)
 		{
 			setLocation(location);
 			synchronized (this) {

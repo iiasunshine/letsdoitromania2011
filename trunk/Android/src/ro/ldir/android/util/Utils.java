@@ -1,21 +1,22 @@
 package ro.ldir.android.util;
 
 import android.app.AlertDialog.Builder;
+import android.app.Dialog;
 import android.content.Context;
 import android.widget.Toast;
 
 public class Utils {
 	
-	public static final void displayDialog(Context context, int messageId)
+	public static final Dialog displayDialog(Context context, int messageId)
 	{
-		displayDialog(context, context.getResources().getString(messageId));
+		return displayDialog(context, context.getResources().getString(messageId));
 	}
 	
-	public static final void displayDialog(Context context, String message)
+	public static final Dialog displayDialog(Context context, String message)
 	{
 		Builder builder = new Builder(context);
 		builder.setMessage(message).setCancelable(true);
-		builder.create().show(); 
+		return builder.create(); 
 	}
 	
 	/**
