@@ -59,7 +59,7 @@ body { margin: 0px 0px 0px 0px; background-color: #fefefe; font: Tahoma; }
 #footer { width: 935px; text-align: left; }
 #footer p { font: 11px Tahoma; color: #999999; border-bottom: 1px solid #e1e1e1; border-top: 1px solid #e1e1e1; margin: 0px 0px 0px 0px; padding: 10px 0px 10px 0px; }
 #copyright { width: 465px; display: inline-block; text-align: left; vertical-align: top; font: 10px Tahoma; color: #999999; margin: 10px 0px 10px 0px; }
-#form-bugs { width: 465px; display: inline-block; text-align: center; vertical-align: top; font: bold 14px Tahoma; color: #4d751f; margin: 10px 0px 10px 0px; }
+#form-bugs { width: 800px; display: inline-block; text-align: center; vertical-align: top; font: bold 14px Tahoma; color: #4d751f; margin: 10px 0px 10px 0px; }
 #poweredBy { width: 465px; display: inline-block; text-align: right; vertical-align: top; font: 10px Tahoma; color: #999999; margin: 10px 0px 10px 0px; }
 #footer a { color: #4d751f; text-decoration: none; }
 #footer a:hover { text-decoration: underline; }
