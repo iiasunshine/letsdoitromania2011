@@ -24,7 +24,14 @@
 					<%-- right column --%>
 					<div id="rightColumn">
 							<div class="label1">
-                                <h1><h:outputText value="Adauga organizatie in echipa"/></h1>
+                                <h1>
+                                <h:panelGroup rendered="#{not teamBean.orgBool}">  
+                                		<h:outputText value="Adauga organizatie in echipa"/>
+                               </h:panelGroup> 	
+                                <h:panelGroup rendered="#{teamBean.orgBool}">  
+                                		<h:outputText value="Modifica datele organizatiei"/>
+                               </h:panelGroup> 	
+                               </h1>
                             </div>
                              <br/>
                              <br/>
@@ -75,11 +82,15 @@
                                 <div class="label"><h:outputText value="Email persoana de contact"/><span class="important">*</span></div>
                                 <h:inputText value="#{teamBean.organization.contactEmail}" id="email" styleClass="formTextfield"/>
                                 <br />
-                                <!-- PARTICIPANTI TODO-->
- 
+                                <!-- PARTICIPANTI -->
+                                <div class="label"><h:outputText value="Participanti din cadrul organizatiei"/><span class="important">*</span></div>
+                                <h:inputText value="#{teamBean.organization.membersCount}" id="participanti" styleClass="formTextfield"/>
+                                <br/>
                      			<br/>
                      			<br/>
+                     			
                                 <!-- BUTOANE -->
+                                <h:panelGroup rendered="#{not teamBean.orgBool}">  
                                 <div style="margin-left: 150px;">
                                     <h:commandButton action="#{teamBean.actionAddOrg}"
                                                      value="Inregistreaza organizatia"
@@ -87,6 +98,17 @@
                                                      styleClass="formButton"/>
                                     <input name="anuleaza" type="reset" class="formButton" value="Renunta" id="anuleaza" />
                                 </div>
+                                </h:panelGroup>
+                                
+                                <h:panelGroup rendered="#{teamBean.orgBool}">  
+                                <div style="margin-left: 150px;">
+                                    <h:commandButton action="#{teamBean.actionEditOrg}"
+                                                     value="Actualizeaza inregistrarile"
+                                                     id="actualizeaza"
+                                                     styleClass="formButton"/>
+                                    <input name="anuleaza" type="reset" class="formButton" value="Renunta" id="anuleaza" />
+                                </div>
+                                </h:panelGroup>
                             </h:form>
 
 					</div>

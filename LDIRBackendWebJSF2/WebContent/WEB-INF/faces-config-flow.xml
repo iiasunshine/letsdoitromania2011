@@ -38,7 +38,11 @@
         </navigation-case>
         <navigation-case>
             <from-outcome>user_rem_team_fail</from-outcome>
-            <to-view-id>/users/echipa-del-editare.jsp</to-view-id>  
+            <to-view-id>/users/echipa-mem-editare.jsp</to-view-id>  
+        </navigation-case>
+         <navigation-case>
+            <from-outcome>team_rem_mem_fail</from-outcome>
+            <to-view-id>/users/echipa-mem-editare.jsp</to-view-id>  
         </navigation-case>
         <navigation-case>
             <from-outcome>team_add_org_fail</from-outcome>

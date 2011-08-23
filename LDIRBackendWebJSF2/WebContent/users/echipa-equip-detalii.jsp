@@ -32,25 +32,25 @@
                               <h:form styleClass="form" rendered="#{not fn:contains(facesContext.messageList[0].severity, 'INFO')}">
                                 <!-- NUMAR APARATE GPS -->
                                 <div class="label"><h:outputText value="Numar Aparate GPS"/></div>
-                                 <h:selectOneMenu value="#{teamBean.tipOrganization}" id="GPS" styleClass="formDropdown">
+                                 <h:selectOneMenu value="#{teamBean.gpsUnits}" id="GPS" styleClass="formDropdown">
                                     <f:selectItem itemLabel="NONE" itemValue="-1"/>
                                      <f:selectItems value="#{teamBean.numbers}"/>
                                 </h:selectOneMenu>
                                 <br />
                                  <!-- TRANSPORT -->
                                 <div class="label"><h:outputText value="Transport"/></div>
-                                <h:inputText value="#{teamBean.organization.address}" id="transport" styleClass="formTextfield"/>
+                                <h:inputText value="#{teamBean.transport}" id="transport" styleClass="formTextfield"/>
                                 <br />
                                  <!-- NUMAR SACI -->
                                 <div class="label"><h:outputText value="Numar Saci"/></div>
-                                 <h:selectOneMenu value="#{teamBean.tipOrganization}" id="saci" styleClass="formDropdown">
+                                 <h:selectOneMenu value="#{teamBean.bagsUnits}" id="saci" styleClass="formDropdown">
                                     <f:selectItem itemLabel="NONE" itemValue="-1"/>
                                     <f:selectItems value="#{teamBean.numSac}"/>
                                 </h:selectOneMenu>
                                 <br />
                                 <!-- NUMAR MANUSI -->
                                 <div class="label"><h:outputText value="Numar Manusi"/></div>
-                                 <h:selectOneMenu value="#{teamBean.tipOrganization}" id="manusi" styleClass="formDropdown">
+                                 <h:selectOneMenu value="#{teamBean.glovesUnits}" id="manusi" styleClass="formDropdown">
                                     <f:selectItem itemLabel="NONE" itemValue="-1"/>
                                     <f:selectItems value="#{teamBean.numbMan}"/>
                                 </h:selectOneMenu>
@@ -64,7 +64,7 @@
                                 <br />
                                 <!-- UTILAJE -->
                                 <div class="label"><h:outputText value="Utilaje de curatenie(basculanta, excavator sa)"/></div>
-                                <h:inputText value="#{teamBean.organization.address}" id="utilaje" styleClass="formTextfield"/>
+                                <h:inputText value="#{teamBean.toolsUnits}" id="utilaje" styleClass="formTextfield"/>
                               
                                 <br />
                      			<br/>
