@@ -213,6 +213,7 @@ public class SecurityHelper {
 	 *            The original report.
 	 * @return A filtered report.
 	 */
+	@SuppressWarnings("unused")
 	public static List<User> filterUserReport(EntityManager em,
 			UserManager userManager, SessionContext ctx, List<User> report) {
 		String email = ctx.getCallerPrincipal().getName();
