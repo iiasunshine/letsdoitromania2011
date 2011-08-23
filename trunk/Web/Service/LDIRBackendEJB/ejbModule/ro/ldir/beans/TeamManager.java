@@ -19,9 +19,12 @@ import javax.persistence.Query;
 
 import ro.ldir.beans.security.SecurityHelper;
 import ro.ldir.dto.ChartedArea;
+import ro.ldir.dto.CleaningEquipment;
 import ro.ldir.dto.Equipment;
+import ro.ldir.dto.GpsEquipment;
 import ro.ldir.dto.Organization;
 import ro.ldir.dto.Team;
+import ro.ldir.dto.TransportEquipment;
 import ro.ldir.dto.User;
 import ro.ldir.exceptions.ChartedAreaAssignmentException;
 import ro.ldir.exceptions.InvalidTeamOperationException;
@@ -68,11 +71,41 @@ public class TeamManager implements TeamManagerLocal {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see ro.ldir.beans.TeamManagerLocal#addEquipment(int,
-	 * ro.ldir.dto.Equipment)
+	 * @see ro.ldir.beans.TeamManagerLocal#addCleaningEquipment(int,
+	 * ro.ldir.dto.CleaningEquipment)
 	 */
 	@Override
-	public void addEquipment(int teamId, Equipment equipment) {
+	public void addCleaningEquipment(int teamId, CleaningEquipment equipment) {
+		Team team = em.find(Team.class, teamId);
+		SecurityHelper.checkTeamManager(userManager, team, ctx);
+		team.getEquipments().add(equipment);
+		equipment.setTeamOwner(team);
+		em.merge(team);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ro.ldir.beans.TeamManagerLocal#addGpsEquipment(int,
+	 * ro.ldir.dto.GpsEquipment)
+	 */
+	@Override
+	public void addGpsEquipment(int teamId, GpsEquipment equipment) {
+		Team team = em.find(Team.class, teamId);
+		SecurityHelper.checkTeamManager(userManager, team, ctx);
+		team.getEquipments().add(equipment);
+		equipment.setTeamOwner(team);
+		em.merge(team);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ro.ldir.beans.TeamManagerLocal#addTransportEquipment(int,
+	 * ro.ldir.dto.TransportEquipment)
+	 */
+	@Override
+	public void addTransportEquipment(int teamId, TransportEquipment equipment) {
 		Team team = em.find(Team.class, teamId);
 		SecurityHelper.checkTeamManager(userManager, team, ctx);
 		team.getEquipments().add(equipment);
@@ -161,6 +194,12 @@ public class TeamManager implements TeamManagerLocal {
 	public void deleteTeam(int teamId) {
 		Team team = em.find(Team.class, teamId);
 		SecurityHelper.checkTeamManager(userManager, team, ctx);
+
+		Query query = em
+				.createQuery("DELETE FROM Equipment e WHERE e.teamOwner = :team");
+		query.setParameter("team", team);
+		query.executeUpdate();
+
 		team.getTeamManager().getManagedTeams().remove(team);
 		em.remove(team);
 	}

@@ -11,7 +11,12 @@ import org.junit.Before;
 import org.junit.Test;
 
 import ro.ldir.dto.ChartedArea;
+import ro.ldir.dto.CleaningEquipment;
+import ro.ldir.dto.GpsEquipment;
 import ro.ldir.dto.Team;
+import ro.ldir.dto.TransportEquipment;
+import ro.ldir.dto.CleaningEquipment.CleaningType;
+import ro.ldir.dto.TransportEquipment.TransportType;
 
 import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientResponse;
@@ -32,12 +37,25 @@ public class TeamOperationsTest extends UserTest {
 		assertEquals(200, cr.getStatus());
 	}
 
+	@After
+	public void cleanupTeam() {
+		removeAssignment();
+		deleteTeam();
+	}
+
 	private void createTeam() {
 		WebResource r = client.resource(BASE + "team");
 		insertedTeam = new Team();
 		insertedTeam.setTeamName(USER + "'s team" + new Date());
 		ClientResponse cr = resourceBuilder(r).entity(insertedTeam,
 				MediaType.APPLICATION_XML).post(ClientResponse.class);
+		assertEquals(200, cr.getStatus());
+	}
+
+	private void deleteTeam() {
+		WebResource r = client.resource(BASE + "team/"
+				+ insertedTeam.getTeamId());
+		ClientResponse cr = resourceBuilder(r).delete(ClientResponse.class);
 		assertEquals(200, cr.getStatus());
 	}
 
@@ -53,22 +71,9 @@ public class TeamOperationsTest extends UserTest {
 		assertEquals(insertedTeam.getTeamName(), managedTeams[0].getTeamName());
 	}
 
-	@After
-	public void cleanupTeam() {
-		removeAssignment();
-		deleteTeam();
-	}
-
 	private void removeAssignment() {
 		WebResource r = client.resource(BASE + "team/"
 				+ insertedTeam.getTeamId() + "/chartArea/" + chartAreaId);
-		ClientResponse cr = resourceBuilder(r).delete(ClientResponse.class);
-		assertEquals(200, cr.getStatus());
-	}
-
-	private void deleteTeam() {
-		WebResource r = client.resource(BASE + "team/"
-				+ insertedTeam.getTeamId());
 		ClientResponse cr = resourceBuilder(r).delete(ClientResponse.class);
 		assertEquals(200, cr.getStatus());
 	}
@@ -114,5 +119,41 @@ public class TeamOperationsTest extends UserTest {
 		Team teams[] = cr.getEntity(Team[].class);
 		assertEquals(1, teams.length);
 		assertEquals(insertedTeam.getTeamId(), teams[0].getTeamId());
+	}
+
+	@Test
+	public void testInsertCleaning() {
+		CleaningEquipment cleaning = new CleaningEquipment();
+		cleaning.setCleaningType(CleaningType.BAGS);
+
+		WebResource r = client.resource(BASE + "team/"
+				+ insertedTeam.getTeamId() + "/cleaning");
+		ClientResponse cr = resourceBuilder(r).entity(cleaning,
+				MediaType.APPLICATION_XML).put(ClientResponse.class);
+		assertEquals(cr.getStatus(), 200);
+	}
+
+	@Test
+	public void testInsertGps() {
+		GpsEquipment gps = new GpsEquipment();
+		gps.setCount(10);
+
+		WebResource r = client.resource(BASE + "team/"
+				+ insertedTeam.getTeamId() + "/gps");
+		ClientResponse cr = resourceBuilder(r).entity(gps,
+				MediaType.APPLICATION_XML).put(ClientResponse.class);
+		assertEquals(cr.getStatus(), 200);
+	}
+
+	@Test
+	public void testInsertTransport() {
+		TransportEquipment transport = new TransportEquipment();
+		transport.setTransportType(TransportType.CAR);
+
+		WebResource r = client.resource(BASE + "team/"
+				+ insertedTeam.getTeamId() + "/transport");
+		ClientResponse cr = resourceBuilder(r).entity(transport,
+				MediaType.APPLICATION_XML).put(ClientResponse.class);
+		assertEquals(cr.getStatus(), 200);
 	}
 }
