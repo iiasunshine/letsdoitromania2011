@@ -50,10 +50,11 @@
 					  	   <h:outputText value="» #{msg.echipa_add_team_link}" />
 					  	</a>
 					  </h3>				    
-			  
+	<h:panelGroup rendered="#{not teamBean.managerBool}">  	
 					  <h3>
 					  	<a href="${pageContext.servletContext.contextPath}/users/echipa-del-editare.jsf">
 					  	   <h:outputText value="» #{msg.echipa_remove_team_link}" />
 					  	</a>
-					  </h3>					  
+					  </h3>	
+    </h:panelGroup>						  				  
 					</div>		

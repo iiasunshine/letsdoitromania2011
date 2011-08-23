@@ -19,6 +19,7 @@ public class NavigationValues {
     
     public static final String USER_ADD_TEAM_FAIL = "user_add_team_fail";
     public static final String USER_REM_TEAM_FAIL = "user_rem_team_fail";
+    public static final String TEAM_REM_MEM_FAIL = "team_rem_mem_fail";
     
     public static final String TEAM_ADD_ORG_FAIL = "team_add_org_fail";
     

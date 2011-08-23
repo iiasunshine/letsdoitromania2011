@@ -24,86 +24,111 @@
 					<%-- right column --%>
 					<div id="rightColumn">
 
-                        	  <a4j:outputPanel id="lista-utilizatori">
-                                <a4j:form>
-                                    <h1>
-                                        <h:outputFormat value="Lista membri ({0})">
-                                            <f:param value="#{fn:length(teamBean.volunteerMembers)}"/>
-                                        </h:outputFormat>
-                                        <br/>
-                                        <br/>
+ <h:messages warnClass="registerMessageError" infoClass="registerMessageOk"/>
+ <br/>
+ <br/>
+					<a4j:outputPanel id="lista-utilizatori">
 
-                                    </h1>
-                                    <h:form>
-                                    <div id="listHeaderContainer">
-                                        <div class="listHeader">Nume</div>
-                                        <div class="listHeader">Oras</div>
-                                        <div class="listHeader">Judet</div>
-                                        <div class="listHeader">Tipul membrului</div>   
-                                        <div class="listHeader">Numar membri</div>
-                                        <div class="listHeader">Sterge membru</div>
-                                    </div>
+						<h1>
+							<h:outputFormat value="Lista membri ({0})">
+								<f:param value="#{fn:length(teamBean.volunteerMembers)}" />
+							</h:outputFormat>
+							<br /> <br />
 
-                                    <a4j:repeat value="#{teamBean.volunteerMembers}" var="user">
-                                        <div id="listEntryContainer">
-                                            <div class="listEntry"><h:outputText value="#{user.firstName}"/></div>
-                                            <div class="listEntry"><h:outputText value="#{user.town}"/></div>
-                                            <div class="listEntry"><h:outputText value="#{user.county}"/></div>
-                                            <div class="listEntry"><h:outputText value="#{user.role}"/></div>
-                                            <div class="listEntry"><h:outputText value="#{fn:length(user.managedTeams)}"/></div>
-                                      
-                                            <div class="listEntry"><h:commandButton action="#{teamBean.actionAddOrg}"
-                                                     value="Sterge"
-                                                     id="confirma"
-                                                     styleClass="formButton"/>
-                                             </div>        
-                                        </div>
-                                    </a4j:repeat>
-                                    </h:form>
-                                </a4j:form>
-                            </a4j:outputPanel>
-                            <a4j:outputPanel id="lista-organizatii">
-                                <a4j:form>
-                                    <h1>
-                                        <h:outputFormat value="Lista Organizatii ({0})">
-                                            <f:param value="#{fn:length(teamBean.organizationMembers)}"/>
-                                        </h:outputFormat>
-                                        <br/>
-                                        <br/>
+						</h1>
+						<h:form>
+							<div id="listHeaderContainer">
+								<div class="listHeader">Nume</div>
+								<div class="listHeader">Oras</div>
+								<div class="listHeader">Judet</div>
+								<div class="listHeader">Tipul membrului</div>
+								<div class="listHeader">Numar membri</div>
+								<div class="listHeader">Sterge membru</div>
+							</div>
 
-                                    </h1>
-                                    <h:form>
-                                    <div id="listHeaderContainer">
-                                        <div class="listHeader">Nume</div>
-                                        <div class="listHeader">Oras</div>
-                                        <div class="listHeader">Judet</div>
-                                        <div class="listHeader">Tipul membrului</div>   
-                                        <div class="listHeader">Numar membri</div>
-                                        <div class="listHeader">Sterge organizatie</div>
-                                    </div>
+							<a4j:repeat value="#{teamBean.volunteerMembers}" var="user">
+								<div id="listEntryContainer">
+									<div class="listEntry">
+										<h:outputText value="#{user.firstName}" />
+									</div>
+									<div class="listEntry">
+										<h:outputText value="#{user.town}" />
+									</div>
+									<div class="listEntry">
+										<h:outputText value="#{user.county}" />
+									</div>
+									<div class="listEntry">
+										<h:outputText value="Persoana Fizica" />
+									</div>
+									<div class="listEntry">
+										<h:outputText value="1" />
+									</div>
 
-                                    <a4j:repeat value="#{teamBean.organizationMembers}" var="org">
-                                        <div id="listEntryContainer">
-                                            <div class="listEntry"><h:outputText value="#{org.name}"/></div>
-                                            <div class="listEntry"><h:outputText value="#{org.town}"/></div>
-                                            <div class="listEntry"><h:outputText value="#{org.county}"/></div>
-                                            <div class="listEntry"><h:outputText value="#{org.type}"/></div>
-                                            <div class="listEntry"><h:outputText value="0"/></div>
-                                      
-                                            <div class="listEntry"><h:commandButton action="#{teamBean.actionAddOrg}"
-                                                     value="Sterge"
-                                                     id="confirma"
-                                                     styleClass="formButton"/>
-                                             </div>        
-                                        </div>
-                                    </a4j:repeat>
-                                    </h:form>
-                                </a4j:form>
-                            </a4j:outputPanel>
+									<div class="listEntry">
+										<h:commandButton action="#{teamBean.actionWithdrawFromTeam}"
+											value="Sterge" id="confirma" styleClass="formButton">
+											<f:param name="memDeleteId" value="#{user.userId}" />
 
+										</h:commandButton>
+									</div>
+								</div>
+							</a4j:repeat>
+							<br />
+							<br />
 
-					</div>
-					
+						</h:form>
+
+					</a4j:outputPanel>
+					<a4j:outputPanel id="lista-organizatii">
+
+							<h1>
+								<h:outputFormat value="Lista Organizatii ({0})">
+									<f:param value="#{fn:length(teamBean.organizationMembers)}" />
+								</h:outputFormat>
+								<br /> <br />
+
+							</h1>
+							<h:form>
+								<div id="listHeaderContainer">
+									<div class="listHeader">Nume</div>
+									<div class="listHeader">Oras</div>
+									<div class="listHeader">Judet</div>
+									<div class="listHeader">Tipul membrului</div>
+									<div class="listHeader">Numar membri</div>
+									<div class="listHeader">Sterge organizatie</div>
+								</div>
+
+								<a4j:repeat value="#{teamBean.organizationMembers}" var="org">
+									<div id="listEntryContainer">
+										<div class="listEntry">
+											<h:outputText value="#{org.name}" />
+										</div>
+										<div class="listEntry">
+											<h:outputText value="#{org.town}" />
+										</div>
+										<div class="listEntry">
+											<h:outputText value="#{org.county}" />
+										</div>
+										<div class="listEntry">
+											<h:outputText value="Organizatie" />
+										</div>
+										<div class="listEntry">
+											<h:outputText value="#{org.membersCount}" />
+										</div>
+
+										<div class="listEntry">
+											<h:commandButton action="#{teamBean.actionDelOrgTeam}"
+												value="Sterge" id="confirma" styleClass="formButton">
+												<f:param name="orgDeleteId" value="#{org.organizationId}" />
+											</h:commandButton>
+										</div>
+
+									</div>
+								</a4j:repeat>
+							</h:form>
+
+					</a4j:outputPanel>
+				</div>		
 				</div>
 			</div>
 
