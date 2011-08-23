@@ -5,22 +5,44 @@ import java.util.Set;
 
 import javax.ejb.Local;
 
-import ro.ldir.dto.Equipment;
+import ro.ldir.dto.CleaningEquipment;
+import ro.ldir.dto.GpsEquipment;
 import ro.ldir.dto.Team;
+import ro.ldir.dto.TransportEquipment;
 import ro.ldir.exceptions.ChartedAreaAssignmentException;
 import ro.ldir.exceptions.InvalidTeamOperationException;
 
 @Local
 public interface TeamManagerLocal {
 	/**
-	 * Add a new equipment to a team.
+	 * Add a new cleaning equipment to a team.
 	 * 
 	 * @param teamId
 	 *            The team to whom the equipment belongs.
 	 * @param equipment
 	 *            The equipment.
 	 */
-	void addEquipment(int teamId, Equipment equipment);
+	void addCleaningEquipment(int teamId, CleaningEquipment equipment);
+
+	/**
+	 * Add a new GPS equipment to a team.
+	 * 
+	 * @param teamId
+	 *            The team to whom the equipment belongs.
+	 * @param equipment
+	 *            The equipment.
+	 */
+	void addGpsEquipment(int teamId, GpsEquipment equipment);
+
+	/**
+	 * Add a new transport equipment to a team.
+	 * 
+	 * @param teamId
+	 *            The team to whom the equipment belongs.
+	 * @param equipment
+	 *            The equipment.
+	 */
+	void addTransportEquipment(int teamId, TransportEquipment equipment);
 
 	/**
 	 * Adds a charting area assignment for the specified team.

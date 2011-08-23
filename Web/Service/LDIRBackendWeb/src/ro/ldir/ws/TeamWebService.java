@@ -85,7 +85,7 @@ public class TeamWebService {
 	@Path("{teamId:[0-9]+}/cleaning")
 	public Response addCleaningEquipment(@PathParam("teamId") int teamId,
 			CleaningEquipment equipment) {
-		teamManager.addEquipment(teamId, equipment);
+		teamManager.addCleaningEquipment(teamId, equipment);
 		return Response.ok().build();
 	}
 
@@ -94,7 +94,7 @@ public class TeamWebService {
 	@Path("{teamId:[0-9]+}/gps")
 	public Response addGpsEquipment(@PathParam("teamId") int teamId,
 			GpsEquipment equipment) {
-		teamManager.addEquipment(teamId, equipment);
+		teamManager.addGpsEquipment(teamId, equipment);
 		return Response.ok().build();
 	}
 
@@ -110,7 +110,7 @@ public class TeamWebService {
 	@Path("{teamId:[0-9]+}/transport")
 	public Response addTransportEquipment(@PathParam("teamId") int teamId,
 			TransportEquipment equipment) {
-		teamManager.addEquipment(teamId, equipment);
+		teamManager.addTransportEquipment(teamId, equipment);
 		return Response.ok().build();
 	}
 
