@@ -25,6 +25,7 @@ package ro.ldir.dto;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -35,10 +36,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @DiscriminatorValue("CleaningEquipment")
 public class CleaningEquipment extends Equipment {
 	public enum CleaningType {
-		BAGS, GLOVES
+		BAGS, GLOVES, SHOVEL
 	}
 
 	private CleaningType cleaningType;
+	private Integer count;
 
 	/**
 	 * @return the cleaningType
@@ -48,10 +50,26 @@ public class CleaningEquipment extends Equipment {
 	}
 
 	/**
+	 * @return the count
+	 */
+	@NotNull
+	public Integer getCount() {
+		return count;
+	}
+
+	/**
 	 * @param cleaningType
 	 *            the cleaningType to set
 	 */
 	public void setCleaningType(CleaningType cleaningType) {
 		this.cleaningType = cleaningType;
+	}
+
+	/**
+	 * @param count
+	 *            the count to set
+	 */
+	public void setCount(Integer count) {
+		this.count = count;
 	}
 }
