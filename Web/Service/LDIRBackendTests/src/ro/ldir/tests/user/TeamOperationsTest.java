@@ -1,6 +1,7 @@
 package ro.ldir.tests.user;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Date;
 
@@ -12,10 +13,11 @@ import org.junit.Test;
 
 import ro.ldir.dto.ChartedArea;
 import ro.ldir.dto.CleaningEquipment;
+import ro.ldir.dto.CleaningEquipment.CleaningType;
+import ro.ldir.dto.Equipment;
 import ro.ldir.dto.GpsEquipment;
 import ro.ldir.dto.Team;
 import ro.ldir.dto.TransportEquipment;
-import ro.ldir.dto.CleaningEquipment.CleaningType;
 import ro.ldir.dto.TransportEquipment.TransportType;
 
 import com.sun.jersey.api.client.ClientHandlerException;
@@ -59,6 +61,15 @@ public class TeamOperationsTest extends UserTest {
 		assertEquals(200, cr.getStatus());
 	}
 
+	private Team getTeam() {
+		WebResource r = client.resource(BASE + "team/"
+				+ insertedTeam.getTeamId());
+		ClientResponse cr = resourceBuilder(r).get(ClientResponse.class);
+		assertEquals(200, cr.getStatus());
+
+		return cr.getEntity(Team.class);
+	}
+
 	@Test
 	public void nameEquals() {
 		WebResource r = client.resource(BASE + "user/" + userId
@@ -98,6 +109,31 @@ public class TeamOperationsTest extends UserTest {
 	}
 
 	@Test
+	public void testAllEquipments() {
+		boolean gpsFound = false, cleaningFound = false, transportFound = false;
+	
+		testInsertCleaning();
+		testInsertGps();
+		testInsertTransport();
+
+		Team team = getTeam();
+		assertEquals(3, team.getEquipments().size());
+
+		for (Equipment e : team.getEquipments()) {
+			if (e instanceof GpsEquipment)
+				gpsFound = true;
+			if (e instanceof CleaningEquipment)
+				cleaningFound = true;
+			if (e instanceof TransportEquipment)
+				transportFound = true;
+		}
+
+		assertTrue(gpsFound);
+		assertTrue(cleaningFound);
+		assertTrue(transportFound);
+	}
+
+	@Test
 	public void testAssignedChartedAreas() {
 		WebResource r = client.resource(BASE + "team/"
 				+ insertedTeam.getTeamId() + "/chartArea");
@@ -125,12 +161,13 @@ public class TeamOperationsTest extends UserTest {
 	public void testInsertCleaning() {
 		CleaningEquipment cleaning = new CleaningEquipment();
 		cleaning.setCleaningType(CleaningType.BAGS);
+		cleaning.setCount(10);
 
 		WebResource r = client.resource(BASE + "team/"
 				+ insertedTeam.getTeamId() + "/cleaning");
 		ClientResponse cr = resourceBuilder(r).entity(cleaning,
 				MediaType.APPLICATION_XML).put(ClientResponse.class);
-		assertEquals(cr.getStatus(), 200);
+		assertEquals(200, cr.getStatus());
 	}
 
 	@Test
@@ -142,7 +179,7 @@ public class TeamOperationsTest extends UserTest {
 				+ insertedTeam.getTeamId() + "/gps");
 		ClientResponse cr = resourceBuilder(r).entity(gps,
 				MediaType.APPLICATION_XML).put(ClientResponse.class);
-		assertEquals(cr.getStatus(), 200);
+		assertEquals(200, cr.getStatus());
 	}
 
 	@Test
@@ -154,6 +191,6 @@ public class TeamOperationsTest extends UserTest {
 				+ insertedTeam.getTeamId() + "/transport");
 		ClientResponse cr = resourceBuilder(r).entity(transport,
 				MediaType.APPLICATION_XML).put(ClientResponse.class);
-		assertEquals(cr.getStatus(), 200);
+		assertEquals(200, cr.getStatus());
 	}
 }
