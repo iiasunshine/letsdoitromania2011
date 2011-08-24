@@ -16,6 +16,7 @@ import ro.ldir.dto.Organization;
 import ro.ldir.dto.Team;
 import ro.ldir.dto.User;
 import ro.ldir.dto.CleaningEquipment.CleaningType;
+import ro.ldir.dto.Organization.OrganizationType;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.AppUtils;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.JsfUtils;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.WSInterface;
@@ -60,13 +61,16 @@ public class TeamManagerBean {
 		log4j.debug("user ->"+userDetails+", team ->"+userTeam);
 
 		ClientResponse cr = wsi.getMemberOfTeam(userDetails.getUserId());
-		
+//        int statusCode = cr.getStatus();
 
 		if (cr.getStatus() != 200) {
 			log4j.debug("nu s-a reusit obtinerea echipei utlizatorului curent (statusCode="
 					+ cr.getStatus()+ " responseStatus="+ cr.getResponseStatus() + ")");
 //			JsfUtils.addWarnBundleMessage("warrning_no_team");
 		} else {
+//			String team = cr1.getEntity(String.class);
+//			 log4j.info("--->team: "+ team );
+
 			userTeam = cr.getEntity(Team.class);
 			initTeam();
 			initManager();
@@ -135,6 +139,10 @@ public class TeamManagerBean {
 			volunteerMembers = cr.getEntity(new GenericType<List<User>>() {});
 			int statusCode = cr.getStatus();
 			log4j.debug("---> statusCode: " + statusCode + " ("+ cr.getClientResponseStatus() + ")");
+			if(statusCode == 200){
+				if(volunteerMembers != null && managerDetails != null)
+				volunteerMembers.remove(managerDetails);
+			}
 		} catch (Exception e) {
 			log4j.debug("error->" + e.getMessage());
 		}
@@ -201,6 +209,8 @@ public class TeamManagerBean {
 	}
 	public String actionDelFromTeam(){
 		
+		
+		
 		String location = JsfUtils.getInitParameter("webservice.url") +"/LDIRBackend/ws/team/"+ userTeam.getTeamId()+"/volunteer/"+userDetails.getUserId();
 		Client client = Client.create();
 	    WebResource resource = client.resource(location);
@@ -237,6 +247,9 @@ public class TeamManagerBean {
         
         /* verificare statusCode si adaugare mesaje */
         if(statusCode == 200){
+        	  User tempUser = new User();
+        	  tempUser.setUserId(new Integer(memDeleteId));
+        	  volunteerMembers.remove(tempUser);
         	  JsfUtils.addInfoBundleMessage("success_del_mem_message");
         	  return NavigationValues.TEAM_REM_MEM_FAIL;
         }else{
@@ -256,11 +269,25 @@ public class TeamManagerBean {
 				||organization.getContactLastname() == null || organization.getContactLastname().length()==0
 				||organization.getContactPhone() == null || organization.getContactPhone().length()==0
 				||organization.getContactEmail() == null || organization.getContactEmail().length()==0
-				||organization.getMembersCount() == null || organization.getMembersCount() !=0){
+				||organization.getMembersCount() == null){
 		       JsfUtils.addWarnBundleMessage("err_mandatory_fields");
 		       return NavigationValues.TEAM_ADD_ORG_FAIL;
 		}
 		
+		if(tipOrganization != null && tipOrganization.length() != 0){
+			if(tipOrganization.equalsIgnoreCase("CITY_HALL")){
+				organization.setType(OrganizationType.CITY_HALL);
+			}else if(tipOrganization.equalsIgnoreCase("COMPANY")){
+				organization.setType(OrganizationType.COMPANY);
+			}else if(tipOrganization.equalsIgnoreCase("LANDFILL")){
+				organization.setType(OrganizationType.LANDFILL);
+			}else if(tipOrganization.equalsIgnoreCase("REGISTRATION_POINT")){
+				organization.setType(OrganizationType.REGISTRATION_POINT);
+			}else if(tipOrganization.equalsIgnoreCase("SCHOOL")){
+				organization.setType(OrganizationType.SCHOOL);
+			}		
+		}
+		 log4j.info("--->  organization: " + tipOrganization );
 		organization.setMemberOf(userTeam);
 		organization.setManager(managerDetails);
 		/* create organization */
@@ -280,20 +307,7 @@ public class TeamManagerBean {
         	 JsfUtils.addWarnBundleMessage("err_mandatory_fields");		      
         }
         return NavigationValues.TEAM_ADD_ORG_FAIL;
-//        /* add to team */
-//		userTeam = new Team();
-//		userTeam.setTeamId(teamID);
-//		 location = JsfUtils.getInitParameter("webservice.url") + "/LDIRBackend/ws/organization/"+organization.getOrganizationId()+"/team";
-//		 client = Client.create();
-//	     resource = client.resource(location);
-//	     builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(JsfUtils.getInitParameter("admin.user"),
-//	                JsfUtils.getInitParameter("admin.password")));
-//	     cr = builder.entity(userTeam, MediaType.APPLICATION_XML).post(ClientResponse.class);
-//        
-//		    statusCode = cr.getStatus();
-//	        log4j.info("---> statusCode organization add team: " + statusCode + " (" + cr.getClientResponseStatus() + ")");
-//	        JsfUtils.addWarnBundleMessage("err_mandatory_fields");  
-//		 return NavigationValues.TEAM_ADD_ORG_FAIL;	
+
 	}
 	public String actionEditOrg(){
 		if(organization.getName() == null || organization.getName().length()==0
@@ -308,7 +322,21 @@ public class TeamManagerBean {
 		       JsfUtils.addWarnBundleMessage("err_mandatory_fields");
 		       return NavigationValues.TEAM_ADD_ORG_FAIL;
 		}
-
+		
+		if(tipOrganization != null && tipOrganization.length() != 0){
+			if(tipOrganization.equalsIgnoreCase("CITY_HALL")){
+				organization.setType(OrganizationType.CITY_HALL);
+			}else if(tipOrganization.equalsIgnoreCase("COMPANY")){
+				organization.setType(OrganizationType.COMPANY);
+			}else if(tipOrganization.equalsIgnoreCase("LANDFILL")){
+				organization.setType(OrganizationType.LANDFILL);
+			}else if(tipOrganization.equalsIgnoreCase("REGISTRATION_POINT")){
+				organization.setType(OrganizationType.REGISTRATION_POINT);
+			}else if(tipOrganization.equalsIgnoreCase("SCHOOL")){
+				organization.setType(OrganizationType.SCHOOL);
+			}		
+		}
+		 log4j.info("--->  organization: " + tipOrganization +","+ organization.getType().toString());
 		/* edit organization */
 		String location = JsfUtils.getInitParameter("webservice.url") + "/LDIRBackend/ws/organization/"+organization.getOrganizationId();
 		Client client = Client.create();
@@ -356,7 +384,11 @@ public class TeamManagerBean {
 		
 	}
 	public String actionAddEquipment(){
-		
+    	
+		JsfUtils.addWarnBundleMessage("err_not_implemented");
+		if(true)
+      	   return NavigationValues.TEAM_REM_MEM_FAIL;
+		 
 		
 		if (gpsUnits != null && gpsUnits > 0) {
 			GpsEquipment gps = new GpsEquipment();
