@@ -158,6 +158,20 @@ public class TeamOperationsTest extends UserTest {
 	}
 
 	@Test
+	public void testGetJoinedTeam() {
+		testJoinTeam();
+		
+		WebResource r = client.resource(BASE + "user/" + userId + "/memberOf");
+		ClientResponse cr = resourceBuilder(r)
+				.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
+		assertEquals(200, cr.getStatus());
+		Team team = cr.getEntity(Team.class);
+
+		assertEquals(insertedTeam.getTeamId(), team.getTeamId());
+		assertEquals(1, team.getEquipments().size());
+	}
+
+	@Test
 	public void testInsertCleaning() {
 		CleaningEquipment cleaning = new CleaningEquipment();
 		cleaning.setCleaningType(CleaningType.BAGS);
@@ -193,4 +207,15 @@ public class TeamOperationsTest extends UserTest {
 				MediaType.APPLICATION_XML).put(ClientResponse.class);
 		assertEquals(200, cr.getStatus());
 	}
+
+	@Test
+	public void testJoinTeam() {
+		testInsertGps();
+
+		WebResource r = client.resource(BASE + "user/" + userId + "/team");
+		ClientResponse cr = resourceBuilder(r).entity(insertedTeam,
+				MediaType.APPLICATION_XML).post(ClientResponse.class);
+		assertEquals(200, cr.getStatus());
+	}
+
 }
