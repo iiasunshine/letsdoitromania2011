@@ -46,8 +46,8 @@ public class TeamManager implements TeamManagerLocal {
 	 * @return The default team name.
 	 */
 	public static String defaultTeamName(User user) {
-		return user.getLastName() + " "
-				+ Integer.toHexString(user.getEmail().hashCode());
+		return ((user.getLastName() == null) ? "anonymous" : user.getLastName())
+				+ " " + Integer.toHexString(user.getEmail().hashCode());
 	}
 
 	@Resource
@@ -200,6 +200,15 @@ public class TeamManager implements TeamManagerLocal {
 		query.setParameter("team", team);
 		query.executeUpdate();
 
+		if (team.getVolunteerMembers() != null)
+			for (User u : team.getVolunteerMembers())
+				moveUserToDefaultTeam(u);
+		if (team.getOrganizationMembers() != null)
+			for (Organization o : team.getOrganizationMembers()) {
+				o.setMemberOf(null);
+				em.merge(o);
+			}
+
 		team.getTeamManager().getManagedTeams().remove(team);
 		em.remove(team);
 	}
@@ -283,6 +292,27 @@ public class TeamManager implements TeamManagerLocal {
 				.createQuery("SELECT x FROM Team x WHERE x.teamName LIKE :nameParam");
 		query.setParameter("nameParam", "%" + nameParam + "%");
 		return query.getResultList();
+	}
+
+	private void moveUserToDefaultTeam(User user) {
+		Team defaultTeam = null;
+		try {
+			defaultTeam = getTeamByExactName(defaultTeamName(user));
+		} catch (NoResultException e) {
+			log.info("The default team (" + defaultTeamName(user) + ") for "
+					+ user.getEmail() + "was not found");
+		}
+
+		user.setMemberOf(defaultTeam);
+
+		if (defaultTeam != null) {
+			log.info("Moving " + user.getEmail()
+					+ " back to the default team (" + defaultTeam.getTeamName()
+					+ ")");
+			defaultTeam.getVolunteerMembers().add(user);
+			em.merge(defaultTeam);
+		}
+		em.merge(user);
 	}
 
 	/*
@@ -396,24 +426,9 @@ public class TeamManager implements TeamManagerLocal {
 		Team team = em.find(Team.class, teamId);
 		SecurityHelper.checkTeamManagerOrMember(userManager, team, user, ctx);
 
-		Team defaultTeam = null;
-		try {
-			defaultTeam = getTeamByExactName(defaultTeamName(user));
-		} catch (NoResultException e) {
-			log.info("The default team (" + defaultTeamName(user) + ") for "
-					+ user.getEmail() + "was not found");
-		}
+		moveUserToDefaultTeam(user);
 
-		user.setMemberOf(defaultTeam);
 		team.getVolunteerMembers().remove(user);
-		if (defaultTeam != null) {
-			log.info("Moving " + user.getEmail()
-					+ " back to the default team (" + defaultTeam.getTeamName()
-					+ ")");
-			defaultTeam.getVolunteerMembers().add(user);
-			em.merge(defaultTeam);
-		}
 		em.merge(team);
-		em.merge(user);
 	}
 }
