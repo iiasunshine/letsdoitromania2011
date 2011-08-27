@@ -14,10 +14,13 @@ import ro.ldir.dto.Equipment;
 import ro.ldir.dto.GpsEquipment;
 import ro.ldir.dto.Organization;
 import ro.ldir.dto.Team;
+import ro.ldir.dto.TransportEquipment;
+import ro.ldir.dto.TransportEquipment.TransportType;
 import ro.ldir.dto.User;
 import ro.ldir.dto.CleaningEquipment.CleaningType;
 import ro.ldir.dto.Organization.OrganizationType;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.AppUtils;
+import ro.radcom.ldir.ldirbackendwebjsf2.tools.DataValidation;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.JsfUtils;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.WSInterface;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.customObjects.CountyNames;
@@ -29,6 +32,7 @@ import com.sun.jersey.api.client.GenericType;
 
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.WebResource.Builder;
+import com.sun.jersey.server.spi.monitoring.glassfish.GlobalStatsProvider;
 
 public class TeamManagerBean {
 
@@ -47,13 +51,15 @@ public class TeamManagerBean {
     private Integer teamID;
     private List<User> volunteerMembers;
     private List<Organization> organizationMembers;
+    private List<Equipment> equipments;
     private String tipOrganization;
 
     private String participants;
     private Integer gpsUnits;
     private String transport;
     private Integer bagsUnits;
-    private Integer glovesUnits; 
+    private Integer glovesUnits;
+    private Integer shovelUnits;
     private String toolsUnits;
 
 	public TeamManagerBean() {
@@ -61,7 +67,6 @@ public class TeamManagerBean {
 		log4j.debug("user ->"+userDetails+", team ->"+userTeam);
 
 		ClientResponse cr = wsi.getMemberOfTeam(userDetails.getUserId());
-//        int statusCode = cr.getStatus();
 
 		if (cr.getStatus() != 200) {
 			log4j.debug("nu s-a reusit obtinerea echipei utlizatorului curent (statusCode="
@@ -69,15 +74,40 @@ public class TeamManagerBean {
 //			JsfUtils.addWarnBundleMessage("warrning_no_team");
 		} else {
 //			String team = cr1.getEntity(String.class);
-//			 log4j.info("--->team: "+ team );
 
 			userTeam = cr.getEntity(Team.class);
+			initEquipments();
 			initTeam();
 			initManager();
 			initTeamMembers();	
 			initOrganization();
 		}
 
+	}
+	private void initEquipments(){
+		if(userTeam != null && userTeam.getEquipments()!= null &&
+				userTeam.getEquipments().size() > 0){
+			equipments= userTeam.getEquipments();
+			for(Equipment equi:equipments){
+				if(equi instanceof GpsEquipment){
+					gpsUnits = ((GpsEquipment) equi).getCount();
+				}
+				if(equi instanceof CleaningEquipment){
+					if(((CleaningEquipment) equi).getCleaningType().equals(CleaningType.BAGS)){
+						bagsUnits = ((CleaningEquipment) equi).getCount();
+					}else if(((CleaningEquipment) equi).getCleaningType().equals(CleaningType.GLOVES)){
+						glovesUnits = ((CleaningEquipment) equi).getCount();
+					}else if(((CleaningEquipment) equi).getCleaningType().equals(CleaningType.SHOVEL)){
+						shovelUnits =((CleaningEquipment) equi).getCount();
+					}
+				}
+				if(equi instanceof TransportEquipment){
+					transport = ((TransportEquipment) equi).getTransportType().toString();
+				}
+
+			}
+			equipmentBool = true;
+		}
 	}
 
 	private void initTeam() {
@@ -209,8 +239,7 @@ public class TeamManagerBean {
 	}
 	public String actionDelFromTeam(){
 		
-		
-		
+	
 		String location = JsfUtils.getInitParameter("webservice.url") +"/LDIRBackend/ws/team/"+ userTeam.getTeamId()+"/volunteer/"+userDetails.getUserId();
 		Client client = Client.create();
 	    WebResource resource = client.resource(location);
@@ -273,6 +302,8 @@ public class TeamManagerBean {
 		       JsfUtils.addWarnBundleMessage("err_mandatory_fields");
 		       return NavigationValues.TEAM_ADD_ORG_FAIL;
 		}
+		
+//		if(DataValidation.validateNumber(organization.getMembersCount()))
 		
 		if(tipOrganization != null && tipOrganization.length() != 0){
 			if(tipOrganization.equalsIgnoreCase("CITY_HALL")){
@@ -361,8 +392,7 @@ public class TeamManagerBean {
         	JsfUtils.addWarnBundleMessage("err_user_rem");
        	    return NavigationValues.TEAM_REM_MEM_FAIL;
 		}
-//		String location = JsfUtils.getInitParameter("webservice.url") +"/LDIRBackend/ws/team/"+ userTeam.getTeamId()+"/organization/"+orgDeleteId;
-		
+	
 		String location = JsfUtils.getInitParameter("webservice.url") +"/LDIRBackend/ws/organization/"+orgDeleteId;		
 		Client client = Client.create();	
 	    WebResource resource = client.resource(location);
@@ -374,6 +404,7 @@ public class TeamManagerBean {
        
        /* verificare statusCode si adaugare mesaje */
        if(statusCode == 200){
+    	  orgBool = false;
     	  organizationMembers =null;
        	  JsfUtils.addInfoBundleMessage("success_del_mem_message");
        	  return NavigationValues.TEAM_REM_MEM_FAIL;
@@ -385,12 +416,26 @@ public class TeamManagerBean {
 	}
 	public String actionAddEquipment(){
     	
-		JsfUtils.addWarnBundleMessage("err_not_implemented");
-		if(true)
-      	   return NavigationValues.TEAM_REM_MEM_FAIL;
-		 
+        //reset equipments
+		if(equipments!=null){
+			for(Equipment equi: equipments){
+			String location = JsfUtils.getInitParameter("webservice.url")
+				+ "/LDIRBackend/ws/team/" + userTeam.getTeamId() + "/equipmentId/"+equi.getEquipmentId();
+			Client client = Client.create();
+		    WebResource resource = client.resource(location);
+		    Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(JsfUtils.getInitParameter("admin.user"),
+		            JsfUtils.getInitParameter("admin.password")));
+		    ClientResponse cr = builder.entity(null, MediaType.APPLICATION_XML).delete(ClientResponse.class);
+		    
+		    int statusCode = cr.getStatus();
+		    log4j.debug("---> statusCode equipment del from team: " + statusCode + " (" + cr.getClientResponseStatus() + ")");
+			}
+		} 
+
 		
-		if (gpsUnits != null && gpsUnits > 0) {
+		
+		
+		if (gpsUnits != null && gpsUnits > 0) {			
 			GpsEquipment gps = new GpsEquipment();
 			gps.setCount(gpsUnits);
 			String location = JsfUtils.getInitParameter("webservice.url")
@@ -402,8 +447,7 @@ public class TeamManagerBean {
 					AppUtils.generateCredentials(
 							JsfUtils.getInitParameter("admin.user"),
 							JsfUtils.getInitParameter("admin.password")));
-			ClientResponse cr = builder.entity(gps, MediaType.APPLICATION_XML)
-					.put(ClientResponse.class);
+			ClientResponse cr = builder.entity(gps, MediaType.APPLICATION_XML).put(ClientResponse.class);
 			int statusCode = cr.getStatus();
 			
 			log4j.debug("---> statusCode gps add team: " + statusCode + " ("
@@ -412,6 +456,7 @@ public class TeamManagerBean {
 		if (bagsUnits != null && bagsUnits > 0) {
 			CleaningEquipment bags = new CleaningEquipment();
 			bags.setCleaningType(CleaningType.BAGS);
+			bags.setCount(bagsUnits);
 			String location = JsfUtils.getInitParameter("webservice.url")
 					+ "/LDIRBackend/ws/team/" + userTeam.getTeamId() + "/cleaning";
 			Client client = Client.create();
@@ -431,6 +476,7 @@ public class TeamManagerBean {
 		if (glovesUnits != null && glovesUnits > 0) {
 			CleaningEquipment gloves = new CleaningEquipment();
 			gloves.setCleaningType(CleaningType.GLOVES);
+			gloves.setCount(glovesUnits);
 			String location = JsfUtils.getInitParameter("webservice.url")
 					+ "/LDIRBackend/ws/team/" + userTeam.getTeamId() + "/cleaning";
 			Client client = Client.create();
@@ -447,8 +493,59 @@ public class TeamManagerBean {
 			log4j.debug("---> statusCode bags add team: " + statusCode + " ("
 					+ cr.getClientResponseStatus() + ")");
 		}
+		if (shovelUnits != null && shovelUnits > 0) {
+			CleaningEquipment shovel = new CleaningEquipment();
+			shovel.setCleaningType(CleaningType.SHOVEL);
+			shovel.setCount(shovelUnits);
+			String location = JsfUtils.getInitParameter("webservice.url")
+					+ "/LDIRBackend/ws/team/" + userTeam.getTeamId() + "/cleaning";
+			Client client = Client.create();
+			WebResource resource = client.resource(location);
+			Builder builder = resource.header(
+					HttpHeaders.AUTHORIZATION,
+					AppUtils.generateCredentials(
+							JsfUtils.getInitParameter("admin.user"),
+							JsfUtils.getInitParameter("admin.password")));
+			ClientResponse cr = builder.entity(shovel, MediaType.APPLICATION_XML)
+					.put(ClientResponse.class);
+			int statusCode = cr.getStatus();
+			
+			log4j.debug("---> statusCode shovel add team: " + statusCode + " ("
+					+ cr.getClientResponseStatus() + ")");
+		}	
+		if (transport != null && transport.length() != 0) {
+			TransportEquipment trans = new TransportEquipment();
+			if(transport.equals("BICYCLE")){
+				trans.setTransportType(TransportType.BICYCLE);
+			}else if(transport.equals("CAR")){
+				trans.setTransportType(TransportType.CAR);
+			}else if(transport.equals("ORGANIZATION_CAR")){
+				trans.setTransportType(TransportType.ORGANIZATION_CAR);
+			}else if(transport.equals("PUBLIC")){
+				trans.setTransportType(TransportType.PUBLIC);
+			}
+			String location = JsfUtils.getInitParameter("webservice.url")
+					+ "/LDIRBackend/ws/team/" + userTeam.getTeamId() + "/transport"; 
+			Client client = Client.create();
+			WebResource resource = client.resource(location);
+			Builder builder = resource.header(
+					HttpHeaders.AUTHORIZATION,
+					AppUtils.generateCredentials(
+							JsfUtils.getInitParameter("admin.user"),
+							JsfUtils.getInitParameter("admin.password")));
+			ClientResponse cr = builder.entity(trans, MediaType.APPLICATION_XML)
+					.put(ClientResponse.class);
+			int statusCode = cr.getStatus();
+			
+			log4j.debug("---> statusCode shovel add team: " + statusCode + " ("
+					+ cr.getClientResponseStatus() + ")");
+		}
 		
-		return NavigationValues.USER_ADD_TEAM_FAIL;
+		
+		
+		
+		JsfUtils.addInfoBundleMessage("success_add_equi_message");
+		return NavigationValues.TEAM_ADD_EQUI_FAIL;
 	}
 	
 	public String actionDelEquipment(){
@@ -537,7 +634,7 @@ public class TeamManagerBean {
 	public List<SelectItem> getNumbers(){
 		 List<SelectItem> items = new ArrayList<SelectItem>();
 		
-		 for(int i = 0; i < 50 ; i++){
+		 for(int i = 1; i < 50 ; i++){
 			 items.add(new SelectItem(i,""+i));
 		 }
 		return items;
@@ -545,7 +642,7 @@ public class TeamManagerBean {
 	public List<SelectItem> getNumSac(){
 		 List<SelectItem> items = new ArrayList<SelectItem>();
 		
-		 for(int i = 0; i < 1000 ; i = i+10){
+		 for(int i = 10; i < 1000 ; i = i+10){
 			 items.add(new SelectItem(i,""+i));
 		 }
 		return items;
@@ -553,7 +650,7 @@ public class TeamManagerBean {
 	public List<SelectItem> getNumbMan(){
 		 List<SelectItem> items = new ArrayList<SelectItem>();
 		
-		 for(int i = 0; i < 200 ; i=i+5){
+		 for(int i = 5; i < 200 ; i=i+5){
 			 items.add(new SelectItem(i,""+i));
 		 }
 		return items;
@@ -645,6 +742,12 @@ public class TeamManagerBean {
 
 	public void setToolsUnits(String toolsUnits) {
 		this.toolsUnits = toolsUnits;
+	}
+	public void setShovelUnits(Integer shovelUnits) {
+		this.shovelUnits = shovelUnits;
+	}
+	public Integer getShovelUnits() {
+		return shovelUnits;
 	}
 
 

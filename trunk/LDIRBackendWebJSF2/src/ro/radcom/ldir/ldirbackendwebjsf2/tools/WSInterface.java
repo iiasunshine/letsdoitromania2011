@@ -229,7 +229,8 @@ public class WSInterface {
         WebResource resource = client.resource(location);
         Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(JsfUtils.getInitParameter("admin.user"),
                 JsfUtils.getInitParameter("admin.password")));
-        ClientResponse cr = builder.entity(null, MediaType.TEXT_PLAIN_TYPE).get(ClientResponse.class);
+//        ClientResponse cr = builder.entity(null, MediaType.TEXT_PLAIN_TYPE).get(ClientResponse.class);
+        ClientResponse cr = builder.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
         return cr;
     }
 

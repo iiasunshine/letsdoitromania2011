@@ -45,6 +45,10 @@
             <to-view-id>/users/echipa-mem-editare.jsp</to-view-id>  
         </navigation-case>
         <navigation-case>
+            <from-outcome>team_add_equi_fail</from-outcome>
+            <to-view-id>/users/echipa-equip-detalii.jsp</to-view-id>  
+        </navigation-case>
+        <navigation-case>
             <from-outcome>team_add_org_fail</from-outcome>
             <to-view-id>/users/echipa-org-detalii.jsp</to-view-id>
         </navigation-case>

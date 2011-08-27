@@ -8,6 +8,7 @@ package ro.radcom.ldir.ldirbackendwebjsf2.tools;
 public class DataValidation {
 
 	private static String nameExp = "[a-zA-z]+([ '-][a-zA-Z]+)*";
+	private static String numExp = "\\d*";
 	
 
 	   
@@ -16,6 +17,13 @@ public class DataValidation {
 		  firstName = firstName.trim(); 
 	      return firstName.matches(nameExp);
 	   } 
+	   
+	   public static boolean validateNumber(String number){
+		   
+		   
+		   
+		   return number.matches(numExp);
+	   }
 	   
 //	   public static boolean validateLastName( String lastName )
 //	   {
@@ -27,5 +35,7 @@ public class DataValidation {
 	   {
 //	       System.out.println(validateFirstName("ricAndrei-dare"));
 //	       System.out.println(validateLastName("asda as asasa sfee"));
+		   
+//		   System.out.println(validateNumber("12223"));
 	   }
 }

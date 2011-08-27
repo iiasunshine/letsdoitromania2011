@@ -39,7 +39,13 @@
                                 <br />
                                  <!-- TRANSPORT -->
                                 <div class="label"><h:outputText value="Transport"/></div>
-                                <h:inputText value="#{teamBean.transport}" id="transport" styleClass="formTextfield"/>
+                                <h:selectOneMenu   value="#{teamBean.transport}" id="transport" styleClass="formDropdown">
+                                	<f:selectItem itemLabel="Bicileta" itemValue="BICYCLE"/>	
+                                    <f:selectItem itemLabel="Masina" itemValue="CAR"/>
+                                    <f:selectItem itemLabel="Masina companiei" itemValue="ORGANIZATION_CAR"/>
+                                    <f:selectItem itemLabel="Transport in public" itemValue="PUBLIC"/>
+                                </h:selectOneMenu>
+                                
                                 <br />
                                  <!-- NUMAR SACI -->
                                 <div class="label"><h:outputText value="Numar Saci"/></div>
@@ -57,7 +63,7 @@
                                 <br />
                                 <!-- NUMAR LOPETI -->
                                 <div class="label"><h:outputText value="Numar Lopeti"/></div>
-                                 <h:selectOneMenu value="#{teamBean.tipOrganization}" id="lopeti" styleClass="formDropdown">
+                                 <h:selectOneMenu value="#{teamBean.shovelUnits}" id="lopeti" styleClass="formDropdown">
                                     <f:selectItem itemLabel="NONE" itemValue="-1"/>
                                     <f:selectItems value="#{teamBean.numbers}"/>
                                 </h:selectOneMenu>
