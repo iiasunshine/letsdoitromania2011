@@ -316,6 +316,8 @@ public class TeamManagerBean {
 				organization.setType(OrganizationType.REGISTRATION_POINT);
 			}else if(tipOrganization.equalsIgnoreCase("SCHOOL")){
 				organization.setType(OrganizationType.SCHOOL);
+			}else if(tipOrganization.equalsIgnoreCase("ONG")){
+				organization.setType(OrganizationType.ONG);
 			}		
 		}
 		 log4j.info("--->  organization: " + tipOrganization );
@@ -365,7 +367,9 @@ public class TeamManagerBean {
 				organization.setType(OrganizationType.REGISTRATION_POINT);
 			}else if(tipOrganization.equalsIgnoreCase("SCHOOL")){
 				organization.setType(OrganizationType.SCHOOL);
-			}		
+			}else if(tipOrganization.equalsIgnoreCase("ONG")){
+				organization.setType(OrganizationType.ONG);
+			}
 		}
 		 log4j.info("--->  organization: " + tipOrganization +","+ organization.getType().toString());
 		/* edit organization */
