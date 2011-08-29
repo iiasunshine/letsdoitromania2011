@@ -83,7 +83,7 @@
                                 <h:inputText value="#{teamBean.organization.contactEmail}" id="email" styleClass="formTextfield"/>
                                 <br />
                                 <!-- PARTICIPANTI -->
-                                <div class="label"><h:outputText value="Participanti din cadrul organizatiei"/><span class="important">*</span></div>
+                                <div class="label"><h:outputText value="Participanti din cadrul organizatiei(numarul)"/><span class="important">*</span></div>
                                 <h:inputText value="#{teamBean.organization.membersCount}" id="participanti" styleClass="formTextfield"/>
                                 <br/>
                      			<br/>
