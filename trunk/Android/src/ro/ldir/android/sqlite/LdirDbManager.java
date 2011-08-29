@@ -35,10 +35,10 @@ public class LdirDbManager {
 		}
 	}
 	
-	private long insert(Garbage garbage) {
+	public long insert(Garbage garbage) {
 		try {
-			ContentValues value = createContentValues(garbage);
-			return database.insert(LdirDbHelper.TABLE_NAME_GARBAGE, null, value);
+			ContentValues values = createContentValues(garbage);
+			return database.insert(LdirDbHelper.TABLE_NAME_GARBAGE, null, values);
 		} catch (SQLException sqlerror) 
 		{
 			LLog.d(sqlerror.getMessage());
@@ -46,10 +46,18 @@ public class LdirDbManager {
 		}
 	}
 	
-	private long update(Garbage garbage)
+	public int update(Garbage garbage) 
 	{
-		// TODO - update in the database
-		return -1;
+		ContentValues values = createContentValues(garbage);
+		String whereClause = LdirDbHelper.GarbageFields.garbageId.column + "="
+				+ garbage.getGarbageId();
+		try {
+			return database.update(LdirDbHelper.TABLE_NAME_GARBAGE, values,
+					whereClause, null);
+		} catch (SQLException sqlerror) {
+			LLog.d(sqlerror.getMessage());
+			return -1;
+		}
 	}
 	
 	/**
@@ -93,7 +101,7 @@ public class LdirDbManager {
 					.getDouble(LdirDbHelper.GarbageFields.xLatitude.ordinal()));
 			garbage.setyLongitude(crsr
 					.getDouble(LdirDbHelper.GarbageFields.yLongitude.ordinal()));
-			// TODO - pictures
+			garbage.setCSVPictures(crsr.getString(LdirDbHelper.GarbageFields.pictures.ordinal()));
 			garbageList.add(garbage);
 
 			crsr.moveToNext();
@@ -133,7 +141,7 @@ public class LdirDbManager {
 		values.put(LdirDbHelper.GarbageFields.percentageWaste.column, garbage.getPercentageWaste());
 		values.put(LdirDbHelper.GarbageFields.xLatitude.column, garbage.getxLatitude());
 		values.put(LdirDbHelper.GarbageFields.yLongitude.column, garbage.getyLongitude());
-		// TODO - pictures
+		values.put(LdirDbHelper.GarbageFields.pictures.column, garbage.getCSVPictures());
 		return values;
 	}
 	

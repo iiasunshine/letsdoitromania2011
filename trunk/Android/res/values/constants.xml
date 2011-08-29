@@ -8,4 +8,5 @@
     <!-- TODO - investigate the right number -->
     <item type="integer" name="min_accuracy" format="integer">10</item>
     
+    
 </resources>

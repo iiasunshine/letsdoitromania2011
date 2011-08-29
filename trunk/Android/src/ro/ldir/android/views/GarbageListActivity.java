@@ -110,7 +110,7 @@ public class GarbageListActivity extends ListActivity {
 	        setListAdapter(adapter);
 	        
 	        // scroll to the item added/updated
-	        long id = data.getLongExtra(AddGarbageActivity.SAVED_GARBAGE_ID, -1);
+	        long id = data.getLongExtra(AddGarbageActivity.SAVED_GARBAGE_ID, -1l);
 	        getListView().setSelection((int)id);
 		}
 		super.onActivityResult(requestCode, resultCode, data);

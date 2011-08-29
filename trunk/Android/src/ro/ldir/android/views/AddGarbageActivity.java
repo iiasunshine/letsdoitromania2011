@@ -1,11 +1,21 @@
 package ro.ldir.android.views;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+
 import ro.ldir.R;
 import ro.ldir.android.entities.Garbage;
 import ro.ldir.android.location.LocationGetter;
 import ro.ldir.android.sqlite.LdirDbManager;
 import ro.ldir.android.util.LDIRApplication;
 import ro.ldir.android.util.LLog;
+import ro.ldir.android.util.LdirPrefferences;
 import ro.ldir.android.util.Utils;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -13,26 +23,36 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.LocationManager;
 import android.location.LocationProvider;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class AddGarbageActivity extends Activity 
 {
 	private static final String SAVED_GARBAGE = "ro.ldir.android.views.saved.garbage";
 	protected static final String SAVED_GARBAGE_ID = "ro.ldir.android.views.saved.garbage.id";
+	protected static final String SAVED_ERROR_MSG_ID = "ro.ldir.android.views.saved.garbage.id";
 	
 	private static final int DLG_NO_GPS = 10;
 	private static final int DLG_GPS_DISABLED = 11;
+	private static final int DLG_ERROR = 12;
 	
 	private static final int REQUEST_ENABLE_GPS = 100;
+	private static final int REQUEST_FROM_CAMERA = 101;
+	private static final int REQUEST_EDIT_GALLERY = 102;
+
 	/**
 	 * This object is received by the activity. it it is set, then the object is changed and updated to the local database
 	 * If it is null, then the object is credated and added to the local database
@@ -40,6 +60,8 @@ public class AddGarbageActivity extends Activity
 	private Garbage garbage;
 	
 	private LocationGetter locationGetter;
+	
+	private int errorMessageId;
 	
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,11 +85,15 @@ public class AddGarbageActivity extends Activity
         	//restore operation
         	garbage = (Garbage)savedInstanceState.get(SAVED_GARBAGE);
         	writeControls(garbage);
+        	
+        	errorMessageId = savedInstanceState.getInt(SAVED_ERROR_MSG_ID, 0);
         }
         
-        TextView txtNrPictures = (TextView)findViewById(R.id.txtNrPictures);
-        int nrOfPicsAttached = garbage.getPictures().size();
-        txtNrPictures.setText(getResources().getString(R.string.details_picture_nr, nrOfPicsAttached));
+        
+//        TextView txtNrPictures = (TextView)findViewById(R.id.btnPictureGallery);
+//        int nrOfPicsAttached = garbage.getPictures().size();
+//        txtNrPictures.setText(String.valueOf(nrOfPicsAttached));
+//        txtNrPictures.setText(getResources().getString(R.string.details_picture_nr, nrOfPicsAttached));
         
         Button btnGPS = (Button)findViewById(R.id.btnGPS);
         btnGPS.setOnClickListener(new OnClickListener() {
@@ -89,6 +115,34 @@ public class AddGarbageActivity extends Activity
 				locationGetter.execute();
 			}
 		});
+	
+        Button btnAddPicture = (Button)findViewById(R.id.btnAddPicture);
+        btnAddPicture.setOnClickListener(new OnClickListener() {
+			
+			public void onClick(View v) {
+				Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+				  intent.putExtra(MediaStore.EXTRA_OUTPUT,Uri.fromFile(Utils.getTempImageFile()));
+				  startActivityForResult(intent, REQUEST_FROM_CAMERA);
+			}
+		});
+        
+        LinearLayout btnPictureGallery = (LinearLayout)findViewById(R.id.btnPictureGallery);
+        btnPictureGallery.setOnClickListener(new OnClickListener() {
+			
+			public void onClick(View v) {
+				ArrayList<String> pictures = garbage.getPictures();
+				if (pictures.isEmpty())
+				{
+					showErrorDialog(R.string.details_no_pictures);
+				}
+				else
+				{
+					Intent intent = new Intent(AddGarbageActivity.this, PictureGalleryActivity.class);
+					intent.putStringArrayListExtra(PictureGalleryActivity.PICTURE_LIST, pictures);
+					startActivityForResult(intent, REQUEST_EDIT_GALLERY);
+				}
+			}
+		});
 	}
 	
 	
@@ -99,6 +153,8 @@ public class AddGarbageActivity extends Activity
 		{
 		case DLG_NO_GPS:
 			return Utils.displayDialog(this, R.string.details_no_gps);
+		case DLG_ERROR:
+			return Utils.displayDialog(this, errorMessageId);
 		case DLG_GPS_DISABLED:
 		{
 			AlertDialog.Builder builder = new AlertDialog.Builder(AddGarbageActivity.this);
@@ -127,8 +183,22 @@ public class AddGarbageActivity extends Activity
 
 
 	@Override
+	protected void onPrepareDialog(int id, Dialog dialog) {
+		switch(id)
+		{
+		case DLG_ERROR:
+			((AlertDialog)dialog).setMessage(getResources().getString(errorMessageId));
+			break;
+		}
+		super.onPrepareDialog(id, dialog);
+	}
+
+
+
+	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		outState.putSerializable(SAVED_GARBAGE, garbage);
+		outState.putInt(SAVED_ERROR_MSG_ID, errorMessageId);
 		super.onSaveInstanceState(outState);
 	}
 
@@ -174,6 +244,7 @@ public class AddGarbageActivity extends Activity
 		 ((TextView)findViewById(R.id.txtMetal)).setText(String.valueOf(garbage.getPercentageMetal()));
 		 ((TextView)findViewById(R.id.txtGlass)).setText(String.valueOf(garbage.getPercentageGlass()));
 		 ((TextView)findViewById(R.id.txtWaste)).setText(String.valueOf(garbage.getPercentageWaste()));
+		 
 	}
 	
 	
@@ -245,18 +316,43 @@ public class AddGarbageActivity extends Activity
 		{
 			LdirDbManager dbManager = new LdirDbManager();
 			dbManager.open(this);
-			long id = dbManager.save(garbage);
-			dbManager.close();
-			if (id != -1)
+			int garbageId = garbage.getGarbageId();
+			boolean success = false;
+			if (garbageId == -1) // insert operation
 			{
-				Utils.displayToast(this, getResources().getString(R.string.details_add_confirm, id));
-				// TODO - add message for update
-				Intent data = new Intent();
-				data.putExtra(SAVED_GARBAGE_ID, id);
-				setResult(RESULT_OK, data);
+				garbageId = (int)dbManager.insert(garbage);
+				if (garbageId != -1)
+				{
+					garbage.setGarbageId((int)garbageId);
+					Utils.displayToast(this, getResources().getString(R.string.details_add_confirm, garbageId));
+					success = true;
+				}
+				else
+				{
+					Utils.displayToast(this, getResources().getString(R.string.adaugat_nok));
+				}
 			}
-			// TODO - add message for error
-			finish();
+			else // update operation
+			{
+				int rows = dbManager.update(garbage);
+				if (rows == 0)
+				{
+					Utils.displayToast(this, getResources().getString(R.string.adaugat_nok));
+				}
+				else
+				{
+					Utils.displayToast(this, getResources().getString(R.string.details_modify_confirm, garbage.getGarbageId()));
+					success = true;
+				}
+			}
+			dbManager.close();
+			if (success)
+			{
+				Intent data = new Intent();
+				data.putExtra(SAVED_GARBAGE_ID, (long)garbageId);
+				setResult(RESULT_OK, data);
+				finish();
+			}
 		}
 		
 	}
@@ -269,6 +365,12 @@ public class AddGarbageActivity extends Activity
 		finish();
 	}
 	
+	private void showErrorDialog(int msgId)
+	{
+		errorMessageId = msgId;
+		showDialog(DLG_ERROR);
+	}
+	
 	/**
 	 * TODO - move to validators
 	 * @param garbage
@@ -279,48 +381,48 @@ public class AddGarbageActivity extends Activity
 		int totalPercentage = garbage.getPercentageGlass() + garbage.getPercentageMetal() + garbage.getPercentagePlastic() + garbage.getPercentageWaste();
 		if (totalPercentage != 100)
 		{
-			Utils.displayDialog(this, R.string.chart_err_overflow_percents);
+			showErrorDialog(R.string.chart_err_overflow_percents);
 			return false;
 		}
 		double coordinate = garbage.getxLatitude();
-		double minLatitude = getResources().getFraction(R.fraction.min_latitude, 10, 10);
-		double maxLatitude = getResources().getFraction(R.fraction.max_latitude, 10, 10);
+		double minLatitude = 43;//getResources().getFraction(R.fraction.min_latitude, 100, 1);
+		double maxLatitude = 49;//getResources().getFraction(R.fraction.max_latitude, 100, 1);
 		if (coordinate < minLatitude || coordinate > maxLatitude)
 		{
-			Utils.displayDialog(this, R.string.chart_err_latitude);
+			showErrorDialog(R.string.chart_err_latitude);
 			return false;
 		}
 		
 		coordinate = garbage.getyLongitude();
-		double minLongitude = getResources().getFraction(R.fraction.min_longitude, 10, 10);
-		double maxLongitude = getResources().getFraction(R.fraction.max_longitude, 10, 10);
+		double minLongitude = 20;//getResources().getFraction(R.fraction.min_longitude, 100, 1);
+		double maxLongitude = 30;//getResources().getFraction(R.fraction.max_longitude, 100, 1);
 		if (coordinate < minLongitude || coordinate > maxLongitude)
 		{
-			Utils.displayDialog(this, R.string.chart_err_longitude);
+			showErrorDialog(R.string.chart_err_longitude);
 			return false;
 		}
 		int percentage = garbage.getPercentageGlass();
 		if (percentage < 0 || percentage > 100)
 		{
-			Utils.displayDialog(this, R.string.chart_js_err_glass);
+			showErrorDialog(R.string.chart_js_err_glass);
 			return false;
 		}
 		percentage = garbage.getPercentageMetal();
 		if (percentage < 0 || percentage > 100)
 		{
-			Utils.displayDialog(this, R.string.chart_js_err_metal);
+			showErrorDialog(R.string.chart_js_err_metal);
 			return false;
 		}
 		percentage = garbage.getPercentagePlastic();
 		if (percentage < 0 || percentage > 100)
 		{
-			Utils.displayDialog(this, R.string.chart_js_err_plastic);
+			showErrorDialog(R.string.chart_js_err_plastic);
 			return false;
 		}
 		percentage = garbage.getPercentageWaste();
 		if (percentage < 0 || percentage > 100)
 		{
-			Utils.displayDialog(this, R.string.chart_js_err_waste);
+			showErrorDialog(R.string.chart_js_err_waste);
 			return false;
 		}
 		// TODO - implement check if the coordinates exist already in the database
@@ -357,8 +459,88 @@ public class AddGarbageActivity extends Activity
 				
 			}
 		}
+		else if (requestCode == REQUEST_FROM_CAMERA && resultCode == RESULT_OK) {
+			InputStream is = null;
+			File tempImageFile = Utils.getTempImageFile();
+			try {
+				is = new FileInputStream(tempImageFile);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+
+			// On HTC Hero the requested file will not be created. Because HTC Hero has custom camera
+			// app implementation and it works another way. It doesn't write to a file but instead
+			// it writes to media gallery and returns uri in intent. More info can be found here:
+			// http://stackoverflow.com/questions/1910608/android-actionimagecapture-intent
+			// http://code.google.com/p/android/issues/detail?id=1480
+			// So here's the workaround:
+			if (is == null) {
+				try {
+					Uri u = data.getData();
+					is = getContentResolver().openInputStream(u);
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				}
+			}
+
+			// Now "is" stream contains the required photo, you can process it
+			Bitmap photo = BitmapFactory.decodeStream(is);
+			FileOutputStream out;
+			try {
+				String imageFileName = LdirPrefferences.getNextImageFileName(this);
+				File file = new File(imageFileName);
+				if (!file.exists())
+				{
+					file.createNewFile();
+				}
+				out = new FileOutputStream(imageFileName);
+				photo.compress(Bitmap.CompressFormat.JPEG, 100, out);
+				List<String> pictures = garbage.getPictures();
+				if (!pictures.contains(imageFileName)){
+					pictures.add(imageFileName);
+				}
+				LdirPrefferences.setLastImageFileName(this, imageFileName);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace(); // TODO - add error message dialog
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			photo.recycle();
+			photo = null;
+
+			// don't forget to remove the temp file when it's not required.
+			tempImageFile.delete();
+		}
+		else if (requestCode == REQUEST_EDIT_GALLERY /*&& resultCode == RESULT_OK*/)
+		{
+			// the picture list was edited. get the picture list from
+			// the intent and set to the garbage
+			ArrayList<String> pictures = data.getStringArrayListExtra(PictureGalleryActivity.PICTURE_LIST);
+			garbage.setPictures(pictures);
+		}
+
 		super.onActivityResult(requestCode, resultCode, data);
 	}
-
 	
+
+	/* btnAddImage:
+	 * when pressed opens a dialog with options: capture image, select existing image
+	 * capture image: 
+	 * - opens camera
+	 * - takes picture
+	 * - saves picture on sd card if exists, or phone if it does not exist, on a location created by the application
+	 * - adds the full path of the image to the list of images from the garbage.
+	 * select existing image:
+	 * - opens file explorer and selects an image. 
+	 * - adds full path of image to the list of images from current garbage
+	 */
+	
+	/*btnPictureGallery
+	 * if the list of images is empty, disable this button
+	 * when pressed opens a gallery with the images from the image list
+	 * if the image was deleted from card/phone - display text - cannot find image
+	 * the user can delete an image from the gallery 
+	 */
 }
