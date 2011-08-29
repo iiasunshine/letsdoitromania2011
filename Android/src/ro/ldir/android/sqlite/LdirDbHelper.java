@@ -23,10 +23,11 @@ public class LdirDbHelper extends SQLiteOpenHelper
 	    percentageMetal("percentageMetal", "INTEGER"),
 	    percentagePlastic("percentagePlastic", "INTEGER"),
 	    percentageWaste("percentageWaste", "INTEGER"),
-//	    private List<String> pictures = new ArrayList<String>();
+	    pictures("pictures", "TEXT"),
 //	    private Date recordDate;
 	    xLatitude("xLatitude", "REAL"),
-	    yLongitude("yLongitude", "REAL");
+	    yLongitude("yLongitude", "REAL"),
+		uploaded("uploaded", "INTEGER");
 	    
 	    String column;
 	    String type;

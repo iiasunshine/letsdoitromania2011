@@ -192,7 +192,7 @@
 	<string name="log_offline_msg">NT_log_offline_msg</string>
 	<string name="main_error_location">NT_main_error_location</string>
 	<string name="seekbar4">nereciclabil</string>
-	<string name="details_picture_nr">%d imagini atasate</string>
+	<string name="details_picture_nr">%d imagini</string>
 	<string name="chart_upload_morman_link">Upload</string>
 	<string name="seekbar3">sticlã</string>
 	<string name="seekbar2">metal</string>
@@ -215,4 +215,7 @@
 	<string name="details_stop_getting_location">Stop</string>
 	<string name="details_gps_disabled">Antena GPS este dezactivata. Activati?</string>
 	<string name="details_ok">Bine</string>
+	<string name="details_no_pictures">Mormanul de gunoi nu are nici o fotografie atasata</string>
+	<string name="gallery_delete">Sterge</string>
+	<string name="gallery_delete_confirm">Doriti sa stergeti imaginea selectata?</string>
 </resources>
