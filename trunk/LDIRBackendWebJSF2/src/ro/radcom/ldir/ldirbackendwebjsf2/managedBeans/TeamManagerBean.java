@@ -423,8 +423,7 @@ public class TeamManagerBean {
 				+ "/LDIRBackend/ws/team/" + userTeam.getTeamId() + "/equipmentId/"+equi.getEquipmentId();
 			Client client = Client.create();
 		    WebResource resource = client.resource(location);
-		    Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(JsfUtils.getInitParameter("admin.user"),
-		            JsfUtils.getInitParameter("admin.password")));
+		    Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(userDetails.getEmail(), userDetails.getPasswd()));
 		    ClientResponse cr = builder.entity(null, MediaType.APPLICATION_XML).delete(ClientResponse.class);
 		    
 		    int statusCode = cr.getStatus();
@@ -443,10 +442,7 @@ public class TeamManagerBean {
 			Client client = Client.create();
 			WebResource resource = client.resource(location);
 			Builder builder = resource.header(
-					HttpHeaders.AUTHORIZATION,
-					AppUtils.generateCredentials(
-							JsfUtils.getInitParameter("admin.user"),
-							JsfUtils.getInitParameter("admin.password")));
+					HttpHeaders.AUTHORIZATION,AppUtils.generateCredentials(userDetails.getEmail(), userDetails.getPasswd()));
 			ClientResponse cr = builder.entity(gps, MediaType.APPLICATION_XML).put(ClientResponse.class);
 			int statusCode = cr.getStatus();
 			
@@ -462,10 +458,7 @@ public class TeamManagerBean {
 			Client client = Client.create();
 			WebResource resource = client.resource(location);
 			Builder builder = resource.header(
-					HttpHeaders.AUTHORIZATION,
-					AppUtils.generateCredentials(
-							JsfUtils.getInitParameter("admin.user"),
-							JsfUtils.getInitParameter("admin.password")));
+					HttpHeaders.AUTHORIZATION,AppUtils.generateCredentials(userDetails.getEmail(), userDetails.getPasswd()));
 			ClientResponse cr = builder.entity(bags, MediaType.APPLICATION_XML)
 					.put(ClientResponse.class);
 			int statusCode = cr.getStatus();
@@ -482,10 +475,7 @@ public class TeamManagerBean {
 			Client client = Client.create();
 			WebResource resource = client.resource(location);
 			Builder builder = resource.header(
-					HttpHeaders.AUTHORIZATION,
-					AppUtils.generateCredentials(
-							JsfUtils.getInitParameter("admin.user"),
-							JsfUtils.getInitParameter("admin.password")));
+					HttpHeaders.AUTHORIZATION,AppUtils.generateCredentials(userDetails.getEmail(), userDetails.getPasswd()));
 			ClientResponse cr = builder.entity(gloves, MediaType.APPLICATION_XML)
 					.put(ClientResponse.class);
 			int statusCode = cr.getStatus();
@@ -502,10 +492,7 @@ public class TeamManagerBean {
 			Client client = Client.create();
 			WebResource resource = client.resource(location);
 			Builder builder = resource.header(
-					HttpHeaders.AUTHORIZATION,
-					AppUtils.generateCredentials(
-							JsfUtils.getInitParameter("admin.user"),
-							JsfUtils.getInitParameter("admin.password")));
+					HttpHeaders.AUTHORIZATION,AppUtils.generateCredentials(userDetails.getEmail(), userDetails.getPasswd()));
 			ClientResponse cr = builder.entity(shovel, MediaType.APPLICATION_XML)
 					.put(ClientResponse.class);
 			int statusCode = cr.getStatus();
@@ -529,10 +516,7 @@ public class TeamManagerBean {
 			Client client = Client.create();
 			WebResource resource = client.resource(location);
 			Builder builder = resource.header(
-					HttpHeaders.AUTHORIZATION,
-					AppUtils.generateCredentials(
-							JsfUtils.getInitParameter("admin.user"),
-							JsfUtils.getInitParameter("admin.password")));
+					HttpHeaders.AUTHORIZATION,AppUtils.generateCredentials(userDetails.getEmail(), userDetails.getPasswd()));
 			ClientResponse cr = builder.entity(trans, MediaType.APPLICATION_XML)
 					.put(ClientResponse.class);
 			int statusCode = cr.getStatus();
@@ -540,9 +524,6 @@ public class TeamManagerBean {
 			log4j.debug("---> statusCode shovel add team: " + statusCode + " ("
 					+ cr.getClientResponseStatus() + ")");
 		}
-		
-		
-		
 		
 		JsfUtils.addInfoBundleMessage("success_add_equi_message");
 		return NavigationValues.TEAM_ADD_EQUI_FAIL;
@@ -555,8 +536,7 @@ public class TeamManagerBean {
 			+ "/LDIRBackend/ws/team/" + userTeam.getTeamId() + "/equipmentId/1";
 		Client client = Client.create();
         WebResource resource = client.resource(location);
-        Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(JsfUtils.getInitParameter("admin.user"),
-                JsfUtils.getInitParameter("admin.password")));
+        Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(userDetails.getEmail(), userDetails.getPasswd()));
         ClientResponse cr = builder.entity(null, MediaType.APPLICATION_XML).delete(ClientResponse.class);
         
         int statusCode = cr.getStatus();
