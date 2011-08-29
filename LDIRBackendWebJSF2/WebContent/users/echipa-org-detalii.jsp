@@ -49,6 +49,7 @@
                                     <f:selectItem itemLabel="Groapa de gunoi" itemValue="LANDFILL"/>
                                     <f:selectItem itemLabel="Punct de inregistrare" itemValue="REGISTRATION_POINT"/>
                                     <f:selectItem itemLabel="Scoala" itemValue="SCHOOL"/>
+                                     <f:selectItem itemLabel="ONG" itemValue="ONG"/>
                                 </h:selectOneMenu>
                                 <br />
                                  <!-- ADRESA -->
