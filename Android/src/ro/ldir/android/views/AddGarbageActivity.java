@@ -33,10 +33,12 @@ import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class AddGarbageActivity extends Activity 
@@ -88,6 +90,9 @@ public class AddGarbageActivity extends Activity
         	
         	errorMessageId = savedInstanceState.getInt(SAVED_ERROR_MSG_ID, 0);
         }
+        
+        ViewGroup layout = (ViewGroup)findViewById(R.id.garbage_layout);
+        setReadOnly(layout, garbage.isUploaded());
         
         
 //        TextView txtNrPictures = (TextView)findViewById(R.id.btnPictureGallery);
@@ -143,6 +148,20 @@ public class AddGarbageActivity extends Activity
 				}
 			}
 		});
+	}
+	
+	private void setReadOnly(ViewGroup parent, boolean readOnly)
+	{
+		int count = parent.getChildCount();
+		for (int i = 0; i < count; i++)
+		{
+			View child = parent.getChildAt(i);
+			child.setEnabled(!readOnly);
+			if (child instanceof ViewGroup)
+			{
+				setReadOnly((ViewGroup)child, readOnly);
+			}
+		}
 	}
 	
 	

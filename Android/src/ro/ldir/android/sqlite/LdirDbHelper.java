@@ -7,7 +7,21 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class LdirDbHelper extends SQLiteOpenHelper 
 {
-	private static final int DATABASE_VERSION = 3;
+	/**
+	 * Database version used during development
+	 */
+	private static final int DATABASE_VERSION_DEV = 1;
+	
+	/**
+	 * Database version released to users
+	 */
+	private static final int DATABASE_VERSION_RELEASED = 1;
+	
+	/**
+	 * Database version used when creating the database
+	 */
+	private static final int DATABASE_VERSION = DATABASE_VERSION_DEV;
+	
 	private static final String DATABASE_NAME = "ldir";
 	protected static final String TABLE_NAME_GARBAGE = "garbage";
 	

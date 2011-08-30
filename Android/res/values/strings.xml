@@ -210,6 +210,8 @@
 	<string name="details_add_picture">Adauga imagine</string>
 	<string name="log_error_msg">NT_log_error_msg</string>
 	<string name="adaugat_ok">mormanul a fost adãugat cu succes</string>
+	
+	<!-- adaugate manual -->
 	<string name="details_no_gps">Acest telefon nu are antena GPS. Va rog sa introduceti coordonatele manual.</string>
 	<string name="details_getting_location">Se updateaza coordonatele...</string>
 	<string name="details_stop_getting_location">Stop</string>
@@ -218,4 +220,5 @@
 	<string name="details_no_pictures">Mormanul de gunoi nu are nici o fotografie atasata</string>
 	<string name="gallery_delete">Sterge</string>
 	<string name="gallery_delete_confirm">Doriti sa stergeti imaginea selectata?</string>
+	<string name="details_delete_confirm">Mormanul %s a fost sters</string>
 </resources>
