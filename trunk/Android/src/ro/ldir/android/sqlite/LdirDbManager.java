@@ -60,6 +60,18 @@ public class LdirDbManager {
 		}
 	}
 	
+	public boolean delete(Garbage garbage) {
+		String whereClause = LdirDbHelper.GarbageFields.garbageId.column + "="
+				+ garbage.getGarbageId();
+		try {
+			database.delete(LdirDbHelper.TABLE_NAME_GARBAGE, whereClause, null);
+			return true;
+		} catch (SQLException sqlerror) {
+			LLog.d(sqlerror.getMessage());
+			return false;
+		}
+	}
+	
 	/**
      * Get all garbages
      * @return List of Garbage
