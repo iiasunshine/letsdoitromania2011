@@ -76,44 +76,35 @@ public class LdirDbManager {
      * Get all garbages
      * @return List of Garbage
      */
-	public ArrayList<Garbage> getGarbageList() {
+	public ArrayList<Garbage> getGarbageList()
+	{
 		ArrayList<Garbage> garbageList = new ArrayList<Garbage>();
 
 		Cursor crsr = database.rawQuery("SELECT * FROM " + LdirDbHelper.TABLE_NAME_GARBAGE, null);
 		crsr.moveToFirst();
 
-		for (int i = 0; i < crsr.getCount(); i++) {
+		for (int i = 0; i < crsr.getCount(); i++)
+		{
 			Garbage garbage = new Garbage();
-			garbage.setGarbageId(crsr
-					.getInt(LdirDbHelper.GarbageFields.garbageId.ordinal()));
-			garbage.setBagCount(crsr.getInt(LdirDbHelper.GarbageFields.bagCount
-					.ordinal()));
+			garbage.setGarbageId(crsr.getInt(LdirDbHelper.GarbageFields.garbageId.ordinal()));
+			garbage.setBagCount(crsr.getInt(LdirDbHelper.GarbageFields.bagCount.ordinal()));
 			garbage.setBigComponentsDescription(crsr
-					.getString(LdirDbHelper.GarbageFields.bigComponentsDescription
-							.ordinal()));
-			garbage.setDescription(crsr
-					.getString(LdirDbHelper.GarbageFields.description.ordinal()));
-			garbage.setDetails(crsr
-					.getString(LdirDbHelper.GarbageFields.details.ordinal()));
-			garbage.setDispersed(crsr
-					.getInt(LdirDbHelper.GarbageFields.dispersed.ordinal()) == 1);
-			garbage.setPercentageGlass(crsr
-					.getInt(LdirDbHelper.GarbageFields.percentageGlass
-							.ordinal()));
-			garbage.setPercentageMetal(crsr
-					.getInt(LdirDbHelper.GarbageFields.percentageMetal
-							.ordinal()));
-			garbage.setPercentagePlastic(crsr
-					.getInt(LdirDbHelper.GarbageFields.percentagePlastic
-							.ordinal()));
-			garbage.setPercentageWaste(crsr
-					.getInt(LdirDbHelper.GarbageFields.percentageWaste
-							.ordinal()));
-			garbage.setxLatitude(crsr
-					.getDouble(LdirDbHelper.GarbageFields.xLatitude.ordinal()));
-			garbage.setyLongitude(crsr
-					.getDouble(LdirDbHelper.GarbageFields.yLongitude.ordinal()));
+					.getString(LdirDbHelper.GarbageFields.bigComponentsDescription.ordinal()));
+			garbage.setDescription(crsr.getString(LdirDbHelper.GarbageFields.description.ordinal()));
+			garbage.setDetails(crsr.getString(LdirDbHelper.GarbageFields.details.ordinal()));
+			garbage.setDispersed(crsr.getInt(LdirDbHelper.GarbageFields.dispersed.ordinal()) == 1);
+			garbage.setPercentageGlass(crsr.getInt(LdirDbHelper.GarbageFields.percentageGlass
+					.ordinal()));
+			garbage.setPercentageMetal(crsr.getInt(LdirDbHelper.GarbageFields.percentageMetal
+					.ordinal()));
+			garbage.setPercentagePlastic(crsr.getInt(LdirDbHelper.GarbageFields.percentagePlastic
+					.ordinal()));
+			garbage.setPercentageWaste(crsr.getInt(LdirDbHelper.GarbageFields.percentageWaste
+					.ordinal()));
+			garbage.setxLatitude(crsr.getDouble(LdirDbHelper.GarbageFields.xLatitude.ordinal()));
+			garbage.setyLongitude(crsr.getDouble(LdirDbHelper.GarbageFields.yLongitude.ordinal()));
 			garbage.setCSVPictures(crsr.getString(LdirDbHelper.GarbageFields.pictures.ordinal()));
+			garbage.setRemoteDbId(crsr.getLong(LdirDbHelper.GarbageFields.remoteDbId.ordinal()));
 			garbageList.add(garbage);
 
 			crsr.moveToNext();
@@ -154,6 +145,7 @@ public class LdirDbManager {
 		values.put(LdirDbHelper.GarbageFields.xLatitude.column, garbage.getxLatitude());
 		values.put(LdirDbHelper.GarbageFields.yLongitude.column, garbage.getyLongitude());
 		values.put(LdirDbHelper.GarbageFields.pictures.column, garbage.getCSVPictures());
+		values.put(LdirDbHelper.GarbageFields.remoteDbId.column, garbage.getRemoteDbId());
 		return values;
 	}
 	
