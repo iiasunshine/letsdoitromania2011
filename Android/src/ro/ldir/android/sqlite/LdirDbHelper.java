@@ -10,7 +10,7 @@ public class LdirDbHelper extends SQLiteOpenHelper
 	/**
 	 * Database version used during development
 	 */
-	private static final int DATABASE_VERSION_DEV = 1;
+	private static final int DATABASE_VERSION_DEV = 2;
 	
 	/**
 	 * Database version released to users
@@ -41,7 +41,7 @@ public class LdirDbHelper extends SQLiteOpenHelper
 //	    private Date recordDate;
 	    xLatitude("xLatitude", "REAL"),
 	    yLongitude("yLongitude", "REAL"),
-		uploaded("uploaded", "INTEGER");
+	    remoteDbId("remoteDbId", "INTEGER");
 	    
 	    String column;
 	    String type;
