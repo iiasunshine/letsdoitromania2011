@@ -60,6 +60,10 @@
                                     <br/>
                                     <h:outputText value="<a href=\"http://app.letsdoitromania.ro/LDIRBackendWebJSF2/docs/manualcartare.pdf\" target=\"_blank\">Downloadeaza Manual Cartare 2011</a>" escape="false"/>
                                     <br/>
+                                    <h:outputText value="<a href=\"http://app.letsdoitromania.ro/LDIRBackendWebJSF2/docs/fisademorman.pdf\" target=\"_blank\">Downloadeaza Fisa de Morman 2011</a>" escape="false"/>
+                                    <br/>
+                                    <h:outputText value="<a href=\"http://app.letsdoitromania.ro/LDIRBackendWebJSF2/docs/prezentarecartare.pdf\" target=\"_blank\">Downloadeaza Prezentare Cartare 2011</a>" escape="false"/>
+                                    <br/>
                                     <h:outputText value="<a href=\"http://itunes.apple.com/us/app/lets-do-it-ro/id449110019\">Downloadeaza aplicatia de cartare pentru iPhone</a>" escape="false"/>
                                     <br/>
                                
