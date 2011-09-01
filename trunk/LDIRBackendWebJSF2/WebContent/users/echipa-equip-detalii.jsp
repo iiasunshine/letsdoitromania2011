@@ -40,7 +40,7 @@
                                  <!-- TRANSPORT -->
                                 <div class="label"><h:outputText value="Transport"/></div>
                                 <h:selectOneMenu   value="#{teamBean.transport}" id="transport" styleClass="formDropdown">
-                                	<f:selectItem itemLabel="Bicileta" itemValue="BICYCLE"/>	
+                                	<f:selectItem itemLabel="Bicicleta" itemValue="BICYCLE"/>	
                                     <f:selectItem itemLabel="Masina" itemValue="CAR"/>
                                     <f:selectItem itemLabel="Masina companiei" itemValue="ORGANIZATION_CAR"/>
                                     <f:selectItem itemLabel="Transport in public" itemValue="PUBLIC"/>
