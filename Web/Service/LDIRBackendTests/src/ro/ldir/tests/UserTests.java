@@ -26,11 +26,12 @@ package ro.ldir.tests;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
+import ro.ldir.tests.user.OrganizationTest;
 import ro.ldir.tests.user.TeamOperationsTest;
 
 /** Run all user tests. */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ TeamOperationsTest.class })
+@Suite.SuiteClasses({ TeamOperationsTest.class, OrganizationTest.class })
 public class UserTests {
 
 }

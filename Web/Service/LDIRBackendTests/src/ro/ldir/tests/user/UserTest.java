@@ -34,6 +34,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -42,11 +43,13 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 
 import ro.ldir.dto.ChartedArea;
+import ro.ldir.dto.Team;
 import ro.ldir.dto.User;
 import ro.ldir.tests.helper.DatabaseHelper;
 import ro.ldir.tests.helper.UserSetup;
 
 import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.WebResource.Builder;
@@ -129,5 +132,35 @@ public abstract class UserTest {
 			SQLException {
 		removeChartedArea();
 		UserSetup.removeTestUser(USER);
+	}
+
+	protected Team insertedTeam;
+
+	protected void createTeam() {
+		WebResource r = client.resource(BASE + "team");
+		insertedTeam = new Team();
+		insertedTeam.setTeamName(USER + "'s team" + new Date());
+		ClientResponse cr = resourceBuilder(r).entity(insertedTeam,
+				MediaType.APPLICATION_XML).post(ClientResponse.class);
+		assertEquals(200, cr.getStatus());
+	}
+
+	protected void deleteTeam() {
+		WebResource r = client.resource(BASE + "team/"
+				+ insertedTeam.getTeamId());
+		ClientResponse cr = resourceBuilder(r).delete(ClientResponse.class);
+		assertEquals(200, cr.getStatus());
+	}
+
+	protected void setTeamId() throws ClientHandlerException {
+		WebResource r = client.resource(BASE + "user/" + userId
+				+ "/managedTeams");
+		ClientResponse cr = resourceBuilder(r).get(ClientResponse.class);
+		assertEquals(200, cr.getStatus());
+
+		Team managedTeams[] = cr.getEntity(Team[].class);
+		assertEquals(1, managedTeams.length);
+
+		insertedTeam.setTeamId(managedTeams[0].getTeamId());
 	}
 }
