@@ -3,8 +3,6 @@ package ro.ldir.tests.user;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Date;
-
 import javax.ws.rs.core.MediaType;
 
 import org.junit.After;
@@ -20,13 +18,11 @@ import ro.ldir.dto.Team;
 import ro.ldir.dto.TransportEquipment;
 import ro.ldir.dto.TransportEquipment.TransportType;
 
-import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 
 /** Test for joining a team. */
 public class TeamOperationsTest extends UserTest {
-	private Team insertedTeam;
 
 	private void assignChartedArea() {
 		ChartedArea toAssign = new ChartedArea();
@@ -43,22 +39,6 @@ public class TeamOperationsTest extends UserTest {
 	public void cleanupTeam() {
 		removeAssignment();
 		deleteTeam();
-	}
-
-	private void createTeam() {
-		WebResource r = client.resource(BASE + "team");
-		insertedTeam = new Team();
-		insertedTeam.setTeamName(USER + "'s team" + new Date());
-		ClientResponse cr = resourceBuilder(r).entity(insertedTeam,
-				MediaType.APPLICATION_XML).post(ClientResponse.class);
-		assertEquals(200, cr.getStatus());
-	}
-
-	private void deleteTeam() {
-		WebResource r = client.resource(BASE + "team/"
-				+ insertedTeam.getTeamId());
-		ClientResponse cr = resourceBuilder(r).delete(ClientResponse.class);
-		assertEquals(200, cr.getStatus());
 	}
 
 	private Team getTeam() {
@@ -89,18 +69,6 @@ public class TeamOperationsTest extends UserTest {
 		assertEquals(200, cr.getStatus());
 	}
 
-	private void setTeamId() throws ClientHandlerException {
-		WebResource r = client.resource(BASE + "user/" + userId
-				+ "/managedTeams");
-		ClientResponse cr = resourceBuilder(r).get(ClientResponse.class);
-		assertEquals(200, cr.getStatus());
-
-		Team managedTeams[] = cr.getEntity(Team[].class);
-		assertEquals(1, managedTeams.length);
-
-		insertedTeam.setTeamId(managedTeams[0].getTeamId());
-	}
-
 	@Before
 	public void setupTeam() {
 		createTeam();
@@ -111,7 +79,7 @@ public class TeamOperationsTest extends UserTest {
 	@Test
 	public void testAllEquipments() {
 		boolean gpsFound = false, cleaningFound = false, transportFound = false;
-	
+
 		testInsertCleaning();
 		testInsertGps();
 		testInsertTransport();
@@ -160,7 +128,7 @@ public class TeamOperationsTest extends UserTest {
 	@Test
 	public void testGetJoinedTeam() {
 		testJoinTeam();
-		
+
 		WebResource r = client.resource(BASE + "user/" + userId + "/memberOf");
 		ClientResponse cr = resourceBuilder(r)
 				.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
@@ -217,5 +185,4 @@ public class TeamOperationsTest extends UserTest {
 				MediaType.APPLICATION_XML).post(ClientResponse.class);
 		assertEquals(200, cr.getStatus());
 	}
-
 }
