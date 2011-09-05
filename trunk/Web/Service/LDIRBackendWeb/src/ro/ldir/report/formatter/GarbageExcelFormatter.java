@@ -47,8 +47,8 @@ public class GarbageExcelFormatter implements ExcelFormatter{
 		row.createCell(0).setCellValue("ID");
 		row.createCell(1).setCellValue("Jude\u0163");
 		row.createCell(2).setCellValue("Comun\u04d1");
-		row.createCell(3).setCellValue("Longitudine");
-		row.createCell(4).setCellValue("Latitudine");		
+		row.createCell(3).setCellValue("Latitudine");
+		row.createCell(4).setCellValue("Longitudine");
 		row.createCell(5).setCellValue("Dispersat");
 		row.createCell(6).setCellValue("Num\u04d1r saci");
 		row.createCell(7).setCellValue("Plastic");
@@ -75,9 +75,9 @@ public class GarbageExcelFormatter implements ExcelFormatter{
 			if (garbage.getTown() != null)
 				row.createCell(2).setCellValue(garbage.getTown().getName());
 			row.createCell(3, Cell.CELL_TYPE_NUMERIC).setCellValue(
-					garbage.getX());
-			row.createCell(4, Cell.CELL_TYPE_NUMERIC).setCellValue(
 					garbage.getY());
+			row.createCell(4, Cell.CELL_TYPE_NUMERIC).setCellValue(
+					garbage.getX());			
 			row.createCell(5, Cell.CELL_TYPE_BOOLEAN).setCellValue(
 					garbage.isDispersed());
 			row.createCell(6, Cell.CELL_TYPE_NUMERIC).setCellValue(
