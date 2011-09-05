@@ -95,13 +95,19 @@ public class GarbageExcelFormatter implements ExcelFormatter{
 			
 			
 			if (garbage.getDescription() != null) {
-				int len = garbage.getDescription().length();
-				if (len > Garbage.DESCRIPTION_LENGTH)
-					len = Garbage.DESCRIPTION_LENGTH;
-				row.createCell(12).setCellValue(
-						garbage.getDescription().substring(0, len)
-								.replaceAll("\\r\\n|\\r|\\n", " "));
+				row.createCell(12,Cell.CELL_TYPE_STRING).setCellValue(
+						garbage.getDescription());
 			}
+			
+//			if (garbage.getDescription() != null) {
+//				int len = garbage.getDescription().length();
+//				if (len > Garbage.DESCRIPTION_LENGTH)
+//					len = Garbage.DESCRIPTION_LENGTH;
+//				row.createCell(12).setCellValue(
+//						garbage.getDescription().substring(0, len)
+//								.replaceAll("\\r\\n|\\r|\\n", " "));
+//			}
+			
 			if (garbage.getStatus() != null)
 				row.createCell(13).setCellValue(
 						garbage.getStatus().getTranslation());
@@ -114,6 +120,7 @@ public class GarbageExcelFormatter implements ExcelFormatter{
 						garbage.getDetails().substring(0, len)
 								.replaceAll("\\r\\n|\\r|\\n", " "));
 			}
+			
 			
 		}
 		return wb;
