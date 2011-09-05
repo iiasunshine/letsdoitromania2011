@@ -90,8 +90,9 @@ function loadCountyGarbageOverlay(value){
 
         var url = WS_URL;
         url += '/LDIRBackend/map/ws/countySearch/garbages/';
-        url += '?county='+jsonObject.name;
+        url += '?county='+jsonObject.name.replace(' ','%20');
 
+        
         /* adaugare layer lista gunoaie din judetul selectat */
         var countyGarbageOverlay = new GGeoXml(url);
         myMap.addOverlay(countyGarbageOverlay);
