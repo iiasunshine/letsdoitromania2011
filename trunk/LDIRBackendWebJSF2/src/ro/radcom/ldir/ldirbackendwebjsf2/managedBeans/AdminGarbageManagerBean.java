@@ -9,6 +9,8 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.WebResource.Builder;
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -218,9 +220,9 @@ public class AdminGarbageManagerBean {
         } else {
             noFilter = false;
         }
-
+        String encodeCountyId = encodeUrl(countyId);
         ClientResponse cr = wsi.getGarbageListByFilters(userDetails,
-                countyId,
+        		encodeCountyId,
                 AppUtils.parseToInt(gridId),
                 AppUtils.parseToInt(userId),
                 addDate,
@@ -234,10 +236,22 @@ public class AdminGarbageManagerBean {
             garbageList = cr.getEntity(Garbage[].class);
         }
     }
+    
+	 public String encodeUrl(String arg){
+	
+		  try{
+			  arg = URLEncoder.encode(arg,"UTF-8"); 
+			  log4j.debug("---> encode: " + arg);
+		  }catch(UnsupportedEncodingException uee){
+			  log4j.debug("---> encode error: " + uee.getMessage());  
+		  }
+		  return  arg;
+	 }
 
     public void actionGenerateExcel() {
+        String encodeCountyId = encodeUrl(countyId);
         ClientResponse cr = wsi.getGarbageListByFilters(userDetails,
-                countyId,
+        		encodeCountyId,
                 AppUtils.parseToInt(gridId),
                 AppUtils.parseToInt(userId),
                 addDate,

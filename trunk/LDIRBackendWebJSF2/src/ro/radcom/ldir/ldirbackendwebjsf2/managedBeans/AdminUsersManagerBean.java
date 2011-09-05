@@ -9,6 +9,8 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.WebResource.Builder;
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -125,9 +127,12 @@ public class AdminUsersManagerBean {
         initUsersList();
     }
 
+    
         public void actionGenerateExcel() {
+        	
+        String encodeCountyId = encodeUrl(selectedCounty);	
         ClientResponse cr = wsi.getUserListByFilters(userDetails,
-                selectedCounty,
+        		encodeCountyId,
                 selectedBirthYear,
                 selectedRole,
                 AppUtils.parseToInt(selectedMinGarbages, -1),
@@ -248,9 +253,9 @@ public class AdminUsersManagerBean {
         } else {
             noFilter = false;
         }
-
+        String encodeCountyId = encodeUrl(selectedCounty);
         ClientResponse cr = wsi.getUserListByFilters(userDetails,
-                selectedCounty,
+        		encodeCountyId,
                 selectedBirthYear,
                 selectedRole,
                 AppUtils.parseToInt(selectedMinGarbages, -1),
@@ -265,6 +270,16 @@ public class AdminUsersManagerBean {
             usersList = cr.getEntity(User[].class);
         }
     }
+    
+	 public String encodeUrl(String arg){
+		  try{
+			  arg = URLEncoder.encode(arg,"UTF-8"); 
+			  log4j.debug("---> encode: " + arg);
+		  }catch(UnsupportedEncodingException uee){
+			  log4j.debug("---> encode error: " + uee.getMessage());  
+		  }
+		  return  arg;
+	 }
 
     /**
      * @return the userDetails
