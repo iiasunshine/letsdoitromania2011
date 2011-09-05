@@ -47,13 +47,23 @@ public class GarbageExcelFormatter implements ExcelFormatter{
 		row.createCell(0).setCellValue("ID");
 		row.createCell(1).setCellValue("Jude\u0163");
 		row.createCell(2).setCellValue("Comun\u04d1");
-		row.createCell(3).setCellValue("Descriere");
-		row.createCell(4).setCellValue("Stare");
+		row.createCell(3).setCellValue("Longitudine");
+		row.createCell(4).setCellValue("Latitudine");		
 		row.createCell(5).setCellValue("Dispersat");
-		row.createCell(6).setCellValue("Voluminos");
-		row.createCell(7).setCellValue("Num\u04d1r saci");
-		row.createCell(8).setCellValue("Longitudine");
-		row.createCell(9).setCellValue("Latitudine");
+		row.createCell(6).setCellValue("Num\u04d1r saci");
+		row.createCell(7).setCellValue("Plastic");
+		row.createCell(8).setCellValue("Metal");
+		row.createCell(9).setCellValue("Sticla");
+		row.createCell(10).setCellValue("Nereciclabil");
+		row.createCell(11).setCellValue("Greu de transportat");		
+		row.createCell(12).setCellValue("Descriere");
+		row.createCell(13).setCellValue("Stare");
+		
+		
+		private int percentageGlass;
+		private int percentageMetal;
+		private int percentagePlastic;
+		private int percentageWaste;
 
 		for (int i = 0; i < garbages.size(); i++) {
 			row = sheet.createRow(i + 1);
@@ -64,33 +74,47 @@ public class GarbageExcelFormatter implements ExcelFormatter{
 			row.createCell(1).setCellValue(garbage.getCounty().getName());
 			if (garbage.getTown() != null)
 				row.createCell(2).setCellValue(garbage.getTown().getName());
+			row.createCell(3, Cell.CELL_TYPE_NUMERIC).setCellValue(
+					garbage.getX());
+			row.createCell(4, Cell.CELL_TYPE_NUMERIC).setCellValue(
+					garbage.getY());
+			row.createCell(5, Cell.CELL_TYPE_BOOLEAN).setCellValue(
+					garbage.isDispersed());
+			row.createCell(6, Cell.CELL_TYPE_NUMERIC).setCellValue(
+					garbage.getBagCount());
+			row.createCell(7, Cell.CELL_TYPE_NUMERIC).setCellValue(
+					garbage.getPercentagePlastic());
+			row.createCell(8, Cell.CELL_TYPE_NUMERIC).setCellValue(
+					garbage.getPercentageMetal());
+			row.createCell(9, Cell.CELL_TYPE_NUMERIC).setCellValue(
+					garbage.getPercentageGlass());
+			row.createCell(10, Cell.CELL_TYPE_NUMERIC).setCellValue(
+					garbage.getPercentageWaste());
+			row.createCell(11, Cell.CELL_TYPE_NUMERIC).setCellValue(
+					garbage.getBigComponentsDescription());
+			
+			
 			if (garbage.getDescription() != null) {
 				int len = garbage.getDescription().length();
 				if (len > Garbage.DESCRIPTION_LENGTH)
 					len = Garbage.DESCRIPTION_LENGTH;
-				row.createCell(3).setCellValue(
+				row.createCell(12).setCellValue(
 						garbage.getDescription().substring(0, len)
 								.replaceAll("\\r\\n|\\r|\\n", " "));
 			}
 			if (garbage.getStatus() != null)
-				row.createCell(4).setCellValue(
+				row.createCell(13).setCellValue(
 						garbage.getStatus().getTranslation());
-			row.createCell(5, Cell.CELL_TYPE_BOOLEAN).setCellValue(
-					garbage.isDispersed());
+			
 			if (garbage.getDetails() != null) {
 				int len = garbage.getDetails().length();
 				if (len > Garbage.DETAILS_LENGTH)
 					len = Garbage.DETAILS_LENGTH;
-				row.createCell(6).setCellValue(
+				row.createCell(14).setCellValue(
 						garbage.getDetails().substring(0, len)
 								.replaceAll("\\r\\n|\\r|\\n", " "));
 			}
-			row.createCell(7, Cell.CELL_TYPE_NUMERIC).setCellValue(
-					garbage.getBagCount());
-			row.createCell(8, Cell.CELL_TYPE_NUMERIC).setCellValue(
-					garbage.getX());
-			row.createCell(9, Cell.CELL_TYPE_NUMERIC).setCellValue(
-					garbage.getY());
+			
 		}
 		return wb;
 	}
