@@ -60,10 +60,10 @@ public class GarbageExcelFormatter implements ExcelFormatter{
 		row.createCell(13).setCellValue("Stare");
 		
 		
-		private int percentageGlass;
+		/*private int percentageGlass;
 		private int percentageMetal;
 		private int percentagePlastic;
-		private int percentageWaste;
+		private int percentageWaste;*/
 
 		for (int i = 0; i < garbages.size(); i++) {
 			row = sheet.createRow(i + 1);
