@@ -2,6 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package ro.radcom.ldir.ldirbackendwebjsf2.managedBeans;
 
 import com.sun.jersey.api.client.ClientResponse;
@@ -11,7 +12,9 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+
 import javax.faces.model.SelectItem;
+
 import org.apache.log4j.Logger;
 import org.apache.myfaces.custom.fileupload.UploadedFile;
 import ro.ldir.dto.Garbage;
@@ -28,6 +31,7 @@ import ro.radcom.ldir.ldirbackendwebjsf2.tools.customObjects.NavigationValues;
  *
  * @author dan.grigore
  */
+
 public class MormanManagerBean {
 
     private static final Logger log4j = Logger.getLogger(LoginBean.class.getCanonicalName());
@@ -201,12 +205,14 @@ public class MormanManagerBean {
             return NavigationValues.MORMAN_ADD_FAIL;
         }
         /* latitudine */
+        
         try {
             if (isCoord_zecimale()) {
                 garbage.setY(Double.parseDouble(latitudine));
             } else {
                 garbage.setY(Double.parseDouble(lat_grd) + (Double.parseDouble(lat_min) / (double) 60) + (Double.parseDouble(lat_sec) / (double) 3600));
             }
+
             if (garbage.getY() == 0) {
                 JsfUtils.addWarnBundleMessage("chart_err_latitude");
                 return NavigationValues.MORMAN_ADD_FAIL;
@@ -540,11 +546,25 @@ public class MormanManagerBean {
         this.coord_grade = !coord_zecimale;
     }
 
+    
+    public Boolean getCoord_zecimale() {
+        return this.coord_zecimale;
+    }
+
+    /**
+     * @return the coord_grade
+     */
+
+    public Boolean getCoord_grade() {
+    	return this.coord_grade;
+    }
+
+
     /**
      * @return the coord_grade
      */
     public boolean isCoord_grade() {
-        return coord_grade;
+        return this.coord_grade;
     }
 
     /**
@@ -553,6 +573,7 @@ public class MormanManagerBean {
     public void setCoord_grade(boolean coord_grade) {
         this.coord_grade = coord_grade;
         this.coord_zecimale = !coord_grade;
+        
     }
 
     /**
