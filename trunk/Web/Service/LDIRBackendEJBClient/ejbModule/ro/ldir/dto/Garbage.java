@@ -122,6 +122,8 @@ public class Garbage extends FieldAccessBean {
 	
 	public String getChartedAreaID(){
 		ChartedArea chartarea=this.chartedArea;
+		if (chartarea == null) 
+			return "-1";
 		String id=chartarea.getName();
 		return id;
 	}

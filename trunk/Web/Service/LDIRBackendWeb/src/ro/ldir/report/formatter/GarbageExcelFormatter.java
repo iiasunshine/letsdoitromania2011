@@ -113,7 +113,7 @@ public class GarbageExcelFormatter implements ExcelFormatter{
 				row.createCell(13).setCellValue(
 						garbage.getStatus().getTranslation());
 			
-			row.createCell(14, Cell.CELL_TYPE_NUMERIC).setCellValue(
+			row.createCell(14).setCellValue(
 					garbage.getChartedAreaID());
 //			
 //			if (garbage.getDetails() != null) {
