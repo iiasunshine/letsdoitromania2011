@@ -42,6 +42,7 @@
                         <%-- Right Column (formular adaugare/editare morman) --%>
                         <div id="rightColumn">
                             <!-- mesaj eroare sau info -->
+                            <a4j:keepAlive beanName="mormanManager"/>
                             <h:messages warnClass="registerMessageError" errorClass="registerMessageError" infoClass="registerMessageOk"/>
 
                             <!-- titlu formular -->
@@ -51,17 +52,8 @@
                                 <h:outputText value="#{msg.chart_modify_morman} #{mormanManager.myGarbage.garbage.garbageId}"
                                               rendered="#{mormanManager.myGarbage.garbage.garbageId > 0}"/>
                             </h1>
-                            <a4j:keepAlive  beanName="mormanManager"/>
+                            
                             <h:form styleClass="form" id="form" enctype="multipart/form-data">
-                                <!-- descriere -->
-                                <div class="label"><h:outputText value="#{msg.chart_add_description}"/><span class="important">*</span></div>
-                                <h:inputTextarea value="#{mormanManager.myGarbage.garbage.description}"
-                                                 cols="45" rows="5"
-                                                 id="descriere"
-                                                 styleClass="formTextarea"
-                                                 validatorMessage="#{msg.chart_err_description}">
-                                    <f:validateLength minimum="0" maximum="1000"/>
-                                </h:inputTextarea>
                                 <br />
                                 <br />
 
@@ -83,6 +75,7 @@
                                     </h:selectBooleanCheckbox>
                                     <h:outputText value="#{msg.chart_add_coord_degrees}"/>
                                     <br />
+                                    <br />
 
                                     <!-- coordonate (latitudine) -->
                                     <div class="label"><h:outputText value="#{msg.chart_add_latitudine}"/><span class="important">*</span></div>
@@ -93,28 +86,34 @@
                                                      id="coordonate-y-dec"
                                                      validatorMessage="#{msg.chart_err_latitude}"
                                                      converterMessage="#{msg.chart_err_latitude}">
-                                            <f:validateDoubleRange minimum="43" maximum="49"/>
+                                            <f:validateDoubleRange minimum="43.0" maximum="49.0"/>
                                         </h:inputText>
                                     </h:panelGroup>
-                                    <h:panelGroup rendered="#{mormanManager.coord_grade}">
+                                    <h:panelGroup rendered="#{mormanManager.coord_grade}">                                        
                                         <h:inputText value="#{mormanManager.lat_grd}"
                                                      onkeypress="return numbersonly(this, event, false);"
                                                      styleClass="formTextfieldSmall"
                                                      id="coordonate-y-grd"
-                                                     converterMessage="#{msg.chart_err_degrees}"/>
-                                        <div class="labelSmall"><h:outputText value="°"/></div>
+                                                     converterMessage="#{msg.chart_err_degrees}">
+                                             <f:validateLongRange minimum="43" maximum="49"/>
+                                             </h:inputText>                          
+                                        <div class="label"><h:outputText value="°"/></div>                                        
+                                        <br />
+                                        <div class="label"><h:outputText value="minute"/></div>
                                         <h:inputText value="#{mormanManager.lat_min}"
                                                      onkeypress="return numbersonly(this, event, false);"
                                                      styleClass="formTextfieldSmall"
                                                      id="coordonate-y-min"
-                                                     converterMessage="#{msg.chart_err_degrees}"/>
-                                        <div class="labelSmall"><h:outputText value="'"/></div>
+                                                     converterMessage="#{msg.chart_err_degrees}"/>                                      
+                                        <div class="label"><h:outputText value="'"/></div>
+                                        <br />
+                                        <div class="label"><h:outputText value="secunde"/></div>
                                         <h:inputText value="#{mormanManager.lat_sec}"
                                                      onkeypress="return numbersonly(this, event, true);"
                                                      styleClass="formTextfieldSmall"
                                                      id="coordonate-y-sec"
                                                      converterMessage="#{msg.chart_err_degrees}"/>
-                                        <div class="labelSmall"><h:outputText value="\""/></div>
+                                        <div class="label"><h:outputText value="\""/></div>
                                     </h:panelGroup>
                                     <br />
 
@@ -136,20 +135,24 @@
                                                      styleClass="formTextfieldSmall"
                                                      id="coordonate-x-grd"
                                                      converterMessage="#{msg.chart_err_degrees}"/>
-                                        <div class="labelSmall"><h:outputText value="°"/></div>
+                                        <div class="label"><h:outputText value="°"/></div>
+                                        <br />
+                                        <div class="label"><h:outputText value="minute"/></div>
                                         <h:inputText value="#{mormanManager.long_min}"
                                                      onkeypress="return numbersonly(this, event, false);"
                                                      styleClass="formTextfieldSmall"
                                                      id="coordonate-x-min"
                                                      converterMessage="#{msg.chart_err_degrees}"/>
-                                        <div class="labelSmall"><h:outputText value="'"/></div>
+                                        <div class="label"><h:outputText value="'"/></div>
+                                        <br />
+                                        <div class="label"><h:outputText value="secunde"/></div>
                                         <h:inputText value="#{mormanManager.long_sec}"
                                                      onkeypress="return numbersonly(this, event, true);"
                                                      styleClass="formTextfieldSmall"
                                                      id="coordonate-x-sec"
                                                      converterMessage="#{msg.chart_err_degrees}"/>
-                                        <div class="labelSmall"><h:outputText value="\""/></div>
                                     </h:panelGroup>
+									<div class="label"><h:outputText value="\""/></div>
                                     <br />
                                 </h:panelGroup>
 
@@ -165,17 +168,7 @@
                                 </h:selectOneMenu>
                                 <br />
 
-                                <!-- descriere componente voluminoase -->
-                                <div class="label"><h:outputText value="#{msg.chart_add_description2}"/></div>
-                                <h:inputTextarea value="#{mormanManager.myGarbage.garbage.bigComponentsDescription}"
-                                                 cols="45" rows="5"
-                                                 styleClass="formTextarea"
-                                                 id="descriere2"validatorMessage="#{msg.chart_err_description2}">
-                                    <f:validateLength minimum="0" maximum="1000"/>
-                                </h:inputTextarea>
-                                <br />
-                                <br />
-
+                                
                                 <!-- procent plastic -->
                                 <div class="label"><h:outputText value="#{msg.chart_add_plastic}"/></div>
                                 <h:inputText value="#{mormanManager.myGarbage.garbage.percentagePlastic}"
@@ -223,6 +216,33 @@
                                              converterMessage="#{msg.chart_js_err_waste}">
                                     <f:validateLongRange maximum="100" minimum="0"/>
                                 </h:inputText>
+                                <br/>
+                                <br/>
+                                
+                                <!-- descriere componente voluminoase -->
+                                <div class="label"><h:outputText value="#{msg.chart_add_description2}"/></div>
+                                <h:inputTextarea value="#{mormanManager.myGarbage.garbage.bigComponentsDescription}"
+                                                 cols="45" rows="5"
+                                                 styleClass="formTextarea"
+                                                 id="descriere2"validatorMessage="#{msg.chart_err_description2}">
+                                    <f:validateLength minimum="0" maximum="1001"/>
+                                </h:inputTextarea>
+                                <div class="labelSmall"><h:outputText value="Maxim 1000 de caractere."/></div>
+                                <br />
+                                <br />
+                                                                                                    <!-- descriere -->
+                                <div class="label"><h:outputText value="#{msg.chart_add_description}"/><span class="important">*</span></div>
+                                <h:inputTextarea value="#{mormanManager.myGarbage.garbage.description}"
+                                                 cols="45" rows="5"
+                                                 id="descriere"
+                                                 styleClass="formTextarea"
+                                                 validatorMessage="#{msg.chart_err_description}">
+                                    <f:validateLength minimum="0" maximum="1000"/>
+                                </h:inputTextarea>
+                                <div class="labelSmall"><h:outputText value="Maxim 1000 de caractere."/></div>
+                                	<br />
+                                	<br />
+                                
 
                                 <!-- imagine 1 -->
                                 <br />
