@@ -27,46 +27,75 @@
                             <br/>
                             <h:panelGroup rendered="#{not (sessionScope['USER_DETAILS'] eq null)}">
                                 <h3>
-                                    <h:outputFormat value="#{msg.home_text_1}" escape="false">
-                                        <f:param value="<a href=\"users/cartare-zone-lista.jsf\">aici</a>"/>
-                                    </h:outputFormat>
+                                    <h:outputText value="Bine ai venit pe aplicatia Let`s Do It, Romania!" escape="false"/>
+                                    <br/>
+                                    <br/>
+                                    <h:outputText value="Aici ai posibilitatea sa:" escape="false"/>
+                                    <br/>
+                                    <h:outputText value="1. Te inscrii in baza noastra de date ca voluntar LDIR (butonul \"Inscrie-te ca voluntar\" de mai sus)" escape="false"/>
+                                	<br/>
+                                    <h:outputText value="2. Accesezi contul tau daca deja te-ai inscris (butonul \"Login\" de mai sus)" escape="false"/>
+                                    <br/>
+                                    <h:outputText value="3. Iti alegi o zona de cartare (butonul \"Zona de Cartare\" - apare dupa ce te-ai logat)" escape="false"/>
+                                    <br/>
+                                    <h:outputText value="4. Introduci mormanele pe care le-ai identificat pe teren (butonul \"Cartare Mormane\" - apare dupa ce te-ai logat)" escape="false"/>
+                                    <br/>
+                                    <h:outputText value="5. Iti gestionezi echipa (butonul \"Echipa\" - apare dupa ce te-ai logat)" escape="false"/>
+                                    <br/>
+                                    <h:outputText value="6. inscrii intr-o echipa, pe baza codului primit de la un voluntar inregistrat, care doreste sa isi creeze o echipa (butonul \"Echipa\" --&#62; \"Inscriere in echipa\" - apare dupa ce te-ai logat)" escape="false"/>
+                                    <br/>
+                                    <br/>                                    
+                                    <h:outputText value="<a href=\"http://app.letsdoitromania.ro/LDIRBackendWebJSF2/docs/manualcartare.pdf\" target=\"_blank\">Descarca Manual Cartare 2011</a>" escape="false"/>
+                                    <br/>
+                                    <h:outputText value="<a href=\"http://app.letsdoitromania.ro/LDIRBackendWebJSF2/docs/fisademorman.pdf\" target=\"_blank\">Descarca Fisa de Morman 2011</a>" escape="false"/>
+                                    <br/>
+                                    <h:outputText value="<a href=\"http://app.letsdoitromania.ro/LDIRBackendWebJSF2/docs/prezentarecartare.pdf\" target=\"_blank\">Descarca Prezentare Cartare 2011</a>" escape="false"/>
+                                    <br/>
+                                    <h:outputText value="<a href=\"http://itunes.apple.com/us/app/lets-do-it-ro/id449110019\">Descarca aplicatia de cartare pentru iPhone</a>" escape="false"/>
+                                    <br/>
+                                    <br/>                                    
+                                    <h:outputText value="<a href=\"http://app.letsdoitromania.ro/LDIRBackendWebJSF2/docs/prezentareinscriereechipevoluntari.pdf\" target=\"_blank\">Descarca Prezentarea Pasilor pentru Inscrierea pentru Ziua de Curatenie Nationala</a>" escape="false"/>
+                               		<br/>                                       
+                                    <h:outputText value="<a href=\"http://app.letsdoitromania.ro/LDIRBackendWebJSF2/docs/declaratieminori2011.pdf\" target=\"_blank\">Descarca Declaratia pentru Participarea Minorilor la Ziua de Curatenie Nationala</a>" escape="false"/>
+                                    <br/>   
+                                    <h:outputText value="<a href=\"http://app.letsdoitromania.ro/LDIRBackendWebJSF2/docs/normedesiguranta2011.pdf\" target=\"_blank\">Descarca Normele de Siguranta pentru Ziua de Curatenie Nationala </a>" escape="false"/>
                                 </h3>
                             </h:panelGroup>
                             <h:panelGroup rendered="#{sessionScope['USER_DETAILS'] eq null}">
                                 <h3>
-                                    <h:outputText value="Bine ai venit la Let`s Do It, Romania!" escape="false"/>
+                                    <h:outputText value="Bine ai venit pe aplicatia Let`s Do It, Romania!" escape="false"/>
                                     <br/>
                                     <br/>
-                                    <h:outputText value="Daca ai ajuns pe aceasta pagina inseamna ca vrei sa faci parte din Echipa Nationala de Actiune si pentru asta dorim in primul rand sa te felicitam! Pe 24 septembrie 2011 ne-am propus sa fim cel putin 500.000, iar cu tine alaturi suntem cu un pas mai aproape de a atinge acest obiectiv." escape="false"/>
+                                    <h:outputText value="Aici ai posibilitatea sa:" escape="false"/>
                                     <br/>
-                                    <h:outputText value="Inscrierea in echipa se realizeaza prin intermediul formularului de <a href=\"user-register.jsf\"><b>aici</b></a>. Vei avea posibilitatea sa te inscrii pentru doua actiuni la fel de importante pentru proiect: cartarea și curatenia. Ca si anul trecut, cei inscrisi pentru ziua nationala de curatenie vor avea posiblitatea de a-si alege mormanele pe care sa le stranga pe 24 septembrie." escape="false"/>
+                                    <h:outputText value="1. Te inscrii in baza noastra de date ca voluntar LDIR (butonul \"Inscrie-te ca voluntar\" de mai sus)" escape="false"/>
                                 	<br/>
-                                    <h:outputText value="- Cartarea presupune determinarea mormanelor de deseuri din arealele naturale si stabilirea coordonatelor acestora cu ajutorul GPS-ului (orice aparat care poate furniza coordonate GPS: GPS masina, GPS de la telefon, GPS de la ceas samd), informatiile fiind ulterior introduse pe acest site. Rezultatul final al acestei actiuni este realizarea hartii deseurilor din Romania, in baza careia vor putea fi estimate resursele necesare pentru reusita proiectului. Tot pe baza acestei harti va fi solicitat sprijinul concret al autoritatilor, companiilor private si al publicului." escape="false"/>
+                                    <h:outputText value="2. Accesezi contul tau daca deja te-ai inscris (butonul \"Login\" de mai sus)" escape="false"/>
                                     <br/>
+                                    <h:outputText value="3. Iti alegi o zona de cartare (butonul \"Zona de Cartare\" - apare dupa ce te-ai logat)" escape="false"/>
                                     <br/>
-                                    <h:outputText value="Procesul de cartare se desfasoara astfel:" escape="false"/>
+                                    <h:outputText value="4. Introduci mormanele pe care le-ai identificat pe teren (butonul \"Cartare Mormane\" - apare dupa ce te-ai logat)" escape="false"/>
                                     <br/>
-                                    <h:outputText value="1. <a href=\"user-register.jsf\"><b>te inregistrezi pentru cartare.</b></a>" escape="false"/>
+                                    <h:outputText value="5. Iti gestionezi echipa (butonul \"Echipa\" - apare dupa ce te-ai logat)" escape="false"/>
                                     <br/>
-                                    <h:outputText value="2. dupa ce te loghezi, vei avea acces la harta Romaniei, impartita in zone de cartare. Optional, aici iti vei putea alege zone de cartare din judetul preferat si ti le vei putea aloca. Dupa alocarea unei zone, poti accesa un pachet de informatii necesare cartarii(harta zonei, detalii despre localizare, puncte de reper si manualul cartarii)" escape="false"/>
+                                    <h:outputText value="6. inscrii intr-o echipa, pe baza codului primit de la un voluntar inregistrat, care doreste sa isi creeze o echipa (butonul \"Echipa\" --&#62; \"Inscriere in echipa\" - apare dupa ce te-ai logat)" escape="false"/>
                                     <br/>
-                                    <h:outputText value="3. mergi pe teren si identifici mormanele de gunoaie. Pentru aceasta, vei completa o fisa de morman, cu detalii relevante pentru ziua de curatenie: coordonatele GPS, ce tipuri de deseuri se afla in compozitia mormanului, in ce volum, daca exista elemente de dificultate in acces sau transportul deseurilor, precum si descrierea cat mai completa a punctelor de reper si a modului in care se face accesul" escape="false"/>
+                                    <br/>                                    
+                                    <h:outputText value="<a href=\"http://app.letsdoitromania.ro/LDIRBackendWebJSF2/docs/manualcartare.pdf\" target=\"_blank\">Descarca Manual Cartare 2011</a>" escape="false"/>
                                     <br/>
-                                    <h:outputText value="4. introduci datele pentru fiecare morman cartat pe harta online, furnizand toate detaliile din fisa de morman" escape="false"/>
+                                    <h:outputText value="<a href=\"http://app.letsdoitromania.ro/LDIRBackendWebJSF2/docs/fisademorman.pdf\" target=\"_blank\">Descarca Fisa de Morman 2011</a>" escape="false"/>
                                     <br/>
-                                    <h:outputText value="In afara de modalitatea clasica de cartare, poti utiliza si aplicatia \"Let's Do It Ro\" pentru IOS (Iphone)." escape="false"/>
+                                    <h:outputText value="<a href=\"http://app.letsdoitromania.ro/LDIRBackendWebJSF2/docs/prezentarecartare.pdf\" target=\"_blank\">Descarca Prezentare Cartare 2011</a>" escape="false"/>
                                     <br/>
-                                    <h:outputText value="Pentru intrebari legate de cartare, poti scrie la <a href=\"mailto:cartare@letsdoitromania.ro\" target=\"_blank\">cartare@letsdoitromania.ro</a>." escape="false"/>
+                                    <h:outputText value="<a href=\"http://itunes.apple.com/us/app/lets-do-it-ro/id449110019\">Descarca aplicatia de cartare pentru iPhone</a>" escape="false"/>
                                     <br/>
-                                    <h:outputText value="<a href=\"http://app.letsdoitromania.ro/LDIRBackendWebJSF2/docs/manualcartare.pdf\" target=\"_blank\">Downloadeaza Manual Cartare 2011</a>" escape="false"/>
-                                    <br/>
-                                    <h:outputText value="<a href=\"http://app.letsdoitromania.ro/LDIRBackendWebJSF2/docs/fisademorman.pdf\" target=\"_blank\">Downloadeaza Fisa de Morman 2011</a>" escape="false"/>
-                                    <br/>
-                                    <h:outputText value="<a href=\"http://app.letsdoitromania.ro/LDIRBackendWebJSF2/docs/prezentarecartare.pdf\" target=\"_blank\">Downloadeaza Prezentare Cartare 2011</a>" escape="false"/>
-                                    <br/>
-                                    <h:outputText value="<a href=\"http://itunes.apple.com/us/app/lets-do-it-ro/id449110019\">Downloadeaza aplicatia de cartare pentru iPhone</a>" escape="false"/>
-                                    <br/>
-                               
+                                    <br/>                                    
+                                    <h:outputText value="<a href=\"http://app.letsdoitromania.ro/LDIRBackendWebJSF2/docs/prezentareinscriereechipevoluntari.pdf\" target=\"_blank\">Descarca Prezentarea Pasilor pentru Inscrierea pentru Ziua de Curatenie Nationala</a>" escape="false"/>
+                               		<br/>                                       
+                                    <h:outputText value="<a href=\"http://app.letsdoitromania.ro/LDIRBackendWebJSF2/docs/declaratieminori2011.pdf\" target=\"_blank\">Descarca Declaratia pentru Participarea Minorilor la Ziua de Curatenie Nationala</a>" escape="false"/>
+                                    <br/>   
+                                    <h:outputText value="<a href=\"http://app.letsdoitromania.ro/LDIRBackendWebJSF2/docs/normedesiguranta2011.pdf\" target=\"_blank\">Descarca Normele de Siguranta pentru Ziua de Curatenie Nationala </a>" escape="false"/>
+                                    
                                 </h3>
                                 <br/>
                             </h:panelGroup>
