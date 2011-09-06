@@ -58,6 +58,7 @@ public class GarbageExcelFormatter implements ExcelFormatter{
 		row.createCell(11).setCellValue("Greu de transportat");		
 		row.createCell(12).setCellValue("Descriere");
 		row.createCell(13).setCellValue("Stare");
+		row.createCell(14).setCellValue("Grid");
 		
 		
 		/*private int percentageGlass;
@@ -112,14 +113,17 @@ public class GarbageExcelFormatter implements ExcelFormatter{
 				row.createCell(13).setCellValue(
 						garbage.getStatus().getTranslation());
 			
-			if (garbage.getDetails() != null) {
-				int len = garbage.getDetails().length();
-				if (len > Garbage.DETAILS_LENGTH)
-					len = Garbage.DETAILS_LENGTH;
-				row.createCell(14).setCellValue(
-						garbage.getDetails().substring(0, len)
-								.replaceAll("\\r\\n|\\r|\\n", " "));
-			}
+			row.createCell(14, Cell.CELL_TYPE_NUMERIC).setCellValue(
+					garbage.getChartedAreaID());
+//			
+//			if (garbage.getDetails() != null) {
+//				int len = garbage.getDetails().length();
+//				if (len > Garbage.DETAILS_LENGTH)
+//					len = Garbage.DETAILS_LENGTH;
+//				row.createCell(15).setCellValue(
+//						garbage.getDetails().substring(0, len)
+//								.replaceAll("\\r\\n|\\r|\\n", " "));
+//			}
 			
 			
 		}
