@@ -36,7 +36,7 @@
     <managed-bean>
         <managed-bean-name>mormanManager</managed-bean-name>
         <managed-bean-class>ro.radcom.ldir.ldirbackendwebjsf2.managedBeans.MormanManagerBean</managed-bean-class>
-        <managed-bean-scope>request</managed-bean-scope>
+        <managed-bean-scope>view</managed-bean-scope>
     </managed-bean>
         <managed-bean>
         <managed-bean-name>userManager</managed-bean-name>
@@ -67,5 +67,10 @@
         <managed-bean-name>adminGarbageManagerBean</managed-bean-name>
         <managed-bean-class>ro.radcom.ldir.ldirbackendwebjsf2.managedBeans.AdminGarbageManagerBean</managed-bean-class>
         <managed-bean-scope>view</managed-bean-scope>
-    </managed-bean>
-</faces-config>
+
+</managed-bean>
+    <managed-bean>
+    	<managed-bean-name>sessionsVariables</managed-bean-name>
+    	<managed-bean-class>ro.radcom.ldir.ldirbackendwebjsf2.managedBeans.SessionsVariables</managed-bean-class>
+    	<managed-bean-scope>session</managed-bean-scope>
+    </managed-bean></faces-config>
