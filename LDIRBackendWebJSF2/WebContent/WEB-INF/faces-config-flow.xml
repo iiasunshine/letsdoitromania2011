@@ -53,6 +53,10 @@
             <to-view-id>/users/echipa-org-detalii.jsp</to-view-id>
         </navigation-case>
         <navigation-case>
+            <from-outcome>team_org_multi_fail</from-outcome>
+            <to-view-id>/users/echipa-org-multi-editare.jsp</to-view-id>
+        </navigation-case>
+        <navigation-case>
             <from-outcome>user_edit_pass_fail</from-outcome>
             <to-view-id>/users/user-psw-editare.jsp</to-view-id>
         </navigation-case>
