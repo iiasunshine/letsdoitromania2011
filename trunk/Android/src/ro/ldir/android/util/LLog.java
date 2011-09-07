@@ -11,4 +11,10 @@ public class LLog
 	{
 		Log.d(LDIR_TAG, msg);
 	}
+	
+	public static final void e(Throwable tr)
+	{
+		Log.e(LDIR_TAG, "", tr);
+		System.out.println(Log.getStackTraceString(tr));
+	}
 }

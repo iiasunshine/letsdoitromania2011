@@ -1,13 +1,24 @@
 package ro.ldir.android.entities;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
-import ro.ldir.R.string;
+import ro.ldir.android.remote.GarbageStatus;
+import ro.ldir.android.remote.IBackendGarbage;
 
-public class BaseGarbage{
+/**
+ * Class with base fields, common with the fields from the backend
+ * All fields that are not found on the backend MUST be added in subclasses of this class
+ * @author Coralia Paunoiu
+ *
+ */
+public class BaseGarbage implements IBackendGarbage{
+	
+	/**
+	 * the default value that the field {@link Garbage#remoteDbId}} has. If the garbage is not uploaded then this is the id
+	 * After the upload, the  {@link Garbage#remoteDbId}} gets a normal id value
+	 */
+	protected static final int NO_DB_ID = -1;
 	
 	public static final int DESCRIPTION_LENGTH = 20;
     public static final int DETAILS_LENGTH = 30;
@@ -17,7 +28,6 @@ public class BaseGarbage{
     private String description;
     private String details;
     private boolean dispersed;
-    private Integer garbageId = -1;
     private int percentageGlass;
     private int percentageMetal;
     private int percentagePlastic;
@@ -26,6 +36,12 @@ public class BaseGarbage{
     private Date recordDate;
     private double xLatitude;
     private double yLongitude;
+    /**
+     * Remote (backend) database id
+     */
+    private int garbageId = NO_DB_ID;
+    
+    private GarbageStatus status =  GarbageStatus.IDENTIFIED;
     
 	public int getBagCount() {
 		return bagCount;
@@ -56,12 +72,6 @@ public class BaseGarbage{
 	}
 	public void setDispersed(boolean dispersed) {
 		this.dispersed = dispersed;
-	}
-	public Integer getGarbageId() {
-		return garbageId;
-	}
-	public void setGarbageId(Integer garbageId) {
-		this.garbageId = garbageId;
 	}
 	public int getPercentageGlass() {
 		return percentageGlass;
@@ -99,16 +109,16 @@ public class BaseGarbage{
 	public void setRecordDate(Date recordDate) {
 		this.recordDate = recordDate;
 	}
-	public double getxLatitude() {
+	public double getLatitude() {
 		return xLatitude;
 	}
-	public void setxLatitude(double xLatitude) {
+	public void setLatitude(double xLatitude) {
 		this.xLatitude = xLatitude;
 	}
-	public double getyLongitude() {
+	public double getLongitude() {
 		return yLongitude;
 	}
-	public void setyLongitude(double yLongitude) {
+	public void setLongitude(double yLongitude) {
 		this.yLongitude = yLongitude;
 	}
 	
@@ -131,4 +141,37 @@ public class BaseGarbage{
 		}
 	}
 
+	public int getGarbageId()
+	{
+		return garbageId;
+	}
+	public void setGarbageId(int garbageId)
+	{
+		this.garbageId = garbageId;
+	}
+	public GarbageStatus getStatus()
+	{
+		return status;
+	}
+	public void setStatus(GarbageStatus status)
+	{
+		this.status = status;
+	}
+	
+	public String getStatusString()
+	{
+		return status.getTranslation();
+	}
+	public void setStatus(String status)
+	{
+		if (GarbageStatus.CLEANED.getTranslation().equals(status))
+		{
+			this.status = GarbageStatus.CLEANED;
+		}
+		else
+		{
+			this.status = GarbageStatus.IDENTIFIED;
+		}
+	}
+	
 }
