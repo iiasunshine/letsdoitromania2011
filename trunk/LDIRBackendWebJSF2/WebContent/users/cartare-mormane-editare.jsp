@@ -52,6 +52,9 @@
                                 <h:outputText value="#{msg.chart_modify_morman} #{mormanManager.myGarbage.garbage.garbageId}"
                                               rendered="#{mormanManager.myGarbage.garbage.garbageId > 0}"/>
                             </h1>
+							<h:outputText value="Campurile cu "/><span class="important">*</span><h:outputText value=" sunt obligatorii"/>
+                            <br />
+                            <h:outputText value="Suma procentelor plastic, metal, sticla si nereciclabile trebuie sa fie 100"/>
                             
                             <h:form styleClass="form" id="form" enctype="multipart/form-data">
                                 <br />
@@ -225,7 +228,7 @@
                                                  cols="45" rows="5"
                                                  styleClass="formTextarea"
                                                  id="descriere2"validatorMessage="#{msg.chart_err_description2}">
-                                    <f:validateLength minimum="0" maximum="1001"/>
+                                    <f:validateLength minimum="0" maximum="1000"/>
                                 </h:inputTextarea>
                                 <div class="labelSmall"><h:outputText value="Maxim 1000 de caractere."/></div>
                                 <br />

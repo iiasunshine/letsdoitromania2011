@@ -33,11 +33,11 @@
                             
                             <h:panelGroup rendered="#{not fn:contains(facesContext.messageList[0].severity, 'INFO')}">
 					         <!-- NUME -->
-                            <div class="label form"><h:outputText value="Nume Echipa:"/></div>
+                            <!--  div class="label form"><h:outputText value="Nume Echipa:"/></div>
                             <div class="label">
                             	<strong><h:outputText value="#{teamBean.userTeam.teamName}"/></strong>
                             </div>
-                             <br/>
+                             <br/> -->
                              <!-- MANAGER -->
                             <div class="label form"><h:outputText value="Nume Manager:"/></div>
                             <div class="label">
@@ -50,18 +50,61 @@
                              <!-- LISTA VOLUNTARI -->
                                 <h:panelGroup rendered="#{fn:length(teamBean.volunteerMembers) gt 0}"
                                               style="#{fn:length(teamBean.volunteerMembers) gt 15? 'max-height: 610px; overflow: scroll; display: block;' : ''}">
-                                    <div class="label form"><h:outputText value="Lista Voluntari:"/> </div>
+                                    <div class="label form"><h:outputText value="Membri in Echipa:"/> </div>
                                     <div class="label">
                                     	<a4j:repeat value="#{teamBean.volunteerMembers}" var="volunteer">
                                     	<strong>
                                             <h:outputText value="#{volunteer.firstName}"/>&nbsp;
                                             <h:outputText value="#{volunteer.lastName}"/>
                                         </strong>
-                                            <br/>
-                                  
-                                   		</a4j:repeat>
+                                            <br/>                                  
+                                   		</a4j:repeat>                                   		
                                     </div>
-                                </h:panelGroup>
+                                <h:panelGroup rendered="#{teamBean.orgBool}">   
+                                		<div class="label form"><h:outputText value=" Organizatia:"/> </div>
+                                		<strong>
+                               			 <h:outputText value="#{teamBean.organization.name}"/>&nbsp;
+                              			</strong>
+                               </h:panelGroup> 
+                              </h:panelGroup>
+                             <!-- COD ACCESS -->
+                             <br/>
+							<div class="label form"><h:outputText value="Cod Acces Echipa:"/></div>
+                            <div class="label">
+                              <strong>
+                               <h:outputText value="#{teamBean.userTeam.teamId}"/>&nbsp;
+                              </strong>
+                            </div>
+                            <br/>
+                             <!-- Dotari Echipa -->
+							<div class="label form"><h:outputText value="Dotari Echipa:"/></div>
+                            <h:panelGroup rendered="#{teamBean.equipmentBool}">  
+                            <div class="label">
+                              <strong>
+                               <div class="label"><h:outputText value="Saci: #{teamBean.bagsUnits}, Manusi: #{teamBean.glovesUnits}, GPS: #{teamBean.gpsUnits}, Transport: #{teamBean.transport}, Lopeti: #{teamBean.shovelUnits}, Alte echipamente: #{teamBean.toolsUnits}"/></div>
+                              </strong>
+                            </div>
+                            </h:panelGroup>
+                            <h:panelGroup rendered="#{not teamBean.equipmentBool}">  
+                            <div class="label">
+                              <strong>
+                               <div class="label"><h:outputText value="Echipa NU are dotari!"/></div>
+                              </strong>
+                            </div>
+                            </h:panelGroup>  
+                            <br/>
+							<br/>
+                            <br/>   
+                            <div class="form">
+                            	<h:outputText value="Pentru a adauga membrii in echipa ta trebuie sa le comunici acestora codul de acces."/>
+                            	<br/>
+							 </div>
+                             <br/>
+                             <div class="form">
+                            	<h:outputText value="Pentru ca o persoana sa devina membru in echipa ta trebuie sa fie inregistrata ca user pe acest site."/>
+                            	<br/>
+                            	<h:outputText value="Daca este inregistrata trebuie sa acceseze meniul [Echipa] -> [Inscriere in echipa] si sa introduca codul de access furnizat mai sus."/>
+                            </div>   
                             </h:panelGroup>    
 					</div>
 					
