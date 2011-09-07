@@ -147,12 +147,39 @@ public class WSInterface {
         ClientResponse cr = builder.entity(null, MediaType.APPLICATION_XML).get(ClientResponse.class);
         return cr;
     }
-
     public ClientResponse getChartedAreasOfTeam(User user, int teamId) {
         String location = WS_URL + "/LDIRBackend/ws/team/" + teamId + "/chartArea";
         WebResource resource = client.resource(location);
         Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(user.getEmail(), user.getPasswd()));
         ClientResponse cr = builder.entity(null, MediaType.APPLICATION_XML).get(ClientResponse.class);
+        return cr;
+    }
+    public ClientResponse getTeam(User user,int teamId) {  
+        String location = WS_URL + "/LDIRBackend/ws/team/" + teamId;
+        WebResource resource = client.resource(location);
+        Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(user.getEmail(), user.getPasswd()));
+        ClientResponse cr = builder.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
+        return cr;
+    }
+    public ClientResponse getTeamManager(User user,int teamId) {
+        String location = WS_URL + "/LDIRBackend/ws/team/" + teamId + "/teamManager";
+        WebResource resource = client.resource(location);
+        Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(user.getEmail(), user.getPasswd()));
+        ClientResponse cr = builder.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
+        return cr;
+    }
+    public ClientResponse getTeamMembers(User user,int teamId) {
+        String location = WS_URL + "/LDIRBackend/ws/team/" + teamId + "/volunteerMembers";
+        WebResource resource = client.resource(location); 
+        Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(user.getEmail(), user.getPasswd()));
+        ClientResponse cr = builder.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
+        return cr;
+    }
+    public ClientResponse getTeamOrganization(User user,int teamId) {
+        String location = WS_URL + "/LDIRBackend/ws/team/" + teamId + "/organizationMembers";
+        WebResource resource = client.resource(location);
+        Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(user.getEmail(), user.getPasswd()));
+        ClientResponse cr = builder.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
         return cr;
     }
 

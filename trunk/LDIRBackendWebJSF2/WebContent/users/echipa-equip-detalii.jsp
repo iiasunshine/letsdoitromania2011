@@ -80,7 +80,9 @@
                                     <h:commandButton action="#{teamBean.actionAddEquipment}"
                                                      value="Inregistreaza dotarile"
                                                      id="confirma"
-                                                     styleClass="formButton"/>
+                                                     styleClass="formButton">
+                                             <f:param name="teamId" value="#{orgBean.teamId}"/>
+                                     </h:commandButton>                
                                     <input name="anuleaza" type="reset" class="formButton" value="Renunta" id="anuleaza" />
                                 </div>
                             </h:form>
