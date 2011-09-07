@@ -221,4 +221,5 @@
 	<string name="gallery_delete">Sterge</string>
 	<string name="gallery_delete_confirm">Doriti sa stergeti imaginea selectata?</string>
 	<string name="details_delete_confirm">Mormanul %s a fost sters</string>
+	<string name="login_progress">In curs de autentificare....</string>
 </resources>

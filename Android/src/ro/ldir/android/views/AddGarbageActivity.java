@@ -250,8 +250,8 @@ public class AddGarbageActivity extends Activity
 	
 	private void writeControls(Garbage garbage)
 	{
-		((TextView)findViewById(R.id.txtLatitude)).setText(String.valueOf(garbage.getxLatitude()));
-		((TextView)findViewById(R.id.txtLongitude)).setText(String.valueOf(garbage.getyLongitude()));
+		((TextView)findViewById(R.id.txtLatitude)).setText(String.valueOf(garbage.getLatitude()));
+		((TextView)findViewById(R.id.txtLongitude)).setText(String.valueOf(garbage.getLongitude()));
 		 ((TextView)findViewById(R.id.txtDescriptionTitle)).setText(garbage.getDescription());
 		 ((TextView)findViewById(R.id.txtDescription)).setText(garbage.getDetails());
 		 ((TextView)findViewById(R.id.txtBagCount)).setText(String.valueOf(garbage.getBagCount()));
@@ -272,13 +272,13 @@ public class AddGarbageActivity extends Activity
 		 String txt = ((TextView)findViewById(R.id.txtLatitude)).getText().toString();
 		 if (txt != null && txt.trim().length() > 0)
 		 {
-			 garbage.setxLatitude(Double.parseDouble(txt));
+			 garbage.setLatitude(Double.parseDouble(txt));
 		 }
 		 
 		 txt = ((TextView)findViewById(R.id.txtLongitude)).getText().toString();
 		 if (txt != null && txt.trim().length() > 0)
 		 {
-			 garbage.setyLongitude(Double.parseDouble(txt));
+			 garbage.setLongitude(Double.parseDouble(txt));
 		 }
 		 
 		 txt = ((TextView)findViewById(R.id.txtDescriptionTitle)).getText().toString();
@@ -335,14 +335,14 @@ public class AddGarbageActivity extends Activity
 		{
 			LdirDbManager dbManager = new LdirDbManager();
 			dbManager.open(this);
-			int garbageId = garbage.getGarbageId();
+			int garbageId = garbage.getSqliteGarbageId();
 			boolean success = false;
 			if (garbageId == -1) // insert operation
 			{
 				garbageId = (int)dbManager.insert(garbage);
 				if (garbageId != -1)
 				{
-					garbage.setGarbageId((int)garbageId);
+					garbage.setSqliteGarbageId((int)garbageId);
 					Utils.displayToast(this, getResources().getString(R.string.details_add_confirm, garbageId));
 					success = true;
 				}
@@ -360,7 +360,7 @@ public class AddGarbageActivity extends Activity
 				}
 				else
 				{
-					Utils.displayToast(this, getResources().getString(R.string.details_modify_confirm, garbage.getGarbageId()));
+					Utils.displayToast(this, getResources().getString(R.string.details_modify_confirm, garbage.getSqliteGarbageId()));
 					success = true;
 				}
 			}
@@ -403,7 +403,7 @@ public class AddGarbageActivity extends Activity
 			showErrorDialog(R.string.chart_err_overflow_percents);
 			return false;
 		}
-		double coordinate = garbage.getxLatitude();
+		double coordinate = garbage.getLatitude();
 		double minLatitude = 43;//getResources().getFraction(R.fraction.min_latitude, 100, 1);
 		double maxLatitude = 49;//getResources().getFraction(R.fraction.max_latitude, 100, 1);
 		if (coordinate < minLatitude || coordinate > maxLatitude)
@@ -412,7 +412,7 @@ public class AddGarbageActivity extends Activity
 			return false;
 		}
 		
-		coordinate = garbage.getyLongitude();
+		coordinate = garbage.getLongitude();
 		double minLongitude = 20;//getResources().getFraction(R.fraction.min_longitude, 100, 1);
 		double maxLongitude = 30;//getResources().getFraction(R.fraction.max_longitude, 100, 1);
 		if (coordinate < minLongitude || coordinate > maxLongitude)

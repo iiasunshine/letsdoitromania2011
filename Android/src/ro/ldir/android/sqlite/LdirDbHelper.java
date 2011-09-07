@@ -27,7 +27,7 @@ public class LdirDbHelper extends SQLiteOpenHelper
 	
 	public enum GarbageFields
 	{
-		garbageId("_id", "INTEGER primary key autoincrement"),
+		sqliteGarbageId("_id", "INTEGER primary key autoincrement"),
 		bagCount("bagCount", "INTEGER"),
 	    bigComponentsDescription("bigComponentsDescription", "TEXT"),
 	    description("description", "TEXT"),
@@ -41,7 +41,8 @@ public class LdirDbHelper extends SQLiteOpenHelper
 //	    private Date recordDate;
 	    xLatitude("xLatitude", "REAL"),
 	    yLongitude("yLongitude", "REAL"),
-	    remoteDbId("remoteDbId", "INTEGER");
+	    garbageId("remoteDbId", "INTEGER"),
+		status("status", "TEXT");
 	    
 	    String column;
 	    String type;

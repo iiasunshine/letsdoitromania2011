@@ -139,7 +139,7 @@ public class GarbageListActivity extends ListActivity {
 		boolean deleted = dbManager.delete(garbage);
 		if (deleted)
 		{
-			Utils.displayToast(context, context.getResources().getString(R.string.details_delete_confirm, garbage.getGarbageId()));
+			Utils.displayToast(context, context.getResources().getString(R.string.details_delete_confirm, garbage.getSqliteGarbageId()));
 			refreshListItems();
 		}
 		dbManager.close();
@@ -163,8 +163,8 @@ public class GarbageListActivity extends ListActivity {
 			}
 			
 			((TextView)convertView.findViewById(R.id.txtLstDescription)).setText(garbage.getDescription());
-			((TextView)convertView.findViewById(R.id.txtLstLatitude)).setText(String.valueOf(garbage.getxLatitude()));
-			((TextView)convertView.findViewById(R.id.txtLstLongitude)).setText(String.valueOf(garbage.getyLongitude()));
+			((TextView)convertView.findViewById(R.id.txtLstLatitude)).setText(String.valueOf(garbage.getLatitude()));
+			((TextView)convertView.findViewById(R.id.txtLstLongitude)).setText(String.valueOf(garbage.getLongitude()));
 			((TextView)convertView.findViewById(R.id.txtLstBagCount)).setText(String.valueOf(garbage.getBagCount()));
 			return convertView;
 		}

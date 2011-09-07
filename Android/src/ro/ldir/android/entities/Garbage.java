@@ -2,34 +2,33 @@ package ro.ldir.android.entities;
 
 import java.io.Serializable;
 
+/**
+ * Custom garbage with extra fields and functionality that the backend garbage
+ * @author Coralia Paunoiu
+ *
+ */
 public class Garbage extends BaseGarbage implements Serializable{
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 2737049284989125474L;
 	
 	/**
-	 * the default value that the field {@link Garbage#remoteDbId}} has. If the garbage is not uploaded then this is the id
-	 * After the upload, the  {@link Garbage#remoteDbId}} gets a normal id value
-	 */
-	private static final long NO_DB_ID = -1L;
-	
-	/*
-	 * The id of the garbage in the remote (backend) database
-	 */
-	private long remoteDbId = NO_DB_ID;
+     * Local database id
+     */
+    private Integer sqliteGarbageId = -1;
 
 	public boolean isUploaded() {
-		return remoteDbId != NO_DB_ID;
+		return getGarbageId() != NO_DB_ID;
 	}
 
-	public void setRemoteDbId(long remoteDbId) {
-		this.remoteDbId = remoteDbId;
+	public Integer getSqliteGarbageId()
+	{
+		return sqliteGarbageId;
 	}
 
-	public long getRemoteDbId() {
-		return remoteDbId;
+	public void setSqliteGarbageId(Integer sqliteGarbageId)
+	{
+		this.sqliteGarbageId = sqliteGarbageId;
 	}
+	
 	
 }
