@@ -119,14 +119,6 @@ public class Garbage extends FieldAccessBean {
 	public ChartedArea getChartedArea() {
 		return chartedArea;
 	}
-	
-	public String getChartedAreaID(){
-		ChartedArea chartarea=this.chartedArea;
-		if (chartarea == null) 
-			return "-1";
-		String id=chartarea.getName();
-		return id;
-	}
 
 	/**
 	 * @return the county

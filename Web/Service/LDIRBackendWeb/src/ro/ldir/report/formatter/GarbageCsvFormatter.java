@@ -40,19 +40,36 @@ public class GarbageCsvFormatter {
 		buf.append("\"ID\",");
 		buf.append("\"Județ\",");
 		buf.append("\"Comună\",");
+		buf.append("\"Latitudine\",");
+		buf.append("\"Longitudine\",");
+		buf.append("\"Dispersat\",");
+		buf.append("\"Număr saci\",");
+		buf.append("\"Plastic\",");
+		buf.append("\"Metal\",");
+		buf.append("\"Sticlă\",");
+		buf.append("\"Nereciclabil\",");
+		buf.append("\"Greu de transportat\",");
 		buf.append("\"Descriere\",");
 		buf.append("\"Stare\",");
-		buf.append("\"Dispersat\",");
-		buf.append("\"Voluminos\",");
-		buf.append("\"Număr saci\",");
-		buf.append("\"Longitudine\",");
-		buf.append("\"Latitudine\"\n");
+		buf.append("\"Zonă cartare\"\n");
 
 		for (Garbage garbage : garbages) {
 			buf.append(garbage.getGarbageId() + ",");
 			buf.append("\"" + garbage.getCounty().getName() + "\",");
 			if (garbage.getTown() != null)
 				buf.append("\"" + garbage.getTown().getName() + "\",");
+			else
+				buf.append(",");
+			buf.append(garbage.getY() + ",");
+			buf.append(garbage.getX() + ",");
+			buf.append("\"" + (garbage.isDispersed() ? "da" : "nu") + "\",");
+			buf.append(garbage.getBagCount() + ",");
+			buf.append(garbage.getPercentagePlastic() + ",");
+			buf.append(garbage.getPercentageMetal() + ",");
+			buf.append(garbage.getPercentageGlass() + ",");
+			buf.append(garbage.getPercentageWaste() + ",");
+			if (garbage.getBigComponentsDescription() != null)
+				buf.append("\"" + garbage.getBigComponentsDescription() + "\",");
 			else
 				buf.append(",");
 			if (garbage.getDescription() != null) {
@@ -68,19 +85,10 @@ public class GarbageCsvFormatter {
 				buf.append("\"" + garbage.getStatus().getTranslation() + "\",");
 			else
 				buf.append(",");
-			buf.append("\"" + (garbage.isDispersed() ? "da" : "nu") + "\",");
-			if (garbage.getDetails() != null) {
-				int len = garbage.getDetails().length();
-				if (len > Garbage.DETAILS_LENGTH)
-					len = Garbage.DETAILS_LENGTH;
-				buf.append("\""
-						+ garbage.getDetails().substring(0, len)
-								.replaceAll("\\r\\n|\\r|\\n", " ") + "\",");
-			} else
-				buf.append(",");
-			buf.append(garbage.getBagCount() + ",");
-			buf.append(garbage.getX() + ",");
-			buf.append(garbage.getY() + "\n");
+			if (garbage.getChartedArea() != null)
+				buf.append("\"" + garbage.getChartedArea().getName() + "\"\n");
+			else
+				buf.append("\n");
 		}
 		return buf.toString();
 	}

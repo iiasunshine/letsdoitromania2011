@@ -33,7 +33,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import ro.ldir.dto.Garbage;
 
 /** Converts a list of garbage to an Excel workbook. */
-public class GarbageExcelFormatter implements ExcelFormatter{
+public class GarbageExcelFormatter implements ExcelFormatter {
 	private List<Garbage> garbages;
 
 	public GarbageExcelFormatter(List<Garbage> garbages) {
@@ -53,18 +53,12 @@ public class GarbageExcelFormatter implements ExcelFormatter{
 		row.createCell(6).setCellValue("Num\u04d1r saci");
 		row.createCell(7).setCellValue("Plastic");
 		row.createCell(8).setCellValue("Metal");
-		row.createCell(9).setCellValue("Sticla");
+		row.createCell(9).setCellValue("Sticl\u04d1");
 		row.createCell(10).setCellValue("Nereciclabil");
-		row.createCell(11).setCellValue("Greu de transportat");		
+		row.createCell(11).setCellValue("Greu de transportat");
 		row.createCell(12).setCellValue("Descriere");
 		row.createCell(13).setCellValue("Stare");
-		row.createCell(14).setCellValue("Grid");
-		
-		
-		/*private int percentageGlass;
-		private int percentageMetal;
-		private int percentagePlastic;
-		private int percentageWaste;*/
+		row.createCell(14).setCellValue("Zon\u04d1 cartare");
 
 		for (int i = 0; i < garbages.size(); i++) {
 			row = sheet.createRow(i + 1);
@@ -78,7 +72,7 @@ public class GarbageExcelFormatter implements ExcelFormatter{
 			row.createCell(3, Cell.CELL_TYPE_NUMERIC).setCellValue(
 					garbage.getY());
 			row.createCell(4, Cell.CELL_TYPE_NUMERIC).setCellValue(
-					garbage.getX());			
+					garbage.getX());
 			row.createCell(5, Cell.CELL_TYPE_BOOLEAN).setCellValue(
 					garbage.isDispersed());
 			row.createCell(6, Cell.CELL_TYPE_NUMERIC).setCellValue(
@@ -91,41 +85,21 @@ public class GarbageExcelFormatter implements ExcelFormatter{
 					garbage.getPercentageGlass());
 			row.createCell(10, Cell.CELL_TYPE_NUMERIC).setCellValue(
 					garbage.getPercentageWaste());
-			row.createCell(11, Cell.CELL_TYPE_NUMERIC).setCellValue(
+			row.createCell(11).setCellValue(
 					garbage.getBigComponentsDescription());
-			
-			
-			if (garbage.getDescription() != null) {
-				row.createCell(12,Cell.CELL_TYPE_STRING).setCellValue(
-						garbage.getDescription());
-			}
-			
-//			if (garbage.getDescription() != null) {
-//				int len = garbage.getDescription().length();
-//				if (len > Garbage.DESCRIPTION_LENGTH)
-//					len = Garbage.DESCRIPTION_LENGTH;
-//				row.createCell(12).setCellValue(
-//						garbage.getDescription().substring(0, len)
-//								.replaceAll("\\r\\n|\\r|\\n", " "));
-//			}
-			
+
+			if (garbage.getDescription() != null)
+				row.createCell(12, Cell.CELL_TYPE_STRING).setCellValue(
+						garbage.getDescription().replaceAll("\\r\\n|\\r|\\n",
+								" "));
+
 			if (garbage.getStatus() != null)
 				row.createCell(13).setCellValue(
 						garbage.getStatus().getTranslation());
-			
-			row.createCell(14).setCellValue(
-					garbage.getChartedAreaID());
-//			
-//			if (garbage.getDetails() != null) {
-//				int len = garbage.getDetails().length();
-//				if (len > Garbage.DETAILS_LENGTH)
-//					len = Garbage.DETAILS_LENGTH;
-//				row.createCell(15).setCellValue(
-//						garbage.getDetails().substring(0, len)
-//								.replaceAll("\\r\\n|\\r|\\n", " "));
-//			}
-			
-			
+
+			if (garbage.getChartedArea() != null)
+				row.createCell(14).setCellValue(
+						garbage.getChartedArea().getName());
 		}
 		return wb;
 	}
