@@ -20,6 +20,7 @@ import javax.ws.rs.core.MediaType;
 import org.apache.log4j.Logger;
 import ro.ldir.dto.ChartedArea;
 import ro.ldir.dto.Garbage;
+import ro.ldir.dto.Organization;
 import ro.ldir.dto.User;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.customObjects.GarbageContextProvider;
 
@@ -159,6 +160,7 @@ public class WSInterface {
         WebResource resource = client.resource(location);
         Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(user.getEmail(), user.getPasswd()));
         ClientResponse cr = builder.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
+//        ClientResponse cr = builder.entity(null, MediaType.APPLICATION_XML).get(ClientResponse.class);
         return cr;
     }
     public ClientResponse getTeamManager(User user,int teamId) {
@@ -177,6 +179,27 @@ public class WSInterface {
     }
     public ClientResponse getTeamOrganization(User user,int teamId) {
         String location = WS_URL + "/LDIRBackend/ws/team/" + teamId + "/organizationMembers";
+        WebResource resource = client.resource(location);
+        Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(user.getEmail(), user.getPasswd()));
+        ClientResponse cr = builder.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
+        return cr;
+    }
+    
+    public ClientResponse addOrganization(User user,Organization org) {
+        String location = WS_URL + "/LDIRBackend/ws/organization";
+        WebResource resource = client.resource(location);
+        Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(user.getEmail(), user.getPasswd()));
+        ClientResponse cr = builder.entity(org, MediaType.APPLICATION_XML).post(ClientResponse.class);
+        return cr;
+        
+//		String location = JsfUtils.getInitParameter("webservice.url") + "/LDIRBackend/ws/organization";
+//		Client client = Client.create();
+//	    WebResource resource = client.resource(location);
+//	    Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(JsfUtils.getInitParameter("admin.user"), JsfUtils.getInitParameter("admin.password")));
+//	    ClientResponse cr = builder.entity(organization, MediaType.APPLICATION_XML).post(ClientResponse.class);
+    }
+    public ClientResponse getOrganizationTeam(User user,int orgId) {
+        String location = WS_URL + "/LDIRBackend/ws/organization/" + orgId + "/memberOf";
         WebResource resource = client.resource(location);
         Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(user.getEmail(), user.getPasswd()));
         ClientResponse cr = builder.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
