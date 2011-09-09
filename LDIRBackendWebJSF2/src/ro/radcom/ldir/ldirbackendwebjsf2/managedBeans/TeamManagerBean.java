@@ -21,7 +21,6 @@ import ro.ldir.dto.User;
 import ro.ldir.dto.CleaningEquipment.CleaningType;
 import ro.ldir.dto.Organization.OrganizationType;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.AppUtils;
-import ro.radcom.ldir.ldirbackendwebjsf2.tools.DataValidation;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.JsfUtils;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.WSInterface;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.customObjects.CountyNames;
@@ -65,22 +64,30 @@ public class TeamManagerBean {
     private Integer glovesUnits;
     private Integer shovelUnits;
     private String toolsUnits;
-    private int teamId;
+    private int teamId = 0;
 
 	public TeamManagerBean() {
-		userDetails = (User) JsfUtils.getHttpSession().getAttribute("USER_DETAILS");
-		log4j.debug("user ->"+userDetails+", team ->"+userTeam);
+	
+		userDetails = (User) JsfUtils.getHttpSession().getAttribute("USER_DETAILS");	
+		log4j.info("user ->"+userDetails+", team ->"+userTeam);
 		String sourcePage = FacesContext.getCurrentInstance().getViewRoot().getViewId();
 		teamId = AppUtils.parseToInt(JsfUtils.getRequestParameter("teamId"));
 		role = userDetails.getRole();
 		if(teamId >0 && role.equals(ORGANIZER_MULTI)){ 	
+			try{
+				
+			log4j.info("role ->"+role+", team ->"+teamId);
 			ClientResponse cr = wsi.getTeam(userDetails, teamId);
 	        int statusCode = cr.getStatus();
 	        if(statusCode !=200){
 				log4j.debug("nu s-a reusit obtinerea echipei utlizatorului curent (statusCode="
 						+ cr.getStatus()+ " responseStatus="+ cr.getResponseStatus() + ")");
 	        }
-	        userTeam = cr.getEntity(Team.class);       
+
+	        userTeam = cr.getEntity(Team.class);
+			}catch(Exception ex){
+				 log4j.info("exception ->"+ex+", team ->"+teamId);
+			}
 		}else{
 			ClientResponse cr = wsi.getMemberOfTeam(userDetails.getUserId());
 
@@ -98,10 +105,11 @@ public class TeamManagerBean {
 			initEquipments();
 		}
 		if(sourcePage.indexOf(PAGE_ORGANIZATION)> -1){
-			initOrganization();
+			initOrganization(teamId);
 		}
 		initManager();
 		initTeamMembers();	
+
 	}
 	private void initEquipments(){
 		if(userTeam != null && userTeam.getEquipments()!= null &&
@@ -171,9 +179,25 @@ public class TeamManagerBean {
 		}
 		
 	}
-	public void initOrganization(){
+	public void initOrganization(Integer teamId){
 		
+		int statusCode = 0;
+		if(teamId > 0){
 		try {
+			 String location = JsfUtils.getInitParameter("webservice.url")
+			+ "/LDIRBackend/ws/team/" + userTeam.getTeamId()+"/organizationMembers";
+			 Client client = Client.create();
+			 WebResource resource = client.resource(location);
+			 Builder builder = resource.header(HttpHeaders.AUTHORIZATION,
+						AppUtils.generateCredentials(JsfUtils.getInitParameter("admin.user"), JsfUtils.getInitParameter("admin.password")));
+			 ClientResponse cr = builder.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
+			 organizationMembers = cr.getEntity(new GenericType<List<Organization>>() {});
+//			 organization = organizationMembers.get(0);
+			 statusCode = cr.getStatus();
+		} catch (Exception e) {
+			log4j.debug("error->" + e.getMessage());
+		}
+		}else{
 			String location = JsfUtils.getInitParameter("webservice.url")
 			+ "/LDIRBackend/ws/user/" + userDetails.getUserId()+"/organizations";
 
@@ -185,24 +209,38 @@ public class TeamManagerBean {
 //			String organizationMembers2 = cr.getEntity(String.class);
 			organizationMembers = cr.getEntity(new GenericType<List<Organization>>() {});
 			
-			int statusCode = cr.getStatus();
+		    statusCode = cr.getStatus();
 			log4j.debug("---> statusCode: " + statusCode + " ("+ cr.getClientResponseStatus() + ")");
-			if(statusCode == 200){
-				
-				 location = JsfUtils.getInitParameter("webservice.url")
-				+ "/LDIRBackend/ws/team/" + userTeam.getTeamId()+"/organizationMembers";
-				 client = Client.create();
-				 resource = client.resource(location);
-				 builder = resource.header(HttpHeaders.AUTHORIZATION,
-							AppUtils.generateCredentials(JsfUtils.getInitParameter("admin.user"), JsfUtils.getInitParameter("admin.password")));
-				 cr = builder.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
-				 organizationMembers = cr.getEntity(new GenericType<List<Organization>>() {});
-//				organization = organizationMembers.get(0);
-//				orgBool = true;
-			}
-		} catch (Exception e) {
-			log4j.debug("error->" + e.getMessage());
 		}
+			if(statusCode == 200){
+				if(organizationMembers != null && organizationMembers.size() > 0){
+					    for(Organization org: organizationMembers){
+					    	if(org.getOrganizationId() != 0 && org.getOrganizationId() > 0){
+					    		try{
+					    			ClientResponse cr = wsi.getOrganizationTeam(userDetails, org.getOrganizationId());
+					    		if(cr.getStatus() != 200){
+					    			//organization = org;
+					    		}else{ 
+					    			Team  team = cr.getEntity(Team.class);
+					    			if(team.getTeamId().equals(teamId)){
+					    				organization = org;
+					    				orgBool = true;
+					    				break;
+					    			}
+					    			log4j.debug("--->  organization: " + team);
+					    		}
+					    		}catch(Exception ex){
+					    			orgBool = true;
+					    			organization = organizationMembers.get(0);
+					    		}
+					    }
+				}
+					
+				
+				}
+
+			}
+		
 		
 	}
 
@@ -312,8 +350,6 @@ public class TeamManagerBean {
 		       } 
 		}
 		
-//		if(DataValidation.validateNumber(organization.getMembersCount()))
-		
 		if(tipOrganization != null && tipOrganization.length() != 0){
 			if(tipOrganization.equalsIgnoreCase("CITY_HALL")){
 				organization.setType(OrganizationType.CITY_HALL);
@@ -329,29 +365,38 @@ public class TeamManagerBean {
 				organization.setType(OrganizationType.ONG);
 			}		
 		}
-		 log4j.info("--->  organization: " + tipOrganization );
-//		organization.setMemberOf(userTeam);
-//		organization.setManager(managerDetails);
 		/* create organization */
-		String location = JsfUtils.getInitParameter("webservice.url") + "/LDIRBackend/ws/organization";
-		Client client = Client.create();
-	    WebResource resource = client.resource(location);
-	    Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(userDetails.getEmail(), userDetails.getPasswd()));
-	    ClientResponse cr = builder.entity(organization, MediaType.APPLICATION_XML).post(ClientResponse.class);
+		ClientResponse cr = wsi.addOrganization(userDetails, organization);
+	
 	    log4j.debug("--->  organization: " + organization.getOrganizationId());
  
+	    initOrganization(0);
+	    
+	    for(Organization org: organizationMembers){
+	    	if(org.getOrganizationId() != 0 && org.getOrganizationId() > 0){
+	    		
+	    		cr = wsi.getOrganizationTeam(userDetails, org.getOrganizationId());
+	    		if(cr.getStatus() != 200){
+	        		/* add organization to team*/
+	    			String location = JsfUtils.getInitParameter("webservice.url") + "/LDIRBackend/ws/organization/"+org.getOrganizationId()+"/team";
+	       		 	Client client = Client.create();
+	       		 	WebResource resource = client.resource(location);
+	       	     	Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(userDetails.getEmail(), userDetails.getPasswd()));
+	       	     	cr = builder.entity(userTeam, MediaType.APPLICATION_XML).post(ClientResponse.class);
+	       	     	log4j.debug("--->  organization: " + organization.getOrganizationId());
+	       	     	orgBool = true;
+	       	     	break;
+	    		}else{ 
+	    			Team  team = cr.getEntity(Team.class);
+	    			log4j.debug("--->  organization: " + team);
+	    		}
+	    	}
+	    }
+	    
 	    int statusCode = cr.getStatus();
+	    
         log4j.debug("---> statusCode organization: " + statusCode + " (" + cr.getClientResponseStatus() + ")");
         if(statusCode == 200){
-        	 initOrganization();
-        	 organization = organizationMembers.get(0);
-    		/* add organization to team*/
-    		 location = JsfUtils.getInitParameter("webservice.url") + "/LDIRBackend/ws/organization/"+organization.getOrganizationId()+"/team";
-    		 client = Client.create();
-    	     resource = client.resource(location);
-    	     builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(userDetails.getEmail(), userDetails.getPasswd()));
-    	     cr = builder.entity(userTeam, MediaType.APPLICATION_XML).post(ClientResponse.class);
-    	     log4j.debug("--->  organization: " + organization.getOrganizationId());
         	 orgBool = true;
 		     JsfUtils.addInfoBundleMessage("success_edit_message");
         }else{
@@ -477,7 +522,7 @@ public class TeamManagerBean {
 			WebResource resource = client.resource(location);
 			Builder builder = resource.header(
 					HttpHeaders.AUTHORIZATION,AppUtils.generateCredentials(userDetails.getEmail(), userDetails.getPasswd()));
-			ClientResponse cr = builder.entity(gps, MediaType.APPLICATION_XML).put(ClientResponse.class);
+			ClientResponse cr = builder.entity((Equipment)gps, MediaType.APPLICATION_XML).put(ClientResponse.class);
 			int statusCode = cr.getStatus();
 			
 			log4j.debug("---> statusCode gps add team: " + statusCode + " ("
@@ -493,7 +538,7 @@ public class TeamManagerBean {
 			WebResource resource = client.resource(location);
 			Builder builder = resource.header(
 					HttpHeaders.AUTHORIZATION,AppUtils.generateCredentials(userDetails.getEmail(), userDetails.getPasswd()));
-			ClientResponse cr = builder.entity(bags, MediaType.APPLICATION_XML)
+			ClientResponse cr = builder.entity((Equipment)bags, MediaType.APPLICATION_XML)
 					.put(ClientResponse.class);
 			int statusCode = cr.getStatus();
 			
@@ -510,7 +555,7 @@ public class TeamManagerBean {
 			WebResource resource = client.resource(location);
 			Builder builder = resource.header(
 					HttpHeaders.AUTHORIZATION,AppUtils.generateCredentials(userDetails.getEmail(), userDetails.getPasswd()));
-			ClientResponse cr = builder.entity(gloves, MediaType.APPLICATION_XML)
+			ClientResponse cr = builder.entity((Equipment)gloves, MediaType.APPLICATION_XML)
 					.put(ClientResponse.class);
 			int statusCode = cr.getStatus();
 			

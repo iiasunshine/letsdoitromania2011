@@ -60,28 +60,48 @@ public class OrganizationManagementBean {
 				 if(userTeam.getEquipments() != null && userTeam.getEquipments().size() >0 ){
 					 equipmentBool = true;
 				 }
-//				 if(userTeam.getOrganizationMembers() != null && userTeam.getOrganizationMembers().size() > 0){
-//					 managedOrganization();
-//					 orgBool = true;
+				 managedOrganization(userTeam);
 //				 }
 				 log4j.info("user teams:" + teamName);
 	    	}
-	    	init();
+	    	managedTeams();
+	    	
 	    }
 	    
-	    private void init() {
-			//get teams managed by Organization member
-			managedTeams();
-		}
-	    public void managedOrganization(){
+
+	    public void managedOrganization(Team userTeam){
 	    	
-	    	String location = JsfUtils.getInitParameter("webservice.url")+"/LDIRBackend/ws/user/"+ userDetails.getUserId() +"/organizations";
-	    	Client client = Client.create();
-	    	WebResource resource = client.resource(location);
-	    	Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(userDetails.getEmail(), userDetails.getPasswd()));
-	    	ClientResponse cr = builder.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
-	    	List<Organization> orgList = cr.getEntity(new GenericType<List<Organization>>(){});
-	    	log4j.info("user teams:" + orgList);
+	   
+			String location = JsfUtils.getInitParameter("webservice.url")+ "/LDIRBackend/ws/user/" + userDetails.getUserId()+"/organizations";
+			Client client = Client.create();
+			WebResource resource = client.resource(location);
+			Builder builder = resource.header(HttpHeaders.AUTHORIZATION,
+					AppUtils.generateCredentials(JsfUtils.getInitParameter("admin.user"), JsfUtils.getInitParameter("admin.password")));
+			ClientResponse cr = builder.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
+			List<Organization> organizationMembers = cr.getEntity(new GenericType<List<Organization>>() {});
+			
+		    int statusCode = cr.getStatus();
+			if(statusCode == 200){
+				if(organizationMembers != null && organizationMembers.size() > 0){
+				    for(Organization org: organizationMembers){
+				    	if(org.getOrganizationId() != 0 && org.getOrganizationId() > 0){		    		
+				    		cr = wsi.getOrganizationTeam(userDetails, org.getOrganizationId());
+				    		if(cr.getStatus() != 200){
+
+				    		}else{ 
+				    			Team  team = cr.getEntity(Team.class);
+				    			if(team.getTeamId().equals(teamId)){
+				    				orgBool = true;
+				    				break;
+				    			}
+				    			log4j.debug("--->  organization: " + team);
+				    		}
+				    }
+				}
+			}
+		    
+	    	}
+	    
 	    }
 	    public void managedTeams(){
 	    	

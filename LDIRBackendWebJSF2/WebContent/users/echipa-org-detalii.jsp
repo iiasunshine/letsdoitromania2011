@@ -96,7 +96,9 @@
                                     <h:commandButton action="#{teamBean.actionAddOrg}"
                                                      value="Inregistreaza organizatia"
                                                      id="confirma"
-                                                     styleClass="formButton"/>
+                                                     styleClass="formButton">
+                                             <f:param name="teamId" value="#{orgBean.teamId}"/>
+                                      </h:commandButton>               
                                     <input name="anuleaza" type="reset" class="formButton" value="Renunta" id="anuleaza" />
                                 </div>
                                 </h:panelGroup>
@@ -106,7 +108,9 @@
                                     <h:commandButton action="#{teamBean.actionEditOrg}"
                                                      value="Actualizeaza inregistrarile"
                                                      id="actualizeaza"
-                                                     styleClass="formButton"/>
+                                                     styleClass="formButton">
+                           				<f:param name="teamId" value="#{orgBean.teamId}"/>
+                                   </h:commandButton>    
                                     <input name="anuleaza" type="reset" class="formButton" value="Renunta" id="anuleaza" />
                                 </div>
                                 </h:panelGroup>
