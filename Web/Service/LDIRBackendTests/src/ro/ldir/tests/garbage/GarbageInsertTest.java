@@ -39,6 +39,7 @@ import com.sun.jersey.api.client.ClientResponse;
 public class GarbageInsertTest extends GarbageTest {
 	@Test
 	public void insertGarbage() {
+		System.out.println("insertGarbageTest");
 		Garbage garbage = new Garbage();
 		garbage.setX(5);
 		garbage.setY(5);
@@ -51,6 +52,7 @@ public class GarbageInsertTest extends GarbageTest {
 
 	@Test
 	public void insertNoCounty() {
+		System.out.println("insertNoCountyTest");
 		Garbage garbage = new Garbage();
 		garbage.setX(100);
 		garbage.setY(100);
@@ -62,6 +64,7 @@ public class GarbageInsertTest extends GarbageTest {
 	@Test
 	/* This must be executed after loading all Romanian counties */
 	public void insertTimis() {
+		System.out.println("insertTimis");
 		Garbage garbage = new Garbage();
 		garbage.setX(21.26648);
 		garbage.setY(45.80465);

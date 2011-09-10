@@ -37,12 +37,15 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response.Status;
 
+import ro.ldir.beans.GarbageGroupManagerLocal;
 import ro.ldir.beans.GarbageManagerLocal;
 import ro.ldir.beans.GeoManagerLocal;
 import ro.ldir.dto.ChartedArea;
 import ro.ldir.dto.Garbage;
+import ro.ldir.dto.GarbageGroup;
 import ro.ldir.map.formatter.ChartedAreasKMLFormatter;
 import ro.ldir.map.formatter.ChartedAreasTeamKMLFormatter;
+import ro.ldir.map.formatter.GarbageGroupsKMLFormatter;
 import ro.ldir.map.formatter.GarbagesKMLFormatter;
 
 /**
@@ -50,13 +53,16 @@ import ro.ldir.map.formatter.GarbagesKMLFormatter;
  */
 @Path("ws")
 public class MapWebService {
+	private GarbageGroupManagerLocal garbageGroupManager;
 	private GarbageManagerLocal garbageManager;
-	private GeoManagerLocal geoManager;;
+	private GeoManagerLocal geoManager;
 
 	public MapWebService() throws NamingException {
 		InitialContext ic = new InitialContext();
 		garbageManager = (GarbageManagerLocal) ic
 				.lookup("java:global/LDIRBackend/LDIRBackendEJB/GarbageManager!ro.ldir.beans.GarbageManager");
+		garbageGroupManager = (GarbageGroupManagerLocal) ic
+				.lookup("java:global/LDIRBackend/LDIRBackendEJB/GarbageGroupManager!ro.ldir.beans.GarbageGroupManager");
 		geoManager = (GeoManagerLocal) ic
 				.lookup("java:global/LDIRBackend/LDIRBackendEJB/GeoManager!ro.ldir.beans.GeoManager");
 	}
@@ -169,6 +175,21 @@ public class MapWebService {
 			@QueryParam("cb") String callbackPattern) {
 		List<Garbage> garbages = garbageManager.getGarbagesByCounty(county);
 		return new GarbagesKMLFormatter(garbages, callbackPattern).toString();
+	}
+
+	@GET
+	@Produces({ "application/vnd.google-earth.kml+xml" })
+	@Path("garbagegroups")
+	public String getGarbageGroups(@QueryParam("topLeftX") double topLeftX,
+			@QueryParam("topLeftY") double topLeftY,
+			@QueryParam("bottomRightX") double bottomRightX,
+			@QueryParam("bottomRightY") double bottomRightY,
+			@QueryParam("cb") String callbackPattern) {
+		List<GarbageGroup> garbageGroups = garbageGroupManager
+				.getGarbageGroups(topLeftX, topLeftY, bottomRightX,
+						bottomRightY);
+		return new GarbageGroupsKMLFormatter(garbageGroups, callbackPattern)
+				.toString();
 	}
 
 	@GET

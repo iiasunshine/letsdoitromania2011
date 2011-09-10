@@ -95,6 +95,7 @@ public class GarbageOperations extends GarbageTest {
 
 	@Test
 	public void imageDisplay() throws IOException {
+		System.out.println("imageDisplay");
 		File picture = new File(GARBAGE_PIC);
 		if (!picture.exists()) {
 			System.err.println(GARBAGE_PIC + " does not exist, skipping test!");
@@ -118,6 +119,7 @@ public class GarbageOperations extends GarbageTest {
 
 	@Test
 	public void imageThumb() throws IOException {
+		System.out.println("imageThumb");
 		File picture = new File(GARBAGE_PIC);
 		if (!picture.exists()) {
 			System.err.println(GARBAGE_PIC + " does not exist, skipping test!");
@@ -141,6 +143,7 @@ public class GarbageOperations extends GarbageTest {
 
 	@Before
 	public void insertGarbage() throws ClassNotFoundException, SQLException {
+		System.out.println("insertGarbage");
 		insertedGarbage = new Garbage();
 		insertedGarbage.setX(5);
 		insertedGarbage.setY(5);
@@ -161,6 +164,7 @@ public class GarbageOperations extends GarbageTest {
 
 	@Test
 	public void pictureInsert() throws IOException {
+		System.out.println("pictureInsert");
 		File picture = new File(GARBAGE_PIC);
 		if (!picture.exists()) {
 			System.err.println(GARBAGE_PIC + " does not exist, skipping test!");
@@ -196,15 +200,12 @@ public class GarbageOperations extends GarbageTest {
 
 	@After
 	public void removeGarbage() throws ClassNotFoundException, SQLException {
-		Connection c = DatabaseHelper.getDbConnection();
-		PreparedStatement s = c
-				.prepareStatement("DELETE FROM GARBAGE WHERE INSERTEDBY=?");
-		s.setInt(1, userId);
-		s.executeUpdate();
+		removeAllGarbages();
 	}
 
 	@Test
 	public void updateCoordinates() {
+		System.out.println("updateCoordinates");
 		WebResource r = client.resource(location + "/" + garbageId);
 		System.out.println("updated " + location + "/" + garbageId);
 		insertedGarbage.setX(4);
@@ -216,6 +217,7 @@ public class GarbageOperations extends GarbageTest {
 
 	@Test
 	public void updateNoCounty() {
+		System.out.println("updateNoCountry");
 		WebResource r = client.resource(location + "/" + garbageId);
 		insertedGarbage.setX(100);
 		ClientResponse cr = r

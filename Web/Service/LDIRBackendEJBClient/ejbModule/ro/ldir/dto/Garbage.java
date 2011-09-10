@@ -80,6 +80,7 @@ public class Garbage extends FieldAccessBean {
 	private String details;
 	private boolean dispersed;
 	private List<Team> enrolledCleaners;
+	private GarbageGroup garbageGroup;
 	private Integer garbageId;
 	private User insertedBy;
 	private int percentageGlass;
@@ -153,6 +154,13 @@ public class Garbage extends FieldAccessBean {
 	@XmlIDREF
 	public List<Team> getEnrolledCleaners() {
 		return enrolledCleaners;
+	}
+
+	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	@JoinColumn(name = "GARBAGEGROUPID")
+	@NonComparableField
+	public GarbageGroup getGarbageGroup() {
+		return garbageGroup;
 	}
 
 	/**
@@ -324,6 +332,11 @@ public class Garbage extends FieldAccessBean {
 	@NonTransferableField
 	public void setEnrolledCleaners(List<Team> enrolledCleaners) {
 		this.enrolledCleaners = enrolledCleaners;
+	}
+
+	@NonTransferableField
+	public void setGarbageGroup(GarbageGroup garbageGroup) {
+		this.garbageGroup = garbageGroup;
 	}
 
 	/**
