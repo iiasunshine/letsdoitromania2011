@@ -101,7 +101,8 @@ public class ChartedArea extends ClosedArea {
 	/**
 	 * @return the garbages
 	 */
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "chartedArea")
+	@OneToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE,
+			CascadeType.PERSIST, CascadeType.REFRESH }, mappedBy = "chartedArea")
 	@XmlIDREF
 	public Set<Garbage> getGarbages() {
 		return garbages;
