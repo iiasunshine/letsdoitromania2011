@@ -48,7 +48,7 @@ garbage.setX(...);
 garbage.setY(...);
 garbage.setVolume(...);
 
-// Make a Jersey client.
+// Create a Jersey client.
 Client client = Client.create();
 WebResource resource = client.resource(location);
 Builder builder = resource.header(HttpHeaders.AUTHORIZATION, "Basic " +
@@ -64,6 +64,22 @@ assert cr.getStatus() == 200;
 More examples are available in the unit tests implemented in the package
 \href{http://code.google.com/p/letsdoitromania2011/source/browse/#svn\%2Ftrunk\%2FWeb\%2FService\%2FLDIRBackendTests\%2Fsrc\%2Fro\%2Fldir\%2Ftests}{\texttt{ro.ldir.tests}}.
 
+\begin{note}
+The default Jersey client does not resolve references when fetching entities
+from the web service. That is, when fetching an user entity, any referenced
+organization, team, and so on will not be initialized, i.e., they will be set to
+\texttt{null}. To fetch these, you can either:
+\begin{itemize}
+  \item make a specialized call, e.g., call
+    \texttt{\footnotesize{\baselocation}ws/user/\{userid\}/organizations} to
+    fetch the organizations managed by an user, or
+  \item use a client produced by the
+    \href{http://code.google.com/p/letsdoitromania2011/source/browse/trunk/Web/Service/LDIRBackendEJBClient/ejbModule/ro/ldir/idresolver/LdirClientResolverFactory.java}{LdirClientResolverFactory}
+    factory. You should note that these clients resolve \emph{one-level
+    indirections only}, e.g., they fetch an user's organization, but they do not
+    fetch the teams in which these organizations are enrolled.
+\end{itemize}
+\end{note}
 \section{Inserting a garbage tag from JavaScript code}
 
 The following assumes a JSON serializer is used\footnote{Such as the one
