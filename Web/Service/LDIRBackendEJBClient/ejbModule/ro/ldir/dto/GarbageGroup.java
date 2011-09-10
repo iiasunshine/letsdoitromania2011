@@ -53,7 +53,7 @@ public class GarbageGroup extends FieldAccessBean {
 	 * If two garbage tags are closer than this constant, they should go inside
 	 * the same group.
 	 */
-	public static final double JOIN_RANGE = .02;
+	public static final double JOIN_RANGE = .1;
 	/**
 	 * The maximum numbers of garbage tags inside a group. Beyond this value,
 	 * neither new garbages are added to the group, nor group merges are
