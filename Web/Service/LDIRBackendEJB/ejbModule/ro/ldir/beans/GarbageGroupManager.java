@@ -151,7 +151,7 @@ public class GarbageGroupManager implements GarbageGroupManagerLocal {
 			if (g.getGarbageGroup() != null)
 				groups.add(g.getGarbageGroup());
 			else
-				logger.warning(g.getGarbageId() + " has no group!");
+				logger.finer(g.getGarbageId() + " has no group!");
 		}
 		return groups;
 	}
