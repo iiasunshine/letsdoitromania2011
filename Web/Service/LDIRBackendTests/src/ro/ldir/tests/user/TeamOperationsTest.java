@@ -37,6 +37,8 @@ public class TeamOperationsTest extends UserTest {
 
 	@After
 	public void cleanupTeam() {
+		if (insertedTeam == null)
+			return;
 		removeAssignment();
 		deleteTeam();
 	}
@@ -150,6 +152,43 @@ public class TeamOperationsTest extends UserTest {
 		ClientResponse cr = resourceBuilder(r).entity(cleaning,
 				MediaType.APPLICATION_XML).put(ClientResponse.class);
 		assertEquals(200, cr.getStatus());
+	}
+
+	@Test
+	public void testRenameTeam() {
+		Team renameTeam = new Team();
+		renameTeam.setTeamName(this.getClass().getName());
+		WebResource r = client.resource(BASE + "team/"
+				+ insertedTeam.getTeamId());
+		ClientResponse cr = resourceBuilder(r).entity(renameTeam,
+				MediaType.APPLICATION_XML).put(ClientResponse.class);
+		assertEquals(200, cr.getStatus());
+
+		r = client.resource(BASE + "user/" + userId + "/managedTeams");
+		cr = resourceBuilder(r).get(ClientResponse.class);
+		assertEquals(200, cr.getStatus());
+
+		Team managedTeams[] = cr.getEntity(Team[].class);
+		assertEquals(1, managedTeams.length);
+		assertEquals(renameTeam.getTeamName(), managedTeams[0].getTeamName());
+	}
+
+	@Test
+	public void testDeleteTeam() {
+		Team renameTeam = new Team();
+		renameTeam.setTeamName(this.getClass().getName());
+		WebResource r = client.resource(BASE + "team/"
+				+ insertedTeam.getTeamId());
+		ClientResponse cr = resourceBuilder(r).delete(ClientResponse.class);
+		assertEquals(200, cr.getStatus());
+
+		r = client.resource(BASE + "user/" + userId + "/managedTeams");
+		cr = resourceBuilder(r).get(ClientResponse.class);
+		assertEquals(200, cr.getStatus());
+
+		Team managedTeams[] = cr.getEntity(Team[].class);
+		assertEquals(0, managedTeams.length);
+		insertedTeam = null;
 	}
 
 	@Test
