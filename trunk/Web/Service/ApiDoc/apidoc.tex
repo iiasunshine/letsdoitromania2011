@@ -78,6 +78,11 @@ morestring=[b]"}
 \\[2mm]
 }
 
+\newcounter{notecounter}
+\newenvironment{note}{
+\par{\color{red}\textbf{Note \addtocounter{notecounter}{1}\arabic{notecounter}:}}}
+{}
+
 \newenvironment{entitydef}[1]{
 \begin{center}
 \colorbox{LightGrey}{\parbox{\textwidth}{
@@ -124,6 +129,7 @@ The \texttt{#1} entity:}
 \begin{document}
 
 \input{title}
+\tableofcontents
 \input{intro}
 \input{entities}
 \input{calls}
