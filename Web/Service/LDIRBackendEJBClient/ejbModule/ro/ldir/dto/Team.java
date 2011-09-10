@@ -183,6 +183,7 @@ public class Team extends FieldAccessBean {
 	 * @param chartedAreas
 	 *            the chartedAreas to set
 	 */
+	@NonTransferableField
 	public void setChartedAreas(Set<ChartedArea> chartedAreas) {
 		this.chartedAreas = chartedAreas;
 	}
@@ -191,6 +192,7 @@ public class Team extends FieldAccessBean {
 	 * @param equipments
 	 *            the equipments to set
 	 */
+	@NonTransferableField
 	public void setEquipments(List<Equipment> equipments) {
 		this.equipments = equipments;
 	}
@@ -208,6 +210,7 @@ public class Team extends FieldAccessBean {
 	 * @param organizationMembers
 	 *            the organizationMembers to set
 	 */
+	@NonTransferableField
 	public void setOrganizationMembers(List<Organization> organizationMembers) {
 		this.organizationMembers = organizationMembers;
 	}
@@ -225,6 +228,7 @@ public class Team extends FieldAccessBean {
 	 * @param teamManager
 	 *            the teamManager to set
 	 */
+	@NonTransferableField
 	public void setTeamManager(User teamManager) {
 		this.teamManager = teamManager;
 	}
@@ -241,6 +245,7 @@ public class Team extends FieldAccessBean {
 	 * @param volunteerMembers
 	 *            the volunteerMembers to set
 	 */
+	@NonTransferableField
 	public void setVolunteerMembers(List<User> volunteerMember) {
 		this.volunteerMembers = volunteerMember;
 	}
