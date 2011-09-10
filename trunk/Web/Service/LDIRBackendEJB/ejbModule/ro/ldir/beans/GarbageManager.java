@@ -117,6 +117,9 @@ public class GarbageManager implements GarbageManagerLocal {
 	EntityManager em;
 
 	@EJB
+	private GarbageGroupManager garbageGroupManager;
+
+	@EJB
 	private GeoManager geoManager;
 
 	/**
@@ -243,9 +246,9 @@ public class GarbageManager implements GarbageManagerLocal {
 		if (garbage.getEnrolledCleaners() != null)
 			for (Team team : garbage.getEnrolledCleaners()) {
 				team.getGarbages().remove(garbage);
-				em.merge(garbage);
+				em.merge(team);
 			}
-
+		garbageGroupManager.cleanupGroup(garbage);
 		em.remove(garbage);
 	}
 
@@ -397,6 +400,8 @@ public class GarbageManager implements GarbageManagerLocal {
 			user.setGarbages(new HashSet<Garbage>());
 		user.getGarbages().add(garbage);
 		garbage.setInsertedBy(user);
+
+		garbageGroupManager.findGroup(garbage, false);
 
 		em.persist(garbage);
 		em.flush();

@@ -8,6 +8,22 @@ calls are designed to serve as input for a mapping service, e.g., Google Maps.
 Therefore, they output a KML and are performed in anonymous fashion (no
 authentication is necessary).
 
+\subsection{Obtaining the garbage groups in a bounding box}
+
+\apilocation{get}{map/ws/garbagegroups/?topLeftX=\param{topLeftX}\&\\topLeftY=\param{topLeftY}\&bottomRightX=\param{bottomRightX}\&bottomRightY=\param{bottomRightY}\&\\cb=\param{callback\_url}}
+\begin{apidata}{parameters}
+  \begin{datalist}
+    \replyditem{\texttt{callback\_url} a pattern inserted in the KML description
+    where \texttt{\{\{\{ID\}\}\}} is replaced with the entity ID.}
+  \end{datalist}
+\end{apidata}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyditem{A KML of all the garbages in the bounding box.}
+  \end{datalist}
+\end{apidata}
+
+
 \subsection{Obtaining the garbage tags in a bounding box}
 
 \apilocation{get}{map/ws/garbages/?topLeftX=\param{topLeftX}\&\\topLeftY=\param{topLeftY}\&bottomRightX=\param{bottomRightX}\&bottomRightY=\param{bottomRightY}\&\\cb=\param{callback\_url}}

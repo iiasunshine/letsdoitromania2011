@@ -157,6 +157,7 @@ public class GarbageGeoTest extends GarbageTest {
 
 	@Test
 	public void testBoundingBox() {
+		System.out.println("testBoundingBox");
 		String p = location + "/bbox";
 		WebResource r = client.resource(p);
 
@@ -172,6 +173,7 @@ public class GarbageGeoTest extends GarbageTest {
 
 	@Test
 	public void testChartedAreaKML() {
+		System.out.println("testChartedAreaKML");
 		WebResource r = client.resource(mapLocation + "/chartedAreas");
 
 		MultivaluedMap<String, String> params = new MultivaluedMapImpl();
@@ -192,6 +194,7 @@ public class GarbageGeoTest extends GarbageTest {
 
 	@Test
 	public void testChartedAreaMembership() {
+		System.out.println("testChartedAreaMembership");
 		WebResource r = client.resource(geoLocation + "/chartedArea/"
 				+ chartAreaId);
 		ChartedArea area = r.get(ChartedArea.class);
@@ -202,6 +205,7 @@ public class GarbageGeoTest extends GarbageTest {
 
 	@Test
 	public void testCountyAreaMembership() {
+		System.out.println("testCountyAreaMembership");
 		WebResource r = client.resource(geoLocation + "/countyArea/"
 				+ countyAreaId);
 		CountyArea area = r.get(CountyArea.class);
@@ -212,6 +216,7 @@ public class GarbageGeoTest extends GarbageTest {
 
 	@Test
 	public void testCountySearch() {
+		System.out.println("testCountySearch");
 		WebResource r = client.resource(location + "/countySearch");
 		MultivaluedMap<String, String> params = new MultivaluedMapImpl();
 		params.add("county", "County");
@@ -223,7 +228,29 @@ public class GarbageGeoTest extends GarbageTest {
 	}
 
 	@Test
+	public void testGarbageGroupKML() {
+		System.out.println("testGarbageGroupKML");
+		WebResource r = client.resource(mapLocation + "/garbagegroups");
+
+		MultivaluedMap<String, String> params = new MultivaluedMapImpl();
+		params.add("topLeftX", "0");
+		params.add("topLeftY", "10");
+		params.add("bottomRightX", "10");
+		params.add("bottomRightY", "0");
+		params.add("cb", "<a href={{{ID}}}>blah</a>");
+
+		ClientResponse cr = r.queryParams(params)
+				.accept("application/vnd.google-earth.kml+xml")
+				.get(ClientResponse.class);
+		assertEquals(200, cr.getStatus());
+
+		String kml = cr.getEntity(String.class);
+		System.out.println(kml);
+	}
+
+	@Test
 	public void testGarbageInChartedArea() {
+		System.out.println("testGarbageInChartedArea");
 		WebResource r = client.resource(geoLocation + "/chartedArea/"
 				+ chartAreaId + "/garbages");
 		Garbage garbages[] = r.get(Garbage[].class);
@@ -232,6 +259,7 @@ public class GarbageGeoTest extends GarbageTest {
 
 	@Test
 	public void testGarbageInCountyArea() {
+		System.out.println("testGarbageInCountyArea");
 		WebResource r = client.resource(geoLocation + "/countyArea/"
 				+ countyAreaId + "/garbages");
 		Garbage garbages[] = r.get(Garbage[].class);
@@ -240,6 +268,7 @@ public class GarbageGeoTest extends GarbageTest {
 
 	@Test
 	public void testGarbageInTownArea() {
+		System.out.println("testGarbageInTownArea");
 		WebResource r = client.resource(geoLocation + "/townArea/" + townAreaId
 				+ "/garbages");
 		Garbage garbages[] = r.get(Garbage[].class);
@@ -248,6 +277,7 @@ public class GarbageGeoTest extends GarbageTest {
 
 	@Test
 	public void testGarbageKML() {
+		System.out.println("testGarbageKML");
 		WebResource r = client.resource(mapLocation + "/garbages");
 
 		MultivaluedMap<String, String> params = new MultivaluedMapImpl();
@@ -268,6 +298,7 @@ public class GarbageGeoTest extends GarbageTest {
 
 	@Test
 	public void testTownAreaMembership() {
+		System.out.println("testTownMembership");
 		WebResource r = client
 				.resource(geoLocation + "/townArea/" + townAreaId);
 		TownArea area = r.get(TownArea.class);
@@ -278,6 +309,7 @@ public class GarbageGeoTest extends GarbageTest {
 
 	@Test
 	public void testTownSearch() {
+		System.out.println("testTownSearch");
 		WebResource resource = client.resource(location + "/townSearch");
 		MultivaluedMap<String, String> params = new MultivaluedMapImpl();
 		params.add("town", "Town");

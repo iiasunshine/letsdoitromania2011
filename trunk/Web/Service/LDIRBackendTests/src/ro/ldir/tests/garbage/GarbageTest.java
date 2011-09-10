@@ -97,13 +97,20 @@ public abstract class GarbageTest {
 			SQLException {
 		Connection c = DatabaseHelper.getDbConnection();
 		PreparedStatement s = c
-				.prepareStatement("DELETE FROM GARBAGE WHERE INSERTEDBY=?");
+				.prepareStatement("DELETE FROM GARBAGEGROUP "
+						+ "WHERE GARBAGEGROUPID IN "
+						+ "(SELECT GARBAGEGROUPID FROM GARBAGE WHERE GARBAGE.INSERTEDBY=?)");
 		s.setInt(1, userId);
-		s.executeUpdate();
+		System.out.println("Deleted " + s.executeUpdate()
+				+ " garbage groups for " + userId);
+
+		s = c.prepareStatement("DELETE FROM GARBAGE WHERE INSERTEDBY=?");
+		s.setInt(1, userId);
+		System.out.println("Deleted " + s.executeUpdate() + " garbages");
 	}
 
-	@AfterClass
-	public static void removeCountyArea() {
+	private static void removeCountyArea() {
+		System.out.println("remove county");
 		WebResource resource = client.resource(geoLocation + "/countyArea/"
 				+ countyAreaId);
 		ClientResponse r = resource.delete(ClientResponse.class);
@@ -126,6 +133,7 @@ public abstract class GarbageTest {
 	public static void tearDownUser() throws ClassNotFoundException,
 			SQLException {
 		removeAllGarbages();
+		removeCountyArea();
 		UserSetup.removeTestUser(USER);
 	}
 }
