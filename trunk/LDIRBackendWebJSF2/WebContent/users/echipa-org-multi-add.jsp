@@ -55,7 +55,7 @@
  				<h:panelGroup rendered="#{orgBean.teamId ne 0}">
  					<h:form>
  							<div class="label1">
-                                <h1><h:outputText value="Inscriere in echipa"/></h1>
+                                <h1><h:outputText value="Editeaza echipa #{orgBean.teamName}"/></h1>
                             </div>
                             <br/>
  						<div class="label">
@@ -63,11 +63,12 @@
  						</div>
                         <h:inputText value="#{orgBean.teamName}" id="code" styleClass="formTextfield"/>
                                 <br/>
+                                <br/>                                
                                  <!-- BUTOANE -->
                                  
                                 <div style="margin-left: 150px;">
                                     <h:commandButton action="#{orgBean.actionChangeNameTeam}"
-                                                     value="Modifica echipa"
+                                                     value="Redenumeste echipa"
                                                      id="confirma1"
                                                      styleClass="formButton">
                                      <f:param name="teamId" value="#{orgBean.teamId}"/>
@@ -82,10 +83,10 @@
                                        <f:param name="teamId" value="#{orgBean.teamId}"/>
                                    </h:commandButton>   
                                 </div>
-                                 <br/>
+                                <br/>
  								<div style="margin-left: 150px;">
                                     <h:commandButton action="echipa_mem_detalii.jsf"
-                                                     value="Adauga membrii in echipa"
+                                                     value="Cod acces echipa"
                                                      id="confirma3"
                                                      styleClass="formButton">
                                          <f:param name="teamId" value="#{orgBean.teamId}"/>
@@ -96,10 +97,14 @@
                                     <h:commandButton action="echipa-mem-editare.jsf"
                                                      value="Modifica lista de membrii din echipa"
                                                      id="confirma4"
-                                                     styleClass="formButton">
+                                                     styleClass="formButton"
+                                                     disabled="true"                                                  
+                                                     >
                                        <f:param name="teamId" value="#{orgBean.teamId}"/>
-                                   </h:commandButton>  
+                                   </h:commandButton>
+                                <h:outputText value="Momentan inactiv"/>  
                                 </div>
+                                
                                  <br/>
                                  <h:panelGroup rendered="#{not orgBean.orgBool}">
                                 <div style="margin-left: 150px;">
@@ -149,9 +154,12 @@
                                     <h:commandButton action="#{orgBean.actionTeam}"
                                                      value="Aloca mormane pentru curatenie"
                                                      id="confirma7"
-                                                     styleClass="formButton">
+                                                     styleClass="formButton"
+                                                     disabled="true"
+                                                     >
                                         <f:param name="teamId" value="#{orgBean.teamId}"/>
                                    </h:commandButton>              
+                                <h:outputText value="Momentan inactiv"/>
                                 </div>
                                  <br/>
                                 <div style="margin-left: 150px;">

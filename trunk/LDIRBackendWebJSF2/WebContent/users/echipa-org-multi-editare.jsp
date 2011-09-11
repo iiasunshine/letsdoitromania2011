@@ -53,7 +53,7 @@
  	<h:messages warnClass="registerMessageError" infoClass="registerMessageOk" />
  					<h:form>
  							<div class="label1">
-                                <h1><h:outputText value="Inscriere in echipa"/></h1>
+                                <h1><h:outputText value="Adauga echipa noua:"/></h1>
                             </div>
                             <br/>
 

@@ -96,7 +96,7 @@
 							<br/>
                             <br/>   
                             <div class="form">
-                            	<h:outputText value="Pentru a adauga membrii in echipa ta trebuie sa le comunici acestora codul de acces."/>
+                            	<h:outputText value="Pentru a adauga membrii in echipa ta trebuie sa le comunici acestora codul de acces:  #{teamBean.userTeam.teamId}"/>
                             	<br/>
 							 </div>
                              <br/>
