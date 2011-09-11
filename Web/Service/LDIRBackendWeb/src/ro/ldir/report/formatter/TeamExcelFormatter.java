@@ -156,7 +156,7 @@ public class TeamExcelFormatter implements ExcelFormatter {
 	}
 
 	public final Workbook convert(Workbook wb) {
-		Sheet sheet = wb.createSheet("Mormane gunoi");
+		Sheet sheet = wb.createSheet("Liste echipe");
 
 		Row row = sheet.createRow(0);
 		row.createCell(0).setCellValue("ID");
@@ -185,7 +185,7 @@ public class TeamExcelFormatter implements ExcelFormatter {
 		row.createCell(23).setCellValue("List\u04d1 mormane alocate");
 		row.createCell(24).setCellValue("Sum\u04d1 volum mormane alocate");
 
-		int i = 0;
+		int i = 0; 
 		for (Team team : teams) {
 			if (team.getOrganizationMembers() == null
 					|| team.getOrganizationMembers().size() == 0) {
@@ -197,6 +197,7 @@ public class TeamExcelFormatter implements ExcelFormatter {
 			}
 			for (Organization org : team.getOrganizationMembers()) {
 				i++;
+				row = sheet.createRow(i);
 				teamHeader(row, team);
 				organization(row, org);
 				teamFooter(row, team);
