@@ -120,6 +120,19 @@ public interface UserManagerLocal {
 	public void invalidAccess(String email);
 
 	/**
+	 * Mail a chart package to the logged in user.
+	 * 
+	 * @param userId
+	 *            The user to whom the package should be mailed.
+	 * @param origin
+	 *            The location to build maps.
+	 * @param garbages
+	 *            The garbages to include in the package.
+	 */
+	public void mailGarbagePackage(int userId, String origin,
+			Set<Integer> garbages);
+
+	/**
 	 * Generates a password reset token. The token is sent via email to the
 	 * user.
 	 * 

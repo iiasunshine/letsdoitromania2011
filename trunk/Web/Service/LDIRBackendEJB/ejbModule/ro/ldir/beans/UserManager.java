@@ -26,6 +26,7 @@ package ro.ldir.beans;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -45,6 +46,7 @@ import javax.persistence.Query;
 import javax.persistence.TemporalType;
 
 import ro.ldir.beans.security.SecurityHelper;
+import ro.ldir.dto.Garbage;
 import ro.ldir.dto.Team;
 import ro.ldir.dto.User;
 import ro.ldir.dto.User.Activity;
@@ -255,6 +257,22 @@ public class UserManager implements UserManagerLocal {
 			userMailer.sendAccountResetMessage(user.getEmail());
 		}
 		em.merge(user);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ro.ldir.beans.UserManagerLocal#mailGarbagePackage(int,
+	 * java.lang.String, java.util.Set)
+	 */
+	@Override
+	public void mailGarbagePackage(int userId, String origin,
+			Set<Integer> garbageIds) {
+		User user = getUser(userId);
+		Set<Garbage> garbages = new HashSet<Garbage>();
+		for (Integer garbageId : garbageIds)
+			garbages.add(em.find(Garbage.class, garbageId));
+		userMailer.sendGarbagePackage(user, origin, garbages);
 	}
 
 	/**

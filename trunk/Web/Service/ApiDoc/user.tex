@@ -158,4 +158,27 @@ The logged in user must be an ``ADMIN''.
 The logged in user must be an ``ADMIN'', ``ORGANIZER'', ``ORGANIZER\_MULTI''. 
 \end{apidata}
 
+\subsection{Garbage package}
+
+The following call generates a PDF containing a garbage package. The PDF will be
+sent by email to the specified user.
+
+\apilocation{get}{ws/user/\param{userId}/garbagePackage?origin=\param{origin}\&\\garbage=\param{garbageId}}
+\begin{apidata}{params}
+  \begin{datalist}
+    \item \texttt{userId} is the ID of the user to whom the package should be
+      sent.
+    \item \texttt{origin} is the beginning of the path which is displayed in the
+      package for all of the specified garbages.
+    \item \texttt{garbageId} represents the garbages to be included in the
+      package. This parameter can be repeated to include several garbages.
+  \end{datalist}
+\end{apidata}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyditem{an email}{if the operation succeeds.}
+    \replyitem{200}{if the operation succeeds.}
+    \replyitem{500}{if another error occurs.}
+  \end{datalist}
+\end{apidata}
 

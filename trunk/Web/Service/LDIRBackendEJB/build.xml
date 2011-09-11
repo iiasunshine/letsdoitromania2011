@@ -7,6 +7,7 @@
 		<pathelement location="build/classes" />
 		<path refid="GlassFish 3.1 [GlassFish 3.1].libraryclasspath" />
 		<path refid="EAR Libraries.libraryclasspath" />
+		<path refid="itext.libraryclasspath" />
 	</path>
 
 	<target name="build-ejbclient">

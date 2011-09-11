@@ -186,6 +186,15 @@ public class UserWebService {
 	}
 
 	@GET
+	@Path("{userId:[0-9]+}/garbagePackage")
+	public Response mailGarbagePackage(@PathParam("userId") Integer userId,
+			@QueryParam("origin") String origin,
+			@QueryParam("garbage") Set<Integer> garbages) {
+		userManager.mailGarbagePackage(userId, origin, garbages);
+		return Response.ok().build();
+	}
+
+	@GET
 	@Produces({ "application/json", "application/xml" })
 	@Path("report")
 	public List<User> report(@QueryParam("county") Set<String> counties,
