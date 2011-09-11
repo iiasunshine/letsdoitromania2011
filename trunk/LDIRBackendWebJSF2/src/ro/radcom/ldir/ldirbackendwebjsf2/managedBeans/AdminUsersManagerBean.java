@@ -175,6 +175,54 @@ public class AdminUsersManagerBean {
             }
         }
     }
+        
+        public void actionGenerateTeamExcel() {
+        	
+            String encodeCountyId = encodeUrl(selectedCounty);	
+            ClientResponse cr = wsi.getTeamListByFilters(userDetails,
+            		encodeCountyId,
+                    selectedBirthYear,
+                    selectedRole,
+                    AppUtils.parseToInt(selectedMinGarbages, -1),
+                    AppUtils.parseToInt(selectedMaxGarbages, -1),
+                    "application/vnd.ms-excel");
+            log4j.debug("---> cr.getStatus()=" + cr.getStatus());
+            if (cr.getStatus() != 200) {
+                log4j.fatal("nu s-a reusit generarea (statusCode=" + cr.getStatus() + " responseStatus=" + cr.getResponseStatus() + ")");
+                JsfUtils.addWarnBundleMessage("internal_err");
+                return;
+            } else {
+                File tempFile = cr.getEntity(File.class);
+                log4j.debug("---> temp file: " + tempFile.getAbsolutePath());
+
+                String relativePath = "temp/statistici/" + userDetails.getUserId() + "/teams.xls";
+                String previewFilePath = JsfUtils.makeContextPath(relativePath);
+                File file = new File(previewFilePath);
+                if (!file.getParentFile().isDirectory()) {
+                    if (!file.getParentFile().mkdirs()) {
+                        log4j.warn("nu s-a putut crea drectorul pentru preview: " + file.getParentFile().getAbsolutePath());
+                    }
+                }
+
+                if (file.isFile()) {
+                    if (!file.delete()) {
+                        log4j.warn("nu s-a putut sterge fisierul existent: " + file.getAbsolutePath());
+                    }
+                }
+
+                log4j.debug("---> file: " + file.getAbsolutePath());
+                if (!tempFile.renameTo(file)) {
+                    log4j.warn("nu s-a putut redenumi fisierul temporar: " + tempFile.getAbsolutePath());
+                } else {
+                    try {
+                        FacesContext.getCurrentInstance().getExternalContext().redirect(JsfUtils.getHttpRequest().getContextPath()+"/"+relativePath);
+                        return;
+                    } catch (Exception ex) {
+                        log4j.warn("Eroare RequestForward: " + ex);
+                    }
+                }
+            }
+        }
 
 
     public List<SelectItem> getCountyItems() {

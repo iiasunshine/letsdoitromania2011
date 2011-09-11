@@ -350,6 +350,37 @@ public class WSInterface {
         return cr;
 
     }
+    
+    public ClientResponse getTeamListByFilters(User admin, String county, int birthYear, String role, int minGarbages, int maxGarbages, String accept) {
+        String location = WS_URL + "/LDIRBackend/ws/team/report?";
+        if (county != null && county.length() > 0) {
+            location += "county=" + county + "&";
+        }
+        if (birthYear > 0) {
+            location += "birthyear=" + birthYear + "&";
+        }
+        if (role != null && role.length() > 0) {
+            location += "role=" + role + "&";
+        }
+        if (minGarbages >= 0) {
+            location += "minGarbages=" + minGarbages + "&";
+        }
+        if (maxGarbages >= 0) {
+            location += "maxGarbages=" + maxGarbages + "&";
+        }
+
+        log4j.debug("---> URL: " + location);
+
+        WebResource resource = client.resource(location);
+        Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(admin.getEmail(), admin.getPasswd()));
+        if (accept != null && accept.length() > 0) {
+            builder.accept(accept);
+        }
+        ClientResponse cr = builder.entity(null, MediaType.TEXT_XML_TYPE).get(ClientResponse.class);
+
+        return cr;
+
+    }
 
     public ClientResponse reinitUser(User userDetails) {
         String pass = userDetails.getPasswd();
