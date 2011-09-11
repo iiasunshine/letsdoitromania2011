@@ -161,6 +161,15 @@ public interface TeamManagerLocal {
 	public void removeEquipment(int teamId, int equipmentId);
 
 	/**
+	 * Lists all teams that match the given parameters. Use {@code null} if you
+	 * do not want to use any of the query parameters.
+	 * 
+	 * @param counties
+	 *            The county where the team manager is located.
+	 */
+	public List<Team> report(Set<String> counties);
+
+	/**
 	 * Lists all teams that have an area assigned to be charted and match the
 	 * given parameters. Use {@code null} if you do not want to use any of the
 	 * query parameters.
