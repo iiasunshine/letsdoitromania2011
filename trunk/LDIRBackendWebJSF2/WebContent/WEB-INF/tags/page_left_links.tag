@@ -6,13 +6,14 @@
 <%@attribute name="role"%>
 
 <div id="leftColumn">
- <c:if test="${(role eq 'ADMIN') or (role eq 'VOLUNTEER')}">				
+ <c:if test="${(role eq 'ADMIN') or (role eq 'VOLUNTEER') or (role eq 'ORGANIZER')}">				
   <h:panelGroup rendered="#{teamBean.managerBool}">
-					  <h3>
-					  	<a href="${pageContext.servletContext.contextPath}/users/echipa_mem_detalii.jsf">
-					  	   <h:outputText value="» #{msg.echipa_add_mem_link}" />
+  					  <h3>
+					  	<a href="${pageContext.servletContext.contextPath}/users/echipa-add-editare.jsf">
+					  	   <h:outputText value="» #{msg.echipa_add_team_link}" />
 					  	</a>
-					  </h3>
+					  </h3>			    
+  
 					  <h3>
 					  	<a href="${pageContext.servletContext.contextPath}/users/echipa-mem-editare.jsf">
 					  	   <h:outputText value="» #{msg.echipa_mod_mem_link}" />
@@ -47,11 +48,6 @@
 					  </h3>
 		</h:panelGroup>				  
 </h:panelGroup>	
-					  <h3>
-					  	<a href="${pageContext.servletContext.contextPath}/users/echipa-add-editare.jsf">
-					  	   <h:outputText value="» #{msg.echipa_add_team_link}" />
-					  	</a>
-					  </h3>				    
 	<h:panelGroup rendered="#{not teamBean.managerBool}">  	
 					  <h3>
 					  	<a href="${pageContext.servletContext.contextPath}/users/echipa-del-editare.jsf">
