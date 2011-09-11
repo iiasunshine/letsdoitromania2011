@@ -92,7 +92,12 @@
                                                            rendered="#{fn:length(adminUsersManagerBean.usersList) gt 0}"
                                                    styleClass="formButtonLeft"
                                                    value="Export lista utilizatori"/>
+                                        <a4j:commandButton actionListener="#{adminUsersManagerBean.actionGenerateTeamExcel}"
+                                                           rendered="#{fn:length(adminUsersManagerBean.usersList) gt 0}"
+                                                   styleClass="formButtonLeft"
+                                                   value="Export lista echipe"/>
                                     </h1>
+                                    
                                     <div id="listHeaderContainer">
                                         <div class="listHeader">Nume</div>
                                         <div class="listHeader">Prenume</div>
