@@ -60,6 +60,8 @@ import ro.ldir.report.formatter.AssignedChartedAreasExcelFormatter;
 import ro.ldir.report.formatter.ExcelFormatter;
 import ro.ldir.report.formatter.GenericXlsFormatter;
 import ro.ldir.report.formatter.GenericXlsxFormatter;
+import ro.ldir.report.formatter.TeamCsvFormatter;
+import ro.ldir.report.formatter.TeamExcelFormatter;
 
 import com.sun.jersey.api.client.ClientResponse.Status;
 
@@ -129,14 +131,6 @@ public class TeamWebService {
 	}
 
 	@DELETE
-	@Path("{teamId:[0-9]+}/equipmentId/{equipmentId:[0-9]+}")
-	public Response deleteEquipmentById(@PathParam("teamId") int teamId,
-			@PathParam("equipmentId") int equipmentId) {
-		teamManager.deleteEquipmentById(teamId, equipmentId);
-		return Response.ok().build();
-	}
-
-	@DELETE
 	@Path("{teamId:[0-9]+}/equipment/{equipmentIdx:[0-9]+}")
 	public Response deleteEquipment(@PathParam("teamId") int teamId,
 			@PathParam("equipmentIdx") int equipmentIdx) {
@@ -149,6 +143,14 @@ public class TeamWebService {
 			return Response.status(Status.INTERNAL_SERVER_ERROR)
 					.entity(e.getCausedByException().getMessage()).build();
 		}
+		return Response.ok().build();
+	}
+
+	@DELETE
+	@Path("{teamId:[0-9]+}/equipmentId/{equipmentId:[0-9]+}")
+	public Response deleteEquipmentById(@PathParam("teamId") int teamId,
+			@PathParam("equipmentId") int equipmentId) {
+		teamManager.deleteEquipmentById(teamId, equipmentId);
 		return Response.ok().build();
 	}
 
@@ -301,6 +303,13 @@ public class TeamWebService {
 
 	@GET
 	@Produces({ "application/json", "application/xml" })
+	@Path("report")
+	public List<Team> report(@QueryParam("county") Set<String> counties) {
+		return teamManager.report(counties);
+	}
+
+	@GET
+	@Produces({ "application/json", "application/xml" })
 	@Path("reportChartedArea")
 	public List<Team> reportChartedArea(
 			@QueryParam("county") Set<String> counties,
@@ -355,6 +364,39 @@ public class TeamWebService {
 						chartedAreaNames, userIds),
 				new AssignedChartedAreaFilter(counties, chartedAreaNames,
 						userIds));
+		byte report[] = new GenericXlsxFormatter(fmt).getBytes();
+		return Response
+				.ok(report)
+				.header("Content-Disposition",
+						"attachment; filename=assignedreport.xlsx").build();
+	}
+
+	@GET
+	@Produces({ "text/csv" })
+	@Path("report")
+	public String reportCsv(@QueryParam("county") Set<String> counties) {
+		return new TeamCsvFormatter(teamManager.report(counties)).toString();
+	}
+
+	@GET
+	@Produces({ "application/vnd.ms-excel" })
+	@Path("report")
+	public Response reportXls(@QueryParam("county") Set<String> counties) {
+		ExcelFormatter fmt = new TeamExcelFormatter(
+				teamManager.report(counties));
+		byte report[] = new GenericXlsFormatter(fmt).getBytes();
+		return Response
+				.ok(report)
+				.header("Content-Disposition",
+						"attachment; filename=assignedreport.xls").build();
+	}
+
+	@GET
+	@Produces({ "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" })
+	@Path("report")
+	public Response reportXlsx(@QueryParam("county") Set<String> counties) {
+		ExcelFormatter fmt = new TeamExcelFormatter(
+				teamManager.report(counties));
 		byte report[] = new GenericXlsxFormatter(fmt).getBytes();
 		return Response
 				.ok(report)

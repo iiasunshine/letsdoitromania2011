@@ -347,6 +347,27 @@ public class TeamManager implements TeamManagerLocal {
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see ro.ldir.beans.TeamManagerLocal#report(java.util.Set)
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	@RolesAllowed({ "ADMIN", "ORGANIZER", "ORGANIZER_MULTI" })
+	public List<Team> report(Set<String> counties) {
+		Query query;
+		if (counties == null || counties.size() == 0)
+			query = em.createQuery("SELECT t FROM Team t");
+		else {
+			query = em.createQuery("SELECT t FROM Team t "
+					+ "INNER JOIN t.teamManager tm WHERE "
+					+ "tm.county IN :counties");
+			query.setParameter("counties", counties);
+		}
+		return query.getResultList();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see
 	 * ro.ldir.beans.TeamManagerLocal#reportAssignedChartedAreas(java.util.Set,
 	 * java.util.Set, java.util.Set)
