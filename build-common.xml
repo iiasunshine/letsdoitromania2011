@@ -27,6 +27,11 @@
 		<pathelement location="${ejbclient.jar}" />
 	</path>
 
+    <path id="itext.libraryclasspath">
+        <pathelement location="${app.location}/EarContent/lib/itextpdf-5.1.2.jar" />
+        <pathelement location="${app.location}/EarContent/lib/itext-xtra-5.1.2.jar" />
+	</path>
+
 	<path id="GlassFish 3.1 [GlassFish 3.1].libraryclasspath">
 		<pathelement location="${glassfish.home}/glassfish/modules/jsf-api.jar" />
 		<pathelement location="${glassfish.home}/glassfish/modules/jsf-impl.jar" />
