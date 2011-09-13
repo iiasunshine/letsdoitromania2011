@@ -53,11 +53,14 @@ public class UserExcelFormatter implements ExcelFormatter {
 		row.createCell(3).setCellValue("Telefon");
 		row.createCell(4).setCellValue("Rol");
 		row.createCell(5).setCellValue("Jude\u0163");
-		row.createCell(6).setCellValue("Data \u00eenregistr\u04d1rii");
-		row.createCell(7).setCellValue("ID");
-		row.createCell(8).setCellValue("Nr. mormane");
-		row.createCell(9).setCellValue("Nr. zone");
-		row.createCell(10).setCellValue("Activitate");
+		row.createCell(6).setCellValue("Oras");
+		row.createCell(7).setCellValue("Data \u00eenregistr\u04d1rii");
+		row.createCell(8).setCellValue("ID");
+		row.createCell(9).setCellValue("Nr. mormane");
+		row.createCell(10).setCellValue("Nr. zone");
+		row.createCell(11).setCellValue("Activitate");
+		row.createCell(12).setCellValue("Numar Organizatii introduse");
+		row.createCell(13).setCellValue("Membru in echipa");
 
 		for (int i = 0; i < users.size(); i++) {
 			row = sheet.createRow(i + 1);
@@ -69,29 +72,30 @@ public class UserExcelFormatter implements ExcelFormatter {
 			row.createCell(3).setCellValue(user.getPhone());
 			row.createCell(4).setCellValue(user.getRole());
 			row.createCell(5).setCellValue(user.getCounty());
+			row.createCell(6).setCellValue(user.getTown());
 
 			if (user.getRecordDate() != null) {
 				CellStyle cellStyle = wb.createCellStyle();
 				cellStyle.setDataFormat(createHelper.createDataFormat()
 						.getFormat("m/d/yy h:mm"));
-				Cell dateCell = row.createCell(6);
+				Cell dateCell = row.createCell(7);
 				dateCell.setCellValue(user.getRecordDate());
 				dateCell.setCellStyle(cellStyle);
 			}
 
-			row.createCell(7, Cell.CELL_TYPE_NUMERIC).setCellValue(
+			row.createCell(8, Cell.CELL_TYPE_NUMERIC).setCellValue(
 					user.getUserId());
 
 			if (user.getGarbages() == null)
-				row.createCell(8, Cell.CELL_TYPE_NUMERIC).setCellValue(0);
-			else
-				row.createCell(8, Cell.CELL_TYPE_NUMERIC).setCellValue(
-						user.getGarbages().size());
-			if (user.getMemberOf() == null
-					|| user.getMemberOf().getChartedAreas() == null)
 				row.createCell(9, Cell.CELL_TYPE_NUMERIC).setCellValue(0);
 			else
 				row.createCell(9, Cell.CELL_TYPE_NUMERIC).setCellValue(
+						user.getGarbages().size());
+			if (user.getMemberOf() == null
+					|| user.getMemberOf().getChartedAreas() == null)
+				row.createCell(10, Cell.CELL_TYPE_NUMERIC).setCellValue(0);
+			else
+				row.createCell(10, Cell.CELL_TYPE_NUMERIC).setCellValue(
 						user.getMemberOf().getChartedAreas().size());
 
 			StringBuffer ab = new StringBuffer();
@@ -99,9 +103,15 @@ public class UserExcelFormatter implements ExcelFormatter {
 			if (activities != null && activities.size() > 0) {
 				for (User.Activity activity : activities)
 					ab.append(activity.getReportName() + ", ");
-				row.createCell(10).setCellValue(
+				row.createCell(11).setCellValue(
 						ab.substring(0, ab.length() - 2));
 			}
+
+			row.createCell(12, Cell.CELL_TYPE_NUMERIC).setCellValue(
+					user.getOrganizations().size());
+			row.createCell(13, Cell.CELL_TYPE_NUMERIC).setCellValue(
+					user.getMemberOf());
+			
 		}
 		return wb;
 	}
