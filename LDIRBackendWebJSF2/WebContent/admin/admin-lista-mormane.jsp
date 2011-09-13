@@ -28,7 +28,7 @@
                                 <div>
                                     <h3>Judet<br/>
                                         <h:selectOneMenu value="#{adminGarbageManagerBean.countyId}">
-                                            <f:selectItem itemLabel="Toate" itemValue=""/>
+                                            <f:selectItem itemLabel="Toate" itemValue="Toate"/>
                                             <f:selectItems value="#{adminGarbageManagerBean.countyItems}"/>
                                         </h:selectOneMenu>
                                     </h3>

@@ -210,7 +210,7 @@ public class AdminGarbageManagerBean {
     }
 
     private void initGarbageList() {
-        if ((countyId == null || countyId.length() == 0)
+        if ((countyId == null)
                 && (gridId == null || gridId.length() == 0)
                 && (userId == null || userId.length() == 0)
                 && (addDate == null)) {
@@ -220,7 +220,14 @@ public class AdminGarbageManagerBean {
         } else {
             noFilter = false;
         }
-        String encodeCountyId = encodeUrl(countyId);
+
+        
+        String encodeCountyId=encodeUrl(countyId);
+        if (countyId.equals("Toate")==true || countyId.equals("") == true){
+        	encodeCountyId=null;
+        	countyId="Toate";
+        };
+        
         ClientResponse cr = wsi.getGarbageListByFilters(userDetails,
         		encodeCountyId,
                 AppUtils.parseToInt(gridId),
@@ -249,7 +256,14 @@ public class AdminGarbageManagerBean {
 	 }
 
     public void actionGenerateExcel() {
-        String encodeCountyId = encodeUrl(countyId);
+        
+    	
+    	String encodeCountyId=encodeUrl(countyId);
+        if (countyId.equals("Toate")==true || countyId.equals("") == true || countyId == null){
+        	encodeCountyId=null;
+        	countyId="Toate";
+        };
+        
         ClientResponse cr = wsi.getGarbageListByFilters(userDetails,
         		encodeCountyId,
                 AppUtils.parseToInt(gridId),
