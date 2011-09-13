@@ -80,11 +80,18 @@ public class TeamManagerBean {
 			ClientResponse cr = wsi.getTeam(userDetails, teamId);
 	        int statusCode = cr.getStatus();
 	        if(statusCode !=200){
+				 cr = wsi.getMemberOfTeam(userDetails.getUserId());
+				if (cr.getStatus() != 200) {
+					JsfUtils.addWarnBundleMessage("warrning_no_team");
+				} else {
+					userTeam = cr.getEntity(Team.class);
+					initTeam();
+				}
 				log4j.debug("nu s-a reusit obtinerea echipei utlizatorului curent (statusCode="
 						+ cr.getStatus()+ " responseStatus="+ cr.getResponseStatus() + ")");
+	        }else{
+	        	userTeam = cr.getEntity(Team.class);
 	        }
-
-	        userTeam = cr.getEntity(Team.class);
 			}catch(Exception ex){
 				 log4j.info("exception ->"+ex+", team ->"+teamId);
 			}
@@ -101,12 +108,16 @@ public class TeamManagerBean {
 			}
 			
 		}
+		if(userTeam != null && userTeam.getEquipments()!= null &&
+				userTeam.getEquipments().size() > 0){
+			equipmentBool = true;
+		}
 		if(sourcePage.indexOf(PAGE_EQIPMENTS) > -1){
 			initEquipments();
 		}
-		if(sourcePage.indexOf(PAGE_ORGANIZATION)> -1){
+//		if(sourcePage.indexOf(PAGE_ORGANIZATION)> -1){
 			initOrganization(teamId);
-		}
+//		}
 		initManager();
 		initTeamMembers();	
 
@@ -222,12 +233,11 @@ public class TeamManagerBean {
 					    			//organization = org;
 					    		}else{ 
 					    			Team  team = cr.getEntity(Team.class);
-					    			if(team.getTeamId().equals(teamId)){
+					    			if(team.getTeamId().equals(userTeam.getTeamId())){
 					    				organization = org;
-					    				orgBool = true;
-					    				break;
+				    					orgBool = true;
+				    					break;
 					    			}
-					    			log4j.debug("--->  organization: " + team);
 					    		}
 					    		}catch(Exception ex){
 					    			orgBool = true;
@@ -608,6 +618,7 @@ public class TeamManagerBean {
 	    if(role.equals(ORGANIZER_MULTI))
 	      return NavigationValues.TEAM_ORG_MULTI_FAIL;
 	    else {
+	    	equipmentBool = true;
 	      return NavigationValues.TEAM_ADD_EQUI_FAIL;
 	    }
 	}
