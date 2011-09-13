@@ -97,12 +97,10 @@
                                     <h:commandButton action="echipa-mem-editare.jsf"
                                                      value="Modifica lista de membrii din echipa"
                                                      id="confirma4"
-                                                     styleClass="formButton"
-                                                     disabled="true"                                                  
+                                                     styleClass="formButton"                                                 
                                                      >
                                        <f:param name="teamId" value="#{orgBean.teamId}"/>
                                    </h:commandButton>
-                                <h:outputText value="Momentan inactiv"/>  
                                 </div>
                                 
                                  <br/>
