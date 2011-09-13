@@ -81,6 +81,9 @@
                                                            styleClass="formButtonLeft"
                                                            value="Export lista mormane"/>
                                     </h1>
+                                    <h:outputText value="Exporturile Excel contin mai multe campuri decat sunt afisate pe pagina web." rendered="#{fn:length(adminGarbageManagerBean.garbageList) gt 0}"/>
+                                    <br/><br/>
+                                    
                                     <div id="listHeaderContainer">
                                         <div class="listHeader">ID morman</div>
                                         <div class="listHeader">Judet</div>

@@ -97,6 +97,8 @@
                                                    styleClass="formButtonLeft"
                                                    value="Export lista echipe"/>
                                     </h1>
+                                    <h:outputText value="Exporturile Excel contin mai multe campuri decat sunt afisate pe pagina web." rendered="#{fn:length(adminUsersManagerBean.usersList) gt 0}"/>
+                                    <br/><br/>
                                     
                                     <div id="listHeaderContainer">
                                         <div class="listHeader">Nume</div>
