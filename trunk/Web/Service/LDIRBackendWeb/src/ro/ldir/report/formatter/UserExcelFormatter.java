@@ -110,7 +110,7 @@ public class UserExcelFormatter implements ExcelFormatter {
 			row.createCell(12, Cell.CELL_TYPE_NUMERIC).setCellValue(
 					user.getOrganizations().size());
 			row.createCell(13, Cell.CELL_TYPE_NUMERIC).setCellValue(
-					user.getMemberOf());
+					user.getMemberOf().getTeamID());
 			
 		}
 		return wb;
