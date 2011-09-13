@@ -59,8 +59,6 @@ public class UserExcelFormatter implements ExcelFormatter {
 		row.createCell(9).setCellValue("Nr. mormane");
 		row.createCell(10).setCellValue("Nr. zone");
 		row.createCell(11).setCellValue("Activitate");
-		row.createCell(12).setCellValue("Numar Organizatii introduse");
-		row.createCell(13).setCellValue("Membru in echipa");
 
 		for (int i = 0; i < users.size(); i++) {
 			row = sheet.createRow(i + 1);
@@ -107,10 +105,7 @@ public class UserExcelFormatter implements ExcelFormatter {
 						ab.substring(0, ab.length() - 2));
 			}
 
-			row.createCell(12, Cell.CELL_TYPE_NUMERIC).setCellValue(
-					user.getOrganizations().size());
-			row.createCell(13, Cell.CELL_TYPE_NUMERIC).setCellValue(
-					user.getMemberOf().getTeamID());
+			        
 			
 		}
 		return wb;
