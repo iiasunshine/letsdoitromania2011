@@ -246,7 +246,7 @@ public class Team extends FieldAccessBean {
 	 *            the volunteerMembers to set
 	 */
 	@NonTransferableField
-	public void setVolunteerMembers(List<User> volunteerMember) {
-		this.volunteerMembers = volunteerMember;
+	public void setVolunteerMembers(List<User> volunteerMembers) {
+		this.volunteerMembers = volunteerMembers;
 	}
 }

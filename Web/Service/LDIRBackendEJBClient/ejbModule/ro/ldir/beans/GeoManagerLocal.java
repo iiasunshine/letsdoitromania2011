@@ -47,7 +47,7 @@ public interface GeoManagerLocal {
 	 * 
 	 * @param chartedAreaId
 	 *            The ID of the chart area to search for.
-	 * @return
+	 * @return the charted area matching the ID.
 	 */
 	public ChartedArea getChartedArea(int chartedAreaId);
 
@@ -99,13 +99,17 @@ public interface GeoManagerLocal {
 	 * Gets all charted areas assigned to a team.
 	 * 
 	 * @param teamId
-	 * @return
+	 *            The team ID to search for.
+	 * @return the list of charted areas charted by the provided team
 	 */
 	public List<ChartedArea> getChartedAreasByChartedBy(int teamId);
 
 	/**
+	 * Gets all charted areas in a county.
+	 * 
 	 * @param county
-	 * @return
+	 *            The county to search in.
+	 * @return A list of all charted areas in the county.
 	 */
 	public List<ChartedArea> getChartedAreasByCounty(String county);
 
@@ -114,7 +118,7 @@ public interface GeoManagerLocal {
 	 * 
 	 * @param countyAreaId
 	 *            The ID of the county area to search for.
-	 * @return
+	 * @return The county area that matches the given ID.
 	 */
 	public CountyArea getCountyArea(int countyAreaId);
 
@@ -132,7 +136,7 @@ public interface GeoManagerLocal {
 	 * 
 	 * @param townAreaId
 	 *            The ID of the town area to search for.
-	 * @return
+	 * @return The town area matching the given ID.
 	 */
 	public TownArea getTownArea(int townAreaId);
 

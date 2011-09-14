@@ -172,7 +172,7 @@ public interface UserManagerLocal {
 
 	/**
 	 * Updates the password of a user. The token must match the one set in the
-	 * database. It must be set with {@link #passwdResetToken(int)}.
+	 * database. It must be set with {@link #passwdResetToken(String)}.
 	 * 
 	 * @param userId
 	 *            The user ID to set the password for.
@@ -200,8 +200,8 @@ public interface UserManagerLocal {
 	/**
 	 * Sets the user's security role.
 	 * 
-	 * @param user
-	 *            Id The user to change
+	 * @param userId
+	 *            ID The user to change
 	 * @param role
 	 *            The new security role.
 	 */

@@ -38,7 +38,7 @@ import ro.ldir.dto.ChartedArea;
 import ro.ldir.dto.ClosedArea;
 
 /**
- * Tester for the {@link ro.ldir.dro.ClosedArea} class.
+ * Tester for the {@link ro.ldir.dto.ClosedArea} class.
  */
 public class ClosedAreaTest {
 	private static ClosedArea arrowHead = new ChartedArea();

@@ -240,7 +240,7 @@ public class SecurityHelper {
 	 * 
 	 * @param userManager
 	 * @param ctx
-	 * @return
+	 * @return the user entity if the logged in user is a multi manager.
 	 */
 	public static User getMultiUser(UserManager userManager, SessionContext ctx) {
 		String email = ctx.getCallerPrincipal().getName();
@@ -258,7 +258,7 @@ public class SecurityHelper {
 	 * 
 	 * @param userManager
 	 * @param ctx
-	 * @return
+	 * @return the logged in user.
 	 */
 	public static User getUser(UserManager userManager, SessionContext ctx) {
 		String email = ctx.getCallerPrincipal().getName();
