@@ -58,6 +58,14 @@ public interface TeamManagerLocal {
 			throws ChartedAreaAssignmentException;
 
 	/**
+	 * Assign a garbage to be cleaned by the given team.
+	 * 
+	 * @param teamId
+	 * @param garbageId
+	 */
+	public void assignGarbage(int teamId, int garbageId);
+
+	/**
 	 * Create a new team managed by the user {@code userId}. The manager does
 	 * not actively participate in the team until it registers to the team.
 	 * 
@@ -159,6 +167,14 @@ public interface TeamManagerLocal {
 	 *            The equipment ID to remove.
 	 */
 	public void removeEquipment(int teamId, int equipmentId);
+
+	/**
+	 * Removed a garbage from these cleaned by a given team.
+	 * 
+	 * @param teamId
+	 * @param garbageId
+	 */
+	public void removeGarbageAssigment(int teamId, int garbageId);
 
 	/**
 	 * Lists all teams that match the given parameters. Use {@code null} if you
