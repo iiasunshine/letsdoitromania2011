@@ -23,13 +23,16 @@
 	<property name="jsf.location" value="${common.basedir}/LDIRBackendWebJSF2" />
 	<property name="jsf.war" value="${jsf.location}/LDIRBackendWebJSF2.war" />
 
+	<property name="geoinit.location" value="${common.basedir}/Web/Service/LDIRBackendGeoInit" />
+	<property name="tests.location" value="${common.basedir}/Web/Service/LDIRBackendTests" />
+
 	<path id="EAR Libraries.libraryclasspath">
 		<pathelement location="${ejbclient.jar}" />
 	</path>
 
-    <path id="itext.libraryclasspath">
-        <pathelement location="${app.location}/EarContent/lib/itextpdf-5.1.2.jar" />
-        <pathelement location="${app.location}/EarContent/lib/itext-xtra-5.1.2.jar" />
+	<path id="itext.libraryclasspath">
+		<pathelement location="${app.location}/EarContent/lib/itextpdf-5.1.2.jar" />
+		<pathelement location="${app.location}/EarContent/lib/itext-xtra-5.1.2.jar" />
 	</path>
 
 	<path id="GlassFish 3.1 [GlassFish 3.1].libraryclasspath">
@@ -76,6 +79,33 @@
 		<pathelement location="${glassfish.home}/glassfish/modules/webservices.security.jar" />
 		<pathelement location="${glassfish.home}/glassfish/modules/woodstox-osgi.jar" />
 		<pathelement location="${glassfish.home}/mq/lib/jaxm-api.jar" />
+	</path>
+
+	<path id="LDIRBackendEJB.classpath">
+		<pathelement location="${ejb.location}/build/classes" />
+		<path refid="GlassFish 3.1 [GlassFish 3.1].libraryclasspath" />
+		<path refid="EAR Libraries.libraryclasspath" />
+		<path refid="itext.libraryclasspath" />
+	</path>
+
+	<path id="LDIRBackendEJBClient.classpath">
+		<pathelement location="${ejbclient.location}/build/classes" />
+		<path refid="GlassFish 3.1 [GlassFish 3.1].libraryclasspath" />
+	</path>
+
+	<path id="LDIRBackendWeb.classpath">
+		<pathelement location="build/classes" />
+		<path refid="GlassFish 3.1 [GlassFish 3.1].libraryclasspath" />
+		<path refid="EAR Libraries.libraryclasspath" />
+		<fileset dir="${webservice.location}/WebContent/WEB-INF/lib" includes="**/*.jar" />
+	</path>
+
+	<path id="tests.classpath">
+		<pathelement location="${tests.location}/lib/junit-4.8.2.jar" />
+		<pathelement location="${tests.location}/lib/mysql-connector-java-5.1.15-bin.jar" />
+		<pathelement location="${tests.location}/bin" />
+		<path refid="GlassFish 3.1 [GlassFish 3.1].libraryclasspath" />
+		<path refid="EAR Libraries.libraryclasspath" />
 	</path>
 
 	<target name="build-ejbclient">
