@@ -49,7 +49,7 @@ public interface OrganizationManagerLocal {
 	/**
 	 * Get an organization by its contact user.
 	 * 
-	 * @param User
+	 * @param userId
 	 *            The user of the organization.
 	 * @return The organization matching the user.
 	 */

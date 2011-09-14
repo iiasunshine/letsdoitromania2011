@@ -203,10 +203,6 @@ public class Organization extends FieldAccessBean implements Serializable {
 		this.county = county;
 	}
 
-	/**
-	 * @param manager
-	 *            the manager to set
-	 */
 	@NonTransferableField
 	public void setManager(User contactUser) {
 		this.manager = contactUser;

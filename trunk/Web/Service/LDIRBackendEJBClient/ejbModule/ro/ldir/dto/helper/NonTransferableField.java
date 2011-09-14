@@ -30,7 +30,7 @@ import java.lang.annotation.Target;
 
 /**
  * Marks a field that should not be transferred during
- * {@link FieldAccessBean#copyFields(Class)}.
+ * {@link FieldAccessBean#copyFields(FieldAccessBean)}.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)

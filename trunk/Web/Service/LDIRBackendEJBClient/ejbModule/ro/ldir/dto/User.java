@@ -514,7 +514,7 @@ public class User extends FieldAccessBean implements Serializable {
 	/**
 	 * Tests the given password.
 	 * 
-	 * @param sha256Password
+	 * @param rawPassword
 	 *            The password to test.
 	 * @return {@code true} if the password matches.
 	 */

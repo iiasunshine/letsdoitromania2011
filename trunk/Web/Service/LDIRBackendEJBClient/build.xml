@@ -3,11 +3,6 @@
 <project basedir="." default="build" name="LDIRBackendEJBClient">
 	<include file="../../../build-common.xml" as="build-common" />
 
-	<path id="LDIRBackendEJBClient.classpath">
-		<pathelement location="build/classes" />
-		<path refid="GlassFish 3.1 [GlassFish 3.1].libraryclasspath" />
-	</path>
-
 	<target name="init">
 		<mkdir dir="build/classes" />
 		<copy includeemptydirs="false" todir="build/classes">

@@ -109,7 +109,7 @@ public interface GarbageManagerLocal {
 	 * @param status
 	 *            The status used to match garbages against.
 	 * @return a list of garbages having the desired status.
-	 * @see ro.ldir.dto.Garbage.Status
+	 * @see ro.ldir.dto.Garbage.GarbageStatus
 	 */
 	public List<Garbage> getGarbages(Garbage.GarbageStatus status);
 
@@ -210,7 +210,7 @@ public interface GarbageManagerLocal {
 	 * @param status
 	 *            The new status of the garbabe.
 	 * 
-	 * @see ro.ldir.dto.Garbage.Status
+	 * @see ro.ldir.dto.Garbage.GarbageStatus
 	 */
 	public void setGarbageStatus(int garbageId, Garbage.GarbageStatus status);
 

@@ -30,7 +30,7 @@ import java.lang.annotation.Target;
 
 /**
  * Marks a field that should not be used during the comparison run by
- * {@link FieldAccessBean#fieldsEqual(Class)}.
+ * {@link FieldAccessBean#fieldsEqual(FieldAccessBean)}.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)

@@ -5,18 +5,6 @@
 
 	<property name="war.file" value="${webservice.war}" />
 
-	<path id="Web App Libraries.libraryclasspath">
-	</path>
-
-
-	<path id="LDIRBackendWeb.classpath">
-		<pathelement location="build/classes" />
-		<path refid="GlassFish 3.1 [GlassFish 3.1].libraryclasspath" />
-		<path refid="Web App Libraries.libraryclasspath" />
-		<path refid="EAR Libraries.libraryclasspath" />
-		<fileset dir="WebContent/WEB-INF/lib" includes="**/*.jar" />
-	</path>
-
 	<target name="build-ejbclient">
 		<ant dir="${ejbclient.location}" target="jar" />
 	</target>
@@ -45,7 +33,7 @@
 		</javac>
 	</target>
 
-	<target depends="build" name="war">
+	<target depends="build,javadoc" name="war">
 		<war destfile="${war.file}" filesetmanifest="merge" needxmlfile="false">
 			<classes dir="build/classes" />
 			<webinf dir="WebContent/WEB-INF" />
@@ -53,4 +41,24 @@
 			<fileset dir="WebContent" />
 		</war>
 	</target>
+	
+	<target name="javadoc">
+		<javadoc destdir="${webservice.location}/WebContent" author="true" version="true" windowtitle="LDIR Backend API" overview="overview.html">
+			<fileset dir="${webservice.location}/src" />
+			<fileset dir="${ejbclient.location}/ejbModule" />
+			<fileset dir="${ejb.location}/ejbModule" />
+			<fileset dir="${geoinit.location}/src" />
+			<fileset dir="${tests.location}/src" />
+			<classpath refid="LDIRBackendWeb.classpath" />
+			<classpath refid="LDIRBackendEJBClient.classpath" />
+			<classpath refid="LDIRBackendEJB.classpath" />
+			<classpath refid="tests.classpath" />
+
+			<doctitle>
+				<![CDATA[<h1>LDIR Backend API</h1>]]></doctitle>
+			<bottom>
+			<![CDATA[<i>Copyright &#169; 2011 Stefan Guna. All Rights Reserved.</i>]]></bottom>
+	</javadoc>
+</target>
+
 </project>
