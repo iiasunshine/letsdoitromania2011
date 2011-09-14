@@ -48,6 +48,7 @@ import ro.ldir.beans.TeamManagerLocal;
 import ro.ldir.dto.ChartedArea;
 import ro.ldir.dto.CleaningEquipment;
 import ro.ldir.dto.Equipment;
+import ro.ldir.dto.Garbage;
 import ro.ldir.dto.GpsEquipment;
 import ro.ldir.dto.Organization;
 import ro.ldir.dto.Team;
@@ -88,6 +89,21 @@ public class TeamWebService {
 	public Response addCleaningEquipment(@PathParam("teamId") int teamId,
 			CleaningEquipment equipment) {
 		teamManager.addCleaningEquipment(teamId, equipment);
+		return Response.ok().build();
+	}
+
+	@PUT
+	@Consumes({ "application/json", "application/xml" })
+	@Path("{teamId:[0-9]+}/cleaningGarbages")
+	public Response addCleaningGarbage(@PathParam("teamId") int teamId,
+			Garbage garbage) {
+		try {
+			teamManager.assignGarbage(teamId, garbage.getGarbageId());
+		} catch (EJBException e) {
+			if (e.getCausedByException() instanceof NullPointerException)
+				throw new WebApplicationException(404);
+			throw new WebApplicationException(500);
+		}
 		return Response.ok().build();
 	}
 
@@ -186,6 +202,18 @@ public class TeamWebService {
 			if (e instanceof CleaningEquipment)
 				result.add((CleaningEquipment) e);
 		return result;
+	}
+
+	@GET
+	@Produces({ "application/json", "application/xml" })
+	@Path("{teamId:[0-9]+}/cleaningGarbages")
+	public List<Garbage> getCleaningGarbages(@PathParam("teamId") int teamId) {
+		try {
+			return new ArrayList<Garbage>(teamManager.getTeam(teamId)
+					.getGarbages());
+		} catch (NullPointerException e) {
+			throw new WebApplicationException(404);
+		}
 	}
 
 	@GET
@@ -293,6 +321,21 @@ public class TeamWebService {
 			@PathParam("chartAreaId") int chartAreaId) {
 		try {
 			teamManager.removeChartAreaAssignment(teamId, chartAreaId);
+		} catch (EJBException e) {
+			if (e.getCausedByException() instanceof NullPointerException)
+				throw new WebApplicationException(404);
+			throw new WebApplicationException(500);
+		}
+		return Response.ok().build();
+	}
+
+	@DELETE
+	@Consumes({ "application/json", "application/xml" })
+	@Path("{teamId:[0-9]+}/cleaningGarbages")
+	public Response removeCleaningGarbage(@PathParam("teamId") int teamId,
+			Garbage garbage) {
+		try {
+			teamManager.removeGarbageAssigment(teamId, garbage.getGarbageId());
 		} catch (EJBException e) {
 			if (e.getCausedByException() instanceof NullPointerException)
 				throw new WebApplicationException(404);

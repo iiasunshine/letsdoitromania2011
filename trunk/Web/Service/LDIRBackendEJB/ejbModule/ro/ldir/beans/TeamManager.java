@@ -1,5 +1,6 @@
 package ro.ldir.beans;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -21,6 +22,7 @@ import ro.ldir.beans.security.SecurityHelper;
 import ro.ldir.dto.ChartedArea;
 import ro.ldir.dto.CleaningEquipment;
 import ro.ldir.dto.Equipment;
+import ro.ldir.dto.Garbage;
 import ro.ldir.dto.GpsEquipment;
 import ro.ldir.dto.Organization;
 import ro.ldir.dto.Team;
@@ -142,6 +144,28 @@ public class TeamManager implements TeamManagerLocal {
 		closedArea.getChartedBy().add(team);
 		em.merge(team);
 		em.merge(closedArea);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ro.ldir.beans.TeamManagerLocal#assignGarbage(int, int)
+	 */
+	@Override
+	public void assignGarbage(int teamId, int garbageId) {
+		Team team = em.find(Team.class, teamId);
+		SecurityHelper.checkTeamMember(userManager, team, ctx);
+		Garbage garbage = em.find(Garbage.class, garbageId);
+
+		if (garbage.getEnrolledCleaners() == null)
+			garbage.setEnrolledCleaners(new ArrayList<Team>());
+		garbage.getEnrolledCleaners().add(team);
+
+		if (team.getGarbages() == null)
+			team.setGarbages(new HashSet<Garbage>());
+		team.getGarbages().add(garbage);
+		em.merge(team);
+		em.merge(garbage);
 	}
 
 	/*
@@ -342,6 +366,23 @@ public class TeamManager implements TeamManagerLocal {
 		Equipment equipment = em.find(Equipment.class, equipmentId);
 		team.getEquipments().remove(equipment);
 		em.merge(team);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ro.ldir.beans.TeamManagerLocal#removeGarbageAssigment(int, int)
+	 */
+	@Override
+	public void removeGarbageAssigment(int teamId, int garbageId) {
+		Team team = em.find(Team.class, teamId);
+		SecurityHelper.checkTeamMember(userManager, team, ctx);
+		Garbage garbage = em.find(Garbage.class, garbageId);
+
+		garbage.getEnrolledCleaners().remove(team);
+		team.getGarbages().remove(garbage);
+		em.merge(team);
+		em.merge(garbage);
 	}
 
 	/*

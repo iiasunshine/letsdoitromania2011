@@ -250,6 +250,53 @@ The logged in user must be an ``ADMIN'' or the team's manager.
 \end{apidata}
 
 
+\subsection{Assigning a garbage to be cleaned}
+
+\apilocation{put}{ws/team/\param{teamId}/cleaningGarbages}
+\begin{apidata}{contents}
+    A \texttt{garbage} entity where the only field set is \texttt{garbageId}.
+    The garbage ID must match one already existing in the DB.
+\end{apidata}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyitem{200}{If the operation succeeds.}
+    \replyitem{404}{If one of the team or garbage are not found.}
+  \end{datalist}
+\end{apidata}
+\begin{apidata}{access}
+The logged in user must be an ``ADMIN'' or the team's manager.
+\end{apidata}
+
+\subsection{Removing a garbage to be cleaned}
+
+\apilocation{delete}{ws/team/\param{teamId}/cleaningGarbages}
+\begin{apidata}{contents}
+    A \texttt{garbage} entity where the only field set is \texttt{garbageId}.
+    The garbage ID must match one already existing in the DB.
+\end{apidata}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyitem{200}{If the operation succeeds.}
+    \replyitem{404}{If one of the team or garbage are not found.}
+  \end{datalist}
+\end{apidata}
+\begin{apidata}{access}
+The logged in user must be an ``ADMIN'' or the team's manager.
+\end{apidata}
+
+\subsection{Getting the list of garbages to be cleaned}
+
+\apilocation{get}{ws/team/\param{teamId}/cleaningGarbages}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \item{An array of \texttt{entities} assigned to this team.}
+  \end{datalist}
+\end{apidata}
+\begin{apidata}{access}
+The logged in user must be an ``ADMIN'' or the team's manager.
+\end{apidata}
+
+
 \subsection{Team report}
 
 \apilocation{get}{ws/team/report?county=\param{county}}
