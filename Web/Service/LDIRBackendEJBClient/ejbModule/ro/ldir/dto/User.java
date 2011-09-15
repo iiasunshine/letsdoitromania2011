@@ -92,6 +92,7 @@ public class User extends FieldAccessBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private boolean acceptsMoreInfo;
+	private boolean profileView;
 	private List<Activity> activities;
 	private Date birthday;
 	private String county;
@@ -139,6 +140,14 @@ public class User extends FieldAccessBean implements Serializable {
 		return acceptsMoreInfo;
 	}
 
+	/**
+	 * 
+	 * @return the profileView
+	 */
+	@Column(nullable = false, columnDefinition = "DEFAULT '0' not NULL")
+	public boolean getProfileView() {
+		return profileView;
+	}
 	/**
 	 * @return the activities
 	 */
@@ -331,6 +340,15 @@ public class User extends FieldAccessBean implements Serializable {
 		this.acceptsMoreInfo = acceptsMoreInfo;
 	}
 
+	/**
+	 * 
+	 * @param profileView
+	 * 			the profileView to set
+	 */
+	public void setProfileView(boolean profileView){
+		this.profileView=profileView;
+	}
+	
 	/**
 	 * @param activities
 	 *            the activities to set
