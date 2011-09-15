@@ -59,6 +59,11 @@
                                     <h:outputText value="<a href=\"http://app.letsdoitromania.ro/LDIRBackendWebJSF2/docs/declaratieminori2011.pdf\" target=\"_blank\">Descarca Declaratia pentru Participarea Minorilor la Ziua de Curatenie Nationala</a>" escape="false"/>
                                     <br/>   
                                     <h:outputText value="<a href=\"http://app.letsdoitromania.ro/LDIRBackendWebJSF2/docs/normedesiguranta2011.pdf\" target=\"_blank\">Descarca Normele de Siguranta pentru Ziua de Curatenie Nationala </a>" escape="false"/>
+                                    <br/>
+                                    <br/>
+                                    <h:outputText value="<a href=\"http://www.letsdoitromania.ro/wp-content/uploads/2011/07/Manual-Curatenie-20111.pdf\" target=\"_blank\">Downloadeaza Manual Pentru Ziua de Curatenie 24 Septembrie 2011</a>" escape="false"/>
+									<br/>  
+                                    
                                 </h3>
                             </h:panelGroup>
                             <h:panelGroup rendered="#{sessionScope['USER_DETAILS'] eq null}">
