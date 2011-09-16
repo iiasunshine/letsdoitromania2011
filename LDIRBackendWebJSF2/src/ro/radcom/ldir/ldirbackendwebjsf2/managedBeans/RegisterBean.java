@@ -43,6 +43,7 @@ public class RegisterBean {
     private boolean cartare = false;
     private boolean curatenie = false;
     private boolean acceptTerms = false;
+    private boolean profileView = true;
     private boolean acceptReceiveNotifications = true;
     private String antispam;
 
@@ -113,6 +114,7 @@ public class RegisterBean {
         }
         
         regiterUser.setAcceptsMoreInfo(acceptReceiveNotifications);
+        regiterUser.setProfileView(profileView);
 
         /* trimiterea datelor utilizatorui */
         String location = JsfUtils.getInitParameter("webservice.url") + "/LDIRBackend/reg/ws";
@@ -305,5 +307,13 @@ public class RegisterBean {
 	 */
 	public boolean isAcceptReceiveNotifications() {
 		return acceptReceiveNotifications;
+	}
+
+	public void setProfileView(boolean profileView) {
+		this.profileView = profileView;
+	}
+
+	public boolean isProfileView() {
+		return profileView;
 	}
 }

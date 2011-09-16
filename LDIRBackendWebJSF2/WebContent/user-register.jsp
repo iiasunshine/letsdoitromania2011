@@ -111,7 +111,13 @@
                                        style="color: #4D751F; ext-decoration: none;">conditiile</a>
                                 </label>
                                 <div class="label"><span class="important">*</span></div>
-                                <br />
+                                <br/>
+                                 <!-- Accepta vizualizare de date Lead -->
+                                <h:selectBooleanCheckbox value="#{registerBean.profileView}" id="vizibleData"/>
+                                <label class="formCheckbox">
+                                    <h:outputText value="#{msg.register_acceptVizibleData} "/>
+                                </label>
+                                <br/>
                                 <!-- Accepta si alte informari -->
                                 <h:selectBooleanCheckbox value="#{registerBean.acceptReceiveNotifications}" id="acceptReceiveNotifications"/>
                                 <label class="formCheckbox">
