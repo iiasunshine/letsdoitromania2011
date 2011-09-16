@@ -25,6 +25,7 @@ public class NavigationValues {
     
     public static final String TEAM_ADD_ORG_FAIL = "team_add_org_fail";
     public static final String TEAM_ORG_MULTI_FAIL = "team_org_multi_fail";
+    public static final String TEAM_ORG_LIST_FAIL = "team_org_list_fail";
     
     public static final String LOGIN_FAIL = "login_fail";
     public static final String LOGIN_SUCCESS = "login_success";

@@ -58,6 +58,11 @@
         <managed-bean-class>ro.radcom.ldir.ldirbackendwebjsf2.managedBeans.MapViewBean</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
+        <managed-bean>
+        <managed-bean-name>areaCleanManager</managed-bean-name>
+        <managed-bean-class>ro.radcom.ldir.ldirbackendwebjsf2.managedBeans.AreaCleanManagerBean</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
     <managed-bean>
         <managed-bean-name>resetBean</managed-bean-name>
         <managed-bean-class>ro.radcom.ldir.ldirbackendwebjsf2.managedBeans.ResetBean</managed-bean-class>

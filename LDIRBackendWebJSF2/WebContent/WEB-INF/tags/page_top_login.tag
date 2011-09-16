@@ -21,12 +21,13 @@
                     <li><a href="${pageContext.servletContext.contextPath}/admin/admin-lista-mormane.jsf" class="${selected eq 'lista_mormane' ? 'active' : ''}"><span>${msg.meniu_lista_mormane}</span></a></li>
                 </c:if>
                 <li><a href="${pageContext.servletContext.contextPath}/users/user-vizualizare.jsf" class="${selected eq 'user_edit' ? 'active': ''}"><span>${msg.meniu_user_edit}</span></a></li>
-                 <c:if test="${role eq 'ORGANIZER_MULTI'}">
+                 <c:if test="${(role eq 'ORGANIZER')or (role eq 'ORGANIZER_MULTI')}">
                 	<li><a href="${pageContext.servletContext.contextPath}/users/echipa-org-multi-editare.jsf" class="${selected eq 'echipa_edit' ? 'active': ''}"><span>${msg.meniu_echipa_edit}</span></a></li>
                  </c:if>
                  <c:if test="${(role eq 'ADMIN') or (role eq 'ORGANIZER') or (role eq 'VOLUNTEER')}">
                 	<li><a href="${pageContext.servletContext.contextPath}/users/echipa-vizualizare.jsf" class="${selected eq 'echipa_edit' ? 'active': ''}"><span>${msg.meniu_echipa_edit}</span></a></li>
                  </c:if>
+                 <li><a href="${pageContext.servletContext.contextPath}/users/curatenie-vizualizare.jsf" class="${selected eq 'curatenie' ? 'active': ''}"><span>${msg.meniu_curatenie_list}</span></a></li>
                 <li><a href="${pageContext.servletContext.contextPath}/logout.jsf"><span>${msg.meniu_logout}</span></a></li>
             </ul>
         </div>

@@ -83,6 +83,44 @@ function zoomToArea(jsonBounds){
         myMap.panTo(bounds.getCenter());
     }
 }
+function loadCountyGarbageDetailOverlay(value){
+    if(value){
+        var jsonObject = JSON.parse(value);
+
+        var url = WS_URL;
+        url += '/LDIRBackend/map/ws/countySearch/garbages/';
+        url += '?county='+jsonObject.name.replace(' ','%20');
+        url += '&cb=' + escape('<a target="_self" style="color: #4D751F;" href="curatenie-morman-detalii.jsf?garbageId={{{ID}}}">&raquo; vizualizeaza(asigneaza morman)</a>');
+
+        
+        /* adaugare layer lista gunoaie din judetul selectat */
+        var countyGarbageOverlay = new GGeoXml(url);
+        myMap.addOverlay(countyGarbageOverlay);
+        if(countyGarbageOverlay_old != null){
+            myMap.removeOverlay(countyGarbageOverlay_old);
+        }
+        countyGarbageOverlay_old = countyGarbageOverlay;
+
+        /* adaugare layer contur judet */
+        var points = new Array();
+        for (var i=0; i<(jsonObject.border.length/2); i++){
+            points[i]=new GLatLng(jsonObject.border[i*2], jsonObject.border[(i*2)+1]);
+        }
+        var countyBorderOverlay = new GPolyline(points);
+        myMap.addOverlay(countyBorderOverlay);
+        if(countyBorderOverlay_old != null){
+            myMap.removeOverlay(countyBorderOverlay_old);
+        }
+        countyBorderOverlay_old = countyBorderOverlay;
+
+        /* zoom pe judetul seletat */
+        var bounds = new GLatLngBounds(new GLatLng(jsonObject.bottomRightY , jsonObject.topLeftX),
+            new GLatLng(jsonObject.topLeftY, jsonObject.bottomRightX));
+        myMap.setZoom(myMap.getBoundsZoomLevel(bounds));
+        myMap.panTo(bounds.getCenter());
+    }
+}
+
 
 function loadCountyGarbageOverlay(value){
     if(value){
@@ -91,7 +129,6 @@ function loadCountyGarbageOverlay(value){
         var url = WS_URL;
         url += '/LDIRBackend/map/ws/countySearch/garbages/';
         url += '?county='+jsonObject.name.replace(' ','%20');
-
         
         /* adaugare layer lista gunoaie din judetul selectat */
         var countyGarbageOverlay = new GGeoXml(url);
