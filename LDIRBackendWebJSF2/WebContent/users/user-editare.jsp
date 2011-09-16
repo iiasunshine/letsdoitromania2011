@@ -98,6 +98,12 @@
                                 <div class="label"><h:outputText value="#{msg.register_phone} "/></div>
                                 <h:inputText value="#{userManager.userDetails.phone}" id="telefon" styleClass="formTextfield"/>
                                 <br/>
+                                 <!-- Accepta vizualizare de date Lead -->
+                                <h:selectBooleanCheckbox value="#{userManager.profileView}" id="vizibleData"/>
+                                <label class="formCheckbox">
+                                    <h:outputText value="#{msg.register_acceptVizibleData} "/>
+                                </label>
+                                <br/>
                                  <!-- Accepta si alte informari -->
                                 <h:selectBooleanCheckbox value="#{userManager.acceptReceiveNotifications}" id="acceptReceiveNotifications"/>
                                 <label class="formCheckbox">
