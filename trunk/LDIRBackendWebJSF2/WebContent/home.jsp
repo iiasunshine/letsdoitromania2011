@@ -42,7 +42,7 @@
                                     <br/>
                                     <h:outputText value="5. Iti gestionezi echipa (butonul \"Echipa\" - apare dupa ce te-ai logat)" escape="false"/>
                                     <br/>
-                                    <h:outputText value="6. inscrii intr-o echipa, pe baza codului primit de la un voluntar inregistrat, care doreste sa isi creeze o echipa (butonul \"Echipa\" --&#62; \"Inscriere in echipa\" - apare dupa ce te-ai logat)" escape="false"/>
+                                    <h:outputText value="6. Te inscrii intr-o echipa, pe baza codului primit de la un voluntar inregistrat, care doreste sa isi creeze o echipa (butonul \"Echipa\" --&#62; \"Inscriere in echipa\" - apare dupa ce te-ai logat)" escape="false"/>
                                     <br/>
                                     <br/>                                    
                                     <h:outputText value="<a href=\"http://app.letsdoitromania.ro/LDIRBackendWebJSF2/docs/manualcartare.pdf\" target=\"_blank\">Descarca Manual Cartare 2011</a>" escape="false"/>
@@ -61,7 +61,7 @@
                                     <h:outputText value="<a href=\"http://app.letsdoitromania.ro/LDIRBackendWebJSF2/docs/normedesiguranta2011.pdf\" target=\"_blank\">Descarca Normele de Siguranta pentru Ziua de Curatenie Nationala </a>" escape="false"/>
                                     <br/>
                                     <br/>
-                                    <h:outputText value="<a href=\"http://www.letsdoitromania.ro/wp-content/uploads/2011/07/Manual-Curatenie-20111.pdf\" target=\"_blank\">Downloadeaza Manual Pentru Ziua de Curatenie 24 Septembrie 2011</a>" escape="false"/>
+                                    <h:outputText value="<a href=\"http://www.letsdoitromania.ro/wp-content/uploads/2011/07/Manual-Curatenie-2011.pdf\" target=\"_blank\">Downloadeaza Manual Pentru Ziua de Curatenie 24 Septembrie 2011</a>" escape="false"/>
 									<br/>  
                                     
                                 </h3>
@@ -83,7 +83,7 @@
                                     <br/>
                                     <h:outputText value="5. Iti gestionezi echipa (butonul \"Echipa\" - apare dupa ce te-ai logat)" escape="false"/>
                                     <br/>
-                                    <h:outputText value="6. inscrii intr-o echipa, pe baza codului primit de la un voluntar inregistrat, care doreste sa isi creeze o echipa (butonul \"Echipa\" --&#62; \"Inscriere in echipa\" - apare dupa ce te-ai logat)" escape="false"/>
+                                    <h:outputText value="6. Te inscrii intr-o echipa, pe baza codului primit de la un voluntar inregistrat, care doreste sa isi creeze o echipa (butonul \"Echipa\" --&#62; \"Inscriere in echipa\" - apare dupa ce te-ai logat)" escape="false"/>
                                     <br/>
                                     <br/>                                    
                                     <h:outputText value="<a href=\"http://app.letsdoitromania.ro/LDIRBackendWebJSF2/docs/manualcartare.pdf\" target=\"_blank\">Descarca Manual Cartare 2011</a>" escape="false"/>
@@ -102,7 +102,7 @@
                                     <h:outputText value="<a href=\"http://app.letsdoitromania.ro/LDIRBackendWebJSF2/docs/normedesiguranta2011.pdf\" target=\"_blank\">Descarca Normele de Siguranta pentru Ziua de Curatenie Nationala </a>" escape="false"/>
                                     <br/>
                                     <br/>
-                                    <h:outputText value="<a href=\"http://www.letsdoitromania.ro/wp-content/uploads/2011/07/Manual-Curatenie-20111.pdf\" target=\"_blank\">Downloadeaza Manual Pentru Ziua de Curatenie 24 Septembrie 2011</a>" escape="false"/>
+                                    <h:outputText value="<a href=\"http://www.letsdoitromania.ro/wp-content/uploads/2011/07/Manual-Curatenie-2011.pdf\" target=\"_blank\">Downloadeaza Manual Pentru Ziua de Curatenie 24 Septembrie 2011</a>" escape="false"/>
 									<br/>  
                                 </h3>
                                 <br/>
