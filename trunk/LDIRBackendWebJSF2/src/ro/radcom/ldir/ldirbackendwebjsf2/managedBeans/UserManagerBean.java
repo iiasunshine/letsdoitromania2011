@@ -46,7 +46,8 @@ public class UserManagerBean {
     private boolean cartare = false;
     private boolean curatenie = false;
     private boolean acceptReceiveNotifications = true;
-
+    private boolean profileView = true;
+    
     public UserManagerBean(){
     	userDetails = (User)JsfUtils.getHttpSession().getAttribute("USER_DETAILS");
     	populateData();
@@ -118,6 +119,7 @@ public class UserManagerBean {
         }
         
     	userDetails.setAcceptsMoreInfo(acceptReceiveNotifications);
+    	userDetails.setProfileView(profileView);
 	
     	 /* update date utilizator */
         String location = JsfUtils.getInitParameter("webservice.url") + "/LDIRBackend/ws/user/" + userDetails.getUserId();
@@ -301,5 +303,13 @@ public class UserManagerBean {
 
 	public boolean isAcceptReceiveNotifications() {
 		return acceptReceiveNotifications;
+	}
+
+	public void setProfileView(boolean profileView) {
+		this.profileView = profileView;
+	}
+
+	public boolean isProfileView() {
+		return profileView;
 	}
 }
