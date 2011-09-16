@@ -60,7 +60,30 @@ public class WSInterface {
         ClientResponse cr = builder.entity(garbage, MediaType.APPLICATION_XML).post(ClientResponse.class);
         return cr;
     }
+    public ClientResponse addGarbageToTeam(User user, int teamId, Garbage garbage){
+        String location = WS_URL + "/LDIRBackend/ws/team/"+teamId+"/cleaningGarbages";
 
+        WebResource resource = client.resource(location);
+        Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(user.getEmail(), user.getPasswd()));
+        ClientResponse cr = builder.entity(garbage, MediaType.APPLICATION_XML).put(ClientResponse.class);
+        return cr;
+   }
+    public ClientResponse getGarbageFromCounty(User user, String county){
+        String location = WS_URL + "/LDIRBackend/ws/garbage/countySearch/?county="+county;
+
+        WebResource resource = client.resource(location);
+        Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(user.getEmail(), user.getPasswd()));
+        ClientResponse cr = builder.entity(null, MediaType.APPLICATION_XML).get(ClientResponse.class);
+        return cr;
+   }
+    public ClientResponse getGarbageofTeam(User user, int teamId){
+        String location = WS_URL + "/LDIRBackend/ws/team/"+teamId+"/cleaningGarbages";
+
+        WebResource resource = client.resource(location);
+        Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(user.getEmail(), user.getPasswd()));
+        ClientResponse cr = builder.entity(null, MediaType.APPLICATION_XML).get(ClientResponse.class);
+        return cr;
+   }
     public ClientResponse addChartedArea(User user, int teamId, int areaId) {
         String location = WS_URL + "/LDIRBackend/ws/team/" + teamId + "/chartArea";
         WebResource resource = client.resource(location);
@@ -223,6 +246,14 @@ public class WSInterface {
         ClientResponse cr = builder.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
         return cr;
     }
+    public ClientResponse getGarbagesOfTown(User user, String country) {
+        String location = WS_URL + "/LDIRBackend/ws/countySearch/garbages/" + "?county="+country;
+        WebResource resource = client.resource(location);
+        Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(user.getEmail(), user.getPasswd()));
+//      ClientResponse cr = builder.entity(null, MediaType.TEXT_PLAIN_TYPE).get(ClientResponse.class);
+        ClientResponse cr = builder.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
+        return cr;
+    }
 
     public ClientResponse getGarbageList(String status) {
         String location = WS_URL + "/LDIRBackend/ws/garbage/statusSearch/?status=" + status;
@@ -376,7 +407,8 @@ public class WSInterface {
         if (accept != null && accept.length() > 0) {
             builder.accept(accept);
         }
-        ClientResponse cr = builder.entity(null, MediaType.TEXT_XML_TYPE).get(ClientResponse.class);
+//        ClientResponse cr = builder.entity(null, MediaType.TEXT_XML_TYPE).get(ClientResponse.class);
+         ClientResponse cr = builder.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
 
         return cr;
 
