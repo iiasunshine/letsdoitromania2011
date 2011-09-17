@@ -43,7 +43,7 @@ public class RegisterBean {
     private boolean cartare = false;
     private boolean curatenie = false;
     private boolean acceptTerms = false;
-    private boolean profileView = true;
+    private boolean profileView = false;
     private boolean acceptReceiveNotifications = true;
     private String antispam;
 

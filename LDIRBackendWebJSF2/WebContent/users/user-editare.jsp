@@ -105,7 +105,7 @@
                                 </label>
                                 <br/>
                                  <!-- Accepta si alte informari -->
-                                <h:selectBooleanCheckbox value="#{userManager.acceptReceiveNotifications}" id="acceptReceiveNotifications"/>
+                                <h:selectBooleanCheckbox value="#{userManager.userDetails.acceptsMoreInfo}" id="acceptReceiveNotifications"/>
                                 <label class="formCheckbox">
                                     <h:outputText value="#{msg.register_acceptNotifications} "/>
                                 </label>
