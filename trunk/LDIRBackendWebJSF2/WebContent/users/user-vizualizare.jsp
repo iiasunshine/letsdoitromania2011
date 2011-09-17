@@ -72,6 +72,26 @@
                              <div class="label form"><h:outputText value="#{msg.register_phone} "/></div>
                               <div class="label"><h:outputText value="#{userManager.userDetails.phone}"/></div>
                              <br/>
+                             <!-- ID -->
+                             <div class="label form"><h:outputText value="ID user: "/></div>
+                              <div class="label"><h:outputText value="#{userManager.userDetails.userId}"/></div>
+                             <br/>
+                             <!-- Accepta vizualizare de date Lead -->
+                                <h:selectBooleanCheckbox value="#{userManager.profileView}" id="vizibleData" disabled="true"/>
+                                <label class="formCheckbox">
+                                    <h:outputText value="#{msg.register_acceptVizibleData} "/>
+                                </label>
+                                <br/>
+                             <!-- Accepta si alte informari -->
+                                <h:selectBooleanCheckbox value="#{userManager.userDetails.acceptsMoreInfo}" id="acceptReceiveNotifications" disabled="true"/>
+                                <label class="formCheckbox">
+                                    <h:outputText value="#{msg.register_acceptNotifications} "/>
+                                </label>
+       
+                                <br />  
+                             
+                             
+                             
 					</div>
 				</div>
 			</div>	  

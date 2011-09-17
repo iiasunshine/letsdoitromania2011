@@ -46,7 +46,7 @@ public class UserManagerBean {
     private boolean cartare = false;
     private boolean curatenie = false;
     private boolean acceptReceiveNotifications = true;
-    private boolean profileView = true;
+    private boolean profileView;
     
     public UserManagerBean(){
     	userDetails = (User)JsfUtils.getHttpSession().getAttribute("USER_DETAILS");
@@ -66,19 +66,20 @@ public class UserManagerBean {
 			setYear(date.getYear());
 		}
 		
-		acceptReceiveNotifications = userDetails.getAcceptsMoreInfo();
+		//acceptReceiveNotifications = userDetails.getAcceptsMoreInfo();
 		
 		List<Activity> activities = userDetails.getActivities();
 		cartare = false;
 	    curatenie = false;
 		for(Activity activity:activities){
 			if(activity == Activity.CHART){
-				cartare = true;
+				this.cartare = true;
 			}
 			if(activity == Activity.CLEAN){
-				curatenie = true;
+				this.curatenie = true;
 			}
 		}
+		this.profileView=userDetails.getProfileView();
 		
 	}
 
@@ -118,7 +119,7 @@ public class UserManagerBean {
     		log4j.debug("Date persistance:"+userDetails.getBirthday());	
         }
         
-    	userDetails.setAcceptsMoreInfo(acceptReceiveNotifications);
+    	//userDetails.setAcceptsMoreInfo(acceptReceiveNotifications);
     	userDetails.setProfileView(profileView);
 	
     	 /* update date utilizator */
