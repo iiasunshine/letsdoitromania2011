@@ -136,15 +136,24 @@ public class User extends FieldAccessBean implements Serializable {
 	 * @return the acceptsMoreInfo
 	 */
 	@Column(nullable = false, columnDefinition = "DEFAULT '0' NOT NULL")
+	public boolean getAcceptsMoreInfo() {
+		return acceptsMoreInfo;
+	}
+
 	public boolean isAcceptsMoreInfo() {
 		return acceptsMoreInfo;
 	}
+
 
 	/**
 	 * 
 	 * @return the profileView
 	 */
 	@Column(nullable = false, columnDefinition = "DEFAULT '0' not NULL")
+	public boolean getProfileView() {
+		return profileView;
+	}
+	
 	public boolean isProfileView() {
 		return profileView;
 	}
