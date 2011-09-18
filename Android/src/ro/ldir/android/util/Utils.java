@@ -3,6 +3,8 @@ package ro.ldir.android.util;
 import java.io.File;
 import java.io.IOException;
 
+import ro.ldir.R;
+
 import android.app.AlertDialog.Builder;
 import android.app.Dialog;
 import android.content.Context;
@@ -25,6 +27,7 @@ public class Utils {
 	{
 		Builder builder = new Builder(context);
 		builder.setMessage(message).setCancelable(true);
+		builder.setPositiveButton(R.string.details_ok, null);
 		return builder.create(); 
 	}
 	

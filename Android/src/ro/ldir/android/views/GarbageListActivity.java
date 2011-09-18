@@ -5,10 +5,18 @@ import java.util.List;
 
 import ro.ldir.R;
 import ro.ldir.android.entities.Garbage;
+import ro.ldir.android.entities.User;
+import ro.ldir.android.remote.BackendFactory;
+import ro.ldir.android.remote.IBackend;
+import ro.ldir.android.remote.RemoteConnError;
 import ro.ldir.android.sqlite.LdirDbManager;
+import ro.ldir.android.util.ErrorDialogHandler;
+import ro.ldir.android.util.IErrDialogActivity;
+import ro.ldir.android.util.LDIRActivity;
 import ro.ldir.android.util.LDIRApplication;
 import ro.ldir.android.util.LLog;
 import ro.ldir.android.util.Utils;
+import android.app.Dialog;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -24,17 +32,24 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
-public class GarbageListActivity extends ListActivity {
+public class GarbageListActivity extends LDIRActivity{
 	
 	private static final String SAVED_GARBAGE_LIST = "ro.ldir.android.views.saved.garbage.list";
+	public static final int DLG_LOGIN_REQUIRED = 200;
+	
+	
 	
 	private ArrayList<Garbage> garbageList;
 	
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.garbage_list);
         
         // fill in an adapter with data from the database
         if (savedInstanceState == null)
@@ -57,6 +72,16 @@ public class GarbageListActivity extends ListActivity {
 			}
         	
 		});
+	}
+	
+	private void setListAdapter(ListAdapter adapter)
+	{
+		getListView().setAdapter(adapter);
+	}
+	
+	private ListView getListView()
+	{
+		return (ListView)findViewById(R.id.list);
 	}
 	
 	private void handleItemClick(Garbage garbage)
@@ -103,12 +128,11 @@ public class GarbageListActivity extends ListActivity {
 			startActivityForResult(intent, 0);
 			break;
 		case R.string.chart_upload_morman_link:
+			upload();
 			break;
 		}
 		return super.onMenuItemSelected(featureId, item);
 	}
-
-
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -130,6 +154,18 @@ public class GarbageListActivity extends ListActivity {
         setListAdapter(adapter);
 	}
 	
+	
+	
+	@Override
+	protected Dialog onCreateDialog(int id)
+	{
+		if (id == DLG_LOGIN_REQUIRED)
+		{
+			return Utils.displayDialog(this, R.string.login_required);
+		}
+		return super.onCreateDialog(id);
+	}
+
 	private void handleDelete(Garbage garbage)
 	{
 		LLog.d("delete");
@@ -166,6 +202,15 @@ public class GarbageListActivity extends ListActivity {
 			((TextView)convertView.findViewById(R.id.txtLstLatitude)).setText(String.valueOf(garbage.getLatitude()));
 			((TextView)convertView.findViewById(R.id.txtLstLongitude)).setText(String.valueOf(garbage.getLongitude()));
 			((TextView)convertView.findViewById(R.id.txtLstBagCount)).setText(String.valueOf(garbage.getBagCount()));
+			ImageView uploaded = (ImageView)convertView.findViewById(R.id.imgUpload);
+			if (garbage.isUploaded())
+			{
+				uploaded.setImageResource(R.drawable.uploaded);
+			}
+			else
+			{
+				uploaded.setImageResource(R.drawable.upload);
+			}
 			return convertView;
 		}
 	}
@@ -237,6 +282,54 @@ public class GarbageListActivity extends ListActivity {
 			/*handleItemClick(garbage);
 			return true;*/
 			return false;
+		}
+	}
+	
+	private void upload()
+	{
+		if (!((LDIRApplication)getApplication()).isLoggedIn())
+		{
+			showDialog(DLG_LOGIN_REQUIRED);
+			return;
+		}
+		User user = ((LDIRApplication)getApplication()).getUserDetails();
+		IBackend backend = BackendFactory.createBackend();
+		for (Garbage garbage: garbageList)
+		{
+			if (!garbage.isUploaded())
+			{
+				try
+				{
+					// upload garbage
+					int remoteDbId = backend.addGarbage(user, garbage);
+					LLog.d("Uploaded garbage to remoteDB. garbage id = " + remoteDbId);
+					garbage.setGarbageId(remoteDbId);
+					// save id to local DB
+					LdirDbManager dbManager = new LdirDbManager();
+					dbManager.open(this);
+					int localDbId = dbManager.update(garbage);
+					LLog.d("Update garbage to localDB. garbage id = " + localDbId);
+					dbManager.close();
+					if (localDbId == Garbage.NO_DB_ID)
+					{
+						Utils.displayToast(this, getResources().getString(R.string.adaugat_nok));
+					}
+					else
+					{
+						List<String> images = garbage.getPictures();
+						for (String image: images)
+						{
+							backend.assignImageToGarbage(user, garbage.getGarbageId(), image);
+							LLog.d("Uploaded image: " + image);
+						}
+					}
+					
+				} catch (RemoteConnError e)
+				{
+					e.printStackTrace();
+					ErrorDialogHandler.showErrorDialog(GarbageListActivity.this, e.getStatusCode());
+				}
+			}
 		}
 	}
 	

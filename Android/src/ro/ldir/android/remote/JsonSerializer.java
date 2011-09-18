@@ -20,18 +20,18 @@ public class JsonSerializer
 		JSONObject obj=new JSONObject();
 		
 		obj.put("bagCount", garbage.getBagCount());
-		obj.put("bigComponentsDescription", garbage.getBigComponentsDescription());
+		obj.put("bigComponentsDescription", garbage.getBigComponentsDescription()== null ? "" : garbage.getBigComponentsDescription());
 		obj.put("description", garbage.getDescription());
 		obj.put("details", garbage.getDetails());
 		obj.put("dispersed", garbage.isDispersed());
-		obj.put("garbageId", garbage.getGarbageId());
+		//obj.put("garbageId", garbage.getGarbageId());
 		obj.put("percentageGlass", garbage.getPercentageGlass());
 		obj.put("percentageMetal", garbage.getPercentageMetal());
 		obj.put("percentagePlastic", garbage.getPercentagePlastic());
 		obj.put("percentageWaste", garbage.getPercentageWaste());
 		obj.put("status", garbage.getStatus().getTranslation());
-		obj.put("x", garbage.getLatitude());
-		obj.put("y", garbage.getLongitude());
+		obj.put("y", garbage.getLatitude());
+		obj.put("x", garbage.getLongitude());
 		
 		return obj.toJSONString();
 	}
