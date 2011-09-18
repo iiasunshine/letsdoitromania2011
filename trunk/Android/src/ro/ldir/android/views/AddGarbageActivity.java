@@ -33,12 +33,11 @@ import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class AddGarbageActivity extends Activity 
@@ -354,7 +353,7 @@ public class AddGarbageActivity extends Activity
 			else // update operation
 			{
 				int rows = dbManager.update(garbage);
-				if (rows == 0)
+				if (rows == Garbage.NO_DB_ID)
 				{
 					Utils.displayToast(this, getResources().getString(R.string.adaugat_nok));
 				}
@@ -397,6 +396,10 @@ public class AddGarbageActivity extends Activity
 	 */
 	private boolean validate(Garbage garbage)
 	{
+		if (garbage.getDescription() == null || garbage.getDescription().trim().length() == 0) {
+            showErrorDialog(R.string.err_mandatory_fields);
+			return false;
+        }
 		int totalPercentage = garbage.getPercentageGlass() + garbage.getPercentageMetal() + garbage.getPercentagePlastic() + garbage.getPercentageWaste();
 		if (totalPercentage != 100)
 		{
@@ -444,7 +447,11 @@ public class AddGarbageActivity extends Activity
 			showErrorDialog(R.string.chart_js_err_waste);
 			return false;
 		}
-		// TODO - implement check if the coordinates exist already in the database
+		if (garbage.getPictures().isEmpty())
+		{
+			showErrorDialog(R.string.details_img_required);
+			return false;
+		}
 		return true;
 	}
 	

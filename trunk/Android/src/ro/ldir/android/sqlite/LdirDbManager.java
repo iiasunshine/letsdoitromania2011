@@ -46,6 +46,11 @@ public class LdirDbManager {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param garbage
+	 * @return the id of the garbage in the local database if successfull or {@link Garbage#NO_DB_ID}} on failure
+	 */
 	public int update(Garbage garbage) 
 	{
 		ContentValues values = createContentValues(garbage);
@@ -56,7 +61,7 @@ public class LdirDbManager {
 					whereClause, null);
 		} catch (SQLException sqlerror) {
 			LLog.d(sqlerror.getMessage());
-			return -1;
+			return Garbage.NO_DB_ID;
 		}
 	}
 	

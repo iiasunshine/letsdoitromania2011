@@ -30,6 +30,13 @@ public class LDIRApplication extends Application
 		this.userDetails = userDetails;
 	}
 	
-	
+	/**
+	 * Checks if the user is logged in in the application
+	 * @return true if the user is logged in - there are user details and false otherwise
+	 */
+	public boolean isLoggedIn()
+	{
+		return getUserDetails() != null;
+	}
 
 }

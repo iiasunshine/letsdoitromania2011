@@ -14,15 +14,26 @@ public interface IBackend
 	public static final int STATUS_CODE_OK = 200;
 	
 	
-	/* the following methods MUST be implemented in this version*/
-	
+	//the following methods MUST be implemented in this version*/
+
+	/**
+	 * On success returns the user object filled with information about the user
+	 * On failure returns null or throws RemoteConnError
+	 */
 	public User signIn(String user, String password) throws RemoteConnError;
 	
 	public void signOut();
 	
-	public void addGarbage(Garbage garbage)  throws RemoteConnError;
+	/**
+	 * 
+	 * @param user
+	 * @param garbage
+	 * @return when successful the id of the garbage in the backend (remote database)
+	 * @throws RemoteConnError
+	 */
+	public int addGarbage(User user, Garbage garbage)  throws RemoteConnError;
 	
-	public void assignImageToGarbage(long garbageId, Bitmap picture) throws RemoteConnError;
+	public void assignImageToGarbage(User user, long garbageId, String picturePath) throws RemoteConnError;
 	
 	public void setGarbageStatus(long garbageId, GarbageStatus status) throws RemoteConnError;
 	

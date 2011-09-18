@@ -5,12 +5,17 @@ import ro.ldir.android.entities.User;
 import ro.ldir.android.remote.BackendFactory;
 import ro.ldir.android.remote.IBackend;
 import ro.ldir.android.remote.RemoteConnError;
+import ro.ldir.android.util.ErrorDialogHandler;
+import ro.ldir.android.util.IDialogIds;
+import ro.ldir.android.util.IErrDialogActivity;
+import ro.ldir.android.util.LDIRActivity;
 import ro.ldir.android.util.LDIRApplication;
 import ro.ldir.android.util.Utils;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -18,21 +23,15 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class SettingsActivity extends Activity {
+public class SettingsActivity extends LDIRActivity{
 	
-	private static final int DLG_ERROR = 401;
-	private static final int DLG_PROGRESS = 101;
-	private static final String DLG_ERROR_MESSAGE = "ro.ldir.views.settings.error";
-	
-	private String errorMessage;
-
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
         
         initWithTestdata();
-        setupLoginButton(isLoggedIn());
+        setupLoginButton(((LDIRApplication)getApplication()).isLoggedIn());
 	}
 	
 	/**
@@ -55,21 +54,6 @@ public class SettingsActivity extends Activity {
         }
 	}
 	
-	@Override
-	protected void onRestoreInstanceState(Bundle savedInstanceState)
-	{
-		super.onRestoreInstanceState(savedInstanceState);
-		errorMessage = savedInstanceState.getString(DLG_ERROR_MESSAGE);
-	}
-
-
-	@Override
-	protected void onSaveInstanceState(Bundle outState)
-	{
-		outState.putString(DLG_ERROR_MESSAGE, errorMessage);
-		super.onSaveInstanceState(outState);
-	}
-
 	/**
 	 * Method use during development. 
 	 * TODO - remove calls to this method when the application is released
@@ -83,42 +67,10 @@ public class SettingsActivity extends Activity {
 		
 	}
 	
-	/**
-	 * Converts the error code received from the backend into an id of the message
-	 * TODO - move this code into a class that handles error codes from the backend
-	 * @param statusCode status code received from the backend
-	 * @return message id from string resources
-	 */
-	private int getErrorMessage(int statusCode)
-	{
-		switch(statusCode)
-		{
-		case 403:
-		case 401:
-			return R.string.login_fail;
-			default:
-				return R.string.internal_err;
-		}
-	}
-	
-	/**
-	 * This method is called whenever an error message must be displayed, for a status code
-	 * @param statusCode
-	 */
-	private void showErrorDialog(int statusCode)
-	{
-		errorMessage = getResources().getString(getErrorMessage(statusCode));
-		showDialog(DLG_ERROR);
-	}
-
 	@Override
 	protected Dialog onCreateDialog(int id)
 	{
-		if (id == DLG_ERROR)
-		{
-			return Utils.displayDialog(this, errorMessage);
-		}
-		else if (id == DLG_PROGRESS)
+		if (id == IDialogIds.DLG_PROGRESS)
 		{
 			// TODO - add cancel listener
 			ProgressDialog pd = new ProgressDialog(this);
@@ -129,16 +81,6 @@ public class SettingsActivity extends Activity {
 		return super.onCreateDialog(id);
 	}
 
-	@Override
-	protected void onPrepareDialog(int id, Dialog dialog)
-	{
-		if (id == DLG_ERROR)
-		{
-			((AlertDialog)dialog).setMessage(errorMessage);
-		}
-		super.onPrepareDialog(id, dialog);
-	}
-	
 	/**
 	 * Listener called when the submit button is a LOGIN button
 	 * @author Coralia Paunoiu
@@ -179,7 +121,7 @@ public class SettingsActivity extends Activity {
 		protected void onPreExecute()
 		{
 			super.onPreExecute();
-			showDialog(DLG_PROGRESS);
+			showDialog(IDialogIds.DLG_PROGRESS);
 		}
 
 		@Override
@@ -191,7 +133,7 @@ public class SettingsActivity extends Activity {
 			{
 				setupLoginButton(true);
 			}
-			dismissDialog(DLG_PROGRESS);
+			dismissDialog(IDialogIds.DLG_PROGRESS);
 		}
 
 		@Override
@@ -206,7 +148,7 @@ public class SettingsActivity extends Activity {
 				return backend.signIn(email, password);
 			} catch (RemoteConnError e)
 			{
-				showErrorDialog(e.getStatusCode());
+				ErrorDialogHandler.showErrorDialog(SettingsActivity.this, e.getStatusCode());
 				return null;
 			}
 		}
@@ -220,13 +162,5 @@ public class SettingsActivity extends Activity {
 	{
 		((LDIRApplication)getApplication()).setUserDetails(null);
 	}
-	
-	/**
-	 * Checks if the user is logged in in the application
-	 * @return true if the user is logged in - there are user details and false otherwise
-	 */
-	private boolean isLoggedIn()
-	{
-		return ((LDIRApplication)getApplication()).getUserDetails() != null;
-	}
+
 }

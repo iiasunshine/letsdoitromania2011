@@ -34,7 +34,7 @@
 	<string name="chart_add_dispersat">Gunoi dispersat:</string>
 	<string name="area_add_err_limit1">A fost atins numarul maxim de echipe (5) ce pot
 		carta zona selectata (%s)</string>
-	<string name="details_description">Descriere:</string>
+	<string name="details_description">Descriere:*</string>
 	<string name="newpass_message_expired">Dreptul de schimbare a parolei a expirat sau
 		aceasta a fost schimbata deja! Pentru a continua resetati-o din nou si
 		veti primi un nou link pe mail pentru schimbarea parolei,</string>
@@ -107,7 +107,7 @@
 	<string name="err_mandatory_fields">Completati toate campurile obligatorii va rugam
 		(cele marcate cu *)!</string>
 	<string name="area_grid_loading">Asteptati, se incarca zonele de cartare</string>
-	<string name="details_description_title">Descrierea mormanului:</string>
+	<string name="details_description_title">Descrierea mormanului:*</string>
 	<string name="reset_mail">Adresa e-mail:</string>
 	<string name="details_modify_link">Modifica morman</string>
 	<string name="chart_err_longitude">Introduceti longitudinea intre 20.0 si 30.0.
@@ -217,9 +217,11 @@
 	<string name="details_stop_getting_location">Stop</string>
 	<string name="details_gps_disabled">Antena GPS este dezactivata. Activati?</string>
 	<string name="details_ok">Bine</string>
-	<string name="details_no_pictures">Mormanul de gunoi nu are nici o fotografie atasata</string>
+	<string name="details_no_pictures">Mormanul de gunoi nu are nici o imagine atasata</string>
 	<string name="gallery_delete">Sterge</string>
 	<string name="gallery_delete_confirm">Doriti sa stergeti imaginea selectata?</string>
 	<string name="details_delete_confirm">Mormanul %s a fost sters</string>
 	<string name="login_progress">In curs de autentificare....</string>
+	<string name="login_required">Trebuie sa fiti autentificat pentru a efectua aceasta comanda</string>
+	<string name="details_img_required">Trebuie sa atasati cel putin o imagine acestui morman de gunoi</string>
 </resources>

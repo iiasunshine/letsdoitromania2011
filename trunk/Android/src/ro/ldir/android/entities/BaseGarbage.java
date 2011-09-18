@@ -18,7 +18,7 @@ public class BaseGarbage implements IBackendGarbage{
 	 * the default value that the field {@link Garbage#remoteDbId}} has. If the garbage is not uploaded then this is the id
 	 * After the upload, the  {@link Garbage#remoteDbId}} gets a normal id value
 	 */
-	protected static final int NO_DB_ID = -1;
+	public static final int NO_DB_ID = -1;
 	
 	public static final int DESCRIPTION_LENGTH = 20;
     public static final int DETAILS_LENGTH = 30;
