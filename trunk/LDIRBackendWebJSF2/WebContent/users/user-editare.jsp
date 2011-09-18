@@ -8,7 +8,7 @@
 		  <jsp:directive.include file="/WEB-INF/jspf/page-meta.jspf" />
 		  <title>Let's do it Romania</title>
 		</head>
-	  	<body>
+	  	<body onload="checkForWarningOnLoad(this)">
 	  	  <center>
 	  	    <%-- page Top --%>                             
 	  	     <custom:page_top_login selected="user_edit" role="${userManager.userDetails.role}"/>
@@ -38,7 +38,7 @@
                              <br/>
                              
                               <h:messages warnClass="registerMessageError" infoClass="registerMessageOk"/>
-                              <h:form styleClass="form" rendered="#{not fn:contains(facesContext.messageList[0].severity, 'INFO')}">
+                              <h:form styleClass="form" id="formProfil" rendered="#{not fn:contains(facesContext.messageList[0].severity, 'INFO')}">
                                 <!-- NUME -->
                                 <div class="label"><h:outputText value="#{msg.register_name} "/><span class="important">*</span></div>
                                 <h:inputText value="#{userManager.userDetails.firstName}" id="nume" styleClass="formTextfield"/>
@@ -98,12 +98,15 @@
                                 <div class="label"><h:outputText value="#{msg.register_phone} "/></div>
                                 <h:inputText value="#{userManager.userDetails.phone}" id="telefon" styleClass="formTextfield"/>
                                 <br/>
-                                 <!-- Accepta vizualizare de date Lead -->
-                                <h:selectBooleanCheckbox value="#{userManager.profileView}" id="vizibleData"/>
+                                 <!-- Accepta vizualizare de date Lead -->                                 
+                                <h:selectBooleanCheckbox value="#{userManager.profileView}" id="vizibleData" onchange="showWarning(this)"/>
                                 <label class="formCheckbox">
                                     <h:outputText value="#{msg.register_acceptVizibleData} "/>
-                                </label>
-                                <br/>
+                                </label>                                
+                                <br/>                                
+                                <label class="important" id="warningPersonalData" style="display:none">
+									<h:outputText value="Emailul si telefonul vor fi vizible liderului de echipa" />
+                                </label>                                
                                  <!-- Accepta si alte informari -->
                                 <h:selectBooleanCheckbox value="#{userManager.userDetails.acceptsMoreInfo}" id="acceptReceiveNotifications"/>
                                 <label class="formCheckbox">
@@ -127,6 +130,7 @@
 	  	  
 	  	    <%-- page Buttom --%>
 	  	    <custom:page_bottom/>
+	  	  <div class="important"  onload="checkForWarningOnLoad()"></div>
 	  	  </center>
 	  	</body>
 	</html>
