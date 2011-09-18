@@ -48,7 +48,7 @@ import ro.ldir.dto.helper.NonTransferableField;
 public class Organization extends FieldAccessBean implements Serializable {
 
 	public enum OrganizationType {
-		CITY_HALL, COMPANY, LANDFILL, REGISTRATION_POINT, SCHOOL, ONG,INSTITUTIE,ALTELE
+		CITY_HALL, COMPANY, LANDFILL, REGISTRATION_POINT, SCHOOL, ONG, INSTITUTIE, ALTELE
 	}
 
 	private static final long serialVersionUID = 1L;;
