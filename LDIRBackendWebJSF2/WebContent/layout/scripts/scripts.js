@@ -2,6 +2,23 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
+
+function checkForWarningOnLoad(b){
+	//el=document.getElementById('rightColumn');
+	el=document.getElementById('formProfil:vizibleData');
+    //alert(el);
+	showWarning(el);
+
+}
+function showWarning(element){
+
+	if (element.checked==true)
+	  document.getElementById('warningPersonalData').style.display = 'block';
+	  else
+		  document.getElementById('warningPersonalData').style.display = 'none';
+	
+} 
+
 function numbersonly(myfield, e, dec){
     var key;
     var keychar;

@@ -113,11 +113,14 @@
                                 <div class="label"><span class="important">*</span></div>
                                 <br/>
                                  <!-- Accepta vizualizare de date Lead -->
-                                <h:selectBooleanCheckbox value="#{registerBean.profileView}" id="vizibleData"/>
+                                <h:selectBooleanCheckbox value="#{registerBean.profileView}" id="vizibleData" onchange="showWarning(this)"/>
                                 <label class="formCheckbox">
                                     <h:outputText value="#{msg.register_acceptVizibleData} "/>
                                 </label>
                                 <br/>
+ 								<label class="important" id="warningPersonalData" style="display:none">
+									<h:outputText value="Emailul si telefonul vor fi vizible liderului de echipa" />
+                                </label> 
                                 <!-- Accepta si alte informari -->
                                 <h:selectBooleanCheckbox value="#{registerBean.acceptReceiveNotifications}" id="acceptReceiveNotifications"/>
                                 <label class="formCheckbox">

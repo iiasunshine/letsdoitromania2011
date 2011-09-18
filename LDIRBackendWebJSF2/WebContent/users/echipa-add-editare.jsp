@@ -35,6 +35,7 @@
                  
                                 <br/>
                                 <br/>
+                                
                                  <!-- BUTOANE -->
                                 <div style="margin-left: 150px;">
                                     <h:commandButton action="#{teamBean.actionAddToTeam}"
@@ -43,6 +44,16 @@
                                                      styleClass="formButton"/>
                                     <input name="anuleaza" type="reset" class="formButton" value="Renunta" id="anuleaza" />
                                 </div>
+                                <br/>
+                                <label id="warningPersonalData1">
+									<h:outputText rendered="#{not userManager.profileView}" value="Pentru ca liderul sa vada datele tale de contact (telefon si email), va trebui sa iti dai acordul expres; pentru aceasta, modifica Profilul tau si selecteaza bifa \"Sunt de acord ca liderul echipei sa vada datele mele de contact\"" />
+                                </label>
+                                <label id="warningPersonalData2" class="important">
+									<h:outputText rendered="#{userManager.profileView}" value="Liderul de echipa POATE sa vada emailul si telefonul tau. Pentru a le ascunde, modifica Profilul tau si deselecteaza bifa \"Sunt de acord ca liderul echipei sa vada datele mele de contact\"" />
+                                </label>     
+                                     
+                                
+                             
   						
   						</h:form>
 

@@ -36,13 +36,18 @@
 							<br /> <br />
 
 						</h1>
+						
+						<span class="important">Emailul si telefonul vor fi afisat doar pentru membrii ce si-au dat acordul .</span>
+						<br/><br/>
 						<h:form>
 							<div id="listHeaderContainer">
 								<div class="listHeader">Nume</div>
 								<div class="listHeader">Oras</div>
 								<div class="listHeader">Judet</div>
 								<div class="listHeader">Tipul membrului</div>
-								<div class="listHeader">Numar membri</div>
+								<div class="listHeader">Numar membri</div>								
+								<div class="listHeader">Telefon</div>
+								<div class="listHeader" style="width:120px">Email</div>
 								<div class="listHeader">Sterge membru</div>
 							</div>
 
@@ -63,6 +68,14 @@
 									<div class="listEntry">
 										<h:outputText value="1" />
 									</div>
+									<div class="listEntry">
+										<h:outputText value="#{user.phone}" rendered="#{user.profileView}"/>
+									</div>
+									<div class="listEntry" style="width:120px;overflow:scroll;overflow-y:hidden">
+										<h:outputText value="#{user.email}" rendered="#{user.profileView}"/>
+									</div>
+									
+									
 
 									<div class="listEntry">
 										<h:commandButton action="#{teamBean.actionWithdrawFromTeam}"
