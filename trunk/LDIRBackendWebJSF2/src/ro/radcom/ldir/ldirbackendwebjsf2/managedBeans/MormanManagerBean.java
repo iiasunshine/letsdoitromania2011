@@ -8,16 +8,22 @@ package ro.radcom.ldir.ldirbackendwebjsf2.managedBeans;
 import com.sun.jersey.api.client.ClientResponse;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.faces.model.SelectItem;
 
 import org.apache.log4j.Logger;
 import org.apache.myfaces.custom.fileupload.UploadedFile;
+import org.json.JSONObject;
+
+import ro.ldir.dto.ChartedArea;
 import ro.ldir.dto.Garbage;
+import ro.ldir.dto.Team;
 import ro.ldir.dto.User;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.AppUtils;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.ImageInfo;
@@ -41,6 +47,7 @@ public class MormanManagerBean {
     private MyGarbage myGarbage = new MyGarbage(new Garbage());
     private List<MyGarbage> myGarbageList = new ArrayList<MyGarbage>();
     private User userDetails = new User();
+    private Team userTeam = null;
     private String latitudine = "0.0";
     private String lat_grd = "0";
     private String lat_min = "0";
@@ -59,14 +66,130 @@ public class MormanManagerBean {
     private UploadedFile uploadedFile2 = null;
     private UploadedFile uploadedFile3 = null;
     private int selectedImgIndex = 0;
+    
+    private boolean mormanAlocat = false;
 
     /** Creates a new instance of MormanManagerBean */
     public MormanManagerBean() {
         /* obtinere id garbage seletat din request (daca este cazul) */
         int garbageId = AppUtils.parseToInt(JsfUtils.getRequestParameter("garbageId"));
+        userDetails = (User) JsfUtils.getHttpSession().getAttribute("USER_DETAILS");
+        Team teamSelected = (Team) JsfUtils.getHttpSession().getAttribute("TEAM_SELECTED");
 
         /* initializare detalii utilizator si lista mormane */
-        init(garbageId);
+       if (garbageId>0){
+         ClientResponse cr = wsi.getGarbage(userDetails,garbageId);
+           if (cr.getStatus() != 200) {
+               log4j.fatal("nu s-a reusit obtinerea mormanului " + garbageId + " (statusCode=" + cr.getStatus() + " responseStatus=" + cr.getResponseStatus() + ")");
+               JsfUtils.addWarnBundleMessage("internal_err");
+               return;
+           } else {
+        	   
+        	   if (teamSelected!=null)
+               {
+            	  Iterator<Garbage> iterator = teamSelected.getGarbages().iterator();
+            	  while (iterator.hasNext()) {
+            		  Garbage g1 = iterator.next();
+            		  if (g1.getGarbageId() == garbageId) {
+            			  	mormanAlocat = true;
+            			  	break;
+            		  }
+
+            	  }
+               };
+
+        	   Garbage g = cr.getEntity(Garbage.class);
+               myGarbage = new MyGarbage(g);
+               longitudine = "" + g.getX();
+               latitudine = "" + g.getY();
+               
+               
+               /* obtinere numar poze */
+               for (int i = 0; i < g.getPictures().size(); i++) {
+                    int height = 0;
+                   try {
+                       /**
+                        * thumbnail
+                        */
+                       ClientResponse cr1 = wsi.getPicture(userDetails, g, i, false);
+
+                       if (cr1.getStatus() == 200) {
+                           File tempFile = cr1.getEntity(File.class);
+                           log4j.debug("---> temp file: " + tempFile.getAbsolutePath());
+
+                           String relativePath = "temp/" + userDetails.getUserId() + "/preview_" + garbageId + "_" + i + "_thumbnail.jpg";
+                           String previewFilePath = JsfUtils.makeContextPath(relativePath);
+                           File previewFile = new File(previewFilePath);
+                           if (!previewFile.getParentFile().isDirectory()) {
+                               if (!previewFile.getParentFile().mkdirs()) {
+                                   log4j.warn("nu s-a putut crea drectorul pentru preview: " + previewFile.getParentFile().getAbsolutePath());
+                               }
+                           }
+                           if (previewFile.isFile()) {
+                               if (!previewFile.delete()) {
+                                   log4j.warn("nu s-a putut sterge fisierul existent: " + previewFile.getAbsolutePath());
+                               }
+                           }
+                           if (!tempFile.renameTo(previewFile)) {
+                               log4j.warn("nu s-a putut redenumi fisierul temporar: " + tempFile.getAbsolutePath());
+                           } else {
+                               thumbnails.add(relativePath);
+                           }
+                       } else {
+                           log4j.fatal("Eroare obtinere imagine backend: statusCode=" + cr1.getStatus() + " (statusMsg=" + cr.getClientResponseStatus() + ")");
+                       }
+
+                       /**
+                        * imagine full
+                        */
+                       cr = wsi.getPicture(userDetails, g, i, true);
+
+                       if (cr.getStatus() == 200) {
+                           File tempFile = cr.getEntity(File.class);
+                           log4j.debug("---> temp file: " + tempFile.getAbsolutePath());
+
+                           String relativePath = "temp/" + userDetails.getUserId() + "/preview_" + garbageId + "_" + i + "_full.jpg";
+                           String previewFilePath = JsfUtils.makeContextPath(relativePath);
+                           File previewFile = new File(previewFilePath);
+                           if (!previewFile.getParentFile().isDirectory()) {
+                               if (!previewFile.getParentFile().mkdirs()) {
+                                   log4j.warn("nu s-a putut crea drectorul pentru preview: " + previewFile.getParentFile().getAbsolutePath());
+                               }
+                           }
+                           if (previewFile.isFile()) {
+                               if (!previewFile.delete()) {
+                                   log4j.warn("nu s-a putut sterge fisierul existent: " + previewFile.getAbsolutePath());
+                               }
+                           }
+                           if (!tempFile.renameTo(previewFile)) {
+                               log4j.warn("nu s-a putut redenumi fisierul temporar: " + tempFile.getAbsolutePath());
+                           } else {
+                               posters.add(relativePath);
+                               ImageInfo imageInfo = ImageInfo.getImageInfo(previewFile.getAbsolutePath(), false);
+                               if(imageInfo.getHeight() > 550){
+                                   height = 550;
+                               }
+                               posterHeights.add(height);
+                           }
+                       } else {
+                           log4j.fatal("Eroare obtinere imagine backend: statusCode=" + cr.getStatus() + " (statusMsg=" + cr.getClientResponseStatus() + ")");
+                       }
+                   } catch (Exception ex) {
+                       log4j.fatal("Eroare obtinere imagine: " + AppUtils.printStackTrace(ex));
+                   }
+               }
+           
+           String infoHtml = "<strong>" + JsfUtils.getBundleMessage("details_morman") + " " + g.getGarbageId() + "</strong><br/>";
+           infoHtml += JsfUtils.getBundleMessage("details_area") + " " + (g.getChartedArea() != null ? g.getChartedArea().getName() : "unknown") + "<br/>";
+           infoHtml += JsfUtils.getBundleMessage("details_county") + " " + (g.getCounty() != null ? g.getCounty().getName() : "unknown") + "<br/>";
+           infoHtml += JsfUtils.getBundleMessage("details_state") + " " + (g.getStatus() != null ? g.getStatus().name() : "unknown") + "<br/><br/>";
+           infoHtml += (g.getDescription() != null ? g.getDescription() : "") + "<br/>";
+           infoHtml += "<br/><a href=\"cartare-mormane-detalii.jsf?garbageId=" + g.getGarbageId() + "\" style=\"color: #4D751F;\">" + JsfUtils.getBundleMessage("details_view_link") + "</a>";
+           myGarbageList.add(new MyGarbage(g, infoHtml));
+       }
+       }
+         else 
+        	 init(garbageId);
 
         /* adaugare mesaj info de pe sesiune daca exista */
         String infoMessage = (String) JsfUtils.getHttpSession().getAttribute("INFO_MESSAGE");
@@ -185,6 +308,8 @@ public class MormanManagerBean {
         }
     }
 
+    
+    
     public void actionSetSelectedImage() {
         log4j.debug("---> imagine selectata");
         selectedImgIndex = AppUtils.parseToInt(JsfUtils.getRequestParameter("imgIndex"));
@@ -346,6 +471,48 @@ public class MormanManagerBean {
         }
     }
 
+    
+    public String actionAssignMorman() {
+        /* atribuire zona noua daca este cazul */
+    	Team teamSelected=null;
+    	if(JsfUtils.getHttpSession().getAttribute("TEAM_SELECTED")!=null)
+        	teamSelected = (Team) JsfUtils.getHttpSession().getAttribute("TEAM_SELECTED");  
+    	if(teamSelected==null)
+    		return "";
+    	
+        int addGarbageId = AppUtils.parseToInt(JsfUtils.getRequestParameter("addGarbageId"));
+        
+        Garbage garbage = new Garbage();        
+        garbage.setGarbageId(addGarbageId);
+        
+        if (addGarbageId > 0) {
+            ClientResponse cr =wsi.addGarbageToTeam(userDetails,teamSelected.getTeamId(),garbage); 
+            		
+            if (cr.getStatus() == 406) {
+                log4j.warn("prea multe echipe pe zona sau prea multe zone la echipa " + addGarbageId + " (statusCode=" + cr.getStatus() + " responseStatus=" + cr.getResponseStatus() + ")");
+                if (cr.getResponseStatus().toString().indexOf("There are too many people charting this area already") >= 0) {
+                    JsfUtils.addWarnMessage("", JsfUtils.getBundleMessage("area_add_err_limit1").replaceAll("\\{0\\}", "" + addGarbageId));
+                } else if (cr.getResponseStatus().toString().indexOf("There are too many charted areas for this team") >= 0) {
+                    JsfUtils.addWarnMessage("", JsfUtils.getBundleMessage("area_add_err_limit2"));
+                } else {
+                    JsfUtils.addWarnBundleMessage("internal_err");
+                }
+            } else if (cr.getStatus() != 200) {
+                log4j.fatal("nu s-a reusit adaugarea garbage " + addGarbageId + " (statusCode=" + cr.getStatus() + " responseStatus=" + cr.getResponseStatus() + ")");
+                JsfUtils.addWarnBundleMessage("internal_err");
+            } else {
+                log4j.debug("garbage atribuit " + addGarbageId + " (statusCode=" + cr.getStatus() + " responseStatus=" + cr.getResponseStatus() + ")");
+
+                String infoText = JsfUtils.getBundleMessage("garbage_add_confirm").replaceAll("\\{0\\}", "" + addGarbageId);
+               
+                return NavigationValues.AREA_ASSIGN_SUCCESS;
+            }
+        }
+
+        return NavigationValues.AREA_ASSIGN_FAIL;
+    }
+    
+    
     public String actionDeleteMorman() {
         ClientResponse cr = wsi.deleteGarbage(userDetails, myGarbage.getGarbage());
         int statusCode = cr.getStatus();
@@ -367,6 +534,46 @@ public class MormanManagerBean {
         }
     }
 
+    public String actionRemoveMormanFromTeam() {
+    	
+    	//TO BE REWRITED FOR TEAMS AND WITH CORRECT wsi. call
+    	
+    	Team teamSelected=null;
+    	if(JsfUtils.getHttpSession().getAttribute("TEAM_SELECTED")!=null)
+        	teamSelected = (Team) JsfUtils.getHttpSession().getAttribute("TEAM_SELECTED");  
+    	if(teamSelected==null)
+    		return "";
+    	
+        int removeGarbageId = AppUtils.parseToInt(JsfUtils.getRequestParameter("removeGarbageId"));
+        
+        Garbage garbage = new Garbage();        
+        garbage.setGarbageId(removeGarbageId);
+        
+        if (removeGarbageId > 0) {
+        	
+        //THIS CALL IS INCORECT
+        ClientResponse cr = wsi.deleteGarbage(userDetails, myGarbage.getGarbage());
+        int statusCode = cr.getStatus();
+        log4j.debug("---> Garbage Delete statusCode: " + statusCode + " (" + cr.getClientResponseStatus() + ")");
+        if (statusCode == 200) {
+            /* cerere informatii user */
+            cr = wsi.reinitUser(userDetails);
+            statusCode = cr.getStatus();
+            log4j.debug("---> Reinit User Garbage statusCode: " + statusCode + " (" + cr.getClientResponseStatus() + ")");
+            if (statusCode != 200) {
+                JsfUtils.addWarnBundleMessage("internal_err");
+                return NavigationValues.MORMAN_DELETE_FAIL;
+            } else {
+                return NavigationValues.MORMAN_DELETE_SUCCESS;
+            }
+        } else {
+            JsfUtils.addWarnBundleMessage("internal_err");
+            return NavigationValues.MORMAN_DELETE_FAIL;
+        }
+        
+        }
+    }
+    
     public List<SelectItem> getSaciNrItems() {
         List<SelectItem> saciNrItems = new ArrayList<SelectItem>();
 
@@ -387,6 +594,12 @@ public class MormanManagerBean {
     /**
      * @param userDetails the userDetails to set
      */
+    
+    public boolean getMormanAlocat(){
+    	return this.mormanAlocat;
+    }
+    
+        
     public void setUserDetails(User userDetails) {
         this.userDetails = userDetails;
     }

@@ -43,22 +43,33 @@
                              <h:outputText value="#{msg.echipa_list_title}"
                                               rendered="#{fn:length(areaCleanManager.teamList) gt 0}"/>
                          </h1>
+						
                          <h:panelGroup rendered="#{fn:length(areaCleanManager.teamList) gt 0}">
                            <a4j:repeat value="#{areaCleanManager.teamList}" var="team">
                           		 <div class="entryLeft">
-                          		 	   <h3> <h:outputText value="Echipa Nume = " /> </h3>
-                                        <strong><h:outputText value="#{team.teamName}"/></strong>
-                                        
+                          		 	   <br/>
+                          		 	   <h3><h:outputText value="Echipa: #{team.teamName}" /></h3>
+								<h:form>
+                                        <h:commandLink action="#{areaCleanManager.actionSelectTeam}">
+                                            <f:param name="team" value="#{team.teamId}"/>
+                                            <h:outputText value="Aloca pt aceasta echipa" escape="false"/>
+                                        </h:commandLink>
+                                </h:form>	 	   
+                            <span class=important><h:outputText value="<strong>Echipa selectata.</strong><br/>" escape="false" rendered="#{areaCleanManager.teamSelected.teamId eq team.teamId}"/></span>
  							<h:panelGroup rendered="#{fn:length(team.garbages) eq 0}">
-                                <h3><h:outputText value="#{msg.clean_empty_list}"/></h3>
+                                <h:outputText value="#{msg.clean_empty_list}"/>
                             </h:panelGroup>
                             <h:panelGroup rendered="#{fn:length(team.garbages) gt 0}">
                                 <h3><h:outputText value="#{msg.map_list_morman}  (#{fn:length(team.garbages)})"/></h3>
                                 <h:panelGroup rendered="#{fn:length(team.garbages) gt 0}"
                                               style="#{fn:length(team.garbages) gt 15? 'max-height: 610px; overflow: scroll; display: block;' : ''}">
                                               
-                                    <a4j:repeat value="#{team.garbages}" var="myGarbage">
-   
+                                    <a4j:repeat value="#{team.garbages.toArray()}" var="myGarbage">
+   										<h:outputText escape="false" value="#{msg.details_morman} "/>                                		
+                                		 <h:outputLink value="curatenie-morman-detalii.jsf?garbageId=#{myGarbage.garbageId}">
+                                                <h:outputText value="#{myGarbage.garbageId}" escape="false"/>
+                                            </h:outputLink>
+                                		<br/>
                                     </a4j:repeat>
                                 </h:panelGroup>
                             </h:panelGroup>
