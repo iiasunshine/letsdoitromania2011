@@ -149,9 +149,6 @@ public class User extends FieldAccessBean implements Serializable {
 		return profileView;
 	}
 	
-	public boolean isProfileView() {
-		return profileView;
-	}
 	/**
 	 * @return the activities
 	 */
