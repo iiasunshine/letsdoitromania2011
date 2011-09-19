@@ -47,7 +47,7 @@ public class AreaCleanManagerBean {
     private List<MyGarbage> myGarbageList = new ArrayList<MyGarbage>();
     private List<MyGarbage> garbageList = new ArrayList<MyGarbage>();
     private User userDetails = new User();
-    private Team userTeam = null;
+    private Team userTeam = null;    
     private User managerDetails;
     private JSONObject areaJsonBouns = null;
     private List<Garbage> areaGarbages = new ArrayList<Garbage>();
@@ -57,6 +57,8 @@ public class AreaCleanManagerBean {
     private boolean managerBool = false;
     private List<Team> teamList = new ArrayList<Team>();
     private String country;
+    private Team teamSelected;
+	
 	
 	public AreaCleanManagerBean(){
 	  
@@ -65,6 +67,9 @@ public class AreaCleanManagerBean {
      */
     userDetails = (User) JsfUtils.getHttpSession().getAttribute("USER_DETAILS");
 
+    if(JsfUtils.getHttpSession().getAttribute("TEAM_SELECTED")!=null)
+    	teamSelected = (Team) JsfUtils.getHttpSession().getAttribute("TEAM_SELECTED");    
+     
     /**
      * echipa utilizatorului curent (=> lista zone atribuite)
      */
@@ -82,20 +87,41 @@ public class AreaCleanManagerBean {
             //load garbages on every team
             if(teamList != null && teamList.size() > 0){
             	for(Team team : teamList){
+
+            		//first team gets selected
+            		if(JsfUtils.getHttpSession().getAttribute("TEAM_SELECTED")==null)
+                    {
+            			teamSelected=team;
+            			JsfUtils.getHttpSession().setAttribute("TEAM_SELECTED", teamSelected);            			
+                    }
+            		
+            		
             		cr = wsi.getGarbageofTeam(userDetails, team.getTeamId());
-            		if(cr.getStatus() == 200){
-            			team = cr.getEntity(Team.class);
-            			
-            		}else {
-            			Garbage garbage = new Garbage();
-            			garbage.setGarbageId(27);
-            			Set<Garbage> temp =  new HashSet<Garbage>();
-            			temp.add(garbage);
-            			team.setGarbages(temp);
-            		}
+                    /* obtinere lista gunoaie */
+                    if (cr.getStatus() != 200) {
+                        log4j.fatal("nu s-a reusit obtinerea gunoaielor pt echipa " + team.getTeamId() + " (statusCode=" + cr.getStatus() + " responseStatus=" + cr.getResponseStatus() + ")");
+                        JsfUtils.addWarnBundleMessage("internal_err");
+                        
+                        return;
+                    }; 
+                    if(cr.getStatus() == 200) {
+                    	
+                    	
+                    	areaGarbages = new ArrayList<Garbage>();
+                    	areaGarbages.addAll(Arrays.asList(cr.getEntity(Garbage[].class)));
+                    	
+                    	if(areaGarbages.isEmpty()!=true&&areaGarbages.size()!=0){
+                    		Set<Garbage> foo = new HashSet<Garbage>(areaGarbages);
+                        	team.setGarbages(foo);
+                    		};
+                        }
+            		
+
             	}
             }
         }
+        
+
     }
     
     ClientResponse cr = wsi.getCountyList();
@@ -171,6 +197,25 @@ public class AreaCleanManagerBean {
 		
 		
 	}
+	
+	
+	public void actionSelectTeam()
+	{
+		
+		int teamId=AppUtils.parseToInt(JsfUtils.getRequestParameter("team"));
+	    if(teamList != null && teamList.size() > 0)
+        	for(Team team : teamList){
+
+        		//first team gets selected
+        		if(teamId==team.getTeamId())
+                {
+        			teamSelected=team;
+        			JsfUtils.getHttpSession().setAttribute("TEAM_SELECTED", teamSelected);
+        			break;
+                };
+        	};
+	};
+	
     public void managedTeams(){
     	
     	String location = JsfUtils.getInitParameter("webservice.url")+"/LDIRBackend/ws/user/"+ userDetails.getUserId() +"/managedTeams";
@@ -236,6 +281,15 @@ public class AreaCleanManagerBean {
 
         return items;
     }
+    
+    public Team getTeamSelected(){
+    	return this.teamSelected;
+    }
+    
+    public void setTeamSelected(Team team){
+    	this.teamSelected=team;
+    }
+    
 	public void setManagerBool(boolean managerBool) {
 		this.managerBool = managerBool;
 	}
