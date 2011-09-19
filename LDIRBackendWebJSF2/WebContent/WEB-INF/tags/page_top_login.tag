@@ -16,7 +16,7 @@
                 <li><a href="${pageContext.servletContext.contextPath}/index.jsf" class="${selected eq 'home' ? 'active' : ''}"><span>${msg.meniu_home}</span></a></li>
                 <li><a href="${pageContext.servletContext.contextPath}/users/cartare-zone-lista.jsf" class="${selected eq 'zone' ? 'active' : ''}"><span>${msg.meniu_zona_cartare}</span></a></li>
                 <li><a href="${pageContext.servletContext.contextPath}/users/cartare-mormane-lista.jsf" class="${selected eq 'mormane' ? 'active' : ''}"><span>${msg.meniu_cartare_mormane}</span></a></li>
-                <c:if test="${(role eq 'ADMIN') or (role eq 'ORGANIZER') or (role eq 'ORGANIZER_MULTI')}">
+                <c:if test="${(role eq 'ADMIN')}">
                     <li><a href="${pageContext.servletContext.contextPath}/admin/admin-lista-voluntari.jsf" class="${selected eq 'lista_utilizatori' ? 'active' : ''}"><span>${msg.meniu_lista_utilizatori}</span></a></li>
                     <li><a href="${pageContext.servletContext.contextPath}/admin/admin-lista-mormane.jsf" class="${selected eq 'lista_mormane' ? 'active' : ''}"><span>${msg.meniu_lista_mormane}</span></a></li>
                 </c:if>
@@ -27,7 +27,7 @@
                  <c:if test="${(role eq 'ADMIN') or (role eq 'ORGANIZER') or (role eq 'VOLUNTEER')}">
                 	<li><a href="${pageContext.servletContext.contextPath}/users/echipa-vizualizare.jsf" class="${selected eq 'echipa_edit' ? 'active': ''}"><span>${msg.meniu_echipa_edit}</span></a></li>
                  </c:if>
-                 <c:if test="${true}">
+                 <c:if test="${false}">
                  <li><a href="${pageContext.servletContext.contextPath}/users/curatenie-vizualizare.jsf" class="${selected eq 'curatenie' ? 'active': ''}"><span>${msg.meniu_curatenie_list}</span></a></li>
                  </c:if>
                 <li><a href="${pageContext.servletContext.contextPath}/logout.jsf"><span>${msg.meniu_logout}</span></a></li>
