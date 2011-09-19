@@ -140,11 +140,6 @@ public class User extends FieldAccessBean implements Serializable {
 		return acceptsMoreInfo;
 	}
 
-	public boolean isAcceptsMoreInfo() {
-		return acceptsMoreInfo;
-	}
-
-
 	/**
 	 * 
 	 * @return the profileView
