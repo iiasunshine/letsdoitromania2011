@@ -51,6 +51,8 @@ public class GarbagesKMLFormatter {
 	private void appendGarbages() {
 		for (Garbage garbage : garbages) {
 			buf.append("<Placemark>\n");
+			buf.append("<styleUrl>#" + garbage.getAllocatedStatus()
+					+ "</styleUrl>\n");
 			buf.append("<name>Garbage " + garbage.getGarbageId() + "</name>\n");
 			buf.append("<description><![CDATA[");
 			buf.append("<p>" + garbage.getDescription() + "</p>\n");
@@ -70,6 +72,15 @@ public class GarbagesKMLFormatter {
 		buf.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
 				+ "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
 				+ "<Document>\n");
+		buf.append("<Style id=\"UNALLOCATED\">\n");
+		buf.append("<IconStyle><color>ff0000ff</color></IconStyle>\n");
+		buf.append("</Style>\n");
+		buf.append("<Style id=\"PARTIALLY\">\n");
+		buf.append("<IconStyle><color>ff00ffff</color></IconStyle>\n");
+		buf.append("</Style>\n");
+		buf.append("<Style id=\"COMPLETELY\">\n");
+		buf.append("<IconStyle><color>ff00ff00</color></IconStyle>\n");
+		buf.append("</Style>\n");
 	}
 
 	/*

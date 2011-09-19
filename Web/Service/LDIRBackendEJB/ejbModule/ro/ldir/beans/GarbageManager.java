@@ -70,7 +70,7 @@ import ro.ldir.dto.ChartedArea;
 import ro.ldir.dto.CountyArea;
 import ro.ldir.dto.Garbage;
 import ro.ldir.dto.Garbage.GarbageStatus;
-import ro.ldir.dto.Team;
+import ro.ldir.dto.GarbageEnrollment;
 import ro.ldir.dto.TownArea;
 import ro.ldir.dto.User;
 import ro.ldir.exceptions.NoCountyException;
@@ -243,10 +243,12 @@ public class GarbageManager implements GarbageManagerLocal {
 		garbage.getInsertedBy().getGarbages().remove(garbage);
 		em.merge(garbage.getInsertedBy());
 
-		if (garbage.getEnrolledCleaners() != null)
-			for (Team team : garbage.getEnrolledCleaners()) {
-				team.getGarbages().remove(garbage);
-				em.merge(team);
+		if (garbage.getGarbageEnrollements() != null)
+			for (GarbageEnrollment enrollment : garbage
+					.getGarbageEnrollements()) {
+				enrollment.getTeam().getGarbageEnrollements()
+						.remove(enrollment);
+				em.merge(enrollment.getTeam());
 			}
 		garbageGroupManager.cleanupGroup(garbage);
 		em.remove(garbage);

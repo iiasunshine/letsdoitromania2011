@@ -1,6 +1,5 @@
 package ro.ldir.beans;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -23,6 +22,7 @@ import ro.ldir.dto.ChartedArea;
 import ro.ldir.dto.CleaningEquipment;
 import ro.ldir.dto.Equipment;
 import ro.ldir.dto.Garbage;
+import ro.ldir.dto.GarbageEnrollment;
 import ro.ldir.dto.GpsEquipment;
 import ro.ldir.dto.Organization;
 import ro.ldir.dto.Team;
@@ -149,23 +149,48 @@ public class TeamManager implements TeamManagerLocal {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see ro.ldir.beans.TeamManagerLocal#assignGarbage(int, int)
+	 * @see ro.ldir.beans.TeamManagerLocal#assignGarbage(int, int, int)
 	 */
 	@Override
-	public void assignGarbage(int teamId, int garbageId) {
+	public void assignGarbage(int teamId, int garbageId, int bagCount)
+			throws InvalidTeamOperationException {
 		Team team = em.find(Team.class, teamId);
 		SecurityHelper.checkTeamMember(userManager, team, ctx);
 		Garbage garbage = em.find(Garbage.class, garbageId);
 
-		if (garbage.getEnrolledCleaners() == null)
-			garbage.setEnrolledCleaners(new ArrayList<Team>());
-		garbage.getEnrolledCleaners().add(team);
+		GarbageEnrollment existingEnrollment = null;
 
-		if (team.getGarbages() == null)
-			team.setGarbages(new HashSet<Garbage>());
-		team.getGarbages().add(garbage);
-		em.merge(team);
-		em.merge(garbage);
+		if (bagCount > garbage.getBagCount())
+			throw new InvalidTeamOperationException("Only "
+					+ garbage.getBagCount()
+					+ " bags are required for this garbage!");
+
+		int allocatedBags = 0;
+		int totalCapacity = team.countMembers() * team.getCleaningPower();
+
+		for (GarbageEnrollment enrollment : team.getGarbageEnrollements())
+			if (enrollment.getGarbage().getGarbageId() == garbageId)
+				existingEnrollment = enrollment;
+			else
+				allocatedBags += enrollment.getAllocatedBags();
+
+		if (allocatedBags + bagCount > totalCapacity)
+			throw new InvalidTeamOperationException(
+					"The total cleaning capacity for this team is "
+							+ totalCapacity + " bags, " + allocatedBags
+							+ " bags already allocated, cannot allocate more!");
+
+		if (existingEnrollment != null) {
+			existingEnrollment.setAllocatedBags(bagCount);
+			em.merge(existingEnrollment);
+			return;
+		}
+
+		GarbageEnrollment enrollment = new GarbageEnrollment(bagCount, garbage,
+				team);
+		garbage.getGarbageEnrollements().add(enrollment);
+		team.getGarbageEnrollements().add(enrollment);
+		em.persist(enrollment);
 	}
 
 	/*
@@ -379,10 +404,16 @@ public class TeamManager implements TeamManagerLocal {
 		SecurityHelper.checkTeamMember(userManager, team, ctx);
 		Garbage garbage = em.find(Garbage.class, garbageId);
 
-		garbage.getEnrolledCleaners().remove(team);
-		team.getGarbages().remove(garbage);
-		em.merge(team);
-		em.merge(garbage);
+		for (GarbageEnrollment enrollment : team.getGarbageEnrollements()) {
+			if (enrollment.getGarbage().getGarbageId().equals(garbageId)) {
+				em.remove(enrollment);
+				team.getGarbageEnrollements().remove(enrollment);
+				garbage.getGarbageEnrollements().remove(enrollment);
+				em.merge(team);
+				em.merge(garbage);
+				return;
+			}
+		}
 	}
 
 	/*

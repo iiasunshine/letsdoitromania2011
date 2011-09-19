@@ -49,6 +49,7 @@ import ro.ldir.dto.ChartedArea;
 import ro.ldir.dto.CleaningEquipment;
 import ro.ldir.dto.Equipment;
 import ro.ldir.dto.Garbage;
+import ro.ldir.dto.GarbageEnrollment;
 import ro.ldir.dto.GpsEquipment;
 import ro.ldir.dto.Organization;
 import ro.ldir.dto.Team;
@@ -56,6 +57,7 @@ import ro.ldir.dto.TransportEquipment;
 import ro.ldir.dto.User;
 import ro.ldir.dto.helper.AssignedChartedAreaFilter;
 import ro.ldir.exceptions.ChartedAreaAssignmentException;
+import ro.ldir.exceptions.InvalidTeamOperationException;
 import ro.ldir.report.formatter.AssignedChartedAreasCsvFormatter;
 import ro.ldir.report.formatter.AssignedChartedAreasExcelFormatter;
 import ro.ldir.report.formatter.ExcelFormatter;
@@ -94,15 +96,26 @@ public class TeamWebService {
 
 	@PUT
 	@Consumes({ "application/json", "application/xml" })
-	@Path("{teamId:[0-9]+}/cleaningGarbages")
+	@Path("{teamId:[0-9]+}/cleaningGarbages/{garbageId:[0-9]+}")
 	public Response addCleaningGarbage(@PathParam("teamId") int teamId,
-			Garbage garbage) {
+			@PathParam("garbageId") int garbageId, String abs) {
+		Integer allocatedBags;
 		try {
-			teamManager.assignGarbage(teamId, garbage.getGarbageId());
+			allocatedBags = new Integer(abs);
+		} catch (NumberFormatException e) {
+			return Response.status(Status.NOT_ACCEPTABLE)
+					.entity("Cannot convert input " + e.getMessage()).build();
+		}
+		try {
+
+			teamManager.assignGarbage(teamId, garbageId, allocatedBags);
 		} catch (EJBException e) {
 			if (e.getCausedByException() instanceof NullPointerException)
 				throw new WebApplicationException(404);
 			throw new WebApplicationException(500);
+		} catch (InvalidTeamOperationException e) {
+			return Response.status(Status.NOT_ACCEPTABLE)
+					.entity(e.getMessage()).build();
 		}
 		return Response.ok().build();
 	}
@@ -208,12 +221,16 @@ public class TeamWebService {
 	@Produces({ "application/json", "application/xml" })
 	@Path("{teamId:[0-9]+}/cleaningGarbages")
 	public List<Garbage> getCleaningGarbages(@PathParam("teamId") int teamId) {
+		List<Garbage> garbages = new ArrayList<Garbage>();
+		Team team;
 		try {
-			return new ArrayList<Garbage>(teamManager.getTeam(teamId)
-					.getGarbages());
+			team = teamManager.getTeam(teamId);
 		} catch (NullPointerException e) {
 			throw new WebApplicationException(404);
 		}
+		for (GarbageEnrollment enrollment : team.getGarbageEnrollements())
+			garbages.add(enrollment.getGarbage());
+		return garbages;
 	}
 
 	@GET
