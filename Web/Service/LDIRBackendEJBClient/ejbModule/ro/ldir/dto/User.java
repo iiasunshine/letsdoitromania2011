@@ -361,10 +361,7 @@ public class User extends FieldAccessBean implements Serializable {
 	/**
 	 * @param activities
 	 *            the activities to set
-	 *            
-	 *            
 	 */
-	
 	public void setActivities(List<Activity> activities) {
 		this.activities = activities;
 	}
