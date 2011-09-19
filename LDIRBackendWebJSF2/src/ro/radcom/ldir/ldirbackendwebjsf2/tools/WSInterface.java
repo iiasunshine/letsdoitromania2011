@@ -68,6 +68,17 @@ public class WSInterface {
         ClientResponse cr = builder.entity(garbage, MediaType.APPLICATION_XML).put(ClientResponse.class);
         return cr;
    }
+
+    public ClientResponse deleteGarbageFromTeam(User user, int teamId, Garbage garbage){
+    	//is this correct?
+        String location = WS_URL + "/LDIRBackend/ws/team/"+teamId+"/cleaningGarbages";
+
+        WebResource resource = client.resource(location);
+        Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(user.getEmail(), user.getPasswd()));
+        ClientResponse cr = builder.entity(garbage, MediaType.APPLICATION_XML).delete(ClientResponse.class);
+        return cr;
+   }
+
     public ClientResponse getGarbageFromCounty(User user, String county){
         String location = WS_URL + "/LDIRBackend/ws/garbage/countySearch/?county="+county;
 
@@ -266,7 +277,7 @@ public class WSInterface {
 
     public ClientResponse getGarbageListByFilters(User admin, String countyId, int gridId, int userId, Date addDate, String accept) {
         String location = WS_URL + "/LDIRBackend/ws/garbage/report?";
-        if (countyId != null && countyId.length() > 0) {
+        if (countyId != null && countyId != "" && countyId != "Toate") {
             location += "county=" + countyId + "&";
         }
         if (gridId > 0) {

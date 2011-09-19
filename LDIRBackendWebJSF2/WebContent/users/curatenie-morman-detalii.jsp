@@ -38,8 +38,12 @@
                             <h:messages warnClass="registerMessageError" infoClass="registerMessageOk"/>
 
                             <h:panelGroup rendered="#{not (mormanManager.myGarbage.garbage.garbageId eq null)}">
-                                <h1><h:outputText value="Acum vizualizezi"/></h1>
+                                <h:outputText escape="false" value="Echipa selectata: "/>
+                                <span class="important"><strong><h:outputText value="#{areaCleanManager.teamSelected.teamName}"/></strong></span>
                                 <br />
+                                <br />
+                                <h1><h:outputText value="Acum vizualizezi"/></h1>
+                                <br />                                
                                 <h:outputText escape="false" value="#{msg.details_morman} "/>
                                 <strong><h:outputText value="#{mormanManager.myGarbage.garbage.garbageId}"/></strong>
                                 <br />
@@ -132,10 +136,16 @@
                                 <br />
                                 <br />
                                 <h3>
-                                    <h:form>
+                                    <h:form rendered="#{not mormanManager.mormanAlocat}">
                                         <h:commandLink action="#{mormanManager.actionAssignMorman}">
-                                            <f:param name="garbageId" value="#{mormanManager.myGarbage.garbage.garbageId}"/>
+                                            <f:param name="addGarbageId" value="#{mormanManager.myGarbage.garbage.garbageId}"/>
                                             <h:outputText value="#{msg.details_assign_link}" escape="false"/>
+                                        </h:commandLink>
+                                    </h:form>
+                                   <h:form rendered="#{mormanManager.mormanAlocat}">
+                                        <h:commandLink action="#{mormanManager.actionRemoveMormanFromTeam}">
+                                            <f:param name="removeGarbageId" value="#{mormanManager.myGarbage.garbage.garbageId}"/>
+                                            <h:outputText value="» Dez-aloca morman" escape="false"/>
                                         </h:commandLink>
                                     </h:form>
                                 </h3>
