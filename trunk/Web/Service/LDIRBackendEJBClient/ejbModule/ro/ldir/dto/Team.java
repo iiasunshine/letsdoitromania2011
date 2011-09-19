@@ -24,7 +24,6 @@
 package ro.ldir.dto;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -45,6 +44,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import ro.ldir.dto.adapters.IntegerAdapter;
 import ro.ldir.dto.helper.FieldAccessBean;
+import ro.ldir.dto.helper.NonComparableField;
 import ro.ldir.dto.helper.NonTransferableField;
 
 /**
@@ -53,9 +53,11 @@ import ro.ldir.dto.helper.NonTransferableField;
 @Entity
 @XmlRootElement
 public class Team extends FieldAccessBean {
+	private static final Integer DEFAULT_CLEANINGPOWER = 4;
 	private Set<ChartedArea> chartedAreas;
+	private Integer cleaningPower = DEFAULT_CLEANINGPOWER;
 	private List<Equipment> equipments;
-	private Set<Garbage> garbages = new HashSet<Garbage>();
+	private List<GarbageEnrollment> garbageEnrollements = new ArrayList<GarbageEnrollment>();
 	private List<Organization> organizationMembers;
 	private Integer teamId;
 	private User teamManager;
@@ -99,6 +101,14 @@ public class Team extends FieldAccessBean {
 	}
 
 	/**
+	 * @return the cleaningPower
+	 */
+	@Column(nullable = false, columnDefinition = "DEFAULT '4' NOT NULL")
+	public Integer getCleaningPower() {
+		return cleaningPower;
+	}
+
+	/**
 	 * @return the equipments
 	 */
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "teamOwner")
@@ -107,12 +117,12 @@ public class Team extends FieldAccessBean {
 	}
 
 	/**
-	 * @return the garbages
+	 * @return the garbageEnrollements
 	 */
-	@ManyToMany(cascade = { CascadeType.MERGE, CascadeType.PERSIST }, mappedBy = "enrolledCleaners")
-	@XmlIDREF
-	public Set<Garbage> getGarbages() {
-		return garbages;
+	@OneToMany(cascade = { CascadeType.ALL }, mappedBy = "team")
+	@NonComparableField
+	public List<GarbageEnrollment> getGarbageEnrollements() {
+		return garbageEnrollements;
 	}
 
 	/**
@@ -189,6 +199,14 @@ public class Team extends FieldAccessBean {
 	}
 
 	/**
+	 * @param cleaningPower
+	 *            the cleaningPower to set
+	 */
+	public void setCleaningPower(Integer cleaningPower) {
+		this.cleaningPower = cleaningPower;
+	}
+
+	/**
 	 * @param equipments
 	 *            the equipments to set
 	 */
@@ -198,12 +216,13 @@ public class Team extends FieldAccessBean {
 	}
 
 	/**
-	 * @param garbages
-	 *            the garbages to set
+	 * @param garbageEnrollemnts
+	 *            the garbageEnrollements to set
 	 */
 	@NonTransferableField
-	public void setGarbages(Set<Garbage> garbages) {
-		this.garbages = garbages;
+	public void setGarbageEnrollements(
+			List<GarbageEnrollment> garbageEnrollements) {
+		this.garbageEnrollements = garbageEnrollements;
 	}
 
 	/**

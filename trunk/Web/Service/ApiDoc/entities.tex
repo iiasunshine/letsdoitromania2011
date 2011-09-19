@@ -114,6 +114,8 @@ Section~\ref{sec:user:update}.
   \roproperty{equipment}{A set of equipment entities that this team possesses.
   Valid equipment are: \texttt{cleaningEquipment}, \texttt{gpsEquipment} and
   \texttt{transportEquipment}.}
+  \roproperty{garbageEnrollments}{A set of \texttt{garbageEnrolment} entities
+  that represent the garbages allocated to this team for cleaning.}
   \roproperty{garbages}{A set of integers denoting the IDs of the
   \texttt{garbage} entities this team desires to clean.}
   \roproperty{insertedGarbages}{A set of integers denoting the IDs of the
@@ -185,8 +187,8 @@ charting and cleaning process. All are derived from an abstract entity called
   \property{description}{A user-inserted string.}
   \property{details}{A string giving further details on the garbage.}
   \property{dispersed}{A boolean indicating whether the garbage is dispersed.}
-  \roproperty{enrolledCleaners}{A list of integers denoting the ID of the
-  \texttt{team} entities that wish to clean this garbage.}
+  \roproperty{garbageEnrollments}{A set of \texttt{garbageEnrolment} entities
+  that represent the garbages allocated to this team for cleaning.}
   \roproperty{garbageId}{An integer denoting the ID of this garbage tag entity
   instance.}
   \roproperty{insertedBy}{An integer denoting the ID of the user inserting this
@@ -207,6 +209,18 @@ charting and cleaning process. All are derived from an abstract entity called
   tag at the moment when the tag is inserted in the system.}
   \property{x}{A float denoting the garbage tag's longitude.}
   \property{y}{A float denoting the garbage tag's latitude.}
+\end{entitydef}
+
+\begin{entitydef}{garbageEnrollment}
+  \property{allocatedBags}{An integer denoting how many bags the referenced
+  \texttt{team} has allocated in the cleaning of the referenced
+  \texttt{garbage}.}
+  \roproperty{garbageEnrollmentId}{An integer denoting the ID of this mapping
+  between a \texttt{team} entity and a \texttt{garbage} entity.}
+  \roproperty{garbage}{An integer representing the ID of the \texttt{garbage} to
+  be cleaned.}
+  \roproperty{team}{An integer representing the ID of the \texttt{team} cleaning
+  the garbage.}
 \end{entitydef}
 
 \subsection{Areas}

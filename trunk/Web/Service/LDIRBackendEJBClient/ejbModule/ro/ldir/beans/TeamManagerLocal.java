@@ -62,8 +62,10 @@ public interface TeamManagerLocal {
 	 * 
 	 * @param teamId
 	 * @param garbageId
+	 * @param bagCount
+	 * @throws InvalidTeamOperationException 
 	 */
-	public void assignGarbage(int teamId, int garbageId);
+	public void assignGarbage(int teamId, int garbageId, int bagCount) throws InvalidTeamOperationException;
 
 	/**
 	 * Create a new team managed by the user {@code userId}. The manager does

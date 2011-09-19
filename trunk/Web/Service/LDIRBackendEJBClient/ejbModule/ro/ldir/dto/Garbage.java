@@ -33,12 +33,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlIDREF;
@@ -56,6 +56,20 @@ import ro.ldir.dto.helper.NonTransferableField;
 @Entity
 @XmlRootElement
 public class Garbage extends FieldAccessBean {
+	public enum AllocatedStatus {
+		COMPLETELY(
+				"alocat complet"), PARTIALLY("alocat parțial"), UNALLOCATED("nealocat");
+		private String translation;
+
+		AllocatedStatus(String translation) {
+			this.translation = translation;
+		}
+
+		public String getTranslation() {
+			return translation;
+		}
+	}
+
 	public enum GarbageStatus {
 		CLEANED("Curățat"), IDENTIFIED("Identificat");
 		private String translation;
@@ -79,7 +93,7 @@ public class Garbage extends FieldAccessBean {
 	private String description;
 	private String details;
 	private boolean dispersed;
-	private List<Team> enrolledCleaners;
+	private List<GarbageEnrollment> garbageEnrollements = new ArrayList<GarbageEnrollment>();
 	private GarbageGroup garbageGroup;
 	private Integer garbageId;
 	private User insertedBy;
@@ -95,6 +109,19 @@ public class Garbage extends FieldAccessBean {
 	private double y;
 
 	public Garbage() {
+	}
+
+	@Transient
+	@NonComparableField
+	public AllocatedStatus getAllocatedStatus() {
+		int totalBags = 0;
+		for (GarbageEnrollment enrollment : garbageEnrollements)
+			totalBags += enrollment.getAllocatedBags();
+		if (totalBags == 0)
+			return AllocatedStatus.UNALLOCATED;
+		if (totalBags == bagCount)
+			return AllocatedStatus.COMPLETELY;
+		return AllocatedStatus.PARTIALLY;
 	}
 
 	/**
@@ -147,13 +174,12 @@ public class Garbage extends FieldAccessBean {
 	}
 
 	/**
-	 * @return the enrolledCleaners
+	 * @return the garbageEnrollements
 	 */
-	@ManyToMany
-	@JoinTable(name = "GARBAGE_TEAM", joinColumns = @JoinColumn(name = "GARBAGEID", referencedColumnName = "GARBAGEID"), inverseJoinColumns = @JoinColumn(name = "TEAMID", referencedColumnName = "TEAMID"))
-	@XmlIDREF
-	public List<Team> getEnrolledCleaners() {
-		return enrolledCleaners;
+	@OneToMany(cascade = { CascadeType.ALL }, mappedBy = "garbage")
+	@NonComparableField
+	public List<GarbageEnrollment> getGarbageEnrollements() {
+		return garbageEnrollements;
 	}
 
 	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
@@ -267,6 +293,11 @@ public class Garbage extends FieldAccessBean {
 		return dispersed;
 	}
 
+	// TODO check whether this must be set
+	@NonTransferableField
+	public void setAllocatedStatus(AllocatedStatus status) {
+	}
+
 	/**
 	 * @param bagCount
 	 *            the bagCount to set
@@ -326,12 +357,13 @@ public class Garbage extends FieldAccessBean {
 	}
 
 	/**
-	 * @param enrolledCleaners
-	 *            the enrolledCleaners to set
+	 * @param garbageEnrollemnts
+	 *            the garbageEnrollements to set
 	 */
 	@NonTransferableField
-	public void setEnrolledCleaners(List<Team> enrolledCleaners) {
-		this.enrolledCleaners = enrolledCleaners;
+	public void setGarbageEnrollements(
+			List<GarbageEnrollment> garbageEnrollements) {
+		this.garbageEnrollements = garbageEnrollements;
 	}
 
 	@NonTransferableField

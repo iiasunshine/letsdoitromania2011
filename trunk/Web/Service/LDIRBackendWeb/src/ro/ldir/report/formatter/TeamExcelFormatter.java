@@ -35,6 +35,7 @@ import ro.ldir.dto.CleaningEquipment;
 import ro.ldir.dto.CleaningEquipment.CleaningType;
 import ro.ldir.dto.Equipment;
 import ro.ldir.dto.Garbage;
+import ro.ldir.dto.GarbageEnrollment;
 import ro.ldir.dto.GpsEquipment;
 import ro.ldir.dto.Organization;
 import ro.ldir.dto.Team;
@@ -102,23 +103,24 @@ public class TeamExcelFormatter implements ExcelFormatter {
 		}
 		row.createCell(21).setCellValue("TBD");
 
-		if (team.getGarbages() == null || team.getGarbages().size() == 0) {
+		if (team.getGarbageEnrollements() == null
+				|| team.getGarbageEnrollements().size() == 0) {
 			row.createCell(22, Cell.CELL_TYPE_NUMERIC).setCellValue(0);
 			row.createCell(24, Cell.CELL_TYPE_NUMERIC).setCellValue(0);
 		} else {
 			row.createCell(22, Cell.CELL_TYPE_NUMERIC).setCellValue(
-					team.getGarbages().size());
+					team.getGarbageEnrollements().size());
 
 			StringBuffer buf = new StringBuffer();
 			int volume = 0, i = 0;
 			Garbage leftover = null;
-			for (Garbage garbage : team.getGarbages()) {
-				if (i == team.getGarbages().size() - 1) {
-					leftover = garbage;
+			for (GarbageEnrollment enrollment : team.getGarbageEnrollements()) {
+				if (i == team.getGarbageEnrollements().size() - 1) {
+					leftover = enrollment.getGarbage();
 					break;
 				}
-				buf.append(garbage.getGarbageId() + ", ");
-				volume += garbage.getBagCount();
+				buf.append(enrollment.getGarbage().getGarbageId() + ", ");
+				volume += enrollment.getGarbage().getBagCount();
 				i++;
 			}
 			if (leftover != null) {
