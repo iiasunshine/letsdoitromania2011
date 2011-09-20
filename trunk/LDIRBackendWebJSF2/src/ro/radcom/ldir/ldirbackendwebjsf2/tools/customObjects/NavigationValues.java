@@ -45,4 +45,11 @@ public class NavigationValues {
     public static final String AREA_ASSIGN_SUCCESS = "area_assign_success";
     public static final String AREA_SET_CHARTED_PERCENT_FAIL = "failed to set charted percent";
     public static final String AREA_SET_CHARTED_PERCENT_SUCCESS = "succesefuly changed charted percent";
+
+    public static final String MORMAN_ALOCAT_SUCCESS = "morman_alocat_success";
+    public static final String MORMAN_ALOCAT_FAIL = "morman_alocat_fail";
+
+    public static final String MORMAN_DEZALOCAT_SUCCESS = "morman_dezalocat_success";
+    public static final String MORMAN_DEZALOCAT_FAIL = "morman_dezalocat_fail";
+
 }
