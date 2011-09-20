@@ -180,6 +180,17 @@ public class Garbage extends FieldAccessBean {
 	public List<GarbageEnrollment> getGarbageEnrollements() {
 		return garbageEnrollements;
 	}
+	
+	@Transient
+	public int getCountBagsEnrollments()
+	{
+		
+		int suma=0;
+		for (GarbageEnrollment ge:garbageEnrollements){
+			suma=suma+ge.getAllocatedBags();
+		}
+		return suma;
+	}
 
 	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinColumn(name = "GARBAGEGROUPID")
