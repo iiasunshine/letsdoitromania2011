@@ -285,7 +285,7 @@ public class Team extends FieldAccessBean {
 	}
 	
 	@Transient
-	public void setGarbages(List<Garbage> g)
+	public void setGarbages(Set<Garbage> g)
 	{
 		this.garbages=g;
 	
