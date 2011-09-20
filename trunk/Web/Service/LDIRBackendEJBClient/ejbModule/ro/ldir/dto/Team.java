@@ -271,14 +271,4 @@ public class Team extends FieldAccessBean {
 		this.volunteerMembers = volunteerMembers;
 	}
 	
-
-   @ManyToMany(cascade = { CascadeType.MERGE, CascadeType.PERSIST }, mappedBy = "enrolledCleaners")
-   @XmlIDREF
-   public Set<Garbage> getGarbages() {
-   return garbages;
-   };
-	       
-  public void setGarbages(Set<Garbage> garbages) {
-	               this.garbages = garbages;
-	      }
 }
