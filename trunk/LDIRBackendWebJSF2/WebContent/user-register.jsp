@@ -118,7 +118,7 @@
                                     <h:outputText value="#{msg.register_acceptVizibleData} "/>
                                 </label>
                                 <br/>
- 								<label class="important" id="warningPersonalData" style="display:none">
+ 								<label class="important" id="warningPersonalData" style="display:block">
 									<h:outputText value="Emailul si telefonul vor fi vizible liderului de echipa" />
                                 </label> 
                                 <!-- Accepta si alte informari -->
