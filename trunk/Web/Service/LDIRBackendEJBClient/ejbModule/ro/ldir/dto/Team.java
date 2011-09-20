@@ -64,7 +64,7 @@ public class Team extends FieldAccessBean {
 	private User teamManager;
 	private String teamName;
 	private List<User> volunteerMembers;
-	private Set<Garbage> garbages;
+	private List<Garbage> garbages=null;
 
 	public Team() {
 	}
@@ -274,6 +274,9 @@ public class Team extends FieldAccessBean {
 	@Transient
 	public List<Garbage> getGarbages()
 	{
+	if(this.garbages!=null)
+		return garbages;
+	
 	ArrayList<Garbage> results=new ArrayList<Garbage>();
 	
 	for (GarbageEnrollment ge:garbageEnrollements){
@@ -285,7 +288,7 @@ public class Team extends FieldAccessBean {
 	}
 	
 	@Transient
-	public void setGarbages(Set<Garbage> g)
+	public void setGarbages(List<Garbage> g)
 	{
 		this.garbages=g;
 	
