@@ -10,4 +10,4 @@
 
 <%-- JS Files --%>
 <script type="text/javascript"  src="${pageContext.servletContext.contextPath}/layout/scripts/scripts.js"></script>
-
+<script type="text/javascript"  src="${pageContext.servletContext.contextPath}/layout/scripts/trackingcode.js"></script>
