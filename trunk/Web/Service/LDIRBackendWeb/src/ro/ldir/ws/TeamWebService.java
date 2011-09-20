@@ -360,6 +360,22 @@ public class TeamWebService {
 		}
 		return Response.ok().build();
 	}
+	
+	@DELETE
+	@Consumes({ "application/json", "application/xml" })
+	@Path("{teamId:[0-9]+}/cleaningGarbages/delete/garbageId:[0-9]")
+	public Response removeCleaningGarbage(@PathParam("teamId") int teamId,
+			@PathParam("garbageId") int garbageId) {
+		try {
+			teamManager.removeGarbageAssigment(teamId, garbageId);
+		} catch (EJBException e) {
+			if (e.getCausedByException() instanceof NullPointerException)
+				throw new WebApplicationException(404);
+			throw new WebApplicationException(500);
+		}
+		return Response.ok().build();
+	}
+
 
 	@GET
 	@Produces({ "application/json", "application/xml" })
