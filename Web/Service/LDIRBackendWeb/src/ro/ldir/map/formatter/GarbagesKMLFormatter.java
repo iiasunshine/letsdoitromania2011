@@ -50,6 +50,7 @@ public class GarbagesKMLFormatter {
 
 	private void appendGarbages() {
 		for (Garbage garbage : garbages) {
+			
 			buf.append("<Placemark>\n");
 			buf.append("<styleUrl>#" + garbage.getAllocatedStatus()
 					+ "</styleUrl>\n");
@@ -62,6 +63,7 @@ public class GarbagesKMLFormatter {
 								garbage.getGarbageId().toString()) + "</p>\n");
 			}
 			buf.append("<p>Saci alocati " + String.valueOf(garbage.getCountBagsEnrollments()) + " / "+String.valueOf(garbage.getBagCount())+"</p>\n");
+			buf.append("<p>Judet: "+garbage.getCounty().getName());
 			buf.append("]]></description>\n");
 			buf.append("<Point><coordinates>" + garbage.getX() + ","
 					+ garbage.getY() + "</coordinates></Point>\n");
