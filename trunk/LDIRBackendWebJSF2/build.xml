@@ -24,7 +24,6 @@
 	</target>
 
 	<target name="copy-ejbclient" depends="build-ejbclient">
-		<copy file="${ejbclient.jar}" todir="WebContent/WEB-INF/lib" />
 	</target>
 
 	<target depends="copy-ejbclient" name="init">
