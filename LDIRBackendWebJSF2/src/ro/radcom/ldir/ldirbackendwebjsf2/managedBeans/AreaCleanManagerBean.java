@@ -22,6 +22,7 @@ import org.json.JSONObject;
 import ro.ldir.dto.ChartedArea;
 import ro.ldir.dto.CountyArea;
 import ro.ldir.dto.Garbage;
+import ro.ldir.dto.GarbageEnrollment;
 import ro.ldir.dto.Team;
 import ro.ldir.dto.User;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.AppUtils;
@@ -58,7 +59,10 @@ public class AreaCleanManagerBean {
     private List<Team> teamList = new ArrayList<Team>();
     private String country;
     private Team teamSelected;
-	
+    private List<GarbageEnrollment> userGarbageEnr= new ArrayList<GarbageEnrollment>();
+    
+    private String currentLat="44.4317879";
+    private String currentLng="26.1015844";
 	
 	public AreaCleanManagerBean(){
 	  
@@ -66,10 +70,31 @@ public class AreaCleanManagerBean {
      * obtinere detalii utilizator
      */
     userDetails = (User) JsfUtils.getHttpSession().getAttribute("USER_DETAILS");
-
+    String lastPosition = (String) JsfUtils.getHttpSession().getAttribute("LASTPOSITION");
+    if(lastPosition!=null)
+    {
+    	currentLat=lastPosition.split(",")[0].toString();
+    	currentLng=lastPosition.split(",")[1].toString();
+    	JsfUtils.getHttpSession().removeAttribute("LASTPOSITION");
+    };
+    
     if(JsfUtils.getHttpSession().getAttribute("TEAM_SELECTED")!=null)
     	teamSelected = (Team) JsfUtils.getHttpSession().getAttribute("TEAM_SELECTED");    
      
+    
+    /* adaugare mesaj info de pe sesiune daca exista */
+    String infoMessage = (String) JsfUtils.getHttpSession().getAttribute("INFO_MESSAGE");
+    if (infoMessage != null) {
+        JsfUtils.addInfoMessage(infoMessage);
+        JsfUtils.getHttpSession().removeAttribute("INFO_MESSAGE");
+    }
+
+    /* adaugare mesaj warn de pe sesiune daca exista */
+    String warnMessage = (String) JsfUtils.getHttpSession().getAttribute("WARN_MESSAGE");
+    if (warnMessage != null) {
+        JsfUtils.addErrorMessage(warnMessage);
+        JsfUtils.getHttpSession().removeAttribute("WARN_MESSAGE");
+    }
     /**
      * echipa utilizatorului curent (=> lista zone atribuite)
      */
@@ -110,9 +135,14 @@ public class AreaCleanManagerBean {
                     	areaGarbages = new ArrayList<Garbage>();
                     	areaGarbages.addAll(Arrays.asList(cr.getEntity(Garbage[].class)));
                     	
+                    	                    	
                     	if(areaGarbages.isEmpty()!=true&&areaGarbages.size()!=0){
-                    		Set<Garbage> foo = new HashSet<Garbage>(areaGarbages);
-                        	team.setGarbages(foo);
+                    		//garbageEnrollements.addAll(Arrays.asList(cr.getEntity(Garbage[].class)));                    		
+                    		//Set<Garbage> foo = new HashSet<Garbage>(areaGarbages);
+                    		//List<Garbage> foo = new List<Garbage>(areaGarbages);
+                    				
+                        	team.setGarbages(areaGarbages);
+                        		 
                     		};
                         }
             		
@@ -350,6 +380,16 @@ public class AreaCleanManagerBean {
 	public void setGarbageList(List<MyGarbage> garbageList) {
 		this.garbageList = garbageList;
 	}
+	
+	public String getCurrentLat() {
+		return currentLat;
+	}
+	
+	public String getCurrentLng() {
+		return currentLng;
+	}
+
+
 	
 	
 }

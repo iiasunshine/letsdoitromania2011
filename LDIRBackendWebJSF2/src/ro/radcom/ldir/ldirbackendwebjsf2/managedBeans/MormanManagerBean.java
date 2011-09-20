@@ -71,10 +71,26 @@ public class MormanManagerBean {
 
     /** Creates a new instance of MormanManagerBean */
     public MormanManagerBean() {
-        /* obtinere id garbage seletat din request (daca este cazul) */
+    	
+        /* adaugare mesaj info de pe sesiune daca exista */
+        String infoMessage = (String) JsfUtils.getHttpSession().getAttribute("INFO_MESSAGE");
+        if (infoMessage != null) {
+            JsfUtils.addInfoMessage(infoMessage);
+            JsfUtils.getHttpSession().removeAttribute("INFO_MESSAGE");
+        }
+
+        /* adaugare mesaj warn de pe sesiune daca exista */
+        String warnMessage = (String) JsfUtils.getHttpSession().getAttribute("WARN_MESSAGE");
+        if (warnMessage != null) {
+            JsfUtils.addErrorMessage(warnMessage);
+            JsfUtils.getHttpSession().removeAttribute("WARN_MESSAGE");
+        }
+        
+       /* obtinere id garbage seletat din request (daca este cazul) */
         int garbageId = AppUtils.parseToInt(JsfUtils.getRequestParameter("garbageId"));
         userDetails = (User) JsfUtils.getHttpSession().getAttribute("USER_DETAILS");
         Team teamSelected = (Team) JsfUtils.getHttpSession().getAttribute("TEAM_SELECTED");
+       
 
         /* initializare detalii utilizator si lista mormane */
        if (garbageId>0){
@@ -191,19 +207,6 @@ public class MormanManagerBean {
          else 
         	 init(garbageId);
 
-        /* adaugare mesaj info de pe sesiune daca exista */
-        String infoMessage = (String) JsfUtils.getHttpSession().getAttribute("INFO_MESSAGE");
-        if (infoMessage != null) {
-            JsfUtils.addInfoMessage(infoMessage);
-            JsfUtils.getHttpSession().removeAttribute("INFO_MESSAGE");
-        }
-
-        /* adaugare mesaj warn de pe sesiune daca exista */
-        String warnMessage = (String) JsfUtils.getHttpSession().getAttribute("WARN_MESSAGE");
-        if (warnMessage != null) {
-            JsfUtils.addErrorMessage(warnMessage);
-            JsfUtils.getHttpSession().removeAttribute("WARN_MESSAGE");
-        }
     }
 
     private void init(int garbageId) {
@@ -486,30 +489,38 @@ public class MormanManagerBean {
         garbage.setGarbageId(addGarbageId);
         
         if (addGarbageId > 0) {
-            ClientResponse cr =wsi.addGarbageToTeam(userDetails,teamSelected.getTeamId(),garbage); 
+            ClientResponse cr =wsi.addGarbageToTeam(userDetails,teamSelected,garbage); 
             		
             if (cr.getStatus() == 406) {
                 log4j.warn("prea multe echipe pe zona sau prea multe zone la echipa " + addGarbageId + " (statusCode=" + cr.getStatus() + " responseStatus=" + cr.getResponseStatus() + ")");
-                if (cr.getResponseStatus().toString().indexOf("There are too many people charting this area already") >= 0) {
-                    JsfUtils.addWarnMessage("", JsfUtils.getBundleMessage("area_add_err_limit1").replaceAll("\\{0\\}", "" + addGarbageId));
-                } else if (cr.getResponseStatus().toString().indexOf("There are too many charted areas for this team") >= 0) {
-                    JsfUtils.addWarnMessage("", JsfUtils.getBundleMessage("area_add_err_limit2"));
-                } else {
-                    JsfUtils.addWarnBundleMessage("internal_err");
-                }
+                JsfUtils.addWarnMessage("",cr.getResponseStatus().toString());
+//                if (cr.getResponseStatus().toString().indexOf("There are too many people charting this area already") >= 0) {
+//                    JsfUtils.addWarnMessage("", JsfUtils.getBundleMessage("area_add_err_limit1").replaceAll("\\{0\\}", "" + addGarbageId));
+//                } else if (cr.getResponseStatus().toString().indexOf("There are too many charted areas for this team") >= 0) {
+//                    JsfUtils.addWarnMessage("", JsfUtils.getBundleMessage("area_add_err_limit2"));
+//                } else {
+//                    JsfUtils.addWarnBundleMessage(cr.getStatus()+";"+cr.getResponseStatus().toString());
+//
+//                }
             } else if (cr.getStatus() != 200) {
                 log4j.fatal("nu s-a reusit adaugarea garbage " + addGarbageId + " (statusCode=" + cr.getStatus() + " responseStatus=" + cr.getResponseStatus() + ")");
-                JsfUtils.addWarnBundleMessage("internal_err");
+                String t="";
+                t=String.valueOf(cr.getStatus());
+                	JsfUtils.addWarnBundleMessage("internal_err");
+                //JsfUtils.addWarnBundleMessage("internal_err");
             } else {
                 log4j.debug("garbage atribuit " + addGarbageId + " (statusCode=" + cr.getStatus() + " responseStatus=" + cr.getResponseStatus() + ")");
 
                 String infoText = JsfUtils.getBundleMessage("garbage_add_confirm").replaceAll("\\{0\\}", "" + addGarbageId);
-               
-                return NavigationValues.AREA_ASSIGN_SUCCESS;
+                JsfUtils.getHttpSession().setAttribute("INFO_MESSAGE", infoText);
+                
+                 
+                JsfUtils.getHttpSession().setAttribute("LASTPOSITION", latitudine+","+longitudine);
+                return NavigationValues.MORMAN_ALOCAT_SUCCESS;
             }
         }
 
-        return NavigationValues.AREA_ASSIGN_FAIL;
+        return NavigationValues.MORMAN_ALOCAT_FAIL;
     }
     
     
@@ -551,27 +562,24 @@ public class MormanManagerBean {
         
         if (removeGarbageId > 0) {
         	
-        //THIS CALL IS INCORECT
-        ClientResponse cr = wsi.deleteGarbage(userDetails, myGarbage.getGarbage());
+        ClientResponse cr = wsi.deleteGarbageFromTeam(userDetails,teamSelected.getTeamId(), removeGarbageId);
         int statusCode = cr.getStatus();
         log4j.debug("---> Garbage Delete statusCode: " + statusCode + " (" + cr.getClientResponseStatus() + ")");
         if (statusCode == 200) {
             /* cerere informatii user */
-            cr = wsi.reinitUser(userDetails);
+            //cr = wsi.reinitUser(userDetails);
             statusCode = cr.getStatus();
-            log4j.debug("---> Reinit User Garbage statusCode: " + statusCode + " (" + cr.getClientResponseStatus() + ")");
-            if (statusCode != 200) {
-                JsfUtils.addWarnBundleMessage("internal_err");
-                return NavigationValues.MORMAN_DELETE_FAIL;
-            } else {
-                return NavigationValues.MORMAN_DELETE_SUCCESS;
+            //log4j.debug("---> Reinit User Garbage statusCode: " + statusCode + " (" + cr.getClientResponseStatus() + ")");
+            String infoText = "Mormanul "+removeGarbageId + " a fost dealocat cu succes";
+            JsfUtils.getHttpSession().setAttribute("INFO_MESSAGE", infoText);
+            return NavigationValues.MORMAN_DEZALOCAT_SUCCESS;
             }
         } else {
             JsfUtils.addWarnBundleMessage("internal_err");
-            return NavigationValues.MORMAN_DELETE_FAIL;
+            return NavigationValues.MORMAN_DEZALOCAT_FAIL;
         }
         
-        }
+        return NavigationValues.MORMAN_DEZALOCAT_FAIL;
     }
     
     public List<SelectItem> getSaciNrItems() {
@@ -848,6 +856,18 @@ public class MormanManagerBean {
     /**
      * @return the postersHeights
      */
+    
+    public int getEnrollBags()
+    {
+    		return myGarbage.getGarbage().getCountBagsEnrollments();
+    	//    	#{mormanManager.myGarbage.garbage.bagCount}
+    }
+    
+    public void setEnrollBags(int t)
+    {
+    	
+    }
+    
     public List<Integer> getPosterHeights() {
         return posterHeights;
     }

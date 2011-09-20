@@ -56,6 +56,11 @@
                                 <strong><h:outputText value="#{mormanManager.myGarbage.garbage.county.name}"/></strong>
                                 <br />
                                 <br />
+                                <h:outputText escape="false" value="Saci alocati: "/>
+                                <strong><h:outputText value="#{mormanManager.enrollBags} / #{mormanManager.myGarbage.garbage.bagCount}"/></strong>
+                                <br />
+                                <br />
+                                
                                 <h3><h:outputText escape="false" value="#{msg.details_description_title}"/></h3>
                                 <h:outputText escape="false" value="#{msg.details_description} "/>
                                 <strong><h:outputText value="#{mormanManager.myGarbage.garbage.description}"/></strong>

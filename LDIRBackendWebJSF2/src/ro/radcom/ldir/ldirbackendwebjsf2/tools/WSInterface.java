@@ -21,6 +21,7 @@ import org.apache.log4j.Logger;
 import ro.ldir.dto.ChartedArea;
 import ro.ldir.dto.Garbage;
 import ro.ldir.dto.Organization;
+import ro.ldir.dto.Team;
 import ro.ldir.dto.User;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.customObjects.GarbageContextProvider;
 
@@ -60,22 +61,28 @@ public class WSInterface {
         ClientResponse cr = builder.entity(garbage, MediaType.APPLICATION_XML).post(ClientResponse.class);
         return cr;
     }
-    public ClientResponse addGarbageToTeam(User user, int teamId, Garbage garbage){
-        String location = WS_URL + "/LDIRBackend/ws/team/"+teamId+"/cleaningGarbages";
+    
+    public ClientResponse addGarbageToTeam(User user, Team team, Garbage garbage){
+        int maxbags=team.getCleaningPower().intValue()*team.countMembers();
+        Integer MaxBags = new Integer(maxbags);
+        String MaxBagsString = MaxBags.toString();
+    	String location = WS_URL + "/LDIRBackend/ws/team/"+team.getTeamId()+"/cleaningGarbages/"+garbage.getGarbageId();
 
         WebResource resource = client.resource(location);
         Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(user.getEmail(), user.getPasswd()));
-        ClientResponse cr = builder.entity(garbage, MediaType.APPLICATION_XML).put(ClientResponse.class);
+        ClientResponse cr = builder.entity(MaxBagsString,MediaType.APPLICATION_JSON).put(ClientResponse.class);
         return cr;
    }
-
-    public ClientResponse deleteGarbageFromTeam(User user, int teamId, Garbage garbage){
-    	//is this correct?
-        String location = WS_URL + "/LDIRBackend/ws/team/"+teamId+"/cleaningGarbages";
+    
+    public ClientResponse deleteGarbageFromTeam(User user, int teamId, int garbageId){
+    	//is this c orrect?
+        String location = WS_URL + "/LDIRBackend/ws/team/"+teamId+"/cleaningGarbages/delete/"+garbageId;
 
         WebResource resource = client.resource(location);
         Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(user.getEmail(), user.getPasswd()));
-        ClientResponse cr = builder.entity(garbage, MediaType.APPLICATION_XML).delete(ClientResponse.class);
+        
+        //X-HTTP-Method-Override
+        ClientResponse cr = builder.entity(null, MediaType.APPLICATION_XML).delete(ClientResponse.class);
         return cr;
    }
 

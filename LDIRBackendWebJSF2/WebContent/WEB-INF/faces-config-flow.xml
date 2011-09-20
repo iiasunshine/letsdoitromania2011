@@ -93,6 +93,32 @@
         </navigation-case>
     </navigation-rule>
 
+    <navigation-rule>
+        <from-view-id>/users/curatenie-morman-detalii.jsp</from-view-id>
+        <navigation-case>
+            <from-outcome>morman_alocat_success</from-outcome>
+            <to-view-id>/users/curatenie-vizualizare.jsp</to-view-id>
+            <redirect/>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>morman_alocat_fail</from-outcome>
+            <to-view-id>/users/curatenie-vizualizare.jsp</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+
+    <navigation-rule>
+        <from-view-id>/users/curatenie-morman-detalii.jsp</from-view-id>
+        <navigation-case>
+            <from-outcome>morman_dezalocat_success</from-outcome>
+            <to-view-id>/users/curatenie-vizualizare.jsp</to-view-id>
+            <redirect/>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>morman_dezalocat_fail</from-outcome>
+            <to-view-id>/users/curatenie-vizualizare.jsp</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+
 
     <navigation-rule>
         <from-view-id>/reset-password.jsp</from-view-id>
