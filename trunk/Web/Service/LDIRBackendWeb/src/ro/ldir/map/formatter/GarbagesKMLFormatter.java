@@ -66,7 +66,7 @@ public class GarbagesKMLFormatter {
 			}};
 			if(garbage.getCounty().getName().equalsIgnoreCase("TIMIS"))			
 			{if (linkPattern != null) {
-				buf.append("<p>Alocarea pentru judetul Timis se face offline.  <a href=\"www.letsdoitromania.ro/contact\">Contactati</a> va rog echipa locala</p>\n");
+				buf.append("<p>Alocarea pentru judetul Timis se face offline.  <a href=\"http://www.letsdoitromania.ro/contact\">Contactati</a> va rog echipa locala</p>\n");
 			}};
 			
 			buf.append("<p>Saci alocati " + String.valueOf(garbage.getCountBagsEnrollments()) + " / "+String.valueOf(garbage.getBagCount())+"</p>\n");
