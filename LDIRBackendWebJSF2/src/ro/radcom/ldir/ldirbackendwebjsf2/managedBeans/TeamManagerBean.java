@@ -6,17 +6,17 @@ import java.util.List;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.naming.InitialContext;
-import javax.naming.NamingException;
+
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 
 import org.apache.log4j.Logger;
 
-import ro.ldir.beans.OrganizationManager;
+
 import ro.ldir.beans.OrganizationManagerLocal;
-import ro.ldir.beans.TeamManager;
+
 import ro.ldir.beans.TeamManagerLocal;
-import ro.ldir.beans.UserManager;
+
 import ro.ldir.beans.UserManagerLocal;
 import ro.ldir.dto.CleaningEquipment;
 import ro.ldir.dto.Equipment;
@@ -74,9 +74,9 @@ public class TeamManagerBean {
 	private String toolsUnits;
 	private int teamId = 0;
 	// testing purpose:
-	private UserManager userManagerLocal = null;
-	private TeamManager teamManagerLocal = null;
-	private OrganizationManager organizationManagerLocal = null;
+	private UserManagerLocal userManagerLocal = null;
+	private TeamManagerLocal teamManagerLocal = null;
+	private OrganizationManagerLocal organizationManagerLocal = null;
 
 	public TeamManagerBean() {
 
@@ -84,11 +84,11 @@ public class TeamManagerBean {
 			InitialContext ic = new InitialContext();
 			Object o=ic.lookup("java:global/LDIRBackend/LDIRBackendEJB/UserManager!ro.ldir.beans.UserManager");
 			log4j.info("OBJECT: "+o.toString());
-			userManagerLocal = (UserManager) ic
+			userManagerLocal = (UserManagerLocal) ic
 					.lookup("java:global/LDIRBackend/LDIRBackendEJB/UserManager!ro.ldir.beans.UserManager");
-			teamManagerLocal = (TeamManager) ic
+			teamManagerLocal = (TeamManagerLocal) ic
 					.lookup("java:global/LDIRBackend/LDIRBackendEJB/TeamManager!ro.ldir.beans.TeamManager");
-			organizationManagerLocal = (OrganizationManager) ic
+			organizationManagerLocal = (OrganizationManagerLocal) ic
 					.lookup("java:global/LDIRBackend/LDIRBackendEJB/OrganizationManager!ro.ldir.beans.OrganizationManager");
 		} catch (Exception e) {
 			log4j.info("AICI" + e);
