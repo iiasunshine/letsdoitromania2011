@@ -64,7 +64,7 @@ public class Team extends FieldAccessBean {
 	private User teamManager;
 	private String teamName;
 	private List<User> volunteerMembers;
-	private List<Garbage> garbages;
+	private Set<Garbage> garbages;
 
 	public Team() {
 	}
