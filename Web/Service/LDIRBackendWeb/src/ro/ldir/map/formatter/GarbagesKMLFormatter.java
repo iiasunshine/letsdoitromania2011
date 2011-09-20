@@ -59,8 +59,9 @@ public class GarbagesKMLFormatter {
 			if (linkPattern != null) {
 				buf.append("<p>"
 						+ linkPattern.replaceAll("\\{\\{\\{ID\\}\\}\\}",
-								garbage.getGarbageId().toString()) + "</p>");
+								garbage.getGarbageId().toString()) + "</p>\n");
 			}
+			buf.append("<p>Saci alocati " + String.valueOf(garbage.getCountBagsEnrollments) + " / "+String.valueOf(garbage.getBagCount())+"</p>\n");
 			buf.append("]]></description>\n");
 			buf.append("<Point><coordinates>" + garbage.getX() + ","
 					+ garbage.getY() + "</coordinates></Point>\n");
