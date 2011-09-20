@@ -3,6 +3,110 @@ var countyGarbageOverlay_old = null;
 var countyBorderOverlay_old = null;
 var chartedGridsOverlay_old = null;
 
+var bboxGarbageOverlay_old = null;
+
+var startDrag=false;
+var addEvent=false;
+
+
+
+function showlinks(element) {
+
+	var departure = element.value;
+	latoras=Number(departure.split(',')[0])
+	lngoras=Number(departure.split(',')[1])
+	
+    //var bounds = new GLatLngBounds(new GLatLng(jsonObject.bottomRightY , jsonObject.topLeftX),
+            //new GLatLng(jsonObject.topLeftY, jsonObject.bottomRightX));
+        //myMap.setCenter(bounds.getCenter(), myMap.getBoundsZoomLevel(bounds));
+        //myMap.setZoom(myMap.getBoundsZoomLevel(bounds));
+        //myMap.panTo(bounds.getCenter());
+	//46.3103035360546,23.7182172002125
+	
+	var oras = new google.maps.LatLng(latoras, lngoras);
+	//alert(departure	)
+	//alert(myMap)
+	
+	zoomLevel = myMap.getZoom();
+    if(zoomLevel<11)
+	 myMap.setZoom(11)	
+	myMap.panTo(new google.maps.LatLng(latoras, lngoras));
+	//alert(new google.maps.LatLng(latoras, lngoras))
+	myMap.setCenter(new google.maps.LatLng(latoras, lngoras));
+    bounds=myMap.getBounds();
+    ne=bounds.getNorthEast();
+    sw=bounds.getSouthWest();
+    
+    loadBBoxGarbageOverlay(ne,sw)   
+    
+    
+}
+
+function onBoundsChanged(){
+	
+	zoomLevel = myMap.getZoom();
+    if(zoomLevel<10)
+    	myMap.setZoom(10)
+    bounds=myMap.getBounds();
+    ne=bounds.getNorthEast();
+    sw=bounds.getSouthWest();
+    
+    
+    loadBBoxGarbageOverlay(ne,sw)
+    //<m:eventListener eventName="tilesloaded" jsFunction="zoomToArea('#{areaCleanManager.areaJsonBouns}')"/>
+	//    startDrag=false;
+
+}
+
+function loadEvents()
+{
+//google.maps.event.addListener(myMap, 'bounds_changed', test);
+GEvent.addListener(myMap, "dragend", onBoundsChanged);
+GEvent.addListener(myMap, "zoomend", onBoundsChanged);
+}
+
+function loadBBoxGarbageOverlay(ne,sw){
+    
+ 	
+	//ne=points[0];
+	//sw=points[1];
+	
+    neLat=ne.lat()
+    neLng=ne.lng()
+    swLat=sw.lat()
+    swLng=sw.lng()
+    
+    topLeftX=swLng;
+    topLeftY=neLat;
+    bottomRightX=neLng;
+    bottomRightY=swLat;
+
+
+    var url = WS_URL;
+    
+    url += '/LDIRBackend/map/ws/garbages/';
+    
+    url += '?topLeftX='+Number(topLeftX).toString()
+  
+    url += '&topLeftY='+topLeftY
+    url += '&bottomRightX='+bottomRightX
+    url += '&bottomRightY='+bottomRightY;
+    url += '&cb=' + escape('<a target="_self" style="color: #4D751F;" href="curatenie-morman-detalii.jsf?garbageId={{{ID}}}">&raquo; vizualizeaza(asigneaza morman)</a>');
+    
+    
+    /* adaugare layer lista gunoaie din judetul selectat */
+    var bboxGarbageOverlay = new GGeoXml(url);
+    myMap.addOverlay(bboxGarbageOverlay);
+    if(bboxGarbageOverlay_old != null){
+        myMap.removeOverlay(bboxGarbageOverlay_old);
+    }
+    bboxGarbageOverlay_old = bboxGarbageOverlay;
+
+
+}
+
+
+
 function loadCountyGridsOverlay(value, team){
     if(value){
         var jsonObject = JSON.parse(value);
