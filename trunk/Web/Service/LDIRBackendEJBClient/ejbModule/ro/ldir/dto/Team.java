@@ -46,6 +46,7 @@ import ro.ldir.dto.adapters.IntegerAdapter;
 import ro.ldir.dto.helper.FieldAccessBean;
 import ro.ldir.dto.helper.NonComparableField;
 import ro.ldir.dto.helper.NonTransferableField;
+import ro.ldir.dto.GarbageEnrollment;
 
 /**
  * The entity bean  representing a team.
@@ -268,4 +269,19 @@ public class Team extends FieldAccessBean {
 	public void setVolunteerMembers(List<User> volunteerMembers) {
 		this.volunteerMembers = volunteerMembers;
 	}
+	
+	@Transient
+	public List<Garbage> getGarbages()
+	{
+	ArrayList<Garbage> results=new ArrayList<Garbage>();
+	
+	for (GarbageEnrollment ge:garbageEnrollements){
+		results.add(ge.getGarbage());
+	}
+	
+	return results;
+	
+	}
+
+
 }
