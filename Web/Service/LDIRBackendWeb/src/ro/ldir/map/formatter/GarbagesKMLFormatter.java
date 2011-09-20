@@ -57,13 +57,19 @@ public class GarbagesKMLFormatter {
 			buf.append("<name>Garbage " + garbage.getGarbageId() + "</name>\n");
 			buf.append("<description><![CDATA[");
 			buf.append("<p>" + garbage.getDescription() + "</p>\n");
-			if (linkPattern != null) {
+			
+			if(garbage.getCounty().getName()!="TIMIS")
+			{if (linkPattern != null) {
 				buf.append("<p>"
 						+ linkPattern.replaceAll("\\{\\{\\{ID\\}\\}\\}",
 								garbage.getGarbageId().toString()) + "</p>\n");
-			}
+			}};
+			if(garbage.getCounty().getName()=="TIMIS")
+			{if (linkPattern != null) {
+				buf.append("<p>Alocarea pentru judetul Timis se face offline.  <a href=\"www.letsdoitromania.ro/contact\">Contactati</a> va rog echipa locala</p>\n");
+			}};
 			buf.append("<p>Saci alocati " + String.valueOf(garbage.getCountBagsEnrollments()) + " / "+String.valueOf(garbage.getBagCount())+"</p>\n");
-			buf.append("<p>Judet: "+garbage.getCounty().getName()+"</p>");
+			buf.append("<p>Judet: "+garbage.getCounty().getName()+"</p>\n");
 			buf.append("]]></description>\n");
 			buf.append("<Point><coordinates>" + garbage.getX() + ","
 					+ garbage.getY() + "</coordinates></Point>\n");
