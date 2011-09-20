@@ -24,6 +24,7 @@
 package ro.ldir.dto;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -63,6 +64,7 @@ public class Team extends FieldAccessBean {
 	private User teamManager;
 	private String teamName;
 	private List<User> volunteerMembers;
+	private Set<Garbage> garbages = new HashSet<Garbage>();
 
 	public Team() {
 	}
@@ -268,4 +270,15 @@ public class Team extends FieldAccessBean {
 	public void setVolunteerMembers(List<User> volunteerMembers) {
 		this.volunteerMembers = volunteerMembers;
 	}
+	
+
+   @ManyToMany(cascade = { CascadeType.MERGE, CascadeType.PERSIST }, mappedBy = "enrolledCleaners")
+   @XmlIDREF
+   public Set<Garbage> getGarbages() {
+   return garbages;
+   };
+	       
+  public void setGarbages(Set<Garbage> garbages) {
+	               this.garbages = garbages;
+	      }
 }
