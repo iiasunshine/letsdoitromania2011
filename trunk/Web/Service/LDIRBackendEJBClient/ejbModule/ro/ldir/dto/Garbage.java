@@ -57,8 +57,7 @@ import ro.ldir.dto.helper.NonTransferableField;
 @XmlRootElement
 public class Garbage extends FieldAccessBean {
 	public enum AllocatedStatus {
-		COMPLETELY(
-				"alocat complet"), PARTIALLY("alocat parțial"), UNALLOCATED("nealocat");
+		COMPLETELY("COMPLETELY"), PARTIALLY("PARTIALLY"), UNALLOCATED("UNALLOCATED");
 		private String translation;
 
 		AllocatedStatus(String translation) {
