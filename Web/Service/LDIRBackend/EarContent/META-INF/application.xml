@@ -13,4 +13,10 @@
 			<context-root>LDIRBackend</context-root>
 		</web>
 	</module>
+	<module>
+		<web>
+			<web-uri>LDIRBackendWebJSF2.war</web-uri>
+			<context-root>LDIRBackendWebJSF2</context-root>
+		</web>
+	</module>
 </application>
