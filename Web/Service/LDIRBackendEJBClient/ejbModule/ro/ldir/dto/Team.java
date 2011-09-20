@@ -45,7 +45,6 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import ro.ldir.dto.adapters.IntegerAdapter;
 import ro.ldir.dto.helper.FieldAccessBean;
-import ro.ldir.dto.helper.NonComparableField;
 import ro.ldir.dto.helper.NonTransferableField;
 
 /**
@@ -54,17 +53,14 @@ import ro.ldir.dto.helper.NonTransferableField;
 @Entity
 @XmlRootElement
 public class Team extends FieldAccessBean {
-	private static final Integer DEFAULT_CLEANINGPOWER = 4;
 	private Set<ChartedArea> chartedAreas;
-	private Integer cleaningPower = DEFAULT_CLEANINGPOWER;
 	private List<Equipment> equipments;
-	private List<GarbageEnrollment> garbageEnrollements = new ArrayList<GarbageEnrollment>();
+	private Set<Garbage> garbages = new HashSet<Garbage>();
 	private List<Organization> organizationMembers;
 	private Integer teamId;
 	private User teamManager;
 	private String teamName;
 	private List<User> volunteerMembers;
-	private Set<Garbage> garbages = new HashSet<Garbage>();
 
 	public Team() {
 	}
@@ -103,14 +99,6 @@ public class Team extends FieldAccessBean {
 	}
 
 	/**
-	 * @return the cleaningPower
-	 */
-	@Column(nullable = false, columnDefinition = "DEFAULT '4' NOT NULL")
-	public Integer getCleaningPower() {
-		return cleaningPower;
-	}
-
-	/**
 	 * @return the equipments
 	 */
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "teamOwner")
@@ -119,12 +107,12 @@ public class Team extends FieldAccessBean {
 	}
 
 	/**
-	 * @return the garbageEnrollements
+	 * @return the garbages
 	 */
-	@OneToMany(cascade = { CascadeType.ALL }, mappedBy = "team")
-	@NonComparableField
-	public List<GarbageEnrollment> getGarbageEnrollements() {
-		return garbageEnrollements;
+	@ManyToMany(cascade = { CascadeType.MERGE, CascadeType.PERSIST }, mappedBy = "enrolledCleaners")
+	@XmlIDREF
+	public Set<Garbage> getGarbages() {
+		return garbages;
 	}
 
 	/**
@@ -193,19 +181,11 @@ public class Team extends FieldAccessBean {
 
 	/**
 	 * @param chartedAreas
-	 *            the chartedAreas to set
+	 *             the chartedAreas to set
 	 */
 	@NonTransferableField
 	public void setChartedAreas(Set<ChartedArea> chartedAreas) {
 		this.chartedAreas = chartedAreas;
-	}
-
-	/**
-	 * @param cleaningPower
-	 *            the cleaningPower to set
-	 */
-	public void setCleaningPower(Integer cleaningPower) {
-		this.cleaningPower = cleaningPower;
 	}
 
 	/**
@@ -218,13 +198,12 @@ public class Team extends FieldAccessBean {
 	}
 
 	/**
-	 * @param garbageEnrollemnts
-	 *            the garbageEnrollements to set
+	 * @param garbages
+	 *            the garbages to set
 	 */
 	@NonTransferableField
-	public void setGarbageEnrollements(
-			List<GarbageEnrollment> garbageEnrollements) {
-		this.garbageEnrollements = garbageEnrollements;
+	public void setGarbages(Set<Garbage> garbages) {
+		this.garbages = garbages;
 	}
 
 	/**
@@ -270,5 +249,4 @@ public class Team extends FieldAccessBean {
 	public void setVolunteerMembers(List<User> volunteerMembers) {
 		this.volunteerMembers = volunteerMembers;
 	}
-	
 }
