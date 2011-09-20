@@ -73,13 +73,25 @@ public class GarbagesKMLFormatter {
 				+ "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n"
 				+ "<Document>\n");
 		buf.append("<Style id=\"UNALLOCATED\">\n");
-		buf.append("<IconStyle><color>ff0000ff</color></IconStyle>\n");
+		buf.append("<IconStyle>\n");
+		buf.append("<Icon>\n");
+		buf.append("<href>http:////maps.gstatic.com/mapfiles/ms2/micons/red-dot.png</href>\n");
+		buf.append("</Icon>\n");
+		buf.append("</IconStyle>\n");
 		buf.append("</Style>\n");
 		buf.append("<Style id=\"PARTIALLY\">\n");
-		buf.append("<IconStyle><color>ff00ffff</color></IconStyle>\n");
+		buf.append("<IconStyle>\n");
+		buf.append("<Icon>\n");
+		buf.append("<href>http:////maps.gstatic.com/mapfiles/ms2/micons/purple.png</href>");
+		buf.append("</Icon>\n");
+		buf.append("</IconStyle>\n");
 		buf.append("</Style>\n");
 		buf.append("<Style id=\"COMPLETELY\">\n");
-		buf.append("<IconStyle><color>ff00ff00</color></IconStyle>\n");
+		buf.append("<IconStyle>\n");
+		buf.append("<Icon>\n");
+		buf.append("<href>http:////maps.gstatic.com/mapfiles/ms2/micons/yellow.png</href>");
+		buf.append("</Icon>\n");
+		buf.append("</IconStyle>\n");
 		buf.append("</Style>\n");
 	}
 
