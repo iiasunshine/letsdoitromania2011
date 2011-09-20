@@ -58,16 +58,17 @@ public class GarbagesKMLFormatter {
 			buf.append("<description><![CDATA[");
 			buf.append("<p>" + garbage.getDescription() + "</p>\n");
 			
-			if(garbage.getCounty().getName()!="TIMIS")
+			if(garbage.getCounty().getName().equalsIgnoreCase("TIMIS")!=true)
 			{if (linkPattern != null) {
 				buf.append("<p>"
 						+ linkPattern.replaceAll("\\{\\{\\{ID\\}\\}\\}",
 								garbage.getGarbageId().toString()) + "</p>\n");
 			}};
-			if(garbage.getCounty().getName()=="TIMIS")
+			if(garbage.getCounty().getName().equalsIgnoreCase("TIMIS"))			
 			{if (linkPattern != null) {
 				buf.append("<p>Alocarea pentru judetul Timis se face offline.  <a href=\"www.letsdoitromania.ro/contact\">Contactati</a> va rog echipa locala</p>\n");
 			}};
+			
 			buf.append("<p>Saci alocati " + String.valueOf(garbage.getCountBagsEnrollments()) + " / "+String.valueOf(garbage.getBagCount())+"</p>\n");
 			buf.append("<p>Judet: "+garbage.getCounty().getName()+"</p>\n");
 			buf.append("]]></description>\n");
