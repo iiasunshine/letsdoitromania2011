@@ -363,7 +363,7 @@ public class TeamWebService {
 	
 	@DELETE
 	@Consumes({ "application/json", "application/xml" })
-	@Path("{teamId:[0-9]+}/cleaningGarbages/delete/garbageId:[0-9]")
+	@Path("{teamId:[0-9]+}/cleaningGarbages/delete/{garbageId:[0-9]}")
 	public Response removeCleaningGarbage(@PathParam("teamId") int teamId,
 			@PathParam("garbageId") int garbageId) {
 		try {
