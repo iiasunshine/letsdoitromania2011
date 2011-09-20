@@ -546,4 +546,15 @@ public class User extends FieldAccessBean implements Serializable {
 		if (recordDate == null)
 			recordDate = new Date();
 	}
+	
+	
+    public boolean getProfileView() {
+        return profileView;
+    }
+
+   public boolean getAcceptsMoreInfo() {
+	   return acceptsMoreInfo;
+   }
+	
+	
 }
