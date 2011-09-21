@@ -288,6 +288,21 @@ public class Team extends FieldAccessBean {
 	}
 	
 	@Transient
+	public int getBagsEnrolled()
+	{
+	if(this.garbageEnrollements.size()==0)
+		return 0;
+	
+	int allocatedBags=0;
+	for (GarbageEnrollment enrollment : this.garbageEnrollements)
+			allocatedBags += enrollment.getAllocatedBags();
+
+	return allocatedBags;
+	
+	}
+
+	
+	@Transient
 	public void setGarbages(List<Garbage> g)
 	{
 		this.garbages=g;
