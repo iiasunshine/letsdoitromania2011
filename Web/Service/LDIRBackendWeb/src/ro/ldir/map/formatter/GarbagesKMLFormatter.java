@@ -59,7 +59,7 @@ public class GarbagesKMLFormatter {
 			buf.append("<p>" + garbage.getDescription() + "</p>\n");
 			
 			
-			if(garbage.getAllocatedStatus().toString().isEqual("COMPLETELY")==true)
+			if(garbage.getAllocatedStatus().toString().equals("COMPLETELY")==true)
 				buf.append("<p  style=\"color:red;font-weight:bold;\">Acest morman a fost alocat complet.</p>\n");
 			
 			if(garbage.getCounty().getName().equalsIgnoreCase("TIMIS"))			
