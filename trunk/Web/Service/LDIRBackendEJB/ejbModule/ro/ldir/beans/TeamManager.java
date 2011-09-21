@@ -161,9 +161,7 @@ public class TeamManager implements TeamManagerLocal {
 		GarbageEnrollment existingEnrollment = null;
 
 		if (bagCount > garbage.getBagCount())
-			throw new InvalidTeamOperationException("Only "
-					+ garbage.getBagCount()
-					+ " bags are required for this garbage!");
+			bagCount = garbage.getBagCount();
 
 		int allocatedBags = 0;
 		int totalCapacity = team.countMembers() * team.getCleaningPower();
