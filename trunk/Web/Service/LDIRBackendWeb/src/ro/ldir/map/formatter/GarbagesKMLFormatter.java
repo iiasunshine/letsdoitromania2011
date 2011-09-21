@@ -58,17 +58,37 @@ public class GarbagesKMLFormatter {
 			buf.append("<description><![CDATA[");
 			buf.append("<p>" + garbage.getDescription() + "</p>\n");
 			
-			if(garbage.getCounty().getName().equalsIgnoreCase("TIMIS")!=true)
+			if(garbage.getCounty().getName().equalsIgnoreCase("TIMIS"))			
+			{if (linkPattern != null) {
+				buf.append("<p>Alocarea pentru judetul Timis se face offline de catre echipa locala.</p>\n");
+			}}
+			else if(garbage.getCounty().getName().equalsIgnoreCase("BACAU"))			
+			{if (linkPattern != null) {
+				buf.append("<p>Alocarea pentru judetul BACAU se face offline de catre echipa locala.</p>\n");
+			}}
+			else if(garbage.getCounty().getName().equalsIgnoreCase("SIBIU"))			
+			{if (linkPattern != null) {
+				buf.append("<p>Alocarea pentru judetul SIBIU se face offline de catre echipa locala.</p>\n");
+			}}
+			else if(garbage.getCounty().getName().equalsIgnoreCase("IASI"))			
+			{if (linkPattern != null) {
+				buf.append("<p>Alocarea pentru judetul IASI se face offline de catre echipa locala.</p>\n");
+			}}
+			else if(garbage.getCounty().getName().equalsIgnoreCase("BOTOSANI"))			
+			{if (linkPattern != null) {
+				buf.append("<p>Alocarea pentru judetul BOTOSANI se face offline de catre echipa locala.</p>\n");
+			}}
+			else if(garbage.getCounty().getName().equalsIgnoreCase("BRASOV"))			
+			{if (linkPattern != null) {
+				buf.append("<p>Alocarea pentru judetul BRASOV se face offline de catre echipa locala.</p>\n");
+			}}
+			else 
 			{if (linkPattern != null) {
 				buf.append("<p>"
 						+ linkPattern.replaceAll("\\{\\{\\{ID\\}\\}\\}",
 								garbage.getGarbageId().toString()) + "</p>\n");
-			}};
-			if(garbage.getCounty().getName().equalsIgnoreCase("TIMIS"))			
-			{if (linkPattern != null) {
-				buf.append("<p>Alocarea pentru judetul Timis se face offline.  <a href=\"http://www.letsdoitromania.ro/contact\">Contactati</a> va rog echipa locala</p>\n");
-			}};
-			
+			}}
+
 			buf.append("<p>Saci alocati " + String.valueOf(garbage.getCountBagsEnrollments()) + " / "+String.valueOf(garbage.getBagCount())+"</p>\n");
 			buf.append("<p>Judet: "+garbage.getCounty().getName()+"</p>\n");
 			buf.append("]]></description>\n");
