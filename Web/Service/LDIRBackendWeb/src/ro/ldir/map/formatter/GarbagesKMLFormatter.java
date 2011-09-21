@@ -58,6 +58,10 @@ public class GarbagesKMLFormatter {
 			buf.append("<description><![CDATA[");
 			buf.append("<p>" + garbage.getDescription() + "</p>\n");
 			
+			
+			if(garbage.getAllocatedStatus()=="COMPLETELY")
+				buf.append("<p  style=\"color:red;font-weight:bold;\">Acest morman a fost alocat complet.</p>\n");
+			
 			if(garbage.getCounty().getName().equalsIgnoreCase("TIMIS"))			
 			{if (linkPattern != null) {
 				buf.append("<p>Alocarea pentru judetul Timis se face offline de catre echipa locala, la punctele de inregistrare din judet.</p>\n");
