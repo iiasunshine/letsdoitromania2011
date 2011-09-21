@@ -45,6 +45,7 @@ public class MormanManagerBean {
 
     /* variabile afisare */
     private MyGarbage myGarbage = new MyGarbage(new Garbage());
+    private Garbage garbageSimplu;
     private List<MyGarbage> myGarbageList = new ArrayList<MyGarbage>();
     private User userDetails = new User();
     private Team userTeam = null;
@@ -115,11 +116,31 @@ public class MormanManagerBean {
                };
 
         	   Garbage g = cr.getEntity(Garbage.class);
+        	   garbageSimplu=g;
                myGarbage = new MyGarbage(g);
                longitudine = "" + g.getX();
                latitudine = "" + g.getY();
+               double lat_grd1=Math.floor(g.getY());
+               double long_grd1=Math.floor(g.getX());
                
+               double lat_min1=(g.getY()-lat_grd1)*60;
+               double long_min1=(g.getX()-long_grd1)*60;
                
+               double lat_sec1=(lat_min1-Math.floor(lat_min1))*60;
+               double long_sec1=(long_min1-Math.floor(long_min1))*60;
+               lat_min1=Math.floor(lat_min1);
+               long_min1=Math.floor(long_min1);
+               lat_grd=String.valueOf(lat_grd1);
+               long_grd=String.valueOf(long_grd1);
+               
+               lat_min=String.valueOf(lat_min1);
+               long_min=String.valueOf(long_min1);              
+               
+               lat_sec=String.valueOf(lat_sec1);
+               long_sec=String.valueOf(long_sec1);
+               lat_sec=lat_sec.substring(0, lat_sec.indexOf(".")+3);
+               long_sec=long_sec.substring(0, long_sec.indexOf(".")+3);
+            	   
                /* obtinere numar poze */
                for (int i = 0; i < g.getPictures().size(); i++) {
                     int height = 0;
@@ -219,6 +240,8 @@ public class MormanManagerBean {
             while (iterator.hasNext()) {
                 Garbage g = iterator.next();
                
+                
+                	
                 if (g.getGarbageId() == garbageId) {
                     myGarbage = new MyGarbage(g);
                     longitudine = "" + g.getX();
@@ -863,6 +886,13 @@ public class MormanManagerBean {
     	//    	#{mormanManager.myGarbage.garbage.bagCount}
     }
     
+    
+    public Garbage getGarbageSimplu()
+    {
+    		return garbageSimplu;
+    	//    	#{mormanManager.myGarbage.garbage.bagCount}
+    }
+
     public void setEnrollBags(int t)
     {
     	
