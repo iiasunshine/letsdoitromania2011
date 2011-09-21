@@ -376,7 +376,8 @@ tbody tr:hover {background: #fafafa;}
     <p>după care dă click pe unul din cele trei linkuri pentru a vedea indicaţiile rutiere:<br/> 
     <a id="bing-link" href="about:blank" target="_blank">Bing</a> <a id="google-link" href="about:blank">Google</a> <a id="yahoo-link" href="about:blank" target="_blank">Yahoo</a></p>
 
-    <p>Locatia mormanului:</p> 
+    <p>Locatia mormanului:</p>
+    <p class="style5">Recomandare: Folosiţi si modul Satellite pe hartă.</p> 
     <div id="map_canvas" style="width:56em; height:400px"></div>    
     <p class="style5">Recomandare: Folosiţi funcţia de print preview din browser înainte de a printa hărţile. Daca exista, folositi si Shrink to fit.</p>
     <p class="style4">E posibil ca această pagină să nu funcţioneze optim în Internet Explorer.</p>
