@@ -15,6 +15,7 @@
             </script>
         </head>
         <body onunload="GUnload()">
+        
             <center>
                 <%-- page Top --%>
                 <h:panelGroup rendered="#{mormanManager.userDetails.role eq 'VOLUNTEER'}">
@@ -42,18 +43,13 @@
                                 <span class="important"><strong><h:outputText value="#{areaCleanManager.teamSelected.teamName}"/></strong></span>
                                 <br />
                                 <br />
-                                <h1><h:outputText value="Acum vizualizezi"/></h1>
-                                <br />                                
+                                <h2><h:outputText value="Acum vizualizezi"/></h2>                                
                                 <h:outputText escape="false" value="#{msg.details_morman} "/>
                                 <strong><h:outputText value="#{mormanManager.myGarbage.garbage.garbageId}"/></strong>
                                 <br />
                                 <br />
-                                <h:outputText escape="false" value="#{msg.details_area} "/>
-                                <strong><h:outputText value="#{mormanManager.myGarbage.garbage.chartedArea.name}"/></strong>
-                                <br />
-                                <br />
                                 <h:outputText escape="false" value="#{msg.details_county} "/>
-                                <strong><h:outputText value="#{mormanManager.myGarbage.garbage.county.name}"/></strong>
+                                <strong><h:outputText value="#{mormanManager.garbageSimplu.county.name}"/></strong>
                                 <br />
                                 <br />
                                 <h:outputText escape="false" value="Saci alocati: "/>
@@ -141,6 +137,13 @@
                                 <br />
                                 <br />
                                 <h3>
+                                    <h:outputLink value="pachetmorman.jsf">
+                                        <f:param name="garbageId" value="#{mormanManager.myGarbage.garbage.garbageId}"/>
+                                        <h:outputText escape="false" value="» Pachet pentru print"/>
+                                    </h:outputLink>
+                                </h3>
+                                
+                                <h3>
                                     <h:form rendered="#{not mormanManager.mormanAlocat}">
                                         <h:commandLink action="#{mormanManager.actionAssignMorman}">
                                             <f:param name="addGarbageId" value="#{mormanManager.myGarbage.garbage.garbageId}"/>
@@ -159,6 +162,7 @@
                                         <h:outputText escape="false" value="#{msg.details_lista_link}"/>
                                     </h:outputLink>
                                 </h3>
+                                
                             </h:panelGroup>
                         </div>
 
@@ -169,7 +173,7 @@
                                        longitude="#{mormanManager.myGarbage.coordXToString}"
                                        width="710px"
                                        height="600px"
-                                       zoom="9"
+                                       zoom="14"
                                        jsVariable="myMap" >
                                     <m:mapControl name="GLargeMapControl3D"/>
                                     <m:mapControl name="GMapTypeControl" position="G_ANCHOR_TOP_RIGHT"/>

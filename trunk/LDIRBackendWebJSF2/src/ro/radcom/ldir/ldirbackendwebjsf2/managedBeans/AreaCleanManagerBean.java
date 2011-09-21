@@ -219,7 +219,7 @@ public class AreaCleanManagerBean {
 //            infoHtml += JsfUtils.getBundleMessage("details_county") + " " + (g.getCounty() != null ? g.getCounty().getName() : "unknown") + "<br/>";
             infoHtml += JsfUtils.getBundleMessage("details_state") + " " + (g.getStatus() != null ? g.getStatus().name() : "unknown") + "<br/><br/>";
             infoHtml += (g.getDescription() != null ? g.getDescription() : "") + "<br/>";
-            infoHtml += "<br/><a href=\"curatenie-morman-detalii.jsf?garbageId=" + g.getGarbageId() + "\" style=\"color: #4D751F;\">" + "&raquo; vizualizeaza(asigneaza morman)" + "</a>";
+            infoHtml += "<br/><a href=\"curatenie-morman-detalii.jsf?garbageId=" + g.getGarbageId() + "\" style=\"color: #4D751F;\">" + "&raquo; Detalii / Aloca mormanul pentru echipa ta" + "</a>";
             garbageList.add(new MyGarbage(g, infoHtml));
         }
         Collections.sort(garbageList, new MyGarbageComparator());

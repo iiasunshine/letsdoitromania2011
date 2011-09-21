@@ -91,7 +91,7 @@ function loadBBoxGarbageOverlay(ne,sw){
     url += '&topLeftY='+topLeftY
     url += '&bottomRightX='+bottomRightX
     url += '&bottomRightY='+bottomRightY;
-    url += '&cb=' + escape('<a target="_self" style="color: #4D751F;" href="curatenie-morman-detalii.jsf?garbageId={{{ID}}}">&raquo; vizualizeaza(asigneaza morman)</a>');
+    url += '&cb=' + escape('<a target="_self" style="color: #4D751F;" href="curatenie-morman-detalii.jsf?garbageId={{{ID}}}">&raquo; Detalii / Aloca mormanul pentru echipa ta</a>');
     
     
     /* adaugare layer lista gunoaie din judetul selectat */
