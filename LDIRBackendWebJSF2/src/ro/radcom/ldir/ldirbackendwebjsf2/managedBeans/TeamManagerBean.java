@@ -73,26 +73,9 @@ public class TeamManagerBean {
 	private Integer shovelUnits;
 	private String toolsUnits;
 	private int teamId = 0;
-	// testing purpose:
-	private UserManagerLocal userManagerLocal = null;
-	private TeamManagerLocal teamManagerLocal = null;
-	private OrganizationManagerLocal organizationManagerLocal = null;
+
 
 	public TeamManagerBean() {
-
-		try {
-			InitialContext ic = new InitialContext();
-			Object o=ic.lookup("java:global/LDIRBackend/LDIRBackendEJB/UserManager!ro.ldir.beans.UserManager");
-			log4j.info("OBJECT: "+o.toString());
-			userManagerLocal = (UserManagerLocal) ic
-					.lookup("java:global/LDIRBackend/LDIRBackendEJB/UserManager!ro.ldir.beans.UserManager");
-			teamManagerLocal = (TeamManagerLocal) ic
-					.lookup("java:global/LDIRBackend/LDIRBackendEJB/TeamManager!ro.ldir.beans.TeamManager");
-			organizationManagerLocal = (OrganizationManagerLocal) ic
-					.lookup("java:global/LDIRBackend/LDIRBackendEJB/OrganizationManager!ro.ldir.beans.OrganizationManager");
-		} catch (Exception e) {
-			log4j.info("AICI" + e);
-		}
 
 		userDetails = (User) JsfUtils.getHttpSession().getAttribute(
 				"USER_DETAILS");
@@ -106,7 +89,7 @@ public class TeamManagerBean {
 
 				log4j.info("role ->" + role + ", team ->" + teamId);
 
-				if (userManagerLocal == null || teamManagerLocal == null) {
+
 					ClientResponse cr = wsi.getTeam(userDetails, teamId);
 					int statusCode = cr.getStatus();
 					if (statusCode != 200) {
@@ -124,20 +107,12 @@ public class TeamManagerBean {
 					} else {
 						userTeam = cr.getEntity(Team.class);
 					}
-				} else {
-					userTeam = teamManagerLocal.getTeam(teamId);
-					if (userTeam == null) {
-						userTeam = userManagerLocal.getUser(
-								userDetails.getUserId()).getMemberOf();
-						setVolunteerMembers(userTeam.getVolunteerMembers());
-					}
-				}
+				
 			} catch (Exception ex) {
 				log4j.info("exception ->" + ex + ", team ->" + teamId);
 			}
 		} else {
 
-			if (userManagerLocal == null || teamManagerLocal == null) {
 				ClientResponse cr = wsi
 						.getMemberOfTeam(userDetails.getUserId());
 
@@ -151,13 +126,6 @@ public class TeamManagerBean {
 					userTeam = cr.getEntity(Team.class);
 					initTeam();
 				}
-			} else {
-				userTeam = userManagerLocal.getUser(userDetails.getUserId())
-						.getMemberOf();
-				if (userTeam == null) {
-					log4j.debug("nu s-a reusit obtinerea echipei utlizatorului curent");
-				}
-			}
 
 		}
 		if (userTeam != null && userTeam.getEquipments() != null
