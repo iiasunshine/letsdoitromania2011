@@ -218,7 +218,7 @@
                                     <m:mapControl name="GMapTypeControl" position="G_ANCHOR_TOP_RIGHT"/>
                                     <m:mapControl name="GScaleControl" position="G_ANCHOR_BOTTOM_RIGHT" />
 									
-                                    
+                                    <!-- 
                                     <a4j:repeat value="#{areaCleanManager.garbageList}" var="gunoi">
                                         <m:marker  latitude="#{gunoi.coordYToString}"
                                                    longitude="#{gunoi.coordXToString}"
@@ -228,7 +228,7 @@
                                                     height="20"/>
                                             <m:htmlInformationWindow htmlText="#{gunoi.infoHtml}"/>
                                         </m:marker>
-                                    </a4j:repeat>
+                                    </a4j:repeat>-->
                                     <!-- zoom si focus pe zona de cartare -->
                                     <m:eventListener eventName="bounds_changed" jsFunction="onBoundsChanged" />     
                                     <m:eventListener eventName="bounds_changed" jsFunction="loadEvents()" />
