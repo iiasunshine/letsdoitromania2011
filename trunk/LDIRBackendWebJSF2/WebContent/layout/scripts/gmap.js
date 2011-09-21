@@ -116,7 +116,7 @@ function loadCountyGridsOverlay(value, team){
         //url += '&cb=' + escape('<a target="_self" style="color: #4D751F;" href="cartare-zone-vizualizare.jsf?areaId={{{ID}}}">&raquo; vizualizeaza</a>');
 
         url += '/LDIRBackend/map/ws/countySearch/team/'+team+'/chartedAreas?county='+jsonObject.name;
-        url += '&cb=' + escape('<a target="_self" style="color: #4D751F;" href="cartare-zone-vizualizare.jsf?areaId={{{ID}}}">&raquo; vizualizeaza</a>');
+        url += '&cb=' + escape('<a target="_self" style="color: #4D751F;" href="cartare-zone-vizualizare.jsf?areaId={{{ID}}}">&raquo; Vizualizeaza</a>');
 
 
         /* adaugare griduri judet selectat si stergere cele vechi */
@@ -194,7 +194,7 @@ function loadCountyGarbageDetailOverlay(value){
         var url = WS_URL;
         url += '/LDIRBackend/map/ws/countySearch/garbages/';
         url += '?county='+jsonObject.name.replace(' ','%20');
-        url += '&cb=' + escape('<a target="_self" style="color: #4D751F;" href="curatenie-morman-detalii.jsf?garbageId={{{ID}}}">&raquo; vizualizeaza(asigneaza morman)</a>');
+        url += '&cb=' + escape('<a target="_self" style="color: #4D751F;" href="curatenie-morman-detalii.jsf?garbageId={{{ID}}}">&raquo; Detalii / Aloca mormanul pentru echipa ta</a>');
 
         
         /* adaugare layer lista gunoaie din judetul selectat */
