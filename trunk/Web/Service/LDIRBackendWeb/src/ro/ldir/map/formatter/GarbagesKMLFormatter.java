@@ -60,27 +60,35 @@ public class GarbagesKMLFormatter {
 			
 			if(garbage.getCounty().getName().equalsIgnoreCase("TIMIS"))			
 			{if (linkPattern != null) {
-				buf.append("<p>Alocarea pentru judetul Timis se face offline de catre echipa locala.</p>\n");
+				buf.append("<p>Alocarea pentru judetul Timis se face offline de catre echipa locala, la punctele de inregistrare din judet.</p>\n");
 			}}
 			else if(garbage.getCounty().getName().equalsIgnoreCase("BACAU"))			
 			{if (linkPattern != null) {
-				buf.append("<p>Alocarea pentru judetul BACAU se face offline de catre echipa locala.</p>\n");
+				buf.append("<p>Alocarea pentru judetul BACAU se face offline de catre echipa locala, la punctele de inregistrare din judet.</p>\n");
 			}}
 			else if(garbage.getCounty().getName().equalsIgnoreCase("SIBIU"))			
 			{if (linkPattern != null) {
-				buf.append("<p>Alocarea pentru judetul SIBIU se face offline de catre echipa locala.</p>\n");
+				buf.append("<p>Alocarea pentru judetul SIBIU se face offline de catre echipa locala, la punctele de inregistrare din judet.</p>\n");
 			}}
 			else if(garbage.getCounty().getName().equalsIgnoreCase("IASI"))			
 			{if (linkPattern != null) {
-				buf.append("<p>Alocarea pentru judetul IASI se face offline de catre echipa locala.</p>\n");
+				buf.append("<p>Alocarea pentru judetul IASI se face offline de catre echipa locala, la punctele de inregistrare din judet.</p>\n");
 			}}
 			else if(garbage.getCounty().getName().equalsIgnoreCase("BOTOSANI"))			
 			{if (linkPattern != null) {
-				buf.append("<p>Alocarea pentru judetul BOTOSANI se face offline de catre echipa locala.</p>\n");
+				buf.append("<p>Alocarea pentru judetul BOTOSANI se face offline de catre echipa locala, la punctele de inregistrare din judet.</p>\n");
 			}}
 			else if(garbage.getCounty().getName().equalsIgnoreCase("BRASOV"))			
 			{if (linkPattern != null) {
-				buf.append("<p>Alocarea pentru judetul BRASOV se face offline de catre echipa locala.</p>\n");
+				buf.append("<p>Alocarea pentru judetul BRASOV se face offline de catre echipa locala, la punctele de inregistrare din judet.</p>\n");
+			}}
+			else if(garbage.getCounty().getName().equalsIgnoreCase("MEHEDINTI"))			
+			{if (linkPattern != null) {
+				buf.append("<p>Alocarea pentru judetul MEHEDINTI se face offline de catre echipa locala, la punctele de inregistrare din judet.</p>\n");
+			}}
+			else if(garbage.getCounty().getName().equalsIgnoreCase("PRAHOVA"))			
+			{if (linkPattern != null) {
+				buf.append("<p>Alocarea pentru judetul PRAHOVA se face offline de catre echipa locala, la punctele de inregistrare din judet.</p>\n");
 			}}
 			else 
 			{if (linkPattern != null) {
