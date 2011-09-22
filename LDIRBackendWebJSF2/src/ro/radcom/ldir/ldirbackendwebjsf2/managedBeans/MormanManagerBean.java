@@ -5,7 +5,12 @@
 
 package ro.radcom.ldir.ldirbackendwebjsf2.managedBeans;
 
+import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.GenericType;
+import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.api.client.WebResource.Builder;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,6 +21,8 @@ import java.util.List;
 import java.util.Set;
 
 import javax.faces.model.SelectItem;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
 
 import org.apache.log4j.Logger;
 import org.apache.myfaces.custom.fileupload.UploadedFile;
@@ -48,7 +55,7 @@ public class MormanManagerBean {
     private Garbage garbageSimplu;
     private List<MyGarbage> myGarbageList = new ArrayList<MyGarbage>();
     private User userDetails = new User();
-    private Team userTeam = null;
+    private Team teamSelected = null;
     private String latitudine = "0.0";
     private String lat_grd = "0";
     private String lat_min = "0";
@@ -87,11 +94,15 @@ public class MormanManagerBean {
             JsfUtils.getHttpSession().removeAttribute("WARN_MESSAGE");
         }
         
-       /* obtinere id garbage seletat din request (daca este cazul) */
+       /* obtinere id garbage selectat din request (daca este cazul) */
         int garbageId = AppUtils.parseToInt(JsfUtils.getRequestParameter("garbageId"));
         userDetails = (User) JsfUtils.getHttpSession().getAttribute("USER_DETAILS");
-        Team teamSelected = (Team) JsfUtils.getHttpSession().getAttribute("TEAM_SELECTED");
-       
+        
+        int teamSelectedId=-1;
+        if(JsfUtils.getHttpSession().getAttribute("TEAM_SELECTED")!=null)
+        	teamSelectedId = (Integer) JsfUtils.getHttpSession().getAttribute("TEAM_SELECTED");
+        if(teamSelectedId!=-1)
+        	reloadTeam(teamSelectedId);
 
         /* initializare detalii utilizator si lista mormane */
        if (garbageId>0){
@@ -500,11 +511,15 @@ public class MormanManagerBean {
     
     public String actionAssignMorman() {
         /* atribuire zona noua daca este cazul */
-    	Team teamSelected=null;
-    	if(JsfUtils.getHttpSession().getAttribute("TEAM_SELECTED")!=null)
-        	teamSelected = (Team) JsfUtils.getHttpSession().getAttribute("TEAM_SELECTED");  
-    	if(teamSelected==null)
-    		return "";
+    	if(JsfUtils.getHttpSession().getAttribute("TEAM_SELECTED")!=null&&teamSelected==null)
+    	{
+        	int teamSelectedId = (Integer) JsfUtils.getHttpSession().getAttribute("TEAM_SELECTED");
+        	reloadTeam(teamSelectedId);
+    	};
+    	if(teamSelected==null){
+    		JsfUtils.addWarnBundleMessage("internal_err");
+    		return NavigationValues.MORMAN_ALOCAT_FAIL;
+    	};
     	
         int addGarbageId = AppUtils.parseToInt(JsfUtils.getRequestParameter("addGarbageId"));
         
@@ -530,7 +545,7 @@ public class MormanManagerBean {
                 String t="";
                 t=String.valueOf(cr.getStatus());
                 	JsfUtils.addWarnBundleMessage("internal_err");
-                //JsfUtils.addWarnBundleMessage("internal_err");
+                	//JsfUtils.addWarnBundleMessage("internal_err");
             } else {
                 log4j.debug("garbage atribuit " + addGarbageId + " (statusCode=" + cr.getStatus() + " responseStatus=" + cr.getResponseStatus() + ")");
 
@@ -546,6 +561,26 @@ public class MormanManagerBean {
         return NavigationValues.MORMAN_ALOCAT_FAIL;
     }
     
+	public void reloadTeam(int id){
+		String location = JsfUtils.getInitParameter("webservice.url")+"/LDIRBackend/ws/user/"+ userDetails.getUserId() +"/managedTeams";
+    	Client client = Client.create();
+    	WebResource resource = client.resource(location);
+    	Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(userDetails.getEmail(), userDetails.getPasswd()));
+    	ClientResponse cr = builder.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
+    	List<Team> teamList = cr.getEntity(new GenericType<List<Team>>(){});
+    	log4j.info("user teams:" + teamList);
+
+	    if(teamList != null && teamList.size() > 0)
+        	for(Team team : teamList){
+
+        		//first team gets selected
+        		if(id==team.getTeamId())
+                {
+        			teamSelected=team;
+        			break;
+                };
+        	};
+	}
     
     public String actionDeleteMorman() {
         ClientResponse cr = wsi.deleteGarbage(userDetails, myGarbage.getGarbage());
@@ -571,12 +606,12 @@ public class MormanManagerBean {
     public String actionRemoveMormanFromTeam() {
     	
     	//TO BE REWRITED FOR TEAMS AND WITH CORRECT wsi. call
-    	
-    	Team teamSelected=null;
-    	if(JsfUtils.getHttpSession().getAttribute("TEAM_SELECTED")!=null)
-        	teamSelected = (Team) JsfUtils.getHttpSession().getAttribute("TEAM_SELECTED");  
     	if(teamSelected==null)
-    		return "";
+    	{
+            JsfUtils.addWarnBundleMessage("internal_err");
+            return NavigationValues.MORMAN_DEZALOCAT_FAIL;
+        }
+        
     	
         int removeGarbageId = AppUtils.parseToInt(JsfUtils.getRequestParameter("removeGarbageId"));
         

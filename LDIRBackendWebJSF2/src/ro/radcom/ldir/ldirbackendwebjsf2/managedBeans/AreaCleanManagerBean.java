@@ -58,12 +58,13 @@ public class AreaCleanManagerBean {
     private boolean managerBool = false;
     private List<Team> teamList = new ArrayList<Team>();
     private String country;
-    private Team teamSelected;
+    private Team teamSelected=null;
     private List<GarbageEnrollment> userGarbageEnr= new ArrayList<GarbageEnrollment>();
     
     private String currentLat="44.4317879";
     private String currentLng="26.1015844";
 	
+    private int teamSelectedId=-1;
 	public AreaCleanManagerBean(){
 	  
 	/**
@@ -78,9 +79,9 @@ public class AreaCleanManagerBean {
     	JsfUtils.getHttpSession().removeAttribute("LASTPOSITION");
     };
     
-    if(JsfUtils.getHttpSession().getAttribute("TEAM_SELECTED")!=null)
-    	teamSelected = (Team) JsfUtils.getHttpSession().getAttribute("TEAM_SELECTED");    
-     
+    if(JsfUtils.getHttpSession().getAttribute("TEAM_SELECTED")!=null){
+    	teamSelectedId = (Integer)  JsfUtils.getHttpSession().getAttribute("TEAM_SELECTED");
+    };
     
     /* adaugare mesaj info de pe sesiune daca exista */
     String infoMessage = (String) JsfUtils.getHttpSession().getAttribute("INFO_MESSAGE");
@@ -88,6 +89,9 @@ public class AreaCleanManagerBean {
         JsfUtils.addInfoMessage(infoMessage);
         JsfUtils.getHttpSession().removeAttribute("INFO_MESSAGE");
     }
+    
+    teamSelected=null;
+    
 
     /* adaugare mesaj warn de pe sesiune daca exista */
     String warnMessage = (String) JsfUtils.getHttpSession().getAttribute("WARN_MESSAGE");
@@ -112,15 +116,19 @@ public class AreaCleanManagerBean {
             //load garbages on every team
             if(teamList != null && teamList.size() > 0){
             	for(Team team : teamList){
-
-            		//first team gets selected
-            		if(JsfUtils.getHttpSession().getAttribute("TEAM_SELECTED")==null)
+            		
+            		if(teamSelected==null&&teamSelectedId==-1)
                     {
             			teamSelected=team;
-            			JsfUtils.getHttpSession().setAttribute("TEAM_SELECTED", teamSelected);            			
+            			JsfUtils.getHttpSession().setAttribute("TEAM_SELECTED", teamSelected.getTeamId());            			
                     }
-            		
-            		
+            		if(teamSelected==null&&teamSelectedId==team.getTeamId())
+                    {
+            			teamSelected=team;
+            			JsfUtils.getHttpSession().setAttribute("TEAM_SELECTED", teamSelected.getTeamId());            			
+                    }
+
+
             		cr = wsi.getGarbageofTeam(userDetails, team.getTeamId());
                     /* obtinere lista gunoaie */
                     if (cr.getStatus() != 200) {
@@ -144,7 +152,10 @@ public class AreaCleanManagerBean {
                         	team.setGarbages(areaGarbages);
                         		 
                     		};
-                        }
+                    		if(teamSelected!=null)
+                    			if(teamSelected.getTeamId()==team.getTeamId())
+                    				teamSelected=team;
+                    }
             		
 
             	}
@@ -240,11 +251,35 @@ public class AreaCleanManagerBean {
         		if(teamId==team.getTeamId())
                 {
         			teamSelected=team;
-        			JsfUtils.getHttpSession().setAttribute("TEAM_SELECTED", teamSelected);
+        			JsfUtils.getHttpSession().removeAttribute("TEAM_SELECTED");
+        			JsfUtils.getHttpSession().setAttribute("TEAM_SELECTED", teamSelected.getTeamId());
         			break;
                 };
         	};
 	};
+	
+	public void reloadTeam(int id){
+		String location = JsfUtils.getInitParameter("webservice.url")+"/LDIRBackend/ws/user/"+ userDetails.getUserId() +"/managedTeams";
+    	Client client = Client.create();
+    	WebResource resource = client.resource(location);
+    	Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(userDetails.getEmail(), userDetails.getPasswd()));
+    	ClientResponse cr = builder.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
+    	teamList = cr.getEntity(new GenericType<List<Team>>(){});
+    	log4j.info("user teams:" + teamList);
+
+	    if(teamList != null && teamList.size() > 0)
+        	for(Team team : teamList){
+
+        		//first team gets selected
+        		if(id==team.getTeamId())
+                {
+        			teamSelected=team;
+        			break;
+                };
+        	};
+
+		
+	}
 	
     public void managedTeams(){
     	
