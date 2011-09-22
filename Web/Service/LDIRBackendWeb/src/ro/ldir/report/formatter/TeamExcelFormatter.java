@@ -26,6 +26,7 @@ package ro.ldir.report.formatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -40,9 +41,14 @@ import ro.ldir.dto.GpsEquipment;
 import ro.ldir.dto.Organization;
 import ro.ldir.dto.Team;
 import ro.ldir.dto.TransportEquipment;
+import ro.radcom.ldir.ldirbackendwebjsf2.managedBeans.LoginBean;
+import org.apache.log4j.Logger;
 
 /** Converts a list of teams to an Excel workbook. */
 public class TeamExcelFormatter implements ExcelFormatter {
+	
+	private static final Logger log4j = Logger.getLogger(LoginBean.class.getCanonicalName());
+	
 	private static int getCleaningType(Team team,
 			CleaningEquipment.CleaningType cleaningType) {
 		int count = 0;
@@ -70,6 +76,7 @@ public class TeamExcelFormatter implements ExcelFormatter {
 	}
 
 	private static void teamFooter(Row row, Team team) {
+		try {
 		if (team.getEquipments() != null) {
 			int gpsCount = 0;
 			for (Equipment eq : team.getEquipments()) {
@@ -101,6 +108,13 @@ public class TeamExcelFormatter implements ExcelFormatter {
 			row.createCell(20, Cell.CELL_TYPE_NUMERIC).setCellValue(
 					getCleaningType(team, CleaningType.SHOVEL));
 		}
+		
+	} catch (NullPointerException e) {
+		log4j.info("dotari parts");
+		log4j.debu("dotari parts");
+	};
+		
+		
 		row.createCell(21).setCellValue("TBD");
 
 		if (team.getGarbageEnrollements() == null
@@ -110,7 +124,10 @@ public class TeamExcelFormatter implements ExcelFormatter {
 		} else {
 			row.createCell(22, Cell.CELL_TYPE_NUMERIC).setCellValue(
 					team.getGarbageEnrollements().size());
-
+			
+			try {
+				
+			
 			StringBuffer buf = new StringBuffer();
 			int volume = 0, i = 0;
 			Garbage leftover = null;
@@ -129,6 +146,10 @@ public class TeamExcelFormatter implements ExcelFormatter {
 			}
 			row.createCell(23).setCellValue(buf.toString());
 			row.createCell(24, Cell.CELL_TYPE_NUMERIC).setCellValue(volume);
+			} catch (NullPointerException e) {
+				log4j.info("enrollments part");
+				log4j.debu("enrollments part");
+			};
 		}
 	}
 
