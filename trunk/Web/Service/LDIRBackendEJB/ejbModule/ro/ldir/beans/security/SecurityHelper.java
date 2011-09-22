@@ -211,7 +211,10 @@ public class SecurityHelper {
 			UserManager userManager, SessionContext ctx, List<User> report) {
 		String email = ctx.getCallerPrincipal().getName();
 		User user = userManager.getUser(email);
-
+		
+		if(true)
+			return report;
+		
 		if (user.getRole().equals(User.SecurityRole.ADMIN.toString()))
 			return report;
 		for (User reportedUser : report) {
