@@ -47,7 +47,7 @@ import org.apache.log4j.Logger;
 /** Converts a list of teams to an Excel workbook. */
 public class TeamExcelFormatter implements ExcelFormatter {
 	
-	private static final Logger log4j = Logger.getLogger(LoginBean.class.getCanonicalName());
+	private static final Logger log4j = Logger.getLogger("ro.radcom.ldir.ldirbackendwebjsf2.managedBeans.LoginBean");
 	
 	private static int getCleaningType(Team team,
 			CleaningEquipment.CleaningType cleaningType) {
@@ -111,7 +111,7 @@ public class TeamExcelFormatter implements ExcelFormatter {
 		
 	} catch (NullPointerException e) {
 		log4j.info("dotari parts");
-		log4j.debu("dotari parts");
+		log4j.debug("dotari parts");
 	};
 		
 		
@@ -148,7 +148,7 @@ public class TeamExcelFormatter implements ExcelFormatter {
 			row.createCell(24, Cell.CELL_TYPE_NUMERIC).setCellValue(volume);
 			} catch (NullPointerException e) {
 				log4j.info("enrollments part");
-				log4j.debu("enrollments part");
+				log4j.debug("enrollments part");
 			};
 		}
 	}
