@@ -140,8 +140,12 @@ public class UserManager implements UserManagerLocal {
 
 		em.persist(user);
 		em.flush();
+		
+		user = getUser(email);
+		activateUser(user.getUserId(),user.getRegistrationToken());
+		
 
-		userMailer.sendWelcomeMessage(user.getEmail());
+		//userMailer.sendWelcomeMessage(user.getEmail());
 	}
 
 	/**

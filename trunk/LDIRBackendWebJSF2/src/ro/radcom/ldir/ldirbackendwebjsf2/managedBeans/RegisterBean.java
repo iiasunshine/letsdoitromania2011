@@ -130,7 +130,8 @@ public class RegisterBean {
             JsfUtils.addWarnBundleMessage("register_err_duplicate_mail");
             return NavigationValues.REGISTER_FAIL;
         } else if (statusCode == 200) {
-            JsfUtils.addInfoBundleMessage("register_message");
+            //JsfUtils.addInfoBundleMessage("register_message");
+            JsfUtils.addInfoBundleMessage("register_message2");
             return NavigationValues.REGISTER_FAIL;
         } else {
             JsfUtils.addWarnBundleMessage("internal_err");
