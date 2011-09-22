@@ -223,7 +223,8 @@ public class AdminGarbageManagerBean {
 
         
         String encodeCountyId=encodeUrl(countyId);
-        if (countyId.equals("Toate")==true || countyId.equals("") == true){
+        if ((countyId.equals("Toate")==true || countyId.equals("") == true)
+        		&& userDetails.getRole().equals("ADMIN")){
         	encodeCountyId=null;
         	countyId="Toate";
         };
