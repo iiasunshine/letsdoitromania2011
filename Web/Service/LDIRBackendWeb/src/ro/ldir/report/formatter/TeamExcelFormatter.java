@@ -122,20 +122,19 @@ public class TeamExcelFormatter implements ExcelFormatter {
 			int volume = 0, i = 0;
 			Garbage leftover = null;
 			for (GarbageEnrollment enrollment : team.getGarbageEnrollements()) {
-			try {
+				if(enrollment.getGarbage()==null)
+					continue;
 				if (i == team.getGarbageEnrollements().size() - 1) {
 					leftover = enrollment.getGarbage();
 					break;
 				}
+				
 				buf.append(enrollment.getGarbage().getGarbageId() + ", ");
 				volume += enrollment.getGarbage().getBagCount();
 				i++;
-			} catch (NullPointerException e) {
-				log4j.info("enrollments part");
-				log4j.debug("enrollments part");
-			};
-			
+
 			}
+			
 			if (leftover != null) {
 				buf.append(leftover.getGarbageId() + "");
 				volume += leftover.getBagCount();
