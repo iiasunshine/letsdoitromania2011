@@ -111,6 +111,7 @@ public class TeamExcelFormatter implements ExcelFormatter {
 	} catch (NullPointerException e) {
 		log4j.info("dotari parts");
 		log4j.debug("dotari parts");
+		row.createCell(26, Cell.CELL_TYPE_STRING).setCellValue("DOTARI");
 	};
 		
 		
@@ -148,6 +149,7 @@ public class TeamExcelFormatter implements ExcelFormatter {
 			} catch (NullPointerException e) {
 				log4j.info("enrollments part");
 				log4j.debug("enrollments part");
+				row.createCell(26, Cell.CELL_TYPE_STRING).setCellValue("Enrollemnts");
 			};
 		}
 	}
