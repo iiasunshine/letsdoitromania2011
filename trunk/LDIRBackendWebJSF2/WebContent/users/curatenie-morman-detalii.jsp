@@ -40,7 +40,8 @@
 
                             <h:panelGroup rendered="#{not (mormanManager.myGarbage.garbage.garbageId eq null)}">
                                 <h:outputText escape="false" value="Echipa selectata: "/>
-                                <span class="important"><strong><h:outputText value="#{areaCleanManager.teamSelected.teamName}"/></strong></span>
+                                <span class="important"><strong><h:outputText value="#{areaCleanManager.teamSelected.teamName}"/></strong></span><br/>
+                                <h:outputText value="Putere de curatare: #{areaCleanManager.teamSelected.getBagsEnrolled()} / #{areaCleanManager.teamSelected.getCleaningPower()*areaCleanManager.teamSelected.countMembers()} saci" escape="false"/></span><br/>
                                 <br />
                                 <br />
                                 <h2><h:outputText value="Acum vizualizezi"/></h2>                                
