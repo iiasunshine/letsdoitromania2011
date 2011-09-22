@@ -94,6 +94,20 @@ public class GarbagesKMLFormatter {
 			{if (linkPattern != null) {
 				buf.append("<p>Alocarea pentru judetul PRAHOVA se face offline de catre echipa locala, la punctele de inregistrare din judet.</p>\n");
 			}}
+			else if(garbage.getCounty().getName().equalsIgnoreCase("CLUJ"))			
+			{if (linkPattern != null) {
+				buf.append("<p>Alocarea pentru judetul CLUJ se face offline de catre echipa locala, la punctele de inregistrare din judet.</p>\n");
+			}}
+			else if(garbage.getCounty().getName().equalsIgnoreCase("MURES"))			
+			{if (linkPattern != null) {
+				buf.append("<p>Alocarea pentru judetul MURES se face offline de catre echipa locala, la punctele de inregistrare din judet.</p>\n");
+			}}
+			else if(garbage.getCounty().getName().equalsIgnoreCase("SATU MARE"))			
+			{if (linkPattern != null) {
+				buf.append("<p>Alocarea pentru judetul SATU MARE se face offline de catre echipa locala, la punctele de inregistrare din judet.</p>\n");
+			}}
+
+
 			else 
 			{if (linkPattern != null) {
 				buf.append("<p>"
