@@ -75,7 +75,7 @@ public class TeamExcelFormatter implements ExcelFormatter {
 	}
 
 	private static void teamFooter(Row row, Team team) {
-		try {
+
 		if (team.getEquipments() != null) {
 			int gpsCount = 0;
 			for (Equipment eq : team.getEquipments()) {
@@ -107,12 +107,6 @@ public class TeamExcelFormatter implements ExcelFormatter {
 			row.createCell(20, Cell.CELL_TYPE_NUMERIC).setCellValue(
 					getCleaningType(team, CleaningType.SHOVEL));
 		}
-		
-	} catch (NullPointerException e) {
-		log4j.info("dotari parts");
-		log4j.debug("dotari parts");
-	};
-		
 		
 		row.createCell(21).setCellValue("TBD");
 
