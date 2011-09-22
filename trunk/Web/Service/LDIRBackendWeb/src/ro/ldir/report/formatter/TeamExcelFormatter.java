@@ -41,7 +41,6 @@ import ro.ldir.dto.GpsEquipment;
 import ro.ldir.dto.Organization;
 import ro.ldir.dto.Team;
 import ro.ldir.dto.TransportEquipment;
-import ro.radcom.ldir.ldirbackendwebjsf2.managedBeans.LoginBean;
 import org.apache.log4j.Logger;
 
 /** Converts a list of teams to an Excel workbook. */
