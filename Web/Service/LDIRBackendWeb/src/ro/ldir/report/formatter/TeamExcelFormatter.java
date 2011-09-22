@@ -118,13 +118,11 @@ public class TeamExcelFormatter implements ExcelFormatter {
 			row.createCell(22, Cell.CELL_TYPE_NUMERIC).setCellValue(
 					team.getGarbageEnrollements().size());
 			
-			try {
-				
-			
 			StringBuffer buf = new StringBuffer();
 			int volume = 0, i = 0;
 			Garbage leftover = null;
 			for (GarbageEnrollment enrollment : team.getGarbageEnrollements()) {
+			try {
 				if (i == team.getGarbageEnrollements().size() - 1) {
 					leftover = enrollment.getGarbage();
 					break;
@@ -132,6 +130,11 @@ public class TeamExcelFormatter implements ExcelFormatter {
 				buf.append(enrollment.getGarbage().getGarbageId() + ", ");
 				volume += enrollment.getGarbage().getBagCount();
 				i++;
+			} catch (NullPointerException e) {
+				log4j.info("enrollments part");
+				log4j.debug("enrollments part");
+			};
+			
 			}
 			if (leftover != null) {
 				buf.append(leftover.getGarbageId() + "");
@@ -139,10 +142,7 @@ public class TeamExcelFormatter implements ExcelFormatter {
 			}
 			row.createCell(23).setCellValue(buf.toString());
 			row.createCell(24, Cell.CELL_TYPE_NUMERIC).setCellValue(volume);
-			} catch (NullPointerException e) {
-				log4j.info("enrollments part");
-				log4j.debug("enrollments part");
-			};
+			
 		}
 	}
 
