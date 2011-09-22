@@ -141,7 +141,11 @@ public class UserManager implements UserManagerLocal {
 		em.persist(user);
 		em.flush();
 		
-		user = getUser(email);
+		query = em
+				.createQuery("SELECT x FROM User x WHERE x.email = :emailParam");
+		query.setParameter("emailParam", email);
+		user = (User) query.getSingleResult();
+
 		activateUser(user.getUserId(),user.getRegistrationToken());
 		
 
