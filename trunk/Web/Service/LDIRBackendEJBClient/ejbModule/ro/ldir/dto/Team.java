@@ -71,7 +71,7 @@ public class Team extends FieldAccessBean {
 
 	/** Count the number of members belonging to the team. */
 	public int countMembers() {
-		int n = 0;
+		int n = 1;//managerul
 		if (volunteerMembers != null)
 			n += volunteerMembers.size();
 		if (organizationMembers != null)
@@ -300,6 +300,18 @@ public class Team extends FieldAccessBean {
 	return allocatedBags;
 	
 	}
+	
+	@Transient
+	public int getCountMembers() {
+		int n = 1;//managerul
+		if (volunteerMembers != null)
+			n += volunteerMembers.size();
+		if (organizationMembers != null)
+			for (Organization org : organizationMembers)
+				n += org.getMembersCount();
+		return n;
+	}
+
 
 	
 	@Transient
