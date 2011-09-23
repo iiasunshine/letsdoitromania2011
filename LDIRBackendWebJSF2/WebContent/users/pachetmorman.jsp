@@ -193,15 +193,16 @@ tbody tr:hover {background: #fafafa;}
   	map.setCenter(morman);
   	map.setZoom(16);
   	
-    directionsDisplay.setMap(map);
+  	directionsDisplay.setMap(map);
+    calcRoute(document.getElementById('orase'))
+    showLinks(document.getElementById('orase'))
   }
   
   function calcRoute(element) {
 	  
 	  
-	showlinks(element);
-	return;
 	
+		
     var start = </f:verbatim><h:outputText value="\'#{mormanManager.latitudine},#{mormanManager.longitudine}\'" /><f:verbatim>
 	
     var end = element.value;
@@ -215,6 +216,8 @@ tbody tr:hover {background: #fafafa;}
         directionsDisplay.setDirections(response);
       }
     });
+    showlinks(element);
+	return;
 
   }
 </script>
@@ -262,7 +265,7 @@ tbody tr:hover {background: #fafafa;}
     </p>
     <h3>2. Indicaţii rutiere</h3>
     <form id="form1" name="form1" method="post" action=""><label class="p">Selectează localitatea din care vei porni: <select name="orase" id="orase" onchange="calcRoute(this);">
-        <option value="-1,-1" selected="selected">Selectează un oraş</option>
+        <option value="44.4325,26.103889" selected="selected">Bucureşti</option>
         <option value="46.31030354,23.7182172">Aiud</option>
         <option value="46.3103035360546,23.7182172002125">Aiud</option>
 <option value="46.0694759364561,23.5736700475653">Alba Iulia</option>
