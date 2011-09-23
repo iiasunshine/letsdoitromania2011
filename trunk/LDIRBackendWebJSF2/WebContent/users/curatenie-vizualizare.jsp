@@ -170,8 +170,8 @@
                                         </h:commandLink>
                                 </h:form>	 	   
                             <span class=important><h:outputText value="<strong>Echipa selectata.</strong><br/>" escape="false" rendered="#{areaCleanManager.teamSelected.teamId eq team.teamId}"/></span>
- 							<h:outputText value="Membrii: #{team.getCountMembers()}" escape="false"/></span><br/>
-							<h:outputText value="Putere de curatare: #{team.getBagsEnrolled()} / #{team.getCleaningPower()*team.getCountMembers()} saci" escape="false"/></span><br/>
+ 							<h:outputText value="Membrii: #{team.countMembers()}" escape="false"/></span><br/>
+							<h:outputText value="Putere de curatare: #{team.getBagsEnrolled()} / #{team.getCleaningPower()*team.countMembers()} saci" escape="false"/></span><br/>
  							<h:panelGroup rendered="#{fn:length(team.garbages) eq 0}">
                                 <h:outputText value="#{msg.clean_empty_list}"/>
                             </h:panelGroup>

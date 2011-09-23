@@ -93,7 +93,7 @@ function loadBBoxGarbageOverlay(ne,sw){
     url += '&bottomRightY='+bottomRightY;
     url += '&cb=' + escape('<a style="color: #4D751F;" href="curatenie-morman-detalii.jsf?garbageId={{{ID}}}">&raquo; Detalii / Aloca mormanul pentru echipa ta</a>');
     
-    
+    alert(url)
     /* adaugare layer lista gunoaie din judetul selectat */
     var bboxGarbageOverlay = new GGeoXml(url);
     myMap.addOverlay(bboxGarbageOverlay);
@@ -226,7 +226,7 @@ function loadCountyGarbageDetailOverlay(value){
 }
 
 
-function loadCountyGarbageOverlay(value){
+function loadCountyGarbageOverlay222(value){
     if(value){
         var jsonObject = JSON.parse(value);
 
