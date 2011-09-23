@@ -65,6 +65,9 @@
                                     <br/>
                                     <br/>
                                     <h:outputText value="<a href=\"http://www.letsdoitromania.ro/wp-content/uploads/2011/07/Manual-Curatenie-2011.pdf\" target=\"_blank\">Downloadeaza Manual Pentru Ziua de Curatenie 24 Septembrie 2011</a>" escape="false"/>
+									<br/>
+                                    <br/>
+									<h:outputText value="<a href=\"http://app-test1.letsdoitromania.ro/legitimatiiCFR/#{sessionScope['USER_DETAILS'].county}-#{sessionScope['USER_DETAILS'].userId}.pdf\" target=\"_blank\">Downloadeaza Legitimatia CFR de calatorie, cu reducere</a>" escape="false"/>									
 									<br/>  
                                     
                                 </h3>
