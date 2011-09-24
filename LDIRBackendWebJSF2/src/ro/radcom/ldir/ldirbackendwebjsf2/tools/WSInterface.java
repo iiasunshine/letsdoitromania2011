@@ -182,6 +182,15 @@ public class WSInterface {
         return cr;
     }
 
+    public ClientResponse setStatusGarbage(User user, Garbage garbage) {
+        String location = WS_URL + "/LDIRBackend/ws/garbage/" + garbage.getGarbageId()+"/status";
+        WebResource resource = client.resource(location);
+        Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(user.getEmail(), user.getPasswd()));
+        ClientResponse cr = builder.entity(garbage.getStatus(), MediaType.APPLICATION_JSON).put(ClientResponse.class);
+        return cr;
+    }
+
+    
     public ClientResponse getGarbage(User user, int garbageId) {
         String location = WS_URL + "/LDIRBackend/ws/garbage/" + garbageId;
         WebResource resource = client.resource(location);

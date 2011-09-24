@@ -90,7 +90,8 @@
                                 <br />
                                 <br />
                                 <h:outputText escape="false" value="Starea mormanului: "/>
-                                <h:selectOneMenu  onchange="#{mormanManager.actionEditMorman()}" value="#{mormanManager.myGarbage.garbage.status}">
+                                <h:selectOneMenu disabled="#{not (mormanManager.userDetails.role eq 'ADMIN' or mormanManager.userDetails.role eq 'ORGANIZER')}"  
+                                onchange="#{mormanManager.actionEditMorman()}" value="#{mormanManager.myGarbage.garbage.status}">
                                  <f:selectItem itemLabel="Identificat" itemValue="IDENTIFIED"/>
                                  <f:selectItem itemLabel="Curăţat" itemValue="CLEANED"/>
                                 </h:selectOneMenu>
