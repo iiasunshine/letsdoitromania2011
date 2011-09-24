@@ -186,7 +186,8 @@ public class WSInterface {
         String location = WS_URL + "/LDIRBackend/ws/garbage/" + garbage.getGarbageId()+"/status";
         WebResource resource = client.resource(location);
         Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(user.getEmail(), user.getPasswd()));
-        ClientResponse cr = builder.entity("CLEANED", MediaType.APPLICATION_JSON).put(ClientResponse.class);
+        String cleaned="CLEANED";
+        ClientResponse cr = builder.entity(cleaned, MediaType.APPLICATION_JSON).put(ClientResponse.class);
         return cr;
     }
 
