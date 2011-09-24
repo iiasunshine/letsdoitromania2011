@@ -52,4 +52,9 @@ public class NavigationValues {
     public static final String MORMAN_DEZALOCAT_SUCCESS = "morman_dezalocat_success";
     public static final String MORMAN_DEZALOCAT_FAIL = "morman_dezalocat_fail";
 
+    public static final String MORMAN_STARE_UPDATE_SUCCES = "morman_stare_updatare_success";
+    public static final String MORMAN_STARE_UPDATE_FAIL = "morman_stare_updatare_fail";
+    
+    
+    
 }

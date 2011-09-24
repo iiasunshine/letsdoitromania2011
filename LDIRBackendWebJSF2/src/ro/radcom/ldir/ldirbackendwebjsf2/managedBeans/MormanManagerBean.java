@@ -80,6 +80,8 @@ public class MormanManagerBean {
     /** Creates a new instance of MormanManagerBean */
     public MormanManagerBean() {
     	
+    	
+    	
         /* adaugare mesaj info de pe sesiune daca exista */
         String infoMessage = (String) JsfUtils.getHttpSession().getAttribute("INFO_MESSAGE");
         if (infoMessage != null) {
@@ -105,6 +107,14 @@ public class MormanManagerBean {
         	reloadTeam(teamSelectedId);
 
         /* initializare detalii utilizator si lista mormane */
+       if (garbageId==0)
+    	   if(JsfUtils.getHttpSession().getAttribute("garbageId")!=null)
+    	   {
+    		   garbageId=(Integer) JsfUtils.getHttpSession().getAttribute("garbageId");
+    		   JsfUtils.getHttpSession().removeAttribute("garbageId");
+    	   }
+    		   
+    		   
        if (garbageId>0){
          ClientResponse cr = wsi.getGarbage(userDetails,garbageId);
            if (cr.getStatus() != 200) {
@@ -352,6 +362,22 @@ public class MormanManagerBean {
         selectedImgIndex = AppUtils.parseToInt(JsfUtils.getRequestParameter("imgIndex"));
     }
 
+    public String actionChangeStare(){
+        ClientResponse cr = wsi.setStatusGarbage(userDetails, myGarbage.getGarbage());
+        int statusCode = cr.getStatus();
+        log4j.debug("---> Garbage Status statusCode: " + statusCode + " (" + cr.getClientResponseStatus() + ")");
+        if (statusCode == 200) {
+            /* cerere informatii user */
+            JsfUtils.getHttpSession().setAttribute("INFO_MESSAGE", "Starea mormanului updatata");
+            JsfUtils.getHttpSession().setAttribute("garbageId", myGarbage.getGarbage().getGarbageId());
+        	return NavigationValues.MORMAN_STARE_UPDATE_SUCCES;
+        } else {
+            JsfUtils.addWarnBundleMessage("internal_err");
+            JsfUtils.getHttpSession().setAttribute("garbageId", myGarbage.getGarbage().getGarbageId());
+            return NavigationValues.MORMAN_STARE_UPDATE_FAIL;
+        }     
+    }
+    
     public String actionEditMorman() {
         /**
          * validari
