@@ -363,6 +363,7 @@ public class MormanManagerBean {
     }
 
     public String actionChangeStare(){
+    	myGarbage.getGarbage().setStatus(Garbage.GarbageStatus.CLEANED);
         ClientResponse cr = wsi.setStatusGarbage(userDetails, myGarbage.getGarbage());
         int statusCode = cr.getStatus();
         log4j.debug("---> Garbage Status statusCode: " + statusCode + " (" + cr.getClientResponseStatus() + ")");
