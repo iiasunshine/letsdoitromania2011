@@ -79,6 +79,19 @@ public class Team extends FieldAccessBean {
 				n += org.getMembersCount();
 		return n;
 	}
+	
+	@Transient
+	public boolean isGarbageIdinTeam(int garbageId)
+	{
+		if(this.garbageEnrollements.size()==0)
+			return false;
+		
+		
+		for (GarbageEnrollment enrollment : this.garbageEnrollements)
+				if(enrollment.getGarbage().getGarbageId()==garbageId)
+					return true;
+		return false;
+	}
 
 	/*
 	 * (non-Javadoc)

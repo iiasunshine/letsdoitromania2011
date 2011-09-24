@@ -90,7 +90,9 @@
                                 <br />
                                 <br />
                                 <h:outputText escape="false" value="Starea mormanului: "/>
-                                <h:selectOneMenu disabled="#{not (mormanManager.userDetails.role eq 'ADMIN' or mormanManager.userDetails.role eq 'ORGANIZER')}"  
+                                <h:selectOneMenu disabled="#{not (mormanManager.userDetails.role eq 'ADMIN' or mormanManager.userDetails.role eq 'ORGANIZER_MULTI' or mormanManager.userDetails.role eq 'ORGANIZER' or mormanManager.teamSelected.isGarbageIdinTeam(mormanManager.myGarbage.garbageId))
+                                or 
+                                }"  
                                 onchange="#{mormanManager.actionEditMorman()}" value="#{mormanManager.myGarbage.garbage.status}">
                                  <f:selectItem itemLabel="Identificat" itemValue="IDENTIFIED"/>
                                  <f:selectItem itemLabel="Curăţat" itemValue="CLEANED"/>
