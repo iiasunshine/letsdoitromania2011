@@ -89,7 +89,7 @@
                                 <strong><h:outputText value="#{mormanManager.myGarbage.garbage.percentageWaste}%"/></strong>
                                 <br />
                                 <br />
-                                <h:outputText escape="false" value="Starea mormanului: "/>
+                                <h:outputText escape="false" value="Starea mormanului: #{mormanManager.myGarbage.garbage.status}"/>
                                 <h:form rendered="#{mormanManager.userDetails.role eq 'ADMIN' or mormanManager.userDetails.role eq 'ORGANIZER_MULTI' or mormanManager.userDetails.role eq 'ORGANIZER' or areaCleanManager.teamSelected.isGarbageIdinTeam(mormanManager.myGarbage.garbage.garbageId)}">
                                         <h:commandLink action="#{mormanManager.actionChangeStare}">
                                             <f:param name="garbageId" value="#{mormanManager.myGarbage.garbage.garbageId}"/>
