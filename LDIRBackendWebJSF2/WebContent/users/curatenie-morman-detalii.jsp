@@ -90,11 +90,13 @@
                                 <br />
                                 <br />
                                 <h:outputText escape="false" value="Starea mormanului: "/>
-                                <h:selectOneMenu disabled="#{not (mormanManager.userDetails.role eq 'ADMIN' or mormanManager.userDetails.role eq 'ORGANIZER_MULTI' or mormanManager.userDetails.role eq 'ORGANIZER' or areaCleanManager.teamSelected.isGarbageIdinTeam(mormanManager.myGarbage.garbage.garbageId))}"  
-                                onchange="#{mormanManager.actionChangeStare()}" value="#{mormanManager.myGarbage.garbage.status}">
-                                 <f:selectItem itemLabel="Identificat" itemValue="IDENTIFIED"/>
-                                 <f:selectItem itemLabel="Curăţat" itemValue="CLEANED"/>
-                                </h:selectOneMenu>
+                                <h:form>
+                                <h:form rendered="#{mormanManager.userDetails.role eq 'ADMIN' or mormanManager.userDetails.role eq 'ORGANIZER_MULTI' or mormanManager.userDetails.role eq 'ORGANIZER' or areaCleanManager.teamSelected.isGarbageIdinTeam(mormanManager.myGarbage.garbage.garbageId)}">
+                                        <h:commandLink action="#{mormanManager.actionChangeStare}">
+                                            <f:param name="garbageId" value="#{mormanManager.myGarbage.garbage.garbageId}"/>
+                                            <h:outputText value="Morman curatat!" escape="false"/>
+                                        </h:commandLink>
+                                    </h:form>
                                 <br />
                                 <br />
                                 <h:outputText escape="false" value="#{msg.details_coords_latitude} "/>
