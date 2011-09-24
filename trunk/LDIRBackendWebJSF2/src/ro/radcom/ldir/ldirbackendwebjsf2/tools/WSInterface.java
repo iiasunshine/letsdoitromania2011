@@ -187,7 +187,7 @@ public class WSInterface {
         WebResource resource = client.resource(location);
         Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(user.getEmail(), user.getPasswd()));
         String cleaned="CLEANED";
-        ClientResponse cr = builder.entity(cleaned, MediaType.APPLICATION_JSON).put(ClientResponse.class);
+        ClientResponse cr = builder.entity(garbage.getStatus(), MediaType.APPLICATION_JSON).put(ClientResponse.class);
         return cr;
     }
 
