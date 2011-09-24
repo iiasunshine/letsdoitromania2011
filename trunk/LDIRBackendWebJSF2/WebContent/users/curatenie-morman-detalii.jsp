@@ -89,8 +89,11 @@
                                 <strong><h:outputText value="#{mormanManager.myGarbage.garbage.percentageWaste}%"/></strong>
                                 <br />
                                 <br />
-                                <h:outputText escape="false" value="#{msg.details_state} "/>
-                                <strong><h:outputText value="#{mormanManager.myGarbage.garbage.status}"/></strong>
+                                <h:outputText escape="false" value="Starea mormanului: "/>
+                                <h:selectOneMenu  onchange="#{mormanManager.actionEditMorman()}" value="#{mormanManager.myGarbage.garbage.status}">
+                                 <f:selectItem itemLabel="Identificat" itemValue="IDENTIFIED"/>
+                                 <f:selectItem itemLabel="Curăţat" itemValue="CLEANED"/>
+                                </h:selectOneMenu>
                                 <br />
                                 <br />
                                 <h:outputText escape="false" value="#{msg.details_coords_latitude} "/>
