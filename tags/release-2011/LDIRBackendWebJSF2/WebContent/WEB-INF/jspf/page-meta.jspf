@@ -1,0 +1,25 @@
+<%-- META data content --%>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<meta http-equiv="Pragma" content="no-cache"/>
+<meta http-equiv="Cache-Control" content="no-cache"/>
+<meta http-equiv="Expire" content="now"/>
+<meta http-equiv="x-ua-compatible" content="ie=8"/>
+
+<%-- CSS Files --%>
+<link rel="stylesheet" type="text/css" href="${pageContext.servletContext.contextPath}/layout/css/style.css"/>
+
+<%-- JS Files --%>
+<script type="text/javascript"  src="${pageContext.servletContext.contextPath}/layout/scripts/scripts.js"></script>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-269435-26']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>

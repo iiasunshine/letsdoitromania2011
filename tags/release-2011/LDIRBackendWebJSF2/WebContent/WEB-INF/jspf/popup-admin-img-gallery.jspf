@@ -1,0 +1,47 @@
+<%@ include file="/WEB-INF/jspf/page-header.jspf" %>
+
+
+<!-- create new issue form dialog -->
+<rich:modalPanel id="img_gallery"
+                 height="750"
+                 width="850"
+                 resizeable="false">
+
+    <%-- HEADER --%>
+    <f:facet name="header">
+        <h:outputText value="Galerie Foto"/>
+    </f:facet>
+
+    <%-- CONTROLS --%>
+    <f:facet name="controls">
+        <h:panelGroup>
+            <h:graphicImage value="/layout/images/close.png" styleClass="hidelink">
+                <rich:componentControl for="img_gallery" operation="hide" event="onclick"/>
+            </h:graphicImage>
+        </h:panelGroup>
+    </f:facet>
+
+    <%-- BODY POPUP --%>
+    <a4j:outputPanel>
+        <h:panelGroup id="selected_image" style=" display:block; text-align: center; height: 565px;">
+            <h:graphicImage value="#{pageContext.servletContext.contextPath}/#{adminGarbageManagerBean.posters[adminGarbageManagerBean.selectedImgIndex]}"
+                            height="#{adminGarbageManagerBean.posterHeights[adminGarbageManagerBean.selectedImgIndex] > 0 ? adminGarbageManagerBean.posterHeights[adminGarbageManagerBean.selectedImgIndex] : ''}"
+                            styleClass="galerie"/>
+        </h:panelGroup>
+        <div style="" />
+        <h:panelGroup style="overflow: scroll; width: 800px; max-height: 150px; display:block;">
+            <a4j:form>
+                <a4j:repeat value="#{adminGarbageManagerBean.thumbnails}" var="thumbnail" rowKeyVar="index">
+                    <a4j:commandLink actionListener="#{adminGarbageManagerBean.actionSetSelectedImage}"
+                                     reRender="selected_image">
+                        <f:param name="imgIndex" value="#{index}"/>
+                        <h:graphicImage value="#{pageContext.servletContext.contextPath}/#{adminGarbageManagerBean.thumbnails[index]}" styleClass="galerie"/>
+                    </a4j:commandLink>
+                </a4j:repeat>
+            </a4j:form>
+        </h:panelGroup>
+    </a4j:outputPanel>
+</rich:modalPanel>
+
+
+

@@ -1,0 +1,13 @@
+<%-- user-login checkpoint --%>
+<%
+            if (session.getAttribute("USER_DETAILS") == null) {
+                response.sendRedirect(request.getContextPath() + "/user-login.jsf");
+                return;
+            } else if (!((ro.ldir.dto.User) session.getAttribute("USER_DETAILS")).getRole().equalsIgnoreCase("admin")
+                    && !((ro.ldir.dto.User) session.getAttribute("USER_DETAILS")).getRole().equalsIgnoreCase("organizer")
+                    && !((ro.ldir.dto.User) session.getAttribute("USER_DETAILS")).getRole().equalsIgnoreCase("organizer_multi")) {
+                response.sendRedirect(request.getContextPath() + "/users/");
+                return;
+            }
+%>
+

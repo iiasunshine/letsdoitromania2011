@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<project name="LDIR-common" basedir=".">
+	<dirname property="common.basedir" file="${ant.file.LDIR-common}" />
+	<property environment="env" />
+	<property name="glassfish.home" value="${env.GLASSFISH_HOME}" />
+	<property name="glassfish.domain" value="domain1" />
+
+	<property name="service.location" value="${common.basedir}/Web/Service" />
+
+	<property name="app.location" value="${common.basedir}/Web/Service/LDIRBackend" />
+	<property name="app.ear" value="${app.location}/LDIRBackend.ear" />
+
+	<property name="ejb.location" value="${common.basedir}/Web/Service/LDIRBackendEJB" />
+	<property name="ejb.jar" value="${ejb.location}/LDIRBackendEJB.jar" />
+
+	<property name="ejbclient.location" value="${common.basedir}/Web/Service/LDIRBackendEJBClient" />
+	<property name="ejbclient.jar" value="${ejbclient.location}/LDIRBackendEJBClient.jar" />
+
+	<property name="webservice.location" value="${common.basedir}/Web/Service/LDIRBackendWeb" />
+	<property name="webservice.war" value="${webservice.location}/LDIRBackendWeb.war" />
+
+	<property name="jsf.location" value="${common.basedir}/LDIRBackendWebJSF2" />
+	<property name="jsf.war" value="${jsf.location}/LDIRBackendWebJSF2.war" />
+
+	<property name="geoinit.location" value="${common.basedir}/Web/Service/LDIRBackendGeoInit" />
+	<property name="tests.location" value="${common.basedir}/Web/Service/LDIRBackendTests" />
+
+	<path id="EAR Libraries.libraryclasspath">
+		<pathelement location="${ejbclient.jar}" />
+	</path>
+
+	<path id="itext.libraryclasspath">
+		<pathelement location="${app.location}/EarContent/lib/itextpdf-5.1.2.jar" />
+		<pathelement location="${app.location}/EarContent/lib/itext-xtra-5.1.2.jar" />
+	</path>
+
+	<path id="GlassFish 3.1 [GlassFish 3.1].libraryclasspath">
+		<pathelement location="${glassfish.home}/glassfish/modules/jsf-api.jar" />
+		<pathelement location="${glassfish.home}/glassfish/modules/jsf-impl.jar" />
+		<pathelement location="${glassfish.home}/glassfish/modules/jstl-impl.jar" />
+		<pathelement location="${glassfish.home}/glassfish/modules/bean-validator.jar" />
+		<pathelement location="${glassfish.home}/glassfish/modules/endorsed/javax.annotation.jar" />
+		<pathelement location="${glassfish.home}/glassfish/modules/endorsed/jaxb-api-osgi.jar" />
+		<pathelement location="${glassfish.home}/glassfish/modules/endorsed/webservices-api-osgi.jar" />
+		<pathelement location="${glassfish.home}/glassfish/modules/glassfish-api.jar" />
+		<pathelement location="${glassfish.home}/glassfish/modules/grizzly-comet.jar" />
+		<pathelement location="${glassfish.home}/glassfish/modules/grizzly-websockets.jar" />
+		<pathelement location="${glassfish.home}/glassfish/modules/javax.ejb.jar" />
+		<pathelement location="${glassfish.home}/glassfish/modules/javax.enterprise.deploy.jar" />
+		<pathelement location="${glassfish.home}/glassfish/modules/javax.jms.jar" />
+		<pathelement location="${glassfish.home}/glassfish/modules/javax.mail.jar" />
+		<pathelement location="${glassfish.home}/glassfish/modules/javax.management.j2ee.jar" />
+		<pathelement location="${glassfish.home}/glassfish/modules/javax.persistence.jar" />
+		<pathelement location="${glassfish.home}/glassfish/modules/javax.resource.jar" />
+		<pathelement location="${glassfish.home}/glassfish/modules/javax.security.auth.message.jar" />
+		<pathelement location="${glassfish.home}/glassfish/modules/javax.security.jacc.jar" />
+		<pathelement location="${glassfish.home}/glassfish/modules/javax.servlet.jar" />
+		<pathelement location="${glassfish.home}/glassfish/modules/javax.servlet.jsp.jar" />
+		<pathelement location="${glassfish.home}/glassfish/modules/javax.servlet.jsp.jstl.jar" />
+		<pathelement location="${glassfish.home}/glassfish/modules/javax.transaction.jar" />
+		<pathelement location="${glassfish.home}/glassfish/modules/jersey-client.jar" />
+		<pathelement location="${glassfish.home}/glassfish/modules/jersey-core.jar" />
+		<pathelement location="${glassfish.home}/glassfish/modules/jersey-gf-server.jar" />
+		<pathelement location="${glassfish.home}/glassfish/modules/jersey-gf-statsproviders.jar" />
+		<pathelement location="${glassfish.home}/glassfish/modules/jersey-json.jar" />
+		<pathelement location="${glassfish.home}/glassfish/modules/jersey-multipart.jar" />
+		<pathelement location="${glassfish.home}/glassfish/modules/weld-osgi-bundle.jar" />
+		<pathelement location="${glassfish.home}/glassfish/modules/org.eclipse.persistence.antlr.jar" />
+		<pathelement location="${glassfish.home}/glassfish/modules/org.eclipse.persistence.asm.jar" />
+		<pathelement location="${glassfish.home}/glassfish/modules/org.eclipse.persistence.core.jar" />
+		<pathelement location="${glassfish.home}/glassfish/modules/org.eclipse.persistence.jpa.jar" />
+		<pathelement location="${glassfish.home}/glassfish/modules/org.eclipse.persistence.jpa.modelgen.jar" />
+		<pathelement location="${glassfish.home}/glassfish/modules/org.eclipse.persistence.oracle.jar" />
+		<pathelement location="${glassfish.home}/glassfish/modules/jaxb-osgi.jar" />
+		<pathelement location="${glassfish.home}/glassfish/modules/webservices-connector.jar" />
+		<pathelement location="${glassfish.home}/glassfish/modules/webservices-extra-jdk-packages.jar" />
+		<pathelement location="${glassfish.home}/glassfish/modules/webservices-osgi.jar" />
+		<pathelement location="${glassfish.home}/glassfish/modules/webservices.security.jar" />
+		<pathelement location="${glassfish.home}/glassfish/modules/woodstox-osgi.jar" />
+		<pathelement location="${glassfish.home}/mq/lib/jaxm-api.jar" />
+	</path>
+
+	<path id="LDIRBackendEJB.classpath">
+		<pathelement location="${ejb.location}/build/classes" />
+		<path refid="GlassFish 3.1 [GlassFish 3.1].libraryclasspath" />
+		<path refid="EAR Libraries.libraryclasspath" />
+		<path refid="itext.libraryclasspath" />
+	</path>
+
+	<path id="LDIRBackendEJBClient.classpath">
+		<pathelement location="${ejbclient.location}/build/classes" />
+		<path refid="GlassFish 3.1 [GlassFish 3.1].libraryclasspath" />
+	</path>
+
+	<path id="LDIRBackendWeb.classpath">
+		<pathelement location="build/classes" />
+		<path refid="GlassFish 3.1 [GlassFish 3.1].libraryclasspath" />
+		<path refid="EAR Libraries.libraryclasspath" />
+		<fileset dir="${webservice.location}/WebContent/WEB-INF/lib" includes="**/*.jar" />
+	</path>
+
+	<path id="tests.classpath">
+		<pathelement location="${tests.location}/lib/junit-4.8.2.jar" />
+		<pathelement location="${tests.location}/lib/mysql-connector-java-5.1.15-bin.jar" />
+		<pathelement location="${tests.location}/bin" />
+		<path refid="GlassFish 3.1 [GlassFish 3.1].libraryclasspath" />
+		<path refid="EAR Libraries.libraryclasspath" />
+	</path>
+
+	<target name="build-ejbclient">
+		<ant dir="${ejbclient.location}" target="jar" />
+	</target>
+</project>

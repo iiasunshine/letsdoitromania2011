@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	id="WebApp_ID" version="3.0">
+	<display-name>LDIRBackendWeb</display-name>
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+		<welcome-file>index.htm</welcome-file>
+		<welcome-file>index.jsp</welcome-file>
+		<welcome-file>default.html</welcome-file>
+		<welcome-file>default.htm</welcome-file>
+		<welcome-file>default.jsp</welcome-file>
+	</welcome-file-list>
+
+	<display-name>ro.ldir.ws</display-name>
+	<servlet>
+		<servlet-name>LDIR Web Service</servlet-name>
+		<servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
+		<init-param>
+			<param-name>com.sun.jersey.config.property.packages</param-name>
+			<param-value>ro.ldir.ws</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>LDIR Web Service</servlet-name>
+		<url-pattern>/ws/*</url-pattern>
+	</servlet-mapping>
+
+	<display-name>ro.ldir.registration</display-name>
+	<servlet>
+		<servlet-name>LDIR Web Registration Service</servlet-name>
+		<servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
+		<init-param>
+			<param-name>com.sun.jersey.config.property.packages</param-name>
+			<param-value>ro.ldir.registration</param-value>
+		</init-param>
+		<init-param>
+			<param-name>ro.ldir.registration.ok-link</param-name>
+			<param-value>http://app.letsdoitromania.ro/LDIRBackendWebJSF2/good.html</param-value>
+		</init-param>
+		<init-param>
+			<param-name>ro.ldir.registration.already-validated</param-name>
+			<param-value>http://app.letsdoitromania.ro/LDIRBackendWebJSF2/bad.html</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>LDIR Web Registration Service</servlet-name>
+		<url-pattern>/reg/*</url-pattern>
+	</servlet-mapping>
+
+	<display-name>ro.ldir.map</display-name>
+	<servlet>
+		<servlet-name>LDIR Map Service</servlet-name>
+		<servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
+		<init-param>
+			<param-name>com.sun.jersey.config.property.packages</param-name>
+			<param-value>ro.ldir.map</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>LDIR Map Service</servlet-name>
+		<url-pattern>/map/*</url-pattern>
+	</servlet-mapping>
+
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>Secure</web-resource-name>
+			<url-pattern>/ws/*</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<description>has to be an anything</description>
+			<role-name>ADMIN</role-name>
+			<role-name>ORGANIZER</role-name>
+			<role-name>ORGANIZER_MULTI</role-name>
+			<role-name>VOLUNTEER</role-name>
+			<role-name>VOLUNTEER_MULTI</role-name>
+		</auth-constraint>
+	</security-constraint>
+
+	<!-- The roles here must match exactly the upper case strings of the enum 
+		ro.ldir.dto.User.SecurityRole -->
+	<login-config>
+		<auth-method>BASIC</auth-method>
+	</login-config>
+	<security-role>
+		<role-name>ADMIN</role-name>
+	</security-role>
+	<security-role>
+		<role-name>ORGANIZER</role-name>
+	</security-role>
+	<security-role>
+		<role-name>ORGANIZER_MULTI</role-name>
+	</security-role>
+	<security-role>
+		<role-name>VOLUNTERR</role-name>
+	</security-role>
+	<security-role>
+		<role-name>VOLUNTEER_MULTI</role-name>
+	</security-role>
+
+	<error-page>
+		<error-code>401</error-code>
+		<location>/error/unauthorized</location>
+	</error-page>
+</web-app>

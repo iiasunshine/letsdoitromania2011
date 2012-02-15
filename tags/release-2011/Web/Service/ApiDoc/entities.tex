@@ -1,0 +1,299 @@
+\chapter{Entities}
+\label{cha:entities}
+
+This chapter describes the entities used to interact with the Let's Do It
+Romania web service. The calls specified later in Chapter~\ref{cha:calls} accept
+as parameters or return one or more of the entities that follow. During the
+aforementioned calls, these entities can be serialized either as JSON or XML.
+
+It should be noted that although most of these entities are persisted in the
+database:
+\begin{itemize}
+  \item some of the properties stored in the database are not serialized,
+  \item some properties are available only at serialization time and are not
+    persisted in the database,
+  \item some properties are read only, e.g., the ID of a user which is
+    automatically assigned by the system, and
+  \item some properties require a special API call to change and cannot be
+    changed when an entity is updated. For instance, the user update call
+    (described later in Section~\ref{sec:user:update}) leaves unchanged the list
+    of teams managed by the user being updated; to update the list of managed
+    teams, the user must make a create team call
+    (Section~\ref{sec:team:create}). 
+\end{itemize}
+
+First (Section~\ref{sec:entities:user}) we present user-related entities, such
+as system users, teams and organizations, and then
+(Section~\ref{sec:entities:geographical}) we present geographical-related
+entities, such as garbage tags, charting areas, and administrative areas.
+
+\section{User-related entities}
+\label{sec:entities:user}
+
+\subsection{System users}
+The following lists all properties of the \texttt{user} entity. All read-only
+properties are immutable with respect to the user update call described in
+Section~\ref{sec:user:update}.
+\begin{entitydef}{user}
+  \property{acceptsMoreInfo}{A boolean stating whether the users has given its
+  approval to receive more information via email.}
+  \property{activities}{A set of string describing the activities that the user
+  is enrolled in. Valid activities are ``CHART'' and ``CLEAN''.}
+  \property{birthday}{A string containing the user's birthday, formatted as
+  ``YYYY-MM-DD''.}
+  \property{county}{A string containing the name of the county where the user is
+  located.}
+  \roproperty{email}{A string containing the user's email address. This property
+  is used to log in the system and cannot be modified.}
+  \property{firstName}{A string denoting the user's first name.}
+  \roproperty{garbages}{A set of integers containing the IDs of the
+  \texttt{garbage} tag entities the user has inserted.}
+  \property{lastName}{A string denoting the user's last name.}
+  \roproperty{managedTeams}{A set of integers containing the IDs of the
+  \texttt{team} entities the user manages. }
+  \roproperty{memberOf}{An integer denoting the ID of the \texttt{team} entity
+  the user is enrolled in.}
+  \roproperty{organization}{A set of integers containing the IDs of the
+  \texttt{organization} entities the user is responsible for.}
+  \property{passwd}{A string denoting the user's password. When polling the
+  system, the web service will return the password encrypted using SHA-256. When
+  updating the user, the new password must be provided in clear text.}
+  \property{phone}{A string denoting the user's phone number.}
+  \roproperty{role}{A string denoting the user's security access role. Valid
+  roles are:
+  \begin{compactitem}
+    \item ``PENDING'': the user has just registered on the website, but the
+      email is not validated yet. The user does not have access to the service.
+    \item ``SUSPENDED'': the user does not have access to the service.
+    \item ``ADMIN'': an administration user.
+    \item ``VOLUNTEER'': a volunteer user that can manage only one team.
+    \item ``VOLUNTEER\_MULTI'': a volunteer user that can manage multiple teams.
+    \item ``ORGANIZER'': a organizer user that can manage only one team.
+    \item ``ORGANIZER\_MULTI'': a organizer user that can manage multiple
+      teams.
+  \end{compactitem} 
+}
+  \property{town}{A string containing the name of the town where the user is
+  located.}
+  \roproperty{userId}{An integer denoting the ID of the \texttt{user} entity
+  instance.}
+\end{entitydef}
+
+\subsection{Organizing users}
+
+\begin{entitydef}{organization}
+  \property{address}{A string containing the address of the organization.}
+  \property{contactEmail}{A string denoting the email address of the contact
+  within this organization.}
+  \property{contactFirstname}{A string denoting the first name of the contact
+  within this organization.}
+  \property{contactLastname}{A string denoting the last name of the contact
+  within this organization.}
+  \property{contactPhone}{A string denoting the phone number of the contact
+  within this organization.}
+  \roproperty{manager}{An integer denoting the ID of the \texttt{user} entity
+  responsible for this organization.}
+  \property{county}{A string denoting the county where this organization is
+  located.}
+  \property{memberOf}{An integer denoting the ID of the \texttt{team} entity
+  in which this organization is enrolled.}
+  \property{membersCount}{An integer denoting the number of members of this
+  organization.}
+  \roproperty{organizationId}{An integer denoting the ID of the
+  \texttt{organization} entity instance.}
+  \property{town}{A string denoting the town where this organization is
+  located.}
+  \property{type}{A string denoting the type of the organization. Valid types
+  are: ``CITY\_HALL'', ``COMPANY'', ``LANDFILL'', ``REGISTRATION\_POINT'',
+  and ``SCHOOL''.}
+\end{entitydef}
+
+\begin{entitydef}{team}
+  \roproperty{chartedAreas}{A set of integers denoting the IDs of the
+  \texttt{chartArea} entities this team instance is charting.}
+  \roproperty{equipment}{A set of equipment entities that this team possesses.
+  Valid equipment are: \texttt{cleaningEquipment}, \texttt{gpsEquipment} and
+  \texttt{transportEquipment}.}
+  \roproperty{garbageEnrollments}{A set of \texttt{garbageEnrolment} entities
+  that represent the garbages allocated to this team for cleaning.}
+  \roproperty{garbages}{A set of integers denoting the IDs of the
+  \texttt{garbage} entities this team desires to clean.}
+  \roproperty{insertedGarbages}{A set of integers denoting the IDs of the
+  \texttt{garbage} entities inserted by members of this team.}
+  \roproperty{organizationMembers}{A set of integers denoting ID of the
+  \texttt{organization} entities enrolled in this team.}
+  \roproperty{teamId}{An integer denoting ID of the \texttt{team} entity
+  instance.}
+  \roproperty{teamManager}{An integer denoting ID of the \texttt{user} entity
+  who is managing this team.}
+  \roproperty{volunteerMembers}{A set of integers denoting the IDs of the
+  \texttt{user} entities enrolled in this team.}
+\end{entitydef}
+
+\subsection{Equipments}
+
+The following entities represent objects that a team may use and own during the
+charting and cleaning process. All are derived from an abstract entity called
+\texttt{equipment}.
+
+\begin{entitydef}{cleaningEquipment}
+  \roproperty{equipmentId}{An integer denoting the ID of the equipment entity
+  instance.}
+  \roproperty{teamOwner}{An integer denoting the ID of the \texttt{team} entity
+  owning this equipment.}
+  \property{cleaningType}{A string denoting the type of this cleaning equipment.
+  Valid types are ``BAGS'' and ``GLOVES.''.}
+\end{entitydef}
+
+
+\begin{entitydef}{gpsEquipment}
+  \roproperty{equipmentId}{An integer denoting the ID of the equipment entity
+  instance.}
+  \roproperty{teamOwner}{An integer denoting the ID of the \texttt{team} entity
+  owning this equipment.}
+  \property{count}{An integer denoting how many equipments of this type are
+  owned by the team.}
+\end{entitydef}
+
+
+\begin{entitydef}{transportEquipment}
+  \roproperty{equipmentId}{An integer denoting the ID of the equipment entity
+  instance.}
+  \roproperty{teamOwner}{An integer denoting the ID of the \texttt{team} entity
+  owning this equipment.}
+  \property{transportType}{A string denoting the type of this transport
+  equipment. Valid transports are ``BICYCLE'', ``CAR'', ``ORGANIZATION\_CAR''
+  and ``PUBLIC''}
+\end{entitydef}
+
+\section{Geographical entities}
+\label{sec:entities:geographical}
+
+\subsection{Garbage tags}
+
+\begin{entitydef}{garbage}
+  \property{bagCount}{An integer denoting the number of bags required to collect
+  this garbage}
+  \property{bigComponentsDescription}{A string describing the components of the
+  garbage.}
+  \roproperty{chartedArea}{An integer denoting the ID of the
+  \texttt{chartedArea} entity in which this garbage has been tagged. This field
+  is automatically filled in by the system based on the geographical coordinates
+  of the garbage tag at the moment when the tag is inserted in the system.}
+  \roproperty{county}{An integer denoting the ID of the \texttt{countyArea}
+  entity in which this garbage has been tagged. This field is automatically
+  filled in by the system based on the geographical coordinates of the garbage
+  tag at the moment when the tag is inserted in the system.}
+  \property{description}{A user-inserted string.}
+  \property{details}{A string giving further details on the garbage.}
+  \property{dispersed}{A boolean indicating whether the garbage is dispersed.}
+  \roproperty{garbageEnrollments}{A set of \texttt{garbageEnrolment} entities
+  that represent the garbages allocated to this team for cleaning.}
+  \roproperty{garbageId}{An integer denoting the ID of this garbage tag entity
+  instance.}
+  \roproperty{insertedBy}{An integer denoting the ID of the user inserting this
+  garbage.}
+  \property{percentageGlass}{An integer.}
+  \property{percentageMetal}{An integer.}
+  \property{percentagePlastic}{An integer.}
+  \property{percentageWaste}{An integer.}
+  \roproperty{pictures}{An array of strings, each denoting the location of a
+  picture illustrating the tagged garbage.}
+  \roproperty{recordDate}{The timestamp when the garbage has been inserted in
+  the system.}
+  \property{status}{A string denoting the garbage tag's status. Can be
+  ``CLEANED'' or ``IDENTIFIED''.}
+  \roproperty{town}{An integer denoting the ID of the \texttt{townArea}
+  entity in which this garbage has been tagged. This field is automatically
+  filled in by the system based on the geographical coordinates of the garbage
+  tag at the moment when the tag is inserted in the system.}
+  \property{x}{A float denoting the garbage tag's longitude.}
+  \property{y}{A float denoting the garbage tag's latitude.}
+\end{entitydef}
+
+\begin{entitydef}{garbageEnrollment}
+  \property{allocatedBags}{An integer denoting how many bags the referenced
+  \texttt{team} has allocated in the cleaning of the referenced
+  \texttt{garbage}.}
+  \roproperty{garbageEnrollmentId}{An integer denoting the ID of this mapping
+  between a \texttt{team} entity and a \texttt{garbage} entity.}
+  \roproperty{garbage}{An integer representing the ID of the \texttt{garbage} to
+  be cleaned.}
+  \roproperty{team}{An integer representing the ID of the \texttt{team} cleaning
+  the garbage.}
+\end{entitydef}
+
+\subsection{Areas}
+
+
+All of the following tags are derived from a base abstract entity called
+\texttt{closedArea}. Such an entity denotes a (closed) polygon made up by
+vertexes expressed as geographical coordinates.
+
+\begin{entitydef}{chartedArea}
+  \roproperty{areaId}{An integer denoting the ID of the \texttt{chartedArea}
+  entity instance.}
+  \property{polyline}{An ordered list of float pairs, each denoting a
+  geographical coordinates. Consecutive entries in this list make the vertexes
+  of a side of the polygon. It is assumed that the last entry and the first
+  entry make up for one polygon sides.}
+  \roproperty{topLeftX}{A float denoting the longitude of a vertex which is the
+  top left corner of the \texttt{chartedArea}'s bounding box.}
+  \roproperty{topLeftY}{A float denoting the latitude of a vertex which is the
+  top left corner of the \texttt{chartedArea}'s bounding box.}
+  \roproperty{bottomRightX}{A float denoting the longitude of a vertex which is
+  the bottom Right corner of the \texttt{chartedArea}'s bounding box.}
+  \roproperty{bottomRightY}{A float denoting the latitude of a vertex which is
+  the bottom Right corner of the \texttt{chartedArea}'s bounding box.}
+  \roproperty{chartedArea}{A list of integers denoting the IDs of the teams
+  charting this area.}
+  \roproperty{garbages}{A list of integers denoting the IDs of the garbage tags
+  inserted in this area.}
+  \property{percentageCompleted}{A percentage denoting how much of this area has
+  been charted.}
+  \property{score}{An integer denoting the score of the charted area.}
+\end{entitydef}
+
+\begin{entitydef}{countyArea}
+  \roproperty{areaId}{An integer denoting the ID of the \texttt{countyArea}
+  entity instance.}
+  \property{polyline}{An ordered list of float pairs, each denoting a
+  geographical coordinates. Consecutive entries in this list make the vertexes
+  of a side of the polygon. It is assumed that the last entry and the first
+  entry make up for one polygon sides.}
+  \roproperty{topLeftX}{A float denoting the longitude of a vertex which is the
+  top left corner of the \texttt{countyArea}'s bounding box.}
+  \roproperty{topLeftY}{A float denoting the latitude of a vertex which is the
+  top left corner of the \texttt{countyArea}'s bounding box.}
+  \roproperty{bottomRightX}{A float denoting the longitude of a vertex which is
+  the bottom Right corner of the \texttt{countyArea}'s bounding box.}
+  \roproperty{bottomRightY}{A float denoting the latitude of a vertex which is
+  the bottom Right corner of the \texttt{countyArea}'s bounding box.}
+  \roproperty{countyArea}{A list of integers denoting the IDs of the teams
+  charting this area.}
+  \roproperty{garbages}{A list of integers denoting the IDs of the garbage tags
+  inserted in this area.}
+  \property{name}{A string denoting the name of the county area.}
+\end{entitydef}
+
+\begin{entitydef}{townArea}
+  \roproperty{areaId}{An integer denoting the ID of the \texttt{townArea}
+  entity instance.}
+  \property{polyline}{An ordered list of float pairs, each denoting a
+  geographical coordinates. Consecutive entries in this list make the vertexes
+  of a side of the polygon. It is assumed that the last entry and the first
+  entry make up for one polygon sides.}
+  \roproperty{topLeftX}{A float denoting the longitude of a vertex which is the
+  top left corner of the \texttt{townArea}'s bounding box.}
+  \roproperty{topLeftY}{A float denoting the latitude of a vertex which is the
+  top left corner of the \texttt{townArea}'s bounding box.}
+  \roproperty{bottomRightX}{A float denoting the longitude of a vertex which is
+  the bottom Right corner of the \texttt{townArea}'s bounding box.}
+  \roproperty{bottomRightY}{A float denoting the latitude of a vertex which is
+  the bottom Right corner of the \texttt{townArea}'s bounding box.}
+  \roproperty{townArea}{A list of integers denoting the IDs of the teams
+  charting this area.}
+  \roproperty{garbages}{A list of integers denoting the IDs of the garbage tags
+  inserted in this area.}
+  \property{name}{A string denoting the name of the town area.}
+\end{entitydef}

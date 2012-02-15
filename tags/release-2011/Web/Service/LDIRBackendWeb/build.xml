@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<project basedir="." default="build" name="LDIRBackendWeb">
+	<include file="../../../build-common.xml" as="build-common" />
+
+	<property name="war.file" value="${webservice.war}" />
+
+	<target name="build-ejbclient">
+		<ant dir="${ejbclient.location}" target="jar" />
+	</target>
+
+	<target depends="build-ejbclient" name="init">
+		<mkdir dir="build/classes" />
+		<copy includeemptydirs="false" todir="build/classes">
+			<fileset dir="src">
+				<exclude name="**/*.launch" />
+				<exclude name="**/*.g" />
+				<exclude name="**/*.java" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="clean">
+		<delete dir="build/classes" />
+		<delete file="${war.file}" />
+	</target>
+
+	<target depends="init" name="build">
+		<echo message="${ant.project.name}: ${ant.file}" />
+		<javac destdir="build/classes">
+			<src path="src" />
+			<classpath refid="LDIRBackendWeb.classpath" />
+		</javac>
+	</target>
+
+	<target depends="build,javadoc" name="war">
+		<war destfile="${war.file}" filesetmanifest="merge" needxmlfile="false">
+			<classes dir="build/classes" />
+			<webinf dir="WebContent/WEB-INF" />
+			<metainf dir="WebContent/META-INF" />
+			<fileset dir="WebContent" />
+		</war>
+	</target>
+	
+	<target name="javadoc">
+		<javadoc destdir="${webservice.location}/WebContent" author="true" version="true" windowtitle="LDIR Backend API" overview="overview.html">
+			<fileset dir="${webservice.location}/src" />
+			<fileset dir="${ejbclient.location}/ejbModule" />
+			<fileset dir="${ejb.location}/ejbModule" />
+			<fileset dir="${geoinit.location}/src" />
+			<fileset dir="${tests.location}/src" />
+			<classpath refid="LDIRBackendWeb.classpath" />
+			<classpath refid="LDIRBackendEJBClient.classpath" />
+			<classpath refid="LDIRBackendEJB.classpath" />
+			<classpath refid="tests.classpath" />
+
+			<doctitle>
+				<![CDATA[<h1>LDIR Backend API</h1>]]></doctitle>
+			<bottom>
+			<![CDATA[<i>Copyright &#169; 2011 Stefan Guna. All Rights Reserved.</i>]]></bottom>
+	</javadoc>
+</target>
+
+</project>

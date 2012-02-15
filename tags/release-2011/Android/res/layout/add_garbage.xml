@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent">
+
+	<RelativeLayout android:id = "@+id/garbage_layout" android:layout_width="fill_parent"
+		android:layout_height="fill_parent">
+		<!-- Coordinates -->
+		<TableLayout android:id="@+id/groupCoordinates"
+			android:stretchColumns="0,1" android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:layout_alignParentTop="true">
+
+			<TableRow>
+				<TextView android:text="@string/details_coords_latitude"
+					android:layout_width="wrap_content" android:layout_height="wrap_content" />
+
+				<TextView android:text="@string/details_coords_longitude"
+					android:layout_width="wrap_content" android:layout_height="wrap_content" />
+
+			</TableRow>
+
+			<TableRow>
+				<EditText android:id="@+id/txtLatitude" android:numeric="decimal"
+					android:layout_width="wrap_content" android:layout_height="wrap_content" />
+
+				<EditText android:id="@+id/txtLongitude" android:numeric="decimal"
+					android:layout_width="wrap_content" android:layout_height="wrap_content" />
+
+				<Button android:id="@+id/btnGPS" android:text="@string/details_btn_GPS"
+					android:layout_width="wrap_content" android:layout_height="wrap_content" />
+			</TableRow>
+
+
+
+		</TableLayout>
+		<!-- Description -->
+
+		<TextView android:id="@+id/lblDescriptionTitle" android:text="@string/details_description_title"
+			android:layout_width="fill_parent" android:layout_height="wrap_content"
+			android:layout_alignParentLeft="true" android:layout_below="@id/groupCoordinates" />
+
+		<EditText android:id="@+id/txtDescriptionTitle"
+			android:layout_width="fill_parent" android:layout_height="wrap_content"
+			android:layout_below="@id/lblDescriptionTitle" />
+
+		<TextView android:id="@+id/lblDescription" android:text="@string/details_description"
+			android:layout_width="fill_parent" android:layout_height="wrap_content"
+			android:layout_alignParentLeft="true" android:layout_below="@id/txtDescriptionTitle" />
+
+		<EditText android:id="@+id/txtDescription"
+			android:layout_width="fill_parent" android:layout_height="wrap_content"
+			android:layout_below="@id/lblDescription" android:lines="3" android:maxLength="1000"/>
+
+		<TableLayout android:layout_width="fill_parent"
+			android:stretchColumns="0,1" android:layout_height="wrap_content"
+			android:layout_below="@id/txtDescription">
+
+			<TableRow>
+				<TextView android:text="@string/details_percent_plastic"
+					android:layout_width="fill_parent" android:layout_height="wrap_content" />
+
+				<TextView android:text="@string/details_bags"
+					android:layout_width="fill_parent" android:layout_height="wrap_content" />
+
+			</TableRow>
+			<TableRow>
+
+				<EditText android:id="@+id/txtPlastic"
+					android:layout_width="fill_parent" android:layout_height="wrap_content"
+					android:numeric="integer" android:text="0"/>
+
+				<EditText android:id="@+id/txtBagCount"
+					android:layout_width="fill_parent" android:layout_height="wrap_content"
+					android:numeric="integer" android:text="@integer/min_nr_of_bags"/>
+
+			</TableRow>
+			<TableRow>
+				<TextView android:text="@string/details_percent_glass"
+					android:layout_width="wrap_content" android:layout_height="wrap_content" />
+
+				<TextView android:text="@string/details_dispersed"
+					android:layout_width="wrap_content" android:layout_height="wrap_content" />
+
+			</TableRow>
+			<TableRow>
+
+				<EditText android:id="@+id/txtGlass" android:layout_width="wrap_content"
+					android:layout_height="fill_parent" android:numeric="integer"  android:text="0"/>
+
+				<CheckBox android:id="@+id/checkDispersed"
+					android:layout_width="wrap_content" android:layout_height="wrap_content" />
+
+			</TableRow>
+
+			<TableRow>
+				<TextView android:text="@string/details_percent_metal"
+					android:layout_width="wrap_content" android:layout_height="wrap_content" />
+
+			</TableRow>
+			<TableRow>
+
+				<EditText android:id="@+id/txtMetal" android:layout_width="wrap_content"
+					android:layout_height="fill_parent" android:numeric="integer"  android:text="0"/>
+
+				<LinearLayout android:id="@+id/btnPictureGallery" android:layout_width="wrap_content" 
+					android:layout_height="wrap_content" android:orientation="horizontal" 
+					style="@android:style/Widget.Button" android:layout_weight="2">
+					<ImageView android:src="@drawable/icon_view_map" 
+						android:layout_width="wrap_content" android:layout_height="wrap_content" 
+						android:layout_weight="1"/>
+					<TextView android:text="@string/details_photo_gallery" 
+						style="@android:style/TextAppearance.Widget.Button"
+						android:layout_width="wrap_content" android:layout_height="wrap_content" 
+						android:layout_weight="1"/>
+				</LinearLayout>
+
+			</TableRow>
+			<TableRow>
+				<TextView android:text="@string/details_percent_waste"
+					android:layout_width="wrap_content" android:layout_height="wrap_content" />
+
+			</TableRow>
+			<TableRow>
+
+				<EditText android:id="@+id/txtWaste" android:layout_width="wrap_content"
+					android:layout_height="wrap_content" android:numeric="integer"  android:text="0"/>
+					
+				<Button android:id="@+id/btnAddPicture" android:text="@string/details_add_picture"
+					android:layout_width="wrap_content" android:layout_height="wrap_content" />
+
+			</TableRow>
+
+		</TableLayout>
+
+
+	</RelativeLayout>
+</ScrollView>

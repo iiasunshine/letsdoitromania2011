@@ -1,0 +1,345 @@
+\section{Team management}
+\label{sec:call:team}
+
+This section describes the calls that affect the state of the teams managed by
+the system. These are implemented in the
+\svnweb{ro/ldir/ws/TeamWebService}{ro.ldir.ws.TeamWebService} web resource.
+
+Most of calls of this section are relative to a team identifier. There are two
+methods that can be used to obtain team identifiers:
+\begin{itemize}
+  \item indirectly through the appropriate field (\texttt{organizations}) of the
+    \texttt{user} entity. Note that the user can either manage the team, or be a
+    team member. How a user can be accessed is described in
+    Section~\ref{sec:call:user} and Section~\ref{sec:call:user}, or
+  \item searching a team by name. This procedure is described in
+    Section~\ref{sec:call:team:name}.
+\end{itemize}
+
+The procedure to enroll users and organizations in a team is described in
+Section~\ref{sec:call:user}, respectively Section~\ref{sec:call:organization}.
+It should be noted that a user (or a organization) can be a member of at most
+one team. 
+
+All calls that follow must be authenticated using HTTP headers. The username in
+the HTTP headers must match a user's email whose state is not ``PENDING'' or
+``SUSPENDED''.
+
+
+\subsection{Creating a new team}
+\label{sec:team:create}
+
+This call inserts a new organization in the system. The team manager for the new
+organization will be set to match the authenticated user.
+
+A user whose role is ``VOLUNTEER'' or ``ORGANIZER'' can manage a single team.
+Only users whose role is either ``VOLUNTEER\_MULTI'' or ``ORGANIZER\_MULTI'' can
+manage multiple teams.
+
+\apilocation{post}{ws/team}
+\begin{apidata}{contents}
+  A \texttt{team} entity describing the new team.
+\end{apidata}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyitem{200}{if the operation succeeds.}
+    \replyitem{500}{if another error occurs.}
+  \end{datalist}
+\end{apidata}
+
+
+\subsection{Getting team information}
+
+\apilocation{get}{ws/team/\param{teamId}}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyditem{A \texttt{team} entity describing the team.}
+  \end{datalist}
+\end{apidata}
+
+
+\subsection{Deleting a team}
+
+\apilocation{delete}{ws/team/\param{teamId}}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyitem{200}{If the operation succeeds.}
+  \end{datalist}
+\end{apidata}
+\begin{apidata}{access}
+The logged in user must be an ``ADMIN'' or the team's manager.
+\end{apidata}
+
+
+\subsection{Searching for a team by name}
+\label{sec:call:team:name}
+
+\apilocation{get}{ws/team/nameSearch/?teamName=\param{teamName}}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyditem{A list of \texttt{team} entities whose name match the searching
+    criteria.}
+  \end{datalist}
+\end{apidata}
+
+\subsection{Adding team equipment}
+
+\apilocation{put}{ws/team/\param{teamId}/\param{equipment\_type}}
+\begin{apidata}{contents}
+  One of the \texttt{GpsEquipment}, \texttt{CleaningEquipment} or
+  \texttt{TransportEquipment} that are to be added inside the team's equipment
+  list.
+
+  The \texttt{\emph{equipment\_type}} path parameter must match the type of the
+  inserted equipment. It can be one of the following strings: ``gps'',
+  ``cleaning'' and ``transport''.
+\end{apidata}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyitem{200}{If the operation succeeds.}
+  \end{datalist}
+\end{apidata}
+\begin{apidata}{access}
+The logged in user must be an ``ADMIN'' or the team's manager.
+\end{apidata}
+
+\subsection{Getting the team equipment by type}
+\label{sec:team:eq_by_type}
+
+\apilocation{get}{ws/team/\param{teamId}/\param{equipment\_type}}
+\begin{apidata}{params}
+  The \texttt{\emph{equipment\_type}} path parameter must match the type of the
+  intended equipment. It can be one of the following strings: ``gps'',
+  ``cleaning'' and ``transport''.
+\end{apidata}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyditem{A list of equipments matching the specified type.}
+    \replyitem{404}{If the team is not found.}
+  \end{datalist}
+\end{apidata}
+\begin{apidata}{access}
+The logged in user must be an ``ADMIN'' or the team's manager.
+\end{apidata}
+
+\subsection{Getting the number of team equipments}
+\label{sec:team:eq_cnt}
+
+\apilocation{get}{ws/team/\param{teamId}/equipmentCount}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyditem{A number describing how many equipments this team has.}
+    \replyitem{404}{If the team is not found.}
+  \end{datalist}
+\end{apidata}
+\begin{apidata}{access}
+The logged in user must be an ``ADMIN'', the team's manager or a team member.
+\end{apidata}
+
+\subsection{Getting team equipment by index}
+\label{sec:team:eq_by_idx}
+
+Given a team equipment index, this call gets information about the equipment.
+Valid indexes are in the range $0 \ldots n$, where $n$ is obtained by the call
+described in Section~\ref{sec:team:eq_cnt}.
+
+\apilocation{get}{ws/team/\param{teamId}/equipment/\param{equipmentId}}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyditem{A \texttt{GpsEquipment}, \texttt{CleaningEquipment} or
+    \texttt{TransportEquipment} entity describing the equipment.}
+    \replyitem{404}{If the team or the equipment is not found.}
+  \end{datalist}
+\end{apidata}
+\begin{apidata}{access}
+The logged in user must be an ``ADMIN'', the team's manager or a team member.
+\end{apidata}
+
+
+\subsection{Removing team equipment by index}
+
+Given a team equipment index, this call deletes the equipment.
+Valid indexes are in the range $0 \ldots n$, where $n$ is obtained by the call
+described in Section~\ref{sec:team:eq_cnt}.
+
+\apilocation{delete}{ws/team/\param{teamId}/equipment/\param{equipmentId}}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyitem{404}{If the team or the equipment is not found.}
+  \end{datalist}
+\end{apidata}
+\begin{apidata}{access}
+The logged in user must be an ``ADMIN'', the team's manager or a team member.
+\end{apidata}
+
+
+\subsection{Removing team equipment by ID}
+
+Given an equipment identifier, this call removes the equipment from a team's
+ownership. The equipment identifiers are a property of the \texttt{equipment}
+entity (i.e., \texttt{equipmentId}). The latter must be obtained through one of
+the calls described in Section~\ref{sec:team:eq_by_type} or
+Section~\ref{sec:team:eq_by_idx}.
+
+\apilocation{delete}{ws/team/\param{teamId}/equipmentId/\param{equipmentId}}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyitem{200}{If the operation succeeds.}
+  \end{datalist}
+\end{apidata}
+\begin{apidata}{access}
+The logged in user must be an ``ADMIN'' or the team's manager.
+\end{apidata}
+
+
+\subsection{Withdrawing a user from the member list}
+
+\apilocation{delete}{ws/team/\param{teamId}/volunteer/\param{volunteerId}}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyitem{200}{If the operation succeeds.}
+  \end{datalist}
+\end{apidata}
+\begin{apidata}{access}
+The logged in user must be an ``ADMIN'' or the team's manager.
+\end{apidata}
+
+
+
+\subsection{Withdrawing an organization from the member list}
+
+\apilocation{delete}{ws/team/\param{teamId}/organization/\param{volunteerId}}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyitem{200}{If the operation succeeds.}
+  \end{datalist}
+\end{apidata}
+\begin{apidata}{access}
+The logged in user must be an ``ADMIN'' or the team's manager.
+\end{apidata}
+
+
+\subsection{Assigning a new area to chart}
+
+\apilocation{post}{ws/team/\param{teamId}/chartArea}
+\begin{apidata}{contents}
+  A \texttt{chartArea} entity whose only set field is the chart area ID.
+\end{apidata}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyitem{200}{If the operation succeeds.}
+    \replyitem{406}{An a string if constraints are violated and the assign
+    operations is not accepted.}
+  \end{datalist}
+\end{apidata}
+\begin{apidata}{access}
+The logged in user must be an ``ADMIN'' or the team's manager.
+\end{apidata}
+
+
+\subsection{Removing an area from the list of areas to chart}
+
+\apilocation{delete}{ws/team/\param{teamId}/chartArea/\param{chartAreaId}}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyitem{200}{If the operation succeeds.}
+  \end{datalist}
+\end{apidata}
+\begin{apidata}{access}
+The logged in user must be an ``ADMIN'' or the team's manager.
+\end{apidata}
+
+
+\subsection{Assigning a garbage to be cleaned}
+
+\apilocation{put}{ws/team/\param{teamId}/cleaningGarbages/\param{garbageId}}
+\begin{apidata}{contents}
+  An integer denoting the number of bags allocated for this garbage.
+\end{apidata}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyitem{200}{If the operation succeeds.}
+    \replyitem{404}{If one of the team or garbage are not found.}
+    \replyitem{406}{If the user is trying to allocated too many bags to this
+    garbage than it has available, or if the garbage requires a smaller amount
+    of bags. An accompanying text will be returned to specified the exact cause
+    of error.}
+    \replyitem{415}{If the posted number of allocated garbages is not a valid
+    integer.}
+  \end{datalist}
+\end{apidata}
+\begin{apidata}{access}
+The logged in user must be an ``ADMIN'' or the team's manager.
+\end{apidata}
+
+\subsection{Removing a garbage to be cleaned}
+
+\apilocation{delete}{ws/team/\param{teamId}/cleaningGarbages}
+\begin{apidata}{contents}
+    A \texttt{garbage} entity where the only field set is \texttt{garbageId}.
+    The garbage ID must match one already existing in the DB.
+\end{apidata}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyitem{200}{If the operation succeeds.}
+    \replyitem{404}{If one of the team or garbage are not found.}
+  \end{datalist}
+\end{apidata}
+\begin{apidata}{access}
+The logged in user must be an ``ADMIN'' or the team's manager.
+\end{apidata}
+
+\subsection{Getting the list of garbages to be cleaned}
+
+\apilocation{get}{ws/team/\param{teamId}/cleaningGarbages}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \item{An array of \texttt{entities} assigned to this team.}
+  \end{datalist}
+\end{apidata}
+\begin{apidata}{access}
+The logged in user must be an ``ADMIN'' or the team's manager.
+\end{apidata}
+
+
+\subsection{Team report}
+
+\apilocation{get}{ws/team/report?county=\param{county}}
+\begin{apidata}{params}
+  Omitting a query parameter behaves like a wildcard. All parameters can be
+  repeated and the query will behave like a disjunction.
+\end{apidata}
+\begin{apidata}{returns}
+  A list of teams matching the query criteria. The list can be formatted using
+  XML, JSON, CSV, XLS or XLSX. To this end, you need to setup the appropriate
+  MIME types in the HTTP Accept headers, i.e., ``application/json'',
+  ``application/xml'', ``text/csv'', ``application/vnd.ms-excel'', respectively
+  ``application/vnd.openxmlformats-officedocument.spreadsheetml.sheet''.
+\end{apidata}
+\begin{apidata}{access}
+The logged in user must be an ``ADMIN'', ``ORGANIZER'', ``ORGANIZER\_MULTI''. 
+\end{apidata}
+
+\subsection{Assigned charted area report}
+
+\apilocation{get}{ws/team/reportChartedArea?county=\param{county}\&\\chartedArea=\param{chartedAreaName}\&managerId=\param{managerId}}
+\begin{apidata}{params}
+  Omitting a query parameter behaves like a wildcard. All parameters can be
+  repeated and the query will behave like a disjunction.
+\end{apidata}
+\begin{apidata}{returns}
+  A list of teams matching the query criteria. The list can be formatted using
+  XML, JSON, CSV, XLS or XLSX. To this end, you need to setup the appropriate
+  MIME types in the HTTP Accept headers, i.e., ``application/json'',
+  ``application/xml'', ``text/csv'', ``application/vnd.ms-excel'', respectively
+  ``application/vnd.openxmlformats-officedocument.spreadsheetml.sheet''.
+
+  The \texttt{chartedArea} objects assigned to each team in the result can be
+  further filtered to match the query criteria using the
+  \texttt{ro.ldir.dto.helper.AssignedChartedAreaFilter}. 
+\end{apidata}
+\begin{apidata}{access}
+The logged in user must be an ``ADMIN'', ``ORGANIZER'', ``ORGANIZER\_MULTI''. 
+\end{apidata}
+
+

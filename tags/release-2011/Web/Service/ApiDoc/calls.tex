@@ -1,0 +1,50 @@
+\chapter{Calls}
+\label{cha:calls}
+
+This chapter describes the calls that the Let's Do It Romania Web Service
+accepts. The assumption is that the web service runs on the local machine and it
+is accessible at \baselocation. If the web service runs at a different location,
+the string ``\baselocation'' must be properly set for each call.
+
+Calls in this section accept take as arguments or return entities described in
+Section~\ref{cha:entities} serialized as JSON or XML. The preferred format is
+specified in the HTTP headers. For instance, if a client desired the web service
+to output format in JSON format during a GET call, the HTTP headers must include
+``\texttt{accepts: application/json}''. XML serialization can be obtained by
+using the header ``\texttt{accepts: application/xml}''. When an entity is
+uploaded to the web service, for instance, through a POST call, the headers to
+be used are ``\texttt{content: application/json}'' if the uploaded entity is
+provided in JSON format, respectively ``\texttt{content: application/xml}'' when
+XML is being employed.
+
+Hereafter, if:
+\begin{itemize}
+  \item {\sffamily \bfseries method} is a HTTP method such as get, post, put,
+    delete, and
+  \item \texttt{\param{url}} is the location of a call,
+\end{itemize}
+then the syntax of a call is represented as:
+
+\bigskip
+
+\apilocation{METHOD}{\param{url}}
+\begin{apidata}{content}
+  Valid only for put and post requests, describes what kind of data the call
+  expects to find embedded in the request.
+\end{apidata}
+\begin{apidata}{returns}
+  Describes a list of possible return values of the call. It can either be an
+  entity, a HTTP result code or raw content.
+\end{apidata}
+\begin{apidata}{access}
+  A brief description of who is allowed to make this call.
+\end{apidata}
+
+\input{registration}
+\input{user}
+\input{user_search}
+\input{organization}
+\input{team}
+\input{garbage}
+\input{map}
+\input{geo}

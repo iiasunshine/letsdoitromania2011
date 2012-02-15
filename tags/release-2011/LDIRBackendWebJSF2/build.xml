@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<project basedir="." default="build" name="LDIRBackendWebJSF2">
+	<include file="../build-common.xml" as="build-common" />
+
+	<property name="war.file" value="${jsf.war}" />
+
+	<path id="Web App Libraries.libraryclasspath">
+		<pathelement location="WebContent/WEB-INF/lib/log4j-1.2.16.jar" />
+		<pathelement location="WebContent/WEB-INF/lib/gmaps4jsf-1.1.4.jar" />
+		<pathelement location="WebContent/WEB-INF/lib/simplecaptcha-1.1.1.jar" />
+		<pathelement location="WebContent/WEB-INF/lib/tomahawk-1.1.10.jar" />
+	</path>
+
+	<path id="LDIRBackendWeb.classpath">
+		<pathelement location="build/classes" />
+		<path refid="GlassFish 3.1 [GlassFish 3.1].libraryclasspath" />
+		<path refid="Web App Libraries.libraryclasspath" />
+		<path refid="EAR Libraries.libraryclasspath" />
+	</path>
+
+	<target name="build-ejbclient">
+		<ant dir="${ejbclient.location}" target="jar" />
+	</target>
+
+	<target name="copy-ejbclient" depends="build-ejbclient">
+	</target>
+
+	<target depends="copy-ejbclient" name="init">
+		<mkdir dir="build/classes" />
+		<copy includeemptydirs="false" todir="build/classes">
+			<fileset dir="src">
+				<exclude name="**/*.launch" />
+				<exclude name="**/*.g" />
+				<exclude name="**/*.java" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="clean">
+		<delete dir="build/classes" />
+		<delete file="WebContent/WEB-INF/lib/${ejbclient.jar}" />
+		<delete file="${war.file}" />
+	</target>
+
+	<target depends="init" name="build">
+		<echo message="${ant.project.name}: ${ant.file}" />
+		<javac destdir="build/classes">
+			<src path="src" />
+			<classpath refid="LDIRBackendWeb.classpath" />
+		</javac>
+	</target>
+
+	<target depends="build" name="war">
+		<war destfile="${war.file}" filesetmanifest="merge" needxmlfile="false">
+			<classes dir="build/classes" />
+			<webinf dir="WebContent/WEB-INF" />
+			<metainf dir="WebContent/META-INF" />
+			<fileset dir="WebContent" />
+		</war>
+	</target>
+
+	<target depends="war" name="deploy">
+		<copy file="${war.file}" todir="${glassfish.home}/glassfish/domains/${glassfish.domain}/autodeploy" />
+	</target>
+</project>

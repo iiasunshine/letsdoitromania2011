@@ -1,0 +1,278 @@
+\section{Garbage tag management}
+
+This section describes the calls that affect the state of garbage tags inserted
+in the system. These are implemented in the
+\svnweb{ro/ldir/ws/GarbageWebService}{ro.ldir.ws.GarbageWebService} web
+resource.
+
+All calls to this web service must be authenticated using HTTP headers. The
+username in the HTTP headers must match a user's email whose security role is
+``ADMIN''.
+
+
+\subsection{Adding a new garbage tag}
+
+This call inserts a new garbage in the system. The owner of the garbage will be
+set to match the authenticated user.
+
+The town, county and charting area of the new garbage tag will be set
+automatically by the system using the tag's coordinates and the entities stored
+in the database.
+
+\apilocation{post}{ws/garbage}
+\begin{apidata}{contents}
+  A \texttt{garbage} entity describing the new garbage tag.
+\end{apidata}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyitem{200}{if the operation succeeds.}
+    \replyitem{400}{if the garbage coordinates are wrong, i.e., they do not
+    belong to any county.}
+    \replyitem{500}{if another error occurs.}
+  \end{datalist}
+\end{apidata}
+
+
+\subsection{Getting garbage tag information}
+
+\apilocation{get}{ws/garbage/\param{garbageId}}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyditem{A \texttt{garbage} entity describing the garbage tag.}
+  \end{datalist}
+\end{apidata}
+
+\subsection{Getting a garbage tag's charted area}
+
+\apilocation{get}{ws/garbage/\param{garbageId}/chartedArea}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyditem{A \texttt{chartedArea} entity describing the garbage tag.}
+  \end{datalist}
+\end{apidata}
+
+\subsection{Getting a garbage tag's county}
+
+\apilocation{get}{ws/garbage/\param{garbageId}/county}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyditem{A \texttt{countyArea} entity describing the garbage tag.}
+  \end{datalist}
+\end{apidata}
+
+\subsection{Getting a garbage tag's town}
+
+\apilocation{get}{ws/garbage/\param{garbageId}/town}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyditem{A \texttt{townArea} entity describing the garbage tag.}
+  \end{datalist}
+\end{apidata}
+
+\subsection{Updating a garbage tag}
+
+\apilocation{post}{ws/garbage/\param{garbageId}}
+\begin{apidata}{contents}
+  A \texttt{garbage} entity describing the new garbage tag.
+\end{apidata}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyitem{200}{if the operation succeeds.}
+    \replyitem{400}{if the garbage coordinates are wrong, i.e., they do not
+    belong to any county.}
+    \replyitem{500}{if another error occurs.}
+  \end{datalist}
+\end{apidata}
+
+\subsection{Deleting a garbage tag}
+
+\apilocation{delete}{ws/garbage/\param{garbageId}}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyitem{200}{if the operation succeeds.}
+    \replyitem{500}{if another error occurs.}
+  \end{datalist}
+\end{apidata}
+
+
+
+% \subsection{Deleting a garbage tag}
+% 
+% This method is not implemented yet.
+% 
+% \apilocation{delete}{ws/garbage/\param{garbageId}}
+% \begin{apidata}{returns}
+%   \begin{datalist}
+%     \replyitem{200}{If the operation succeeds.}
+%   \end{datalist}
+% \end{apidata}
+% \begin{apidata}{access}
+% The logged in user must be an ``ADMIN'' or the garbage tag's owner.
+% \end{apidata}
+
+
+\subsection{Setting the status of a garbage tag}
+
+\apilocation{put}{ws/garbage/\param{garbageId}/status}
+\begin{apidata}{contents}
+  A string denoting the new status of the garbage. Can be either ``CLEANED'' or
+  ``IDENTIFIED''.
+\end{apidata}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyitem{200}{if the operation succeeds.}
+    \replyitem{500}{if another error occurs.}
+  \end{datalist}
+\end{apidata}
+\begin{apidata}{access}
+The logged in user must be an ``ADMIN'' or the garbage tag's owner.
+\end{apidata}
+
+
+\subsection{Assigning a new image to a garbage tag}
+
+\apilocation{post}{ws/garbage/\param{garbageId}/image}
+\begin{apidata}{contents}
+  A ``multipart/form-data'' request containing a field ``file'' representing a
+  new image to be associated to this garbage tag.
+\end{apidata}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyitem{200}{if the operation succeeds.}
+    \replyitem{404}{if the garbage tag does not exist.}
+    \replyitem{500}{if another error occurs.}
+  \end{datalist}
+\end{apidata}
+\begin{apidata}{access}
+The logged in user must be an ``ADMIN'' or the garbage tag's owner.
+\end{apidata}
+
+
+\subsection{Getting an image of the garbage tag}
+
+The following  calls retrieves an image associated to a garbage. All garbage
+tags have an array of images, and new images are pushed to the tail of the
+array. The array length can be obtained through the \texttt{pictures} field of
+the \texttt{garbage} entity.  To make any of the following calls, a valid image
+index must be known. Valid indexes are from 0 to \texttt{pictureCount} - 1.
+
+To get an image in its original size, call:
+
+\apilocation{get}{ws/garbage/\param{garbageId}/image/\param{image\_index}}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyditem{An ``image/jpeg'' file containing the picture.}
+    \replyitem{404}{If the garbage tag does not exist or the index is invalid.}
+  \end{datalist}
+\end{apidata}
+
+To get a lower resolution file, call:
+
+\apilocation{get}{ws/garbage/\param{garbageId}/image/\param{image\_index}/display}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyditem{An ``image/jpeg'' file containing the picture.}
+    \replyitem{404}{If the garbage tag does not exist or the index is invalid.}
+  \end{datalist}
+\end{apidata}
+
+To get a thumbnail, call:
+
+\apilocation{get}{ws/garbage/\param{garbageId}/image/\param{image\_index}/thumb}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyditem{An ``image/jpeg'' file containing the picture.}
+    \replyitem{404}{If the garbage tag does not exist or the index is invalid.}
+  \end{datalist}
+\end{apidata}
+
+
+\subsection{Deleting an image of the garbage tag}
+
+This call deletes an image associated to a garbage. All garbage tags have an
+array of images, and new images are pushed to the tail of the array. The array
+length can be obtained through the \texttt{pictureCount} field of the
+\texttt{garbage} entity. 
+
+To make this call, a valid image index must be known. Valid indexes are from 0
+to \texttt{pictureCount} - 1.
+
+\apilocation{delete}{ws/garbage/\param{garbageId}/image/\param{image\_index}}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyitem{200}{If the operation succeeds.}
+    \replyitem{404}{If the garbage tag does not exist or the index is invalid.}
+  \end{datalist}
+\end{apidata}
+\begin{apidata}{access}
+The logged in user must be an ``ADMIN'' or the garbage tag's owner.
+\end{apidata}
+
+
+\subsection{Searching for garbages in a given town}
+
+\apilocation{get}{ws/garbage/townSearch/?town=\param{town\_name}}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyditem{A list of \texttt{garbage} entities of the garbages in the given
+    town.}
+  \end{datalist}
+\end{apidata}
+
+
+\subsection{Searching for garbages in a given county}
+
+\apilocation{get}{ws/garbage/countySearch/?county=\param{county\_name}}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyditem{A list of \texttt{garbage} entities of the garbages in the given
+    county.}
+  \end{datalist}
+\end{apidata}
+
+
+\subsection{Searching for garbages by status}
+
+\apilocation{get}{ws/garbage/statusSearch/?status=\param{status}}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyditem{A list of \texttt{garbage} entities of the garbages having the
+    given status.}
+  \end{datalist}
+\end{apidata}
+
+\subsection{Searching for garbages within a bounding box}
+
+\apilocation{get}{ws/garbage/bbox/?topLeftX=\param{topLeftX}\&\\topLeftY=\param{topLeftY}\&bottomRightX=\param{bottomRightX}\&bottomRightY=\param{bottomRightY}\&\\maxResults=\param{maxResults}}
+\begin{apidata}{parameters}
+  \texttt{maxResults} can be omitted if no upper bound is desired.
+\end{apidata}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyditem{HTTP 406: if the query generates more results than the specified
+    \texttt{maxResults}}
+    \replyditem{A list of \texttt{garbage} entities of the garbages within the
+    the provided bounding box.}
+  \end{datalist}
+\end{apidata}
+
+\subsection{Garbage report}
+
+\apilocation{get}{ws/garbage/report?county=\param{county}\&chartedArea=\param{name}\&\\userId=\param{ID}\&insertDate=\param{date}}
+\begin{apidata}{params}
+  Omitting a query parameter behaves like a wildcard in the query. All
+  parameters can be repeated to obtain the result of a disjunction. Dates will
+  be specified in the \texttt{yyyy-MM-dd} format.
+\end{apidata}
+\begin{apidata}{returns}
+  A garbage list matching the query criteria. The list can be formatted using
+  XML, JSON, CSV, XLS or XLSX. To this end, you need to setup the appropriate
+  MIME types in the HTTP Accept headers, i.e., ``application/json'',
+  ``application/xml'', ``text/csv'', ``application/vnd.ms-excel'', respectively
+  ``application/vnd.openxmlformats-officedocument.spreadsheetml.sheet''.
+\end{apidata}
+\begin{apidata}{access}
+The logged in user must be an ``ADMIN'', ``ORGANIZER'', ``ORGANIZER\_MULTI''. 
+\end{apidata}
+
+

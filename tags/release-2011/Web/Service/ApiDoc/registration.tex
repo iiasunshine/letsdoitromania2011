@@ -1,0 +1,70 @@
+\section{User registration}
+
+The registration of new users is handled by the
+\svnweb{ro/ldir/registration/RegistrationWebService}{ro.ldir.registration.RegistrationWebService}
+web resource. Registration is a two step process. In a first step, the new user
+submits its details to the system. The system will mark the user's status as
+``PENDING''. Then, the system will send the new user an email containing a token
+used to validate the user's email address. In the second step, when the user
+validates the email, the system moves the user in the default role
+``VOLUNTEER''. Later, an administrator can change the role of the recently
+validated user. The latter procedure is covered in Section~\ref{sec:call:user}.
+
+All calls described throughout this section are sent without authentication.
+
+\subsection{Submitting new user details}
+
+\apilocation{post}{reg/ws}
+\begin{apidata}{content}
+  A \texttt{user} entity containing the user to register.
+\end{apidata}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyitem{200}{if the operation succeeds.}
+    \replyitem{409}{if the email is already in use.}
+    \replyitem{500}{if another error occurs.}
+  \end{datalist}
+\end{apidata}
+
+\subsection{Validating the user's email}
+\apilocation{get}{reg/ws/\param{userId}/\param{key}}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyitem{200}{if the operation succeeds.}
+    \replyitem{404}{if user does not exist.}
+    \replyitem{409}{if the token is incorrect or the user is already validated.}
+  \end{datalist}
+\end{apidata}
+
+\subsection{Resetting user passwords}
+
+To reset the password of a user, you must first generate a token using the call:
+
+\apilocation{post}{reg/ws/reset?email=\param{email}}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyitem{200}{if the operation succeeds.}
+    \replyitem{404}{if user does not exist.}
+    \replyitem{500}{if another error occurs.}
+  \end{datalist}
+\end{apidata}
+
+The previous call sends a token (valid for a limited amount of time) to the user
+via email. The token must be used in the following call along which you must
+pass the new password:
+
+\apilocation{post}{reg/ws/reset/\param{userId}/\param{token}}
+\begin{apidata}{content}
+  A string containing the new password of the user.
+\end{apidata}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyitem{200}{if the operation succeeds.}
+    \replyitem{404}{if user does not exist.}
+    \replyitem{406}{if the token is invalid.}
+    \replyitem{500}{if another error occurs.}
+  \end{datalist}
+\end{apidata}
+
+
+

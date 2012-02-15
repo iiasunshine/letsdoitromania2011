@@ -1,0 +1,8 @@
+<%-- user-login checkpoint --%>
+<%
+            if (session.getAttribute("USER_DETAILS") != null) {
+                response.sendRedirect(request.getContextPath()+"/index.jsf");
+                return;
+            }
+%>
+

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<project basedir="." default="build" name="LDIRBackendGeoInit">
+	<include file="../../../build-common.xml" as="build-common" />
+
+	<path id="geoinit.classpath">
+		<pathelement location="bin" />
+		<path refid="GlassFish 3.1 [GlassFish 3.1].libraryclasspath" />
+		<path refid="EAR Libraries.libraryclasspath" />
+	</path>
+
+	<target name="build-ejbclient">
+		<ant dir="${ejbclient.location}" target="jar" />
+	</target>
+
+	<target depends="build-ejbclient" name="init">
+		<mkdir dir="bin" />
+		<copy includeemptydirs="false" todir="bin">
+			<fileset dir="src">
+				<exclude name="**/*.launch" />
+				<exclude name="**/*.g" />
+				<exclude name="**/*.java" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="clean">
+		<delete dir="bin" />
+		<delete file="${war.file}" />
+	</target>
+
+	<target depends="init" name="build">
+		<echo message="${ant.project.name}: ${ant.file}" />
+		<javac destdir="bin">
+			<src path="src" />
+			<classpath refid="geoinit.classpath" />
+		</javac>
+	</target>
+
+	<target depends="build" name="geoinit">
+		<java classname="ro.ldir.init.CountyInitializer">
+			<classpath refid="geoinit.classpath" />
+		</java>
+		<java classname="ro.ldir.init.TownInitializer">
+			<classpath refid="geoinit.classpath" />
+		</java>
+		<java classname="ro.ldir.init.ChartedAreaInitializer">
+			<classpath refid="geoinit.classpath" />
+		</java>
+	</target>
+</project>

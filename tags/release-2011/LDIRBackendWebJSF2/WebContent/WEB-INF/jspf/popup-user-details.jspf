@@ -1,0 +1,122 @@
+<%@ include file="/WEB-INF/jspf/page-header.jspf" %>
+
+
+<!-- create new issue form dialog -->
+<rich:modalPanel id="popup_user_details"
+                 height="450"
+                 width="480"
+                 resizeable="false">
+
+    <%-- HEADER --%>
+    <f:facet name="header">
+        <h:outputText value="Editare Utilizator"/>
+    </f:facet>
+
+    <%-- CONTROLS --%>
+    <f:facet name="controls">
+        <h:panelGroup>
+            <h:graphicImage value="/layout/images/close.png" styleClass="hidelink">
+                <rich:componentControl for="popup_user_details" operation="hide" event="onclick"/>
+            </h:graphicImage>
+        </h:panelGroup>
+    </f:facet>
+
+    <%-- BODY POPUP --%>
+    <a4j:outputPanel>
+        <a4j:form>
+            <!-- NUME -->
+            <div class="label"><h:outputText value="#{msg.register_name} "/><span class="important">*</span></div>
+            <h:inputText value="#{adminUsersManagerBean.selectedUser.lastName}" id="nume" styleClass="formTextfield"/>
+            <br />
+            <!-- PRENUME -->
+            <div class="label"><h:outputText value="#{msg.register_surname} "/><span class="important">*</span></div>
+            <h:inputText value="#{adminUsersManagerBean.selectedUser.firstName}" id="prenume" styleClass="formTextfield"/>
+            <br />
+            <!-- MAIL -->
+            <div class="label"><h:outputText value="#{msg.register_email} "/><span class="important">*</span></div>
+            <h:inputText value="#{adminUsersManagerBean.selectedUser.email}" id="email" styleClass="formTextfield"/>
+            <br />
+            <!-- DATA NASTERE -->
+            <div class="label"><h:outputText value="#{msg.register_birthday} "/></div>
+            <h:selectOneMenu value="#{adminUsersManagerBean.day}" id="zi_nastere" styleClass="formDate">
+                <f:selectItem itemLabel="Zi" itemValue=""/>
+                <f:selectItems value="#{adminUsersManagerBean.daysItems}"/>
+            </h:selectOneMenu>
+
+            <h:selectOneMenu value="#{adminUsersManagerBean.month}" id="luna_nastere" styleClass="formDate">
+                <f:selectItem itemLabel="Luna" itemValue=""/>
+                <f:selectItem itemLabel="Ianuarie" itemValue="1"/>
+                <f:selectItem itemLabel="Februarie" itemValue="2"/>
+                <f:selectItem itemLabel="Martie" itemValue="3"/>
+                <f:selectItem itemLabel="Aprilie" itemValue="4"/>
+                <f:selectItem itemLabel="Mai" itemValue="5"/>
+                <f:selectItem itemLabel="Iunie" itemValue="6"/>
+                <f:selectItem itemLabel="Iulie" itemValue="7"/>
+                <f:selectItem itemLabel="August" itemValue="8"/>
+                <f:selectItem itemLabel="Septembrie" itemValue="9"/>
+                <f:selectItem itemLabel="Octombrie" itemValue="10"/>
+                <f:selectItem itemLabel="Noiembrie" itemValue="11"/>
+                <f:selectItem itemLabel="Decembrie" itemValue="12"/>
+            </h:selectOneMenu>
+
+            <h:selectOneMenu value="#{adminUsersManagerBean.year}" id="an_nastere" styleClass="formDate">
+                <f:selectItem itemLabel="An" itemValue=""/>
+                <f:selectItems value="#{adminUsersManagerBean.yearsItems}"/>
+            </h:selectOneMenu>
+            <br />
+            <!-- ORAS -->
+            <div class="label"><h:outputText value="#{msg.register_city} "/></div>
+            <h:inputText value="#{adminUsersManagerBean.selectedUser.town}" id="oras_resedinta" styleClass="formTextfield"/>
+            <br />
+            <!-- JUDET -->
+            <div class="label"><h:outputText value="#{msg.register_area} "/></div>
+            <h:selectOneMenu value="#{adminUsersManagerBean.selectedUser.county}" id="judet_resedinta" styleClass="formDropdown">
+                <f:selectItem itemLabel="Alege Judet" itemValue=""/>
+                <f:selectItems value="#{adminUsersManagerBean.countyItems}"/>
+            </h:selectOneMenu>
+            <br />
+            <!-- ACTIVITATI -->
+            <div class="label"><h:outputText value="#{msg.register_activities} "/><span class="important">*</span></div>
+            <h:selectBooleanCheckbox value="#{adminUsersManagerBean.cartare}" id="cartare"/>
+            <label class="formCheckbox"><h:outputText value="#{msg.register_activities_cartare}   "/></label>
+            <h:selectBooleanCheckbox value="#{adminUsersManagerBean.curatenie}" id="curatenie"/>
+            <label class="formCheckbox"><h:outputText value="#{msg.register_activities_curatenie}"/></label>
+            <br />
+            <!-- TELEFON -->
+            <div class="label"><h:outputText value="#{msg.register_phone} "/></div>
+            <h:inputText value="#{adminUsersManagerBean.selectedUser.phone}" id="telefon" styleClass="formTextfield"/>
+            <br />
+            <!-- ROL -->
+            <div class="label"><h:outputText value="ROL: "/><span class="important">*</span></div>
+            <h:selectOneMenu value="#{adminUsersManagerBean.selectedUser.role}" id="rol" styleClass="formDropdown">
+                <f:selectItem itemLabel="ADMIN" itemValue="ADMIN"/>
+                <f:selectItem itemLabel="VOLUNTEER" itemValue="VOLUNTEER"/>
+                <f:selectItem itemLabel="ORGANIZER" itemValue="ORGANIZER"/>
+                <f:selectItem itemLabel="ORGANIZER_MULTI" itemValue="ORGANIZER_MULTI"/>
+            </h:selectOneMenu>
+            <!-- Accepta si alte informari -->
+            <!--h:selectBooleanCheckbox value="{adminUsersManagerBean.selectedUseracceptsMoreInfo}" id="acceptReceiveNotifications"/>
+            <label class="formCheckbox">
+                <xh:outputText value="{msg.register_acceptNotifications} "/>
+            </label-->
+            <br />
+            <br />
+            <br />
+
+            <!-- BUTOANE -->
+            <a4j:commandButton actionListener="#{adminUsersManagerBean.actionEditUser}"
+                               value="Salveaza modificari"
+                               reRender="lista-utilizatori"
+                               oncomplete="#{rich:component('popup-loading')}.hide();"
+                               onclick="#{rich:component('popup_user_details')}.hide(); #{rich:component('popup-loading')}.show();"
+                               styleClass="formButton"/>
+            <input name="anuleaza" type="reset" class="formButton" value="Anuleaza Modificari" id="anuleaza" />
+            <a4j:commandButton value="Renunta"
+                               onclick="#{rich:component('popup_user_details')}.hide();"
+                               styleClass="formButton"/>
+        </a4j:form>
+    </a4j:outputPanel>
+</rich:modalPanel>
+
+
+

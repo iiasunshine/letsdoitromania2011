@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<project basedir="." default="build" name="LDIRBackendTests">
+	<include file="../../../build-common.xml" as="build-common" />
+
+	<target name="build-ejbclient">
+		<ant dir="${ejbclient.location}" target="jar" />
+	</target>
+
+	<target depends="build-ejbclient" name="init">
+		<mkdir dir="bin" />
+		<copy includeemptydirs="false" todir="bin">
+			<fileset dir="src">
+				<exclude name="**/*.launch" />
+				<exclude name="**/*.g" />
+				<exclude name="**/*.java" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="clean">
+		<delete dir="bin" />
+		<delete file="${war.file}" />
+	</target>
+
+	<target depends="init" name="build">
+		<echo message="${ant.project.name}: ${ant.file}" />
+		<javac destdir="bin">
+			<src path="src" />
+			<classpath refid="tests.classpath" />
+		</javac>
+	</target>
+
+	<target depends="build" name="test">
+		<java classname="org.junit.runner.JUnitCore">
+			<arg value="ro.ldir.tests.ClosedAreaTest" />
+			<arg value="ro.ldir.tests.GarbageTests" />
+			<arg value="ro.ldir.tests.UserTests" />
+			<classpath refid="tests.classpath" />
+		</java>
+	</target>
+</project>

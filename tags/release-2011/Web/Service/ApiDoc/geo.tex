@@ -1,0 +1,29 @@
+\section{The geographical web service}
+
+The system provides a geographical web service for managing the charting areas,
+towns and counties known by the system. These are however to be set apriori
+deployment, not to be changed after deployment, a feature were only ``ADMIN''
+users have access and therefore are not documented. This is implemented in the
+\svnweb{ro/ldir/ws/GeoWebService}{ro.ldir.ws.GeoWebService} web resource.
+
+Documentation will be provided on a per ``need-to-know'' basis.
+
+\subsection{Setting the percentage completed of a charted area}
+
+\apilocation{post}{ws/geo/chartedArea/\param{chartedAreaId}/\\percentageCompleted}
+\begin{apidata}{content}
+  An integer denoting how much of the area has been charted.
+\end{apidata}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyitem{200}{if the operation succeeds.}
+    \replyitem{403}{if the access policy if violated.}
+    \replyitem{404}{if the charted area does not exists.}
+    \replyitem{500}{if another error occurs.}
+  \end{datalist}
+\end{apidata}
+\begin{apidata}{access}
+The logged in user must be an ``ADMIN'' or charting the area.
+\end{apidata}
+
+

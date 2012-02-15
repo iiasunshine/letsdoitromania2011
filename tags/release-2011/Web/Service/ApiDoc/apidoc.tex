@@ -1,0 +1,138 @@
+\documentclass[a4paper,11pt]{report}
+
+\usepackage[top=2cm,bottom=2cm,left=1.5cm,right=1.5cm]{geometry}
+\usepackage[pdftex]{graphicx}
+\usepackage[pdftex,bookmarks=true]{hyperref}
+\usepackage{indentfirst}
+\usepackage{paralist}
+\usepackage{parskip}
+\usepackage{booktabs}
+\usepackage[english]{babel}
+\usepackage{tabularx}
+\usepackage[svgnames]{xcolor}
+\usepackage{listings}
+
+\lstset{
+language=Java,
+basicstyle=\footnotesize,
+backgroundcolor=\color{LightGrey},
+frame=single,
+}
+
+\lstdefinelanguage{JavaScript}
+{morekeywords={function,var,try, catch, return, new},
+morecomment=[l]{//},
+morestring=[b]',
+morestring=[b]"}
+
+\hypersetup{
+  pdftitle={Let's Do It Romania Backend API Specification},
+  pdfauthor={Stefan Guna}
+}
+
+\newcommand{\version}{development}
+\newcommand{\stef}{\c{S}tefan Gun\v{a}}
+
+\makeatletter
+\renewcommand{\@makechapterhead}[1]{%
+  \vspace*{10\p@}%
+  {\parindent \z@ \raggedright \normalfont
+    \ifnum \c@secnumdepth >\m@ne
+        \LARGE\bfseries \sffamily \thechapter.\space
+    \fi
+    \interlinepenalty\@M
+    \LARGE \bfseries \sffamily #1\par\nobreak
+    \vskip 10\p@
+  }}
+
+\renewcommand{\@makeschapterhead}[1]{%
+  \vspace*{10\p@}%
+  {\parindent \z@ \raggedright
+    \normalfont
+    \interlinepenalty\@M
+    \LARGE \bfseries \sffamily  #1\par\nobreak
+    \vskip 10\p@
+  }}
+
+
+\newcommand{\svnweb}[2]{\href{http://code.google.com/p/letsdoitromania2011/source/browse/trunk/Web/Service/LDIRBackendWeb/src/#1.java}{#2}}
+  
+\newcommand{\baselocation}{http://localhost:8080/LDIRBackend/}
+\newcommand{\param}[1]{\textit{#1}}
+\newcommand{\apiheaderwidth}{.1\textwidth}
+\newcommand{\apidescriptionwidth}{.85\textwidth}
+
+\newcommand{\apilocation}[2]{
+\begin{minipage}[t]{\textwidth}
+\begin{minipage}[t]{\apiheaderwidth}
+\sffamily \bfseries #1
+\end{minipage}
+~\hfill~
+\begin{minipage}[t]{\apidescriptionwidth}
+  \colorbox{LightGrey}{
+  \parbox{\textwidth}{
+  \small\ttfamily \baselocation#2
+  }}
+\end{minipage}
+\end{minipage}
+\\[2mm]
+}
+
+\newcounter{notecounter}
+\newenvironment{note}{
+\par{\color{red}\textbf{Note \addtocounter{notecounter}{1}\arabic{notecounter}:}}}
+{}
+
+\newenvironment{entitydef}[1]{
+\begin{center}
+\colorbox{LightGrey}{\parbox{\textwidth}{
+The \texttt{#1} entity:}
+}\end{center}
+\begin{compactitem}}{\end{compactitem}}
+
+\newenvironment{apidata}[1]{
+\begin{minipage}[t]{\textwidth}
+\begin{minipage}[t]{\apiheaderwidth}
+\sffamily #1:
+\end{minipage}
+~\hfill~
+\begin{minipage}[t]{\apidescriptionwidth}}{
+\end{minipage}
+\end{minipage}
+\\[2mm]
+}
+
+\newenvironment{datalist}{
+\small
+\begin{compactitem}
+}{\end{compactitem}}
+
+\newcommand{\dataitem}[3]{
+\item \texttt{#1}~(#2): #3
+}
+\newcommand{\replyitem}[2]{
+\item HTTP #1: #2
+}
+\newcommand{\replyditem}[1]{
+\item #1
+}
+
+\newcommand{\property}[2]{
+\item \texttt{#1}: #2
+}
+
+\newcommand{\roproperty}[2]{
+\item \texttt{#1} (read-only): #2
+}
+
+
+\begin{document}
+
+\input{title}
+\tableofcontents
+\input{intro}
+\input{entities}
+\input{calls}
+\input{fdl}
+\input{back}
+\end{document}

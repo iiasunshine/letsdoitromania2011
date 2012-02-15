@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:application="http://java.sun.com/xml/ns/javaee/application_5.xsd"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/application_6.xsd"
+	id="Application_ID" version="6">
+	<display-name>LDIRBackend</display-name>
+	<module>
+		<ejb>LDIRBackendEJB.jar</ejb>
+	</module>
+	<module>
+		<web>
+			<web-uri>LDIRBackendWeb.war</web-uri>
+			<context-root>LDIRBackend</context-root>
+		</web>
+	</module>
+	<module>
+		<web>
+			<web-uri>LDIRBackendWebJSF2.war</web-uri>
+			<context-root>LDIRBackendWebJSF2</context-root>
+		</web>
+	</module>
+</application>

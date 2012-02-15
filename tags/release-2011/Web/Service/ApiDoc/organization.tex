@@ -1,0 +1,119 @@
+\section{Organization management}
+\label{sec:call:organization}
+
+This section describes the calls that affect the state of organization. These
+are implemented in the
+\svnweb{ro/ldir/ws/OrganizationWebService}{ro.ldir.ws.OrganizationWebService}
+web resource.
+
+Most of calls of this section are relative to an organization identifier. At the
+present state, the only way to obtain organization identifiers is indirectly
+through the appropriate field (\texttt{organizations}) of the \texttt{user}
+entity. How a user can be accessed is described in Section~\ref{sec:call:user}
+and Section~\ref{sec:call:user}. 
+
+All calls that follow must be authenticated using HTTP headers. The username in
+the HTTP headers must match a user's email whose state is not ``PENDING'' or
+``SUSPENDED''.
+
+
+\subsection{Enrolling a new organization}
+
+This call inserts a new organization in the system. The contact person for the
+new organization will be set to match the authenticated user. The organization
+will be made member of the user's \emph{only} managed team, if this exists.
+Otherwise, the call fails.
+
+\apilocation{post}{ws/organization/addEnroll}
+\begin{apidata}{contents}
+  A \texttt{organization} entity describing the new organization.
+\end{apidata}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyitem{200}{if the operation succeeds.}
+    \replyitem{409}{if the user manages 0 or more than 1 team.}
+    \replyitem{500}{if another error occurs.}
+  \end{datalist}
+\end{apidata}
+
+\subsection{Registering a new organization}
+
+This call inserts a new organization in the system. The contact person for the
+new organization will be set to match the authenticated user.
+
+\apilocation{post}{ws/organization}
+\begin{apidata}{contents}
+  A \texttt{organization} entity describing the new organization.
+\end{apidata}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyitem{200}{if the operation succeeds.}
+    \replyitem{500}{if another error occurs.}
+  \end{datalist}
+\end{apidata}
+
+
+\subsection{Getting organization information}
+
+\apilocation{get}{ws/organization/\param{organizationId}}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyditem{A \texttt{organization} entity describing the organization.}
+  \end{datalist}
+\end{apidata}
+\begin{apidata}{access}
+The logged in user must be an ``ADMIN'', the user who is the organization's
+contact, or a user from a team in which the accessed organization's contact is
+either part of or manager.
+\end{apidata}
+
+
+\subsection{Deleting an organization}
+
+\apilocation{delete}{ws/organization/\param{organizationId}}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyitem{200}{If the operation succeeds.}
+  \end{datalist}
+\end{apidata}
+\begin{apidata}{access}
+The logged in user must be an ``ADMIN'' or the organization's contact.
+\end{apidata}
+
+
+\subsection{Updating an organization}
+
+\apilocation{put}{ws/organization/\param{organizationId}}
+\begin{apidata}{contents}
+  A \texttt{organization} entity containing the new properties of the
+  organization.
+\end{apidata}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyitem{200}{if the operation succeeds.}
+    \replyitem{500}{if another error occurs.}
+  \end{datalist}
+\end{apidata}
+\begin{apidata}{access}
+The logged in user must be an ``ADMIN'' or the organization's contact.
+\end{apidata}
+
+
+\subsection{Enrolling an organization in a team}
+
+\apilocation{post}{ws/organization/\param{organizationID}/team}
+\begin{apidata}{content}
+  A \texttt{team} entity where only the \texttt{teamId} field is set.
+\end{apidata}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyitem{200}{if the operation succeeds.}
+    \replyitem{404}{if the organization does not exists.}
+    \replyitem{409}{if the organization is already enrolled in a team.}
+    \replyitem{500}{if another error occurs.}
+  \end{datalist}
+\end{apidata}
+\begin{apidata}{access}
+The logged in user must be an ``ADMIN'' or the organization's contact.
+\end{apidata}
+
