@@ -6,25 +6,25 @@
 	<property name="glassfish.home" value="${env.GLASSFISH_HOME}" />
 	<property name="glassfish.domain" value="domain1" />
 
-	<property name="service.location" value="${common.basedir}/Web/Service" />
+	<property name="service.location" value="${common.basedir}/Web" />
 
-	<property name="app.location" value="${common.basedir}/Web/Service/LDIRBackend" />
+	<property name="app.location" value="${common.basedir}/Web/LDIRBackend" />
 	<property name="app.ear" value="${app.location}/LDIRBackend.ear" />
 
-	<property name="ejb.location" value="${common.basedir}/Web/Service/LDIRBackendEJB" />
+	<property name="ejb.location" value="${common.basedir}/Web/LDIRBackendEJB" />
 	<property name="ejb.jar" value="${ejb.location}/LDIRBackendEJB.jar" />
 
-	<property name="ejbclient.location" value="${common.basedir}/Web/Service/LDIRBackendEJBClient" />
+	<property name="ejbclient.location" value="${common.basedir}/Web/LDIRBackendEJBClient" />
 	<property name="ejbclient.jar" value="${ejbclient.location}/LDIRBackendEJBClient.jar" />
 
-	<property name="webservice.location" value="${common.basedir}/Web/Service/LDIRBackendWeb" />
+	<property name="webservice.location" value="${common.basedir}/Web/LDIRBackendWeb" />
 	<property name="webservice.war" value="${webservice.location}/LDIRBackendWeb.war" />
 
-	<property name="jsf.location" value="${common.basedir}/LDIRBackendWebJSF2" />
+    <property name="jsf.location" value="${common.basedir}/Web/LDIRBackendWebJSF2" />
 	<property name="jsf.war" value="${jsf.location}/LDIRBackendWebJSF2.war" />
 
-	<property name="geoinit.location" value="${common.basedir}/Web/Service/LDIRBackendGeoInit" />
-	<property name="tests.location" value="${common.basedir}/Web/Service/LDIRBackendTests" />
+	<property name="geoinit.location" value="${common.basedir}/Web/LDIRBackendGeoInit" />
+	<property name="tests.location" value="${common.basedir}/Web/LDIRBackendTests" />
 
 	<path id="EAR Libraries.libraryclasspath">
 		<pathelement location="${ejbclient.jar}" />
