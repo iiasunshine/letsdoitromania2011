@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 
 <project basedir="." default="ear" name="LDIRBackend">
-	<include file="../../build-common.xml" as="build-common" />
+	<include file="../build-common.xml" as="build-common" />
 
 	<target name="clean">
 		<ant dir="${app.location}" target="clean" />

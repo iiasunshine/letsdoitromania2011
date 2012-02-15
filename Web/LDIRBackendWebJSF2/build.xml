@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 
 <project basedir="." default="build" name="LDIRBackendWebJSF2">
-	<include file="../build-common.xml" as="build-common" />
+    <include file="../../build-common.xml" as="build-common" />
 
 	<property name="war.file" value="${jsf.war}" />
 
