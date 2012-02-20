@@ -5,9 +5,9 @@
 
 == MySQL ==
  # Install MySQL.
- # Create a database called `lair`.
- # Create a MySQL user called `lair` with password `lair`.
- # Grant the `lair` user all permissions on the `lair` database. Restrict the remote access to the database.
+ # Create a database called `ldir`.
+ # Create a MySQL user called `ldir` with password `ldir`.
+ # Grant the `ldir` user all permissions on the `ldir` database. Restrict the remote access to the database.
 
 == Java tools ==
  # Install Java JDK 1.6.
