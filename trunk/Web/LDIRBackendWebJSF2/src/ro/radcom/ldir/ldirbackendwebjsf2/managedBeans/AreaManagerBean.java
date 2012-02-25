@@ -4,7 +4,6 @@
  */
 package ro.radcom.ldir.ldirbackendwebjsf2.managedBeans;
 
-import com.sun.jersey.api.client.ClientResponse;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,6 +18,7 @@ import ro.ldir.dto.CountyArea;
 import ro.ldir.dto.Garbage;
 import ro.ldir.dto.Team;
 import ro.ldir.dto.User;
+import ro.ldir.exceptions.ChartedAreaAssignmentException;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.AppUtils;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.JsfUtils;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.WSInterface;
@@ -62,14 +62,7 @@ public class AreaManagerBean {
          * echipa utilizatorului curent (=> lista zone atribuite)
          */
         if (true) {
-            ClientResponse cr = wsi.getMemberOfTeam(userDetails.getUserId());
-            if (cr.getStatus() != 200) {
-                log4j.fatal("nu s-a reusit obtinerea echipei utlizatorului curent (statusCode=" + cr.getStatus() + " responseStatus=" + cr.getResponseStatus() + ")");
-                JsfUtils.addWarnBundleMessage("internal_err");
-                return;
-            } else {
-                userTeam = cr.getEntity(Team.class);
-            }
+                userTeam = userDetails.getMemberOf();
         }
 
         /**
@@ -77,32 +70,14 @@ public class AreaManagerBean {
          */
         int areaId = AppUtils.parseToInt(JsfUtils.getRequestParameter("areaId"));
         if (areaId > 0) {
-            ClientResponse cr = wsi.getChartedArea(areaId);
-            if (cr.getStatus() != 200) {
-                log4j.fatal("nu s-a reusit obtinerea gridului " + areaId + " (statusCode=" + cr.getStatus() + " responseStatus=" + cr.getResponseStatus() + ")");
-                JsfUtils.addWarnBundleMessage("internal_err");
-                return;
-            } else {
-                seletedArea = cr.getEntity(ChartedArea.class);
+        	seletedArea = wsi.getChartedArea(areaId);
                 /* obtinere nr echipe care au mai cartat aceasta zona*/
-                cr = wsi.getTeamsOfChartedArea(userDetails, areaId);
-                if (cr.getStatus() != 200) {
-                    log4j.fatal("nu s-a reusit obtinerea echipelor care au mai cartat zona " + areaId + " (statusCode=" + cr.getStatus() + " responseStatus=" + cr.getResponseStatus() + ")");
-                    JsfUtils.addWarnBundleMessage("internal_err");
-                    return;
-                } else {
-                    areaTeams.addAll(Arrays.asList(cr.getEntity(Team[].class)));
-                }
+                areaTeams.addAll(seletedArea.getChartedBy());
+                
 
                 /* obtinere lista gunoaie */
-                cr = wsi.getGarbagesOfChartedArea(userDetails, areaId);
-                if (cr.getStatus() != 200) {
-                    log4j.fatal("nu s-a reusit obtinerea gunoaielor din zona " + areaId + " (statusCode=" + cr.getStatus() + " responseStatus=" + cr.getResponseStatus() + ")");
-                    JsfUtils.addWarnBundleMessage("internal_err");
-                    return;
-                } else {
-                    areaGarbages.addAll(Arrays.asList(cr.getEntity(Garbage[].class)));
-                }
+                areaGarbages.addAll(seletedArea.getGarbages());
+                
 
                 /* obiect JSON cu coordonatele pentru zoom si focus */
                 try {
@@ -115,19 +90,14 @@ public class AreaManagerBean {
                     log4j.fatal("Eroare construire areaJsonBouns: " + AppUtils.printStackTrace(ex));
                 }
             }
-        }
+        
 
         /**
          * zone de cartare atribuite echipei curente
          */
         if (userTeam != null) {
-            ClientResponse cr = wsi.getChartedAreasOfTeam(userDetails, userTeam.getTeamId());
-            if (cr.getStatus() != 200) {
-                log4j.fatal("nu s-a reusit zonelor echipei " + userTeam.getTeamId() + " (statusCode=" + cr.getStatus() + " responseStatus=" + cr.getResponseStatus() + ")");
-                JsfUtils.addWarnBundleMessage("internal_err");
-                return;
-            } else {
-                chartedAreasList.addAll(Arrays.asList(cr.getEntity(ChartedArea[].class)));
+
+                chartedAreasList.addAll(wsi.getChartedAreasOfTeam(userDetails, userTeam.getTeamId()));
                 Collections.sort(chartedAreasList, new MyAreaComparator());
 
                 /* verificare daca gridul curent se afla in lista celor cartate */
@@ -139,22 +109,15 @@ public class AreaManagerBean {
                         }
                     }
                 }
-            }
+            
         }
 
         /**
          * obtinere lista judete
          */
         if (seletedArea == null) {
-            ClientResponse cr = wsi.getCountyList();
-            if (cr.getStatus() != 200) {
-                log4j.fatal("nu s-a reusit obtinerea listei de judete(statusCode=" + cr.getStatus() + " responseStatus=" + cr.getResponseStatus() + ")");
-                JsfUtils.addWarnBundleMessage("internal_err");
-                return;
-            } else {
-                countyAreas = cr.getEntity(CountyArea[].class);
+                countyAreas =  wsi.getCountyList();
                 info += "CountyAreas = " + countyAreas.length + "<br/>";
-            }
         }
 
         /**
@@ -231,27 +194,20 @@ public class AreaManagerBean {
         String addAreaName = JsfUtils.getRequestParameter("addAreaName");
         String addAreaCounty = JsfUtils.getRequestParameter("addAreaCounty");
         if (addAreaId > 0 && userTeam != null) {
-            ClientResponse cr = wsi.addChartedArea(userDetails, userTeam.getTeamId(), addAreaId);
-            if (cr.getStatus() == 406) {
-                log4j.warn("prea multe echipe pe zona sau prea multe zone la echipa " + addAreaId + " (statusCode=" + cr.getStatus() + " responseStatus=" + cr.getResponseStatus() + ")");
-                if (cr.getResponseStatus().toString().indexOf("There are too many people charting this area already") >= 0) {
-                    JsfUtils.addWarnMessage("", JsfUtils.getBundleMessage("area_add_err_limit1").replaceAll("\\{0\\}", "" + addAreaName));
-                } else if (cr.getResponseStatus().toString().indexOf("There are too many charted areas for this team") >= 0) {
-                    JsfUtils.addWarnMessage("", JsfUtils.getBundleMessage("area_add_err_limit2"));
-                } else {
+            try {
+            	wsi.addChartedArea(userDetails, userTeam.getTeamId(), addAreaId);
+            }  catch (ChartedAreaAssignmentException e) {
+                log4j.warn("prea multe echipe pe zona sau prea multe zone la echipa " + addAreaId);
                     JsfUtils.addWarnBundleMessage("internal_err");
-                }
-            } else if (cr.getStatus() != 200) {
-                log4j.fatal("nu s-a reusit adaugarea zonei " + addAreaId + " (statusCode=" + cr.getStatus() + " responseStatus=" + cr.getResponseStatus() + ")");
-                JsfUtils.addWarnBundleMessage("internal_err");
-            } else {
-                log4j.debug("zona atribuita " + addAreaId + " (statusCode=" + cr.getStatus() + " responseStatus=" + cr.getResponseStatus() + ")");
+                return NavigationValues.AREA_ASSIGN_FAIL;
+            } 
+                log4j.debug("zona atribuita " + addAreaId);
 
                 String infoText = JsfUtils.getBundleMessage("area_add_confirm").replaceAll("\\{0\\}", "" + addAreaName);
                 JsfUtils.getHttpSession().setAttribute("INFO_MESSAGE", infoText);
                 JsfUtils.getHttpSession().setAttribute("SELECTED_COUNTY", addAreaCounty);
                 return NavigationValues.AREA_ASSIGN_SUCCESS;
-            }
+            
         }
 
         return NavigationValues.AREA_ASSIGN_FAIL;
@@ -266,18 +222,15 @@ public class AreaManagerBean {
 
         log4j.debug("---> removeAreaId: " + removeAreaId + "  userTeam: " + userTeam);
         if (removeAreaId > 0 && userTeam != null) {
-            ClientResponse cr = wsi.removeChartedArea(userDetails, userTeam.getTeamId(), removeAreaId);
-            if (cr.getStatus() != 200) {
-                log4j.fatal("nu s-a reusit stergerea zonei " + removeAreaId + " (statusCode=" + cr.getStatus() + " responseStatus=" + cr.getResponseStatus() + ")");
-                JsfUtils.addWarnBundleMessage("internal_err");
-            } else {
-                log4j.debug("zona stearsa " + removeAreaId + " (statusCode=" + cr.getStatus() + " responseStatus=" + cr.getResponseStatus() + ")");
+            wsi.removeChartedArea(userDetails, userTeam.getTeamId(), removeAreaId);
+            
+                log4j.debug("zona stearsa " + removeAreaId );
 
                 String infoText = JsfUtils.getBundleMessage("area_remove_confirm").replaceAll("\\{0\\}", "" + removeAreaName);
                 JsfUtils.getHttpSession().setAttribute("INFO_MESSAGE", infoText);
                 JsfUtils.getHttpSession().setAttribute("SELECTED_COUNTY", removeAreaCounty);
                 return NavigationValues.AREA_ASSIGN_SUCCESS;
-            }
+            
         }
 
         return NavigationValues.AREA_ASSIGN_FAIL;

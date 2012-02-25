@@ -5,20 +5,6 @@
 
 	<property name="war.file" value="${jsf.war}" />
 
-	<path id="Web App Libraries.libraryclasspath">
-		<pathelement location="WebContent/WEB-INF/lib/log4j-1.2.16.jar" />
-		<pathelement location="WebContent/WEB-INF/lib/gmaps4jsf-1.1.4.jar" />
-		<pathelement location="WebContent/WEB-INF/lib/simplecaptcha-1.1.1.jar" />
-		<pathelement location="WebContent/WEB-INF/lib/tomahawk-1.1.10.jar" />
-	</path>
-
-	<path id="LDIRBackendWeb.classpath">
-		<pathelement location="build/classes" />
-		<path refid="GlassFish 3.1 [GlassFish 3.1].libraryclasspath" />
-		<path refid="Web App Libraries.libraryclasspath" />
-		<path refid="EAR Libraries.libraryclasspath" />
-	</path>
-
 	<target name="build-ejbclient">
 		<ant dir="${ejbclient.location}" target="jar" />
 	</target>
@@ -47,7 +33,7 @@
 		<echo message="${ant.project.name}: ${ant.file}" />
 		<javac destdir="build/classes">
 			<src path="src" />
-			<classpath refid="LDIRBackendWeb.classpath" />
+			<classpath refid="LDIRBackendWebJSF2.libraryclasspath" />
 		</javac>
 	</target>
 

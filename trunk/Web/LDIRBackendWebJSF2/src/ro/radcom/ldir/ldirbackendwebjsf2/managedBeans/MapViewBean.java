@@ -4,7 +4,6 @@
  */
 package ro.radcom.ldir.ldirbackendwebjsf2.managedBeans;
 
-import com.sun.jersey.api.client.ClientResponse;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,15 +36,7 @@ public class MapViewBean {
 
     /** Creates a new instance of MapViewBean */
     public MapViewBean() {
-        /* obtinere lista judete */
-        ClientResponse cr = wsi.getCountyList();
-        if (cr.getStatus() != 200) {
-            log4j.fatal("nu s-a reusit obtinerea listei de judete(statusCode=" + cr.getStatus() + " responseStatus=" + cr.getResponseStatus() + ")");
-            JsfUtils.addWarnBundleMessage("internal_err");
-            return;
-        } else {
-            countyAreas = cr.getEntity(CountyArea[].class);
-        }
+            countyAreas = wsi.getCountyList();
     }
 
     /*private void init(int garbageId) {

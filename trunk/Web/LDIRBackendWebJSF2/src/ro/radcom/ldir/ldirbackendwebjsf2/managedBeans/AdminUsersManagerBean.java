@@ -4,10 +4,6 @@
  */
 package ro.radcom.ldir.ldirbackendwebjsf2.managedBeans;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.api.client.WebResource.Builder;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -57,16 +53,8 @@ public class AdminUsersManagerBean {
     public AdminUsersManagerBean() {
         /* obtinere detalii utilizator */
         userDetails = (User) JsfUtils.getHttpSession().getAttribute("USER_DETAILS");
-
-        /* obtinere lista judete */
-        ClientResponse cr = wsi.getCountyList();
-        if (cr.getStatus() != 200) {
-            log4j.fatal("nu s-a reusit obtinerea listei de judete(statusCode=" + cr.getStatus() + " responseStatus=" + cr.getResponseStatus() + ")");
-            JsfUtils.addWarnBundleMessage("internal_err");
-            return;
-        } else {
-            countyAreas = cr.getEntity(CountyArea[].class);
-        }
+        countyAreas = wsi.getCountyList();
+        
 
         /* obtinere lista utilizatori */
         //initUsersList();
@@ -109,119 +97,19 @@ public class AdminUsersManagerBean {
         }
 
         /* update date utilizator */
-        String location = JsfUtils.getInitParameter("webservice.url") + "/LDIRBackend/ws/user/" + selectedUser.getUserId();
-        Client client = Client.create();
-        WebResource resource = client.resource(location);
-        Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(userDetails.getEmail(), userDetails.getPasswd()));
-        ClientResponse cr = builder.entity(selectedUser, MediaType.APPLICATION_XML).put(ClientResponse.class);
-        int statusCode = cr.getStatus();
-        log4j.debug("---> statusCode: " + statusCode + " (" + cr.getClientResponseStatus() + ")");
-
-        /* verificare statusCode si adaugare mesaje */
-        if (statusCode == 200) {
-            //JsfUtils.addInfoBundleMessage("register_message");
-        } else {
-            JsfUtils.addWarnBundleMessage("internal_err");
-        }
-
+        wsi.updateUser(selectedUser);
+      
         initUsersList();
     }
 
     
         public void actionGenerateExcel() {
         	
-        String encodeCountyId = encodeUrl(selectedCounty);	
-        ClientResponse cr = wsi.getUserListByFilters(userDetails,
-        		encodeCountyId,
-                selectedBirthYear,
-                selectedRole,
-                AppUtils.parseToInt(selectedMinGarbages, -1),
-                AppUtils.parseToInt(selectedMaxGarbages, -1),
-                "application/vnd.ms-excel");
-        log4j.debug("---> cr.getStatus()=" + cr.getStatus());
-        if (cr.getStatus() != 200) {
-            log4j.fatal("nu s-a reusit generarea (statusCode=" + cr.getStatus() + " responseStatus=" + cr.getResponseStatus() + ")");
-            JsfUtils.addWarnBundleMessage("internal_err");
-            return;
-        } else {
-            File tempFile = cr.getEntity(File.class);
-            log4j.debug("---> temp file: " + tempFile.getAbsolutePath());
-
-            String relativePath = "temp/statistici/" + userDetails.getUserId() + "/useri.xls";
-            String previewFilePath = JsfUtils.makeContextPath(relativePath);
-            File file = new File(previewFilePath);
-            if (!file.getParentFile().isDirectory()) {
-                if (!file.getParentFile().mkdirs()) {
-                    log4j.warn("nu s-a putut crea drectorul pentru preview: " + file.getParentFile().getAbsolutePath());
-                }
-            }
-
-            if (file.isFile()) {
-                if (!file.delete()) {
-                    log4j.warn("nu s-a putut sterge fisierul existent: " + file.getAbsolutePath());
-                }
-            }
-
-            log4j.debug("---> file: " + file.getAbsolutePath());
-            if (!tempFile.renameTo(file)) {
-                log4j.warn("nu s-a putut redenumi fisierul temporar: " + tempFile.getAbsolutePath());
-            } else {
-                try {
-                    FacesContext.getCurrentInstance().getExternalContext().redirect(JsfUtils.getHttpRequest().getContextPath()+"/"+relativePath);
-                    return;
-                } catch (Exception ex) {
-                    log4j.warn("Eroare RequestForward: " + ex);
-                }
-            }
-        }
+       
     }
         
         public void actionGenerateTeamExcel() {
-        	
-            String encodeCountyId = encodeUrl(selectedCounty);	
-            ClientResponse cr = wsi.getTeamListByFilters(userDetails,
-            		encodeCountyId,
-                    selectedBirthYear,
-                    selectedRole,
-                    AppUtils.parseToInt(selectedMinGarbages, -1),
-                    AppUtils.parseToInt(selectedMaxGarbages, -1),
-                    "application/vnd.ms-excel");
-            log4j.debug("---> cr.getStatus()=" + cr.getStatus());
-            if (cr.getStatus() != 200) {
-                log4j.fatal("nu s-a reusit generarea (statusCode=" + cr.getStatus() + " responseStatus=" + cr.getResponseStatus() + ")");
-                JsfUtils.addWarnBundleMessage("internal_err");
-                return;
-            } else {
-                File tempFile = cr.getEntity(File.class);
-                log4j.debug("---> temp file: " + tempFile.getAbsolutePath());
-
-                String relativePath = "temp/statistici/" + userDetails.getUserId() + "/teams.xls";
-                String previewFilePath = JsfUtils.makeContextPath(relativePath);
-                File file = new File(previewFilePath);
-                if (!file.getParentFile().isDirectory()) {
-                    if (!file.getParentFile().mkdirs()) {
-                        log4j.warn("nu s-a putut crea drectorul pentru preview: " + file.getParentFile().getAbsolutePath());
-                    }
-                }
-
-                if (file.isFile()) {
-                    if (!file.delete()) {
-                        log4j.warn("nu s-a putut sterge fisierul existent: " + file.getAbsolutePath());
-                    }
-                }
-
-                log4j.debug("---> file: " + file.getAbsolutePath());
-                if (!tempFile.renameTo(file)) {
-                    log4j.warn("nu s-a putut redenumi fisierul temporar: " + tempFile.getAbsolutePath());
-                } else {
-                    try {
-                        FacesContext.getCurrentInstance().getExternalContext().redirect(JsfUtils.getHttpRequest().getContextPath()+"/"+relativePath);
-                        return;
-                    } catch (Exception ex) {
-                        log4j.warn("Eroare RequestForward: " + ex);
-                    }
-                }
-            }
+       
         }
 
 
@@ -302,21 +190,13 @@ public class AdminUsersManagerBean {
             noFilter = false;
         }
         String encodeCountyId = encodeUrl(selectedCounty);
-        ClientResponse cr = wsi.getUserListByFilters(userDetails,
+       usersList = wsi.getUserListByFilters(userDetails,
         		encodeCountyId,
                 selectedBirthYear,
                 selectedRole,
                 AppUtils.parseToInt(selectedMinGarbages, -1),
                 AppUtils.parseToInt(selectedMaxGarbages, -1),
                 null);
-        log4j.debug("---> cr.getStatus()=" + cr.getStatus());
-        if (cr.getStatus() != 200) {
-            log4j.fatal("nu s-a reusit aplicarea filtrului (statusCode=" + cr.getStatus() + " responseStatus=" + cr.getResponseStatus() + ")");
-            JsfUtils.addWarnBundleMessage("internal_err");
-            return;
-        } else {
-            usersList = cr.getEntity(User[].class);
-        }
     }
     
 	 public String encodeUrl(String arg){

@@ -1,456 +1,324 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package ro.radcom.ldir.ldirbackendwebjsf2.tools;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.api.client.WebResource.Builder;
-import com.sun.jersey.api.client.config.ClientConfig;
-import com.sun.jersey.api.client.config.DefaultClientConfig;
-import com.sun.jersey.multipart.FormDataMultiPart;
-import com.sun.jersey.multipart.file.FileDataBodyPart;
 import java.io.File;
-import java.text.SimpleDateFormat;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.apache.log4j.Logger;
+
+import ro.ldir.beans.GarbageManagerLocal;
+import ro.ldir.beans.GeoManagerLocal;
+import ro.ldir.beans.OrganizationManagerLocal;
+import ro.ldir.beans.TeamManagerLocal;
+import ro.ldir.beans.UserManagerLocal;
 import ro.ldir.dto.ChartedArea;
+import ro.ldir.dto.CleaningEquipment;
+import ro.ldir.dto.CountyArea;
 import ro.ldir.dto.Garbage;
+import ro.ldir.dto.Garbage.GarbageStatus;
+import ro.ldir.dto.GarbageEnrollment;
+import ro.ldir.dto.GpsEquipment;
 import ro.ldir.dto.Organization;
 import ro.ldir.dto.Team;
+import ro.ldir.dto.TransportEquipment;
 import ro.ldir.dto.User;
-import ro.radcom.ldir.ldirbackendwebjsf2.tools.customObjects.GarbageContextProvider;
+import ro.ldir.exceptions.ChartedAreaAssignmentException;
+import ro.ldir.exceptions.InvalidTeamOperationException;
+import ro.ldir.exceptions.InvalidTokenException;
+import ro.ldir.exceptions.InvalidUserException;
+import ro.ldir.exceptions.NoCountyException;
 
 /**
- *
+ * 
  * @author dan.grigore
  */
 public class WSInterface {
+	private GeoManagerLocal geoManager;
+	private GarbageManagerLocal garbageManager;
+	private TeamManagerLocal teamManager;
+	private OrganizationManagerLocal orgManager;
+	private UserManagerLocal userManager;
 
-    private static final Logger log4j = Logger.getLogger(WSInterface.class.getCanonicalName());
-    private Client client = null;
-    private String WS_URL = "";
+	public WSInterface(boolean custom) {
 
-    public WSInterface(boolean custom) {
-        WS_URL = JsfUtils.getInitParameter("webservice.url");
-        if (custom) {
-            ClientConfig cc = new DefaultClientConfig();
-            cc.getClasses().add(GarbageContextProvider.class);
-            client = Client.create(cc);
-       // 	client = LdirClientResolverFactory.getResolverClient("http://app.letsdoitromania.ro/LDIRBackend/", username introdus de utilizator, parola introdusa de utilizator);
-        } else {
-            client = Client.create();
-        }
-    }
+	}
 
-    public WSInterface() {
-        this(false);
-    }
+	public WSInterface() {
+		this(false);
+	}
 
-    public ClientResponse addGarbage(User user, Garbage garbage) {
-        String location = WS_URL + "/LDIRBackend/ws/garbage";
-        if (garbage.getGarbageId() != null && garbage.getGarbageId() > 0) {
-            location += "/" + garbage.getGarbageId();
-        }
-        WebResource resource = client.resource(location);
-        Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(user.getEmail(), user.getPasswd()));
-        ClientResponse cr = builder.entity(garbage, MediaType.APPLICATION_XML).post(ClientResponse.class);
-        return cr;
-    }
-    
-    public ClientResponse addGarbageToTeam(User user, Team team, Garbage garbage){
-        int maxbags=team.getCleaningPower().intValue()*team.countMembers();
-        Integer MaxBags = new Integer(maxbags);
-        String MaxBagsString = MaxBags.toString();
-    	String location = WS_URL + "/LDIRBackend/ws/team/"+team.getTeamId()+"/cleaningGarbages/"+garbage.getGarbageId();
+	public int addGarbage(User user, Garbage garbage) throws NoCountyException {
+		if (garbage.getGarbageId() != null && garbage.getGarbageId() > 0) {
+			garbageManager.updateGarbage(garbage.getGarbageId(), garbage);
+			return garbage.getGarbageId();
+		}
+	return	garbageManager.insertGarbage(garbage);
+	}
 
-        WebResource resource = client.resource(location);
-        Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(user.getEmail(), user.getPasswd()));
-        ClientResponse cr = builder.entity(MaxBagsString,MediaType.APPLICATION_JSON).put(ClientResponse.class);
-        return cr;
-   }
-    
-    public ClientResponse deleteGarbageFromTeam(User user, int teamId, int garbageId){
-    	//is this c orrect?
-        String location = WS_URL + "/LDIRBackend/ws/team/"+teamId+"/cleaningGarbages/delete/"+garbageId;
+	public void addGarbageToTeam(User user, Team team, Garbage garbage) throws InvalidTeamOperationException {
+		int maxbags = team.getCleaningPower().intValue() * team.countMembers();
+		teamManager.assignGarbage(team.getTeamId(), garbage.getGarbageId(), maxbags);
+	}
 
-        WebResource resource = client.resource(location);
-        Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(user.getEmail(), user.getPasswd()));
-        
-        //X-HTTP-Method-Override
-        ClientResponse cr = builder.entity(null, MediaType.APPLICATION_XML).delete(ClientResponse.class);
-        return cr;
-   }
+	public void deleteGarbageFromTeam(User user, int teamId,
+			int garbageId) {
+		teamManager.removeGarbageAssigment(teamId, garbageId);
+	}
 
-    public ClientResponse getGarbageFromCounty(User user, String county){
-        String location = WS_URL + "/LDIRBackend/ws/garbage/countySearch/?county="+county;
+	public List<Garbage> getGarbageFromCounty(User user, String county) {
+		return garbageManager.getGarbagesByCounty(county);
+	}
 
-        WebResource resource = client.resource(location);
-        Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(user.getEmail(), user.getPasswd()));
-        ClientResponse cr = builder.entity(null, MediaType.APPLICATION_XML).get(ClientResponse.class);
-        return cr;
-   }
-    public ClientResponse getGarbageofTeam(User user, int teamId){
-        String location = WS_URL + "/LDIRBackend/ws/team/"+teamId+"/cleaningGarbages";
+	public List<Garbage> getGarbageofTeam(User user, int teamId) {
+		List<Garbage> garbages = new ArrayList<Garbage>();
+		Team team = teamManager.getTeam(teamId);
+		for (GarbageEnrollment enrollment : team.getGarbageEnrollements())
+			garbages.add(enrollment.getGarbage());
+		return garbages;
+	}
 
-        WebResource resource = client.resource(location);
-        Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(user.getEmail(), user.getPasswd()));
-        ClientResponse cr = builder.entity(null, MediaType.APPLICATION_XML).get(ClientResponse.class);
-        return cr;
-   }
-    public ClientResponse addChartedArea(User user, int teamId, int areaId) {
-        String location = WS_URL + "/LDIRBackend/ws/team/" + teamId + "/chartArea";
-        WebResource resource = client.resource(location);
-        Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(JsfUtils.getInitParameter("admin.user"),
-                JsfUtils.getInitParameter("admin.password")));
+	public void addChartedArea(User user, int teamId, int areaId) throws ChartedAreaAssignmentException {	
+		teamManager.assignChartArea(teamId, areaId);
+	}
 
-        ChartedArea chartedArea = new ChartedArea();
-        chartedArea.setAreaId(areaId);
-
-        ClientResponse cr = builder.entity(chartedArea, MediaType.APPLICATION_XML).post(ClientResponse.class);
-        return cr;
-    }
-
-    /*
+	/*
      * 
      */
-    public ClientResponse setChartedPercent(int areaId, int percent) {
-        String location = WS_URL + "/LDIRBackend/ws/geo/chartedArea/" + areaId + "/percentageCompleted";
-        WebResource resource = client.resource(location);
-        Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(JsfUtils.getInitParameter("admin.user"),
-                JsfUtils.getInitParameter("admin.password")));
+	public void setChartedPercent(int areaId, int percent) {
+		geoManager.setPercentageCompleted(areaId, percent);
+	}
 
-        Integer percentInteger = new Integer(percent);
+	public void removeChartedArea(User user, int teamId, int areaId) {
+		teamManager.removeChartAreaAssignment(teamId, areaId);
+	}
 
-        ClientResponse cr = builder.entity(percentInteger, MediaType.APPLICATION_XML).post(ClientResponse.class);
-        return cr;
-    }
+	public void addPicture(User user, Garbage garbage, File picture) throws FileNotFoundException, IOException {
+		garbageManager.addNewImage(garbage.getGarbageId(), picture, picture.getName());
+	}
 
-    public ClientResponse removeChartedArea(User user, int teamId, int areaId) {
-        String location = WS_URL + "/LDIRBackend/ws/team/" + teamId + "/chartArea/" + areaId;
-        WebResource resource = client.resource(location);
-        Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(user.getEmail(), user.getPasswd()));
+	public File getPicture(User user, Garbage garbage, int imgNr,
+			boolean full)  {
+		if (full)
+			return new File(garbageManager.getImageDisplayPath(garbage.getGarbageId(), imgNr));
+		return new File(garbageManager.getImageThumbnailPath(garbage.getGarbageId(), imgNr));
+	}
 
-        ClientResponse cr = builder.entity(null, MediaType.APPLICATION_XML).delete(ClientResponse.class);
-        return cr;
-    }
+	public void deleteGarbage(User user, Garbage garbage) {
+		garbageManager.deleteGarbage(garbage.getGarbageId());
+	}
 
-    public ClientResponse addPicture(User user, Garbage garbage, File picture) throws Exception {
-        if (!picture.exists()) {
-            throw new Exception(picture.getAbsolutePath() + " does not exist, skipping test!");
-        }
+	public void setStatusGarbage(User user, Garbage garbage) {
+		garbageManager.setGarbageStatus(garbage.getGarbageId(), garbage.getStatus());
+	}
 
-        String location = WS_URL + "/LDIRBackend/ws/garbage/" + garbage.getGarbageId() + "/image";
-        WebResource resource = client.resource(location);
-        Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(user.getEmail(), user.getPasswd()));
+	public Garbage getGarbage(User user, int garbageId) {
+		return garbageManager.getGarbage(garbageId);
+	}
 
-        FormDataMultiPart fdmp = new FormDataMultiPart();
-        fdmp.bodyPart(new FileDataBodyPart("file", picture));
-        ClientResponse cr = builder.entity(garbage, MediaType.MULTIPART_FORM_DATA_TYPE).post(ClientResponse.class, fdmp);
+	public List<ChartedArea> getChartedAreasOfTeam(User user, int teamId) {
+		return new ArrayList<ChartedArea>(teamManager.getTeam(teamId)
+				.getChartedAreas());
+	}
 
-        return cr;
-    }
+	public Team getTeam(User user, int teamId) {
+		return teamManager.getTeam(teamId);
+	}
 
-    public ClientResponse getPicture(User user, Garbage garbage, int imgNr, boolean full) throws Exception {
-        String location = WS_URL + "/LDIRBackend/ws/garbage/" + garbage.getGarbageId() + "/image/" + imgNr + (full ? "/display" : "/thumb");
-        WebResource resource = client.resource(location);
-        Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(user.getEmail(), user.getPasswd()));
+	public void addOrganization(User user, Organization org) {
+		orgManager.addOrganization(org);
 
-        ClientResponse cr = builder.get(ClientResponse.class);
-        return cr;
-    }
+		// String location = JsfUtils.getInitParameter("webservice.url") +
+		// "/LDIRBackend/ws/organization";
+		// Client client = Client.create();
+		// WebResource resource = client.resource(location);
+		// Builder builder = resource.header(HttpHeaders.AUTHORIZATION,
+		// AppUtils.generateCredentials(JsfUtils.getInitParameter("admin.user"),
+		// JsfUtils.getInitParameter("admin.password")));
+		// ClientResponse cr = builder.entity(organization,
+		// MediaType.APPLICATION_XML).post(ClientResponse.class);
+	}
 
-    public ClientResponse countPictures(User user, Garbage garbage) throws Exception {
-        String location = WS_URL + "/LDIRBackend/ws/garbage/" + garbage.getGarbageId() + "/imageCount";
-        WebResource resource = client.resource(location);
-        Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(user.getEmail(), user.getPasswd()));
+	public List<Garbage> getGarbageList(GarbageStatus status) {
+		return garbageManager.getGarbages(status);
+	}
 
-        ClientResponse cr = builder.entity(null, MediaType.APPLICATION_XML).get(ClientResponse.class);
+	public List<Garbage> getGarbageListByFilters(User admin, String countyId,
+			int gridId, int userId, Date addDate, String accept) {
+		Set<String> counties = new HashSet<String>();
+		counties.add(countyId);
+		Set<String> grids = new HashSet<String>();
+		grids.add(new Integer(gridId).toString());
+		Set<Integer> userIds = new HashSet<Integer>();
+		userIds.add(userId);
+		Set<Date> dates = new HashSet<Date>();
+		dates.add(addDate);
+		return garbageManager.report(counties, grids, userIds,
+				dates);
+	}
 
-        return cr;
-    }
+	public CountyArea[] getCountyList() {
+		List<CountyArea> areas = geoManager.getAllCounties();
+		CountyArea[] result = new CountyArea[areas.size()];
+		int i = 0;
+		for (CountyArea area : areas)
+			result[i++] = area;
+		return result;
+	}
 
-    public ClientResponse deleteGarbage(User user, Garbage garbage) {
-        String location = WS_URL + "/LDIRBackend/ws/garbage/" + garbage.getGarbageId();
-        WebResource resource = client.resource(location);
-        Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(user.getEmail(), user.getPasswd()));
-        ClientResponse cr = builder.entity(null, MediaType.APPLICATION_XML).delete(ClientResponse.class);
-        return cr;
-    }
+	public ChartedArea getChartedArea(int areaId) {
+		return geoManager.getChartedArea(areaId);
+	}
 
-    public ClientResponse setStatusGarbage(User user, Garbage garbage) {
-        String location = WS_URL + "/LDIRBackend/ws/garbage/" + garbage.getGarbageId()+"/status";
-        WebResource resource = client.resource(location);
-        Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(user.getEmail(), user.getPasswd()));
-        String cleaned="CLEANED";
-        ClientResponse cr = builder.entity(garbage.getStatus(), MediaType.APPLICATION_JSON).put(ClientResponse.class);
-        return cr;
-    }
 
-    
-    public ClientResponse getGarbage(User user, int garbageId) {
-        String location = WS_URL + "/LDIRBackend/ws/garbage/" + garbageId;
-        WebResource resource = client.resource(location);
-        Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(user.getEmail(), user.getPasswd()));
-        ClientResponse cr = builder.entity(null, MediaType.APPLICATION_XML).get(ClientResponse.class);
-        return cr;
-    }
-    public ClientResponse getChartedAreasOfTeam(User user, int teamId) {
-        String location = WS_URL + "/LDIRBackend/ws/team/" + teamId + "/chartArea";
-        WebResource resource = client.resource(location);
-        Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(user.getEmail(), user.getPasswd()));
-        ClientResponse cr = builder.entity(null, MediaType.APPLICATION_XML).get(ClientResponse.class);
-        return cr;
-    }
-    public ClientResponse getTeam(User user,int teamId) {  
-        String location = WS_URL + "/LDIRBackend/ws/team/" + teamId;
-        WebResource resource = client.resource(location);
-        Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(user.getEmail(), user.getPasswd()));
-        ClientResponse cr = builder.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
-//        ClientResponse cr = builder.entity(null, MediaType.APPLICATION_XML).get(ClientResponse.class);
-        return cr;
-    }
-    public ClientResponse getTeamManager(User user,int teamId) {
-        String location = WS_URL + "/LDIRBackend/ws/team/" + teamId + "/teamManager";
-        WebResource resource = client.resource(location);
-        Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(user.getEmail(), user.getPasswd()));
-        ClientResponse cr = builder.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
-        return cr;
-    }
-    public ClientResponse getTeamMembers(User user,int teamId) {
-        String location = WS_URL + "/LDIRBackend/ws/team/" + teamId + "/volunteerMembers";
-        WebResource resource = client.resource(location); 
-        Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(user.getEmail(), user.getPasswd()));
-        ClientResponse cr = builder.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
-        return cr;
-    }
-    public ClientResponse getTeamOrganization(User user,int teamId) {
-        String location = WS_URL + "/LDIRBackend/ws/team/" + teamId + "/organizationMembers";
-        WebResource resource = client.resource(location);
-        Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(user.getEmail(), user.getPasswd()));
-        ClientResponse cr = builder.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
-        return cr;
-    }
-    
-    public ClientResponse addOrganization(User user,Organization org) {
-        String location = WS_URL + "/LDIRBackend/ws/organization";
-        WebResource resource = client.resource(location);
-        Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(user.getEmail(), user.getPasswd()));
-        ClientResponse cr = builder.entity(org, MediaType.APPLICATION_XML).post(ClientResponse.class);
-        return cr;
-        
-//		String location = JsfUtils.getInitParameter("webservice.url") + "/LDIRBackend/ws/organization";
-//		Client client = Client.create();
-//	    WebResource resource = client.resource(location);
-//	    Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(JsfUtils.getInitParameter("admin.user"), JsfUtils.getInitParameter("admin.password")));
-//	    ClientResponse cr = builder.entity(organization, MediaType.APPLICATION_XML).post(ClientResponse.class);
-    }
-    public ClientResponse getOrganizationTeam(User user,int orgId) {
-        String location = WS_URL + "/LDIRBackend/ws/organization/" + orgId + "/memberOf";
-        WebResource resource = client.resource(location);
-        Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(user.getEmail(), user.getPasswd()));
-        ClientResponse cr = builder.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
-        return cr;
-    }
+	public void login(String user, String pass) {
+	}
 
-    public ClientResponse getTeamsOfChartedArea(User user, int areaId) {
-        String location = WS_URL + "/LDIRBackend/ws/geo/chartedArea/" + areaId + "/chartedBy";
-        WebResource resource = client.resource(location);
-        Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(user.getEmail(), user.getPasswd()));
-//        ClientResponse cr = builder.entity(null, MediaType.APPLICATION_XML).get(ClientResponse.class);
-        ClientResponse cr = builder.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
-        return cr;
-    }
+	public void resetPassword(String email) {
+		userManager.passwdResetToken(email);
+	}
 
-    public ClientResponse getGarbagesOfChartedArea(User user, int areaId) {
-        String location = WS_URL + "/LDIRBackend/ws/geo/chartedArea/" + areaId + "/garbages";
-        WebResource resource = client.resource(location);
-        Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(user.getEmail(), user.getPasswd()));
-//      ClientResponse cr = builder.entity(null, MediaType.TEXT_PLAIN_TYPE).get(ClientResponse.class);
-        ClientResponse cr = builder.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
-        return cr;
-    }
-    public ClientResponse getGarbagesOfTown(User user, String country) {
-        String location = WS_URL + "/LDIRBackend/ws/countySearch/garbages/" + "?county="+country;
-        WebResource resource = client.resource(location);
-        Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(user.getEmail(), user.getPasswd()));
-//      ClientResponse cr = builder.entity(null, MediaType.TEXT_PLAIN_TYPE).get(ClientResponse.class);
-        ClientResponse cr = builder.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
-        return cr;
-    }
+	public void setPassword(String newPassword, String userId,
+			String token) throws NumberFormatException, InvalidTokenException {
+		userManager.setPassword(Integer.parseInt(userId), token, newPassword);
+	}
 
-    public ClientResponse getGarbageList(String status) {
-        String location = WS_URL + "/LDIRBackend/ws/garbage/statusSearch/?status=" + status;
-        WebResource resource = client.resource(location);
-        Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(JsfUtils.getInitParameter("admin.user"),
-                JsfUtils.getInitParameter("admin.password")));
-        ClientResponse cr = builder.entity(null, MediaType.TEXT_PLAIN_TYPE).get(ClientResponse.class);
-        return cr;
-    }
+	public User getUserDetails(String user, String pass, int userId) {
+		// TODO
+		return null;
+	}
 
-    public ClientResponse getGarbageListByFilters(User admin, String countyId, int gridId, int userId, Date addDate, String accept) {
-        String location = WS_URL + "/LDIRBackend/ws/garbage/report?";
-        if (countyId != null && countyId != "" && countyId != "Toate") {
-            location += "county=" + countyId + "&";
-        }
-        if (gridId > 0) {
-            location += "chartedArea=" + gridId + "&";
-        }
-        if (userId > 0) {
-            location += "userId=" + userId + "&";
-        }
-        if (addDate != null) {
-            location += "insertDate=" + new SimpleDateFormat("yyyy-MM-dd").format(addDate);
-        }
-        log4j.debug("---> URL: " + location);
+	public User[] getUserListByFilters(User admin, String county,
+			int birthYear, String role, int minGarbages, int maxGarbages,
+			String accept) {
+		// TODO
+		return null;
+	}
 
-        WebResource resource = client.resource(location);
-        Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(admin.getEmail(), admin.getPasswd()));
-        if (accept != null && accept.length() > 0) {
-            builder.accept(accept);
-        }
-        ClientResponse cr = builder.entity(null, MediaType.TEXT_XML_TYPE).get(ClientResponse.class);
-        return cr;
-    }
+	public Team[] getTeamListByFilters(User admin, String county,
+			int birthYear, String role, int minGarbages, int maxGarbages,
+				String accept) {
+		// TODO
+		return null;
 
-    public ClientResponse getCountyList() {
-        String location = WS_URL + "/LDIRBackend/ws/geo/countyArea/all";
-        WebResource resource = client.resource(location);
-        Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(JsfUtils.getInitParameter("admin.user"),
-                JsfUtils.getInitParameter("admin.password")));
-        ClientResponse cr = builder.entity(null, MediaType.TEXT_PLAIN_TYPE).get(ClientResponse.class);
-        return cr;
-    }
+	}
 
-    public ClientResponse getChartedArea(int areaId) {
-        String location = WS_URL + "/LDIRBackend/ws/geo/chartedArea/" + areaId;
-        WebResource resource = client.resource(location);
-        Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(JsfUtils.getInitParameter("admin.user"),
-                JsfUtils.getInitParameter("admin.password")));
-//        ClientResponse cr = builder.entity(null, MediaType.TEXT_PLAIN_TYPE).get(ClientResponse.class);
-        ClientResponse cr = builder.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
-        return cr;
-    }
+	public User reinitUser(User userDetails) {
+		return getUserDetails(userDetails.getEmail(),
+				userDetails.getPasswd(), userDetails.getUserId());
+	}
 
-    public ClientResponse getMemberOfTeam(int userId) {
-        String location = WS_URL + "/LDIRBackend/ws/user/" + userId + "/memberOf";
-        WebResource resource = client.resource(location);
-        Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(JsfUtils.getInitParameter("admin.user"),
-                JsfUtils.getInitParameter("admin.password")));
-//        ClientResponse cr = builder.entity(null, MediaType.TEXT_PLAIN_TYPE).get(ClientResponse.class);
-        ClientResponse cr = builder.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
-        return cr;
-    }
+	/**
+	 * @param teamId
+	 * @param equipment
+	 */
+	public void addCleaningEquiptment(Integer teamId, CleaningEquipment equipment) {
+		teamManager.addCleaningEquipment(teamId, equipment);
+	}
 
-    public ClientResponse login(String user, String pass) {
-        String location = WS_URL + "/LDIRBackend/ws/user";
-        WebResource resource = client.resource(location);
-        Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(user, pass));
-        ClientResponse cr = builder.entity(null, MediaType.TEXT_PLAIN).get(ClientResponse.class);
-        return cr;
-    }
+	/**
+	 * @param teamId
+	 * @param transport
+	 */
+	public void addTransportEquipment(Integer teamId, TransportEquipment trans) {
+		teamManager.addTransportEquipment(teamId, trans);
+	}
 
-    public ClientResponse resetPassword(String email) {
-        String location = WS_URL + "/LDIRBackend/reg/ws/reset?email=" + email;
-        WebResource resource = client.resource(location);
-        Builder builder = resource.getRequestBuilder();
-        ClientResponse cr = builder.entity(null, MediaType.TEXT_PLAIN).get(ClientResponse.class);
-        return cr;
-    }
+	/**
+	 * @param teamId
+	 * @param gps
+	 */
+	public void addGpsEquipment(Integer teamId, GpsEquipment gps) {
+		teamManager.addGpsEquipment(teamId, gps);
+	}
 
-    public ClientResponse setPassword(String newPassword, String userId, String token) {
-        String location = WS_URL + "/LDIRBackend/reg/ws/reset/" + userId + "/" + token;
-        WebResource resource = client.resource(location);
-        Builder builder = resource.getRequestBuilder();
-        ClientResponse cr = builder.entity(newPassword, MediaType.APPLICATION_XML).post(ClientResponse.class);
-        return cr;
-    }
+	/**
+	 * @param orgDeleteId
+	 */
+	public void deleteOrganization(int orgDeleteId) {
+		orgManager.deleteOrganization(orgDeleteId);
+	}
 
-    public ClientResponse getUserDetails(String user, String pass, int userId) {
-        String location = WS_URL + "/LDIRBackend/ws/user/" + userId;
-        WebResource resource = client.resource(location);
-        Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(user, pass));
-        ClientResponse cr = builder.entity(null, MediaType.TEXT_PLAIN).get(ClientResponse.class);
+	/**
+	 * @param teamId
+	 * @param equipmentId
+	 */
+	public void deleteEquipment(Integer teamId, Integer equipmentId) {
+		teamManager.deleteEquipmentById(teamId, equipmentId);
+	}
 
-        return cr;
-    }
+	/**
+	 * @param organization
+	 */
+	public void updateOrganization(Organization organization) {
+		orgManager.updateOrganization(organization.getOrganizationId(), organization);
+	}
 
-    public ClientResponse getUserListByFilters(User admin, String county, int birthYear, String role, int minGarbages, int maxGarbages, String accept) {
-        String location = WS_URL + "/LDIRBackend/ws/user/report?";
-        if (county != null && county.length() > 0) {
-            location += "county=" + county + "&";
-        }
-        if (birthYear > 0) {
-            location += "birthyear=" + birthYear + "&";
-        }
-        if (role != null && role.length() > 0) {
-            location += "role=" + role + "&";
-        }
-        if (minGarbages >= 0) {
-            location += "minGarbages=" + minGarbages + "&";
-        }
-        if (maxGarbages >= 0) {
-            location += "maxGarbages=" + maxGarbages + "&";
-        }
+	/**
+	 * @param org
+	 * @param userTeam
+	 * @throws InvalidTeamOperationException 
+	 */
+	public void addOrganizationToTeam(Organization org, Team userTeam) throws InvalidTeamOperationException {
+		teamManager.enrollOrganization(org.getOrganizationId(), userTeam.getTeamId());
+	}
 
-        log4j.debug("---> URL: " + location);
+	/**
+	 * @param userTeam
+	 * @param memDeleteId
+	 */
+	public void removeVolunteerFromTeam(Team userTeam, int memDeleteId) {
+		teamManager.withdrawUser(memDeleteId, userTeam.getTeamId());
+		
+	}
 
-        WebResource resource = client.resource(location);
-        Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(admin.getEmail(), admin.getPasswd()));
-        if (accept != null && accept.length() > 0) {
-            builder.accept(accept);
-        }
-        ClientResponse cr = builder.entity(null, MediaType.TEXT_XML_TYPE).get(ClientResponse.class);
+	/**
+	 * @param userTeam
+	 * @param userDetails
+	 * @throws InvalidTeamOperationException 
+	 */
+	public void enrollVolunteerToTeam(Team userTeam, User userDetails) throws InvalidTeamOperationException {
+		teamManager.enrollUser(userDetails.getUserId(), userTeam.getTeamId());
+	}
 
-        return cr;
+	/**
+	 * @param selectedUser
+	 */
+	public void updateUser(User selectedUser) {
+		userManager.updateUser(selectedUser.getUserId(), selectedUser);
+	}
 
-    }
-    
-    public ClientResponse getTeamListByFilters(User admin, String county, int birthYear, String role, int minGarbages, int maxGarbages, String accept) {
-        String location = WS_URL + "/LDIRBackend/ws/team/report?";
-        if (county != null && county.length() > 0) {
-            location += "county=" + county + "&";
-        }
-        if (birthYear > 0) {
-            location += "birthyear=" + birthYear + "&";
-        }
-        if (role != null && role.length() > 0) {
-            location += "role=" + role + "&";
-        }
-        if (minGarbages >= 0) {
-            location += "minGarbages=" + minGarbages + "&";
-        }
-        if (maxGarbages >= 0) {
-            location += "maxGarbages=" + maxGarbages + "&";
-        }
+	/**
+	 * @param teamTemp
+	 */
+	public void addTeam(Team teamTemp){
+		teamManager.createTeam(teamTemp);
+	}
 
-        log4j.debug("---> URL: " + location);
+	/**
+	 * @param teamId
+	 * @param teamTemp
+	 */
+	public void updateTeam(int teamId, Team teamTemp) {
+		teamManager.updateTeam(teamId, teamTemp);
+	}
 
-        WebResource resource = client.resource(location);
-        Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(admin.getEmail(), admin.getPasswd()));
-        if (accept != null && accept.length() > 0) {
-            builder.accept(accept);
-        }
-//        ClientResponse cr = builder.entity(null, MediaType.TEXT_XML_TYPE).get(ClientResponse.class);
-         ClientResponse cr = builder.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
+	/**
+	 * @param teamId
+	 */
+	public void deleteTeam(int teamId) {
+		teamManager.deleteTeam(teamId);
+	}
 
-        return cr;
-
-    }
-
-    public ClientResponse reinitUser(User userDetails) {
-        String pass = userDetails.getPasswd();
-        ClientResponse cr = getUserDetails(userDetails.getEmail(), userDetails.getPasswd(), userDetails.getUserId());
-        int statusCode = cr.getStatus();
-        if (statusCode == 200) {
-            userDetails = cr.getEntity(User.class);
-            userDetails.setPasswd(pass);
-            JsfUtils.getHttpSession().setAttribute("USER_DETAILS", userDetails);
-        }
-        return cr;
-    }
+	/**
+	 * @param regiterUser
+	 * @throws InvalidUserException 
+	 */
+	public void registerUser(User regiterUser) throws InvalidUserException {
+		userManager.addUser(regiterUser);
+	}
 }
