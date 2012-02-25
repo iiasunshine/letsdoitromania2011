@@ -4,10 +4,6 @@
  */
 package ro.radcom.ldir.ldirbackendwebjsf2.managedBeans;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.api.client.WebResource.Builder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -21,8 +17,10 @@ import nl.captcha.gimpy.DropShadowGimpyRenderer;
 import nl.captcha.text.producer.DefaultTextProducer;
 import org.apache.log4j.Logger;
 import ro.ldir.dto.User;
+import ro.ldir.exceptions.InvalidUserException;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.AppUtils;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.JsfUtils;
+import ro.radcom.ldir.ldirbackendwebjsf2.tools.WSInterface;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.customObjects.CountyNames;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.customObjects.NavigationValues;
 
@@ -31,6 +29,7 @@ import ro.radcom.ldir.ldirbackendwebjsf2.tools.customObjects.NavigationValues;
  * @author dan.grigore
  */
 public class RegisterBean {
+	private WSInterface wsi = new WSInterface();
 
     private static final Logger log4j = Logger.getLogger(LoginBean.class.getCanonicalName());
 
@@ -116,27 +115,15 @@ public class RegisterBean {
         regiterUser.setAcceptsMoreInfo(acceptReceiveNotifications);
         regiterUser.setProfileView(profileView);
 
-        /* trimiterea datelor utilizatorui */
-        String location = JsfUtils.getInitParameter("webservice.url") + "/LDIRBackend/reg/ws";
-        Client client = Client.create();
-        WebResource resource = client.resource(location);
-        Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials("", ""));
-        ClientResponse cr = builder.entity(regiterUser, MediaType.APPLICATION_XML).post(ClientResponse.class);
-        int statusCode = cr.getStatus();
-        log4j.debug("---> statusCode: " + statusCode + " (" + cr.getClientResponseStatus() + ")");
-
-        /* verificare statusCode si adaugare mesaje */
-        if (statusCode == 409) {
+        try {
+			wsi.registerUser(regiterUser);
+		} catch (InvalidUserException e) {   
             JsfUtils.addWarnBundleMessage("register_err_duplicate_mail");
             return NavigationValues.REGISTER_FAIL;
-        } else if (statusCode == 200) {
-            //JsfUtils.addInfoBundleMessage("register_message");
+		}
             JsfUtils.addInfoBundleMessage("register_message2");
             return NavigationValues.REGISTER_FAIL;
-        } else {
-            JsfUtils.addWarnBundleMessage("internal_err");
-            return NavigationValues.REGISTER_SUCCESS;
-        }
+       
     }
 
     public List<SelectItem> getCountyItems() {

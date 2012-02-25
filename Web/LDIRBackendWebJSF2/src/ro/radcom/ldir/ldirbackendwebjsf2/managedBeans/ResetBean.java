@@ -4,9 +4,10 @@
  */
 package ro.radcom.ldir.ldirbackendwebjsf2.managedBeans;
 
-import com.sun.jersey.api.client.ClientResponse;
 import javax.validation.ValidationException;
 import org.apache.log4j.Logger;
+
+import ro.ldir.exceptions.InvalidTokenException;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.AppUtils;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.JsfUtils;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.WSInterface;
@@ -58,28 +59,12 @@ public class ResetBean {
      * @return
      */
     public String actionReset() {
-        try {
+        
             /* cerere resetare parola */
-            ClientResponse cr = wsi.resetPassword(loginMail);
-            int statusCode = cr.getStatus();
-            log4j.debug("---> statusCode login: " + statusCode + " (" + cr.getClientResponseStatus() + ")");
-
-            /* verificare status code */
-            if (statusCode == 404) {
-                JsfUtils.addWarnBundleMessage("reset_message_not_found");
-            } else if (statusCode != 200) {
-                JsfUtils.addWarnBundleMessage("internal_err");
-            } else {
-                JsfUtils.getHttpSession().setAttribute("INFO_MESSAGE", JsfUtils.getBundleMessage("reset_message_confirm"));
+            wsi.resetPassword(loginMail);
+                        JsfUtils.getHttpSession().setAttribute("INFO_MESSAGE", JsfUtils.getBundleMessage("reset_message_confirm"));
                 return NavigationValues.RESET_SUCCESS;
-            }
-            log4j.warn("---> statusCode login: " + statusCode + " (" + cr.getClientResponseStatus() + ")");
-        } catch (Exception ex) {
-            log4j.fatal("Eroare resetare parola: " + AppUtils.printStackTrace(ex));
-            JsfUtils.addWarnBundleMessage("internal_err");
-        }
-
-        return NavigationValues.RESET_FAIL;
+        
     }
 
     /**
@@ -109,30 +94,25 @@ public class ResetBean {
         /**
          * setare parola noua
          */
-        try {
+       
             /* cerere resetare parola */
-            ClientResponse cr = wsi.setPassword(password, getUserId(), getToken());
-            int statusCode = cr.getStatus();
-            log4j.debug("---> statusCode login(userId=" + getUserId() + ", token=" + getToken() + ", password=" + password + "): " + statusCode + " (" + cr.getClientResponseStatus() + ")");
+            try {
+				wsi.setPassword(password, getUserId(), getToken());
+				  JsfUtils.getHttpSession().setAttribute("INFO_MESSAGE", JsfUtils.getBundleMessage("newpass_message_confirm"));
+	                JsfUtils.addInfoBundleMessage("newpass_message_confirm");
+	                return NavigationValues.NEW_PASS_SUCCESS;
+			} catch (NumberFormatException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvalidTokenException e) {
+			}
+            
+            
 
-            /* verificare status code */
-            if (statusCode == 404) {
-                JsfUtils.addWarnBundleMessage("newpass_message_invalid_user");
-            } else if (statusCode == 406) {
-                JsfUtils.addWarnBundleMessage("newpass_message_expired");
-            } else if (statusCode != 200) {
-                JsfUtils.addWarnBundleMessage("internal_err");
-            } else {
-                JsfUtils.getHttpSession().setAttribute("INFO_MESSAGE", JsfUtils.getBundleMessage("newpass_message_confirm"));
-                JsfUtils.addInfoBundleMessage("newpass_message_confirm");
-                return NavigationValues.NEW_PASS_SUCCESS;
-            }
-            log4j.warn("---> statusCode login(userId=" + getUserId() + ", token=" + getToken() + ", password=" + password + "): " + statusCode + " (" + cr.getClientResponseStatus() + ")");
-        } catch (Exception ex) {
-            log4j.fatal("Eroare resetare parola: " + AppUtils.printStackTrace(ex));
-            JsfUtils.addWarnBundleMessage("internal_err");
-        }
-
+              
+            
+        
+        JsfUtils.addWarnBundleMessage("newpass_message_expired");
         JsfUtils.getHttpSession().setAttribute("userId", userId);
         JsfUtils.getHttpSession().setAttribute("token", token);
         return NavigationValues.NEW_PASS_FAIL;

@@ -4,22 +4,18 @@
  */
 package ro.radcom.ldir.ldirbackendwebjsf2.managedBeans;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.api.client.WebResource.Builder;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import javax.faces.context.FacesContext;
+
 import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
+
 import org.apache.log4j.Logger;
+
 import ro.ldir.dto.CountyArea;
 import ro.ldir.dto.Garbage;
 import ro.ldir.dto.User;
@@ -54,18 +50,8 @@ public class AdminGarbageManagerBean {
 
     /** Creates a new instance of AdminGarbageManagerBean */
     public AdminGarbageManagerBean() {
-        /* obtinere detalii utilizator */
+    	countyAreas = wsi.getCountyList();
         userDetails = (User) JsfUtils.getHttpSession().getAttribute("USER_DETAILS");
-
-        /* obtinere lista judete */
-        ClientResponse cr = wsi.getCountyList();
-        if (cr.getStatus() != 200) {
-            log4j.fatal("nu s-a reusit obtinerea listei de judete(statusCode=" + cr.getStatus() + " responseStatus=" + cr.getResponseStatus() + ")");
-            JsfUtils.addWarnBundleMessage("internal_err");
-            return;
-        } else {
-            countyAreas = cr.getEntity(CountyArea[].class);
-        }
     }
 
     public void actionApplyFilter() {
@@ -101,10 +87,7 @@ public class AdminGarbageManagerBean {
                 /**
                  * thumbnail
                  */
-                ClientResponse cr = wsi.getPicture(userDetails, selectedGarbage, i, false);
-
-                if (cr.getStatus() == 200) {
-                    File tempFile = cr.getEntity(File.class);
+                    File tempFile = wsi.getPicture(userDetails, selectedGarbage, i, false);
                     log4j.debug("---> temp file: " + tempFile.getAbsolutePath());
 
                     String relativePath = "temp/" + userDetails.getUserId() + "/preview_" + garbageId + "_" + i + "_thumbnail.jpg";
@@ -125,22 +108,16 @@ public class AdminGarbageManagerBean {
                     } else {
                         thumbnails.add(relativePath);
                     }
-                } else {
-                    log4j.fatal("Eroare obtinere imagine backend: statusCode=" + cr.getStatus() + " (statusMsg=" + cr.getClientResponseStatus() + ")");
-                }
 
                 /**
                  * imagine full
                  */
-                cr = wsi.getPicture(userDetails, selectedGarbage, i, true);
-
-                if (cr.getStatus() == 200) {
-                    File tempFile = cr.getEntity(File.class);
+                    tempFile = wsi.getPicture(userDetails, selectedGarbage, i, true);
                     log4j.debug("---> temp file: " + tempFile.getAbsolutePath());
 
-                    String relativePath = "temp/" + userDetails.getUserId() + "/preview_" + garbageId + "_" + i + "_full.jpg";
-                    String previewFilePath = JsfUtils.makeContextPath(relativePath);
-                    File previewFile = new File(previewFilePath);
+                    relativePath = "temp/" + userDetails.getUserId() + "/preview_" + garbageId + "_" + i + "_full.jpg";
+                    previewFilePath = JsfUtils.makeContextPath(relativePath);
+                    previewFile = new File(previewFilePath);
                     if (!previewFile.getParentFile().isDirectory()) {
                         if (!previewFile.getParentFile().mkdirs()) {
                             log4j.warn("nu s-a putut crea drectorul pentru preview: " + previewFile.getParentFile().getAbsolutePath());
@@ -161,9 +138,6 @@ public class AdminGarbageManagerBean {
                         }
                         posterHeights.add(height);
                     }
-                } else {
-                    log4j.fatal("Eroare obtinere imagine backend: statusCode=" + cr.getStatus() + " (statusMsg=" + cr.getClientResponseStatus() + ")");
-                }
             } catch (Exception ex) {
                 log4j.fatal("Eroare obtinere imagine: " + AppUtils.printStackTrace(ex));
             }
@@ -191,20 +165,7 @@ public class AdminGarbageManagerBean {
         }
 
         /* stergere */
-        String location = JsfUtils.getInitParameter("webservice.url") + "/LDIRBackend/ws/garbage/" + selectedGarbage.getGarbageId();
-        Client client = Client.create();
-        WebResource resource = client.resource(location);
-        Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(userDetails.getEmail(), userDetails.getPasswd()));
-        ClientResponse cr = builder.entity(null, MediaType.APPLICATION_XML).delete(ClientResponse.class);
-        int statusCode = cr.getStatus();
-        log4j.debug("---> statusCode: " + statusCode + " (" + cr.getClientResponseStatus() + ")");
-
-        /* verificare statusCode si adaugare mesaje */
-        if (statusCode == 200) {
-            //JsfUtils.addInfoBundleMessage("register_message");
-        } else {
-            JsfUtils.addWarnBundleMessage("internal_err");
-        }
+        wsi.deleteGarbage(null, selectedGarbage);
 
         initGarbageList();
     }
@@ -229,20 +190,17 @@ public class AdminGarbageManagerBean {
         	countyId="Toate";
         };
         
-        ClientResponse cr = wsi.getGarbageListByFilters(userDetails,
-        		encodeCountyId,
-                AppUtils.parseToInt(gridId),
-                AppUtils.parseToInt(userId),
-                addDate,
-                null);
-        log4j.debug("---> cr.getStatus()=" + cr.getStatus());
-        if (cr.getStatus() != 200) {
-            log4j.fatal("nu s-a reusit aplicarea filtrului (statusCode=" + cr.getStatus() + " responseStatus=" + cr.getResponseStatus() + ")");
-            JsfUtils.addWarnBundleMessage("internal_err");
-            return;
-        } else {
-            garbageList = cr.getEntity(Garbage[].class);
-        }
+      
+           
+            		List<Garbage> garbages = wsi.getGarbageListByFilters(userDetails,
+            		encodeCountyId,
+                    AppUtils.parseToInt(gridId),
+                    AppUtils.parseToInt(userId),
+                    addDate,
+                    null);
+            		 garbageList = new Garbage[garbages.size()];
+            		 garbages.toArray(garbageList);
+        
     }
     
 	 public String encodeUrl(String arg){
@@ -259,54 +217,8 @@ public class AdminGarbageManagerBean {
     public void actionGenerateExcel() {
         
     	
-    	String encodeCountyId=encodeUrl(countyId);
-        if (countyId.equals("Toate")==true || countyId.equals("") == true || countyId == null){
-        	encodeCountyId=null;
-        	countyId="Toate";
-        };
+ 
         
-        ClientResponse cr = wsi.getGarbageListByFilters(userDetails,
-        		encodeCountyId,
-                AppUtils.parseToInt(gridId),
-                AppUtils.parseToInt(userId),
-                addDate,
-                "application/vnd.ms-excel");
-        log4j.debug("---> cr.getStatus()=" + cr.getStatus());
-        if (cr.getStatus() != 200) {
-            log4j.fatal("nu s-a reusit generarea (statusCode=" + cr.getStatus() + " responseStatus=" + cr.getResponseStatus() + ")");
-            JsfUtils.addWarnBundleMessage("internal_err");
-            return;
-        } else {
-            File tempFile = cr.getEntity(File.class);
-            log4j.debug("---> temp file: " + tempFile.getAbsolutePath());
-
-            String relativePath = "temp/statistici/" + userDetails.getUserId() + "/mormane.xls";
-            String previewFilePath = JsfUtils.makeContextPath(relativePath);
-            File file = new File(previewFilePath);
-            if (!file.getParentFile().isDirectory()) {
-                if (!file.getParentFile().mkdirs()) {
-                    log4j.warn("nu s-a putut crea drectorul pentru preview: " + file.getParentFile().getAbsolutePath());
-                }
-            }
-
-            if (file.isFile()) {
-                if (!file.delete()) {
-                    log4j.warn("nu s-a putut sterge fisierul existent: " + file.getAbsolutePath());
-                }
-            }
-
-            log4j.debug("---> file: " + file.getAbsolutePath());
-            if (!tempFile.renameTo(file)) {
-                log4j.warn("nu s-a putut redenumi fisierul temporar: " + tempFile.getAbsolutePath());
-            } else {
-                try {
-                    FacesContext.getCurrentInstance().getExternalContext().redirect(JsfUtils.getHttpRequest().getContextPath()+"/"+relativePath);
-                    return;
-                } catch (Exception ex) {
-                    log4j.warn("Eroare RequestForward: " + ex);
-                }
-            }
-        }
     }
 
     public List<SelectItem> getCountyItems() {

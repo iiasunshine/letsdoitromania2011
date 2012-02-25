@@ -32,11 +32,6 @@ import ro.radcom.ldir.ldirbackendwebjsf2.tools.MyGarbage;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.WSInterface;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.customObjects.MyGarbageComparator;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.GenericType;
-import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.api.client.WebResource.Builder;
 
 public class AreaCleanManagerBean {
 	
@@ -103,13 +98,7 @@ public class AreaCleanManagerBean {
      * echipa utilizatorului curent (=> lista zone atribuite)
      */
     if (true) {
-        ClientResponse cr = wsi.getMemberOfTeam(userDetails.getUserId());
-        if (cr.getStatus() != 200) {
-            log4j.fatal("nu s-a reusit obtinerea echipei utlizatorului curent (statusCode=" + cr.getStatus() + " responseStatus=" + cr.getResponseStatus() + ")");
-            JsfUtils.addWarnBundleMessage("internal_err");
-            return;
-        } else {
-            userTeam = cr.getEntity(Team.class);
+            userTeam = userDetails.getMemberOf();
             initManager();
             managedTeams();
             
@@ -129,19 +118,7 @@ public class AreaCleanManagerBean {
                     }
 
 
-            		cr = wsi.getGarbageofTeam(userDetails, team.getTeamId());
-                    /* obtinere lista gunoaie */
-                    if (cr.getStatus() != 200) {
-                        log4j.fatal("nu s-a reusit obtinerea gunoaielor pt echipa " + team.getTeamId() + " (statusCode=" + cr.getStatus() + " responseStatus=" + cr.getResponseStatus() + ")");
-                        JsfUtils.addWarnBundleMessage("internal_err");
-                        
-                        return;
-                    }; 
-                    if(cr.getStatus() == 200) {
-                    	
-                    	
-                    	areaGarbages = new ArrayList<Garbage>();
-                    	areaGarbages.addAll(Arrays.asList(cr.getEntity(Garbage[].class)));
+            	areaGarbages =wsi.getGarbageofTeam(userDetails, team.getTeamId());
                     	
                     	                    	
                     	if(areaGarbages.isEmpty()!=true&&areaGarbages.size()!=0){
@@ -155,25 +132,19 @@ public class AreaCleanManagerBean {
                     		if(teamSelected!=null)
                     			if(teamSelected.getTeamId()==team.getTeamId())
                     				teamSelected=team;
-                    }
+                    
             		
 
             	}
             }
-        }
+        
         
 
     }
     
-    ClientResponse cr = wsi.getCountyList();
-    if (cr.getStatus() != 200) {
-        log4j.fatal("nu s-a reusit obtinerea listei de judete(statusCode=" + cr.getStatus() + " responseStatus=" + cr.getResponseStatus() + ")");
-        JsfUtils.addWarnBundleMessage("internal_err");
-        return;
-    } else {
-        countyAreas = cr.getEntity(CountyArea[].class);
+
+        countyAreas = wsi.getCountyList();
         info += "CountyAreas = " + countyAreas.length + "<br/>";
-    }
     //init garbages
     	init();
     	
@@ -181,16 +152,8 @@ public class AreaCleanManagerBean {
 	
 	public void init(){
 		
-			/* obtinere lista gunoaie */
-			ClientResponse cr = wsi.getGarbageFromCounty(userDetails, country);
-        if (cr.getStatus() != 200) {
-            log4j.fatal("nu s-a reusit obtinerea gunoaielor " + " (statusCode=" + cr.getStatus() + " responseStatus=" + cr.getResponseStatus() + ")");
-            JsfUtils.addWarnBundleMessage("internal_err");
-            return;
-        } else {
-//            areaGarbages.addAll(Arrays.asList(cr.getEntity(Garbage[].class)));
-            areaGarbages =  cr.getEntity(new GenericType<List<Garbage>>(){});
-        }
+        areaGarbages = wsi.getGarbageFromCounty(userDetails, country);
+        
 //
 
 		if(country != null){
@@ -259,12 +222,7 @@ public class AreaCleanManagerBean {
 	};
 	
 	public void reloadTeam(int id){
-		String location = JsfUtils.getInitParameter("webservice.url")+"/LDIRBackend/ws/user/"+ userDetails.getUserId() +"/managedTeams";
-    	Client client = Client.create();
-    	WebResource resource = client.resource(location);
-    	Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(userDetails.getEmail(), userDetails.getPasswd()));
-    	ClientResponse cr = builder.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
-    	teamList = cr.getEntity(new GenericType<List<Team>>(){});
+    	teamList = userDetails.getManagedTeams();
     	log4j.info("user teams:" + teamList);
 
 	    if(teamList != null && teamList.size() > 0)
@@ -282,20 +240,13 @@ public class AreaCleanManagerBean {
 	}
 	
     public void managedTeams(){
-    	
-    	String location = JsfUtils.getInitParameter("webservice.url")+"/LDIRBackend/ws/user/"+ userDetails.getUserId() +"/managedTeams";
-    	Client client = Client.create();
-    	WebResource resource = client.resource(location);
-    	Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(userDetails.getEmail(), userDetails.getPasswd()));
-    	ClientResponse cr = builder.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
-    	teamList = cr.getEntity(new GenericType<List<Team>>(){});
+    	teamList = userDetails.getManagedTeams();
     	log4j.info("user teams:" + teamList);
     }
 	public void initManager(){
 		
 		try {
-			ClientResponse cr = wsi.getTeamManager(userDetails, userTeam.getTeamId());
-			managerDetails = cr.getEntity(User.class);
+			managerDetails = userTeam.getTeamManager();
 			log4j.debug("managerDetails->" + managerDetails);
 		} catch (Exception e) {
 			log4j.debug("error->" + e.getMessage());

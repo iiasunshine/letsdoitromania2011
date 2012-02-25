@@ -99,6 +99,12 @@
 		<path refid="EAR Libraries.libraryclasspath" />
 		<fileset dir="${webservice.location}/WebContent/WEB-INF/lib" includes="**/*.jar" />
 	</path>
+	
+	<path id="LDIRBackendWebJSF2.libraryclasspath">
+		<path refid="GlassFish 3.1 [GlassFish 3.1].libraryclasspath" />
+		<path refid="EAR Libraries.libraryclasspath" />
+		<fileset dir="${jsf.location}/WebContent/WEB-INF/lib" includes="**/*.jar" />
+	</path>
 
 	<path id="tests.classpath">
 		<pathelement location="${tests.location}/lib/junit-4.8.2.jar" />

@@ -5,12 +5,10 @@
 
 	<target name="clean">
 		<ant dir="${service.location}" target="clean" />
-		<ant dir="${jsf.location}" target="clean" />
 	</target>
 
 	<target name="build">
 		<ant dir="${service.location}" target="ear" />
-		<ant dir="${jsf.location}" target="war" />
 	</target>
 
 	<target name="deploy">

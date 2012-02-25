@@ -13,5 +13,9 @@
             <dependent-object/>
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="LDIRBackendWebJSF2.war" deploy-path="/" handle="module:/resource/LDIRBackendWebJSF2/LDIRBackendWebJSF2">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
     </wb-module>
 </project-modules>

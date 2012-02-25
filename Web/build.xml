@@ -8,6 +8,7 @@
 		<ant dir="${ejb.location}" target="clean" />
 		<ant dir="${ejbclient.location}" target="clean" />
 		<ant dir="${webservice.location}" target="clean" />
+		<ant dir="${jsf.location}" target="clean" />
 		<delete dir="docs" />
 	</target>
 

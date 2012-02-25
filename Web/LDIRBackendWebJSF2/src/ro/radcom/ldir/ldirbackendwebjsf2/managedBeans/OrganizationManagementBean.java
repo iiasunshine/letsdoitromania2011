@@ -13,13 +13,6 @@ import javax.ws.rs.core.MediaType;
 
 import org.apache.log4j.Logger;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.GenericType;
-import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.api.client.WebResource.Builder;
-
-
 import ro.ldir.dto.Organization;
 import ro.ldir.dto.Team;
 import ro.ldir.dto.User;
@@ -46,15 +39,8 @@ public class OrganizationManagementBean {
 	    	
 	    	teamId = AppUtils.parseToInt(JsfUtils.getRequestParameter("teamId"));
 	    	if(teamId >0){
-				String location = JsfUtils.getInitParameter("webservice.url")
-				+ "/LDIRBackend/ws/team/" + teamId;
-				Client client = Client.create();
-				WebResource resource = client.resource(location);
-				Builder builder = resource.header(HttpHeaders.AUTHORIZATION,
-				AppUtils.generateCredentials(JsfUtils.getInitParameter("admin.user"),
-		                JsfUtils.getInitParameter("admin.password")));
-				ClientResponse cr = builder.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
-				Team userTeam = cr.getEntity(Team.class);
+
+				Team userTeam = userDetails.getMemberOf();
 				
 				 teamName = userTeam.getTeamName();
 				 if(userTeam.getEquipments() != null && userTeam.getEquipments().size() >0 ){
@@ -70,47 +56,27 @@ public class OrganizationManagementBean {
 	    
 
 	    public void managedOrganization(Team userTeam){
-	    	
-	   
-			String location = JsfUtils.getInitParameter("webservice.url")+ "/LDIRBackend/ws/user/" + userDetails.getUserId()+"/organizations";
-			Client client = Client.create();
-			WebResource resource = client.resource(location);
-			Builder builder = resource.header(HttpHeaders.AUTHORIZATION,
-					AppUtils.generateCredentials(JsfUtils.getInitParameter("admin.user"), JsfUtils.getInitParameter("admin.password")));
-			ClientResponse cr = builder.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
-			List<Organization> organizationMembers = cr.getEntity(new GenericType<List<Organization>>() {});
+	    	List<Organization> organizationMembers = userDetails.getOrganizations();
 			
-		    int statusCode = cr.getStatus();
-			if(statusCode == 200){
+		   
 				if(organizationMembers != null && organizationMembers.size() > 0){
 				    for(Organization org: organizationMembers){
 				    	if(org.getOrganizationId() != 0 && org.getOrganizationId() > 0){		    		
-				    		cr = wsi.getOrganizationTeam(userDetails, org.getOrganizationId());
-				    		if(cr.getStatus() != 200){
-
-				    		}else{ 
-				    			Team  team = cr.getEntity(Team.class);
+				    			Team  team = org.getMemberOf();
 				    			if(team.getTeamId().equals(teamId)){
 				    				orgBool = true;
 				    				break;
 				    			}
 				    			log4j.debug("--->  organization: " + team);
-				    		}
 				    }
 				}
-			}
+			
 		    
 	    	}
 	    
 	    }
 	    public void managedTeams(){
-	    	
-	    	String location = JsfUtils.getInitParameter("webservice.url")+"/LDIRBackend/ws/user/"+ userDetails.getUserId() +"/managedTeams";
-	    	Client client = Client.create();
-	    	WebResource resource = client.resource(location);
-	    	Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(userDetails.getEmail(), userDetails.getPasswd()));
-	    	ClientResponse cr = builder.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
-	    	teamList = cr.getEntity(new GenericType<List<Team>>(){});
+	    	teamList = userDetails.getManagedTeams();
 	    	log4j.info("user teams:" + teamList);
 	    }
 
@@ -131,17 +97,7 @@ public class OrganizationManagementBean {
 	        Team teamTemp = new Team();
 	        teamTemp.setTeamName(teamName);
 	        
-            String location = JsfUtils.getInitParameter("webservice.url")+"/LDIRBackend/ws/team/";
-            Client client = Client.create();
-	        WebResource resource = client.resource(location);
-	        Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(userDetails.getEmail(), userDetails.getPasswd()));
-	        ClientResponse cr = builder.entity(teamTemp, MediaType.APPLICATION_XML).post(ClientResponse.class);
-	        int statusCode = cr.getStatus();
-	        
-	        if(statusCode !=200){
-	        	  JsfUtils.addWarnBundleMessage("fail_add_team_message");
-		          return NavigationValues.TEAM_ORG_MULTI_FAIL;
-	        }
+	        wsi.addTeam(teamTemp);
 	    	managedTeams();
 	        JsfUtils.addInfoBundleMessage("success_edit_message");
 	          return NavigationValues.TEAM_ORG_MULTI_FAIL;
@@ -198,17 +154,7 @@ public class OrganizationManagementBean {
 	        
 	        Team teamTemp = new Team();
 	        teamTemp.setTeamName(teamName);
-	        
-            String location = JsfUtils.getInitParameter("webservice.url")+"/LDIRBackend/ws/team/"+teamId;
-            Client client = Client.create();
-	        WebResource resource = client.resource(location);
-	        Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(userDetails.getEmail(), userDetails.getPasswd()));
-	        ClientResponse cr = builder.entity(teamTemp, MediaType.APPLICATION_XML).put(ClientResponse.class);
-	        int statusCode = cr.getStatus();
-	        if(statusCode !=200){
-	        	  JsfUtils.addWarnBundleMessage("fail_change_team_message");
-		          return NavigationValues.TEAM_ORG_MULTI_FAIL;
-	        }
+	        wsi.updateTeam(teamId, teamTemp);
 	        managedTeams();
 	        JsfUtils.addInfoBundleMessage("success_edit_message");
 	          return NavigationValues.TEAM_ORG_MULTI_FAIL;
@@ -216,16 +162,7 @@ public class OrganizationManagementBean {
 		public String actionDeleteTeam(){
 			
 
-            String location = JsfUtils.getInitParameter("webservice.url")+"/LDIRBackend/ws/team/"+teamId;
-            Client client = Client.create();
-	        WebResource resource = client.resource(location);
-	        Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(userDetails.getEmail(), userDetails.getPasswd()));
-	        ClientResponse cr = builder.entity(null, MediaType.APPLICATION_XML).delete(ClientResponse.class);
-	        int statusCode = cr.getStatus();
-	        if(statusCode !=200){
-	        	  JsfUtils.addWarnBundleMessage("fail_change_team_message");
-		          return NavigationValues.TEAM_ORG_MULTI_FAIL;
-	        }
+            wsi.deleteTeam(teamId);
 	        managedTeams();
 	        JsfUtils.addInfoBundleMessage("success_edit_message");
 	          return NavigationValues.TEAM_ORG_MULTI_FAIL;

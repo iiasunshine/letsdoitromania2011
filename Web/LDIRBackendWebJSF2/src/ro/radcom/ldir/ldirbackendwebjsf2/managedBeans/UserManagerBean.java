@@ -12,11 +12,6 @@ import javax.ws.rs.core.MediaType;
 
 import org.apache.log4j.Logger;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.api.client.WebResource.Builder;
-
 import ro.ldir.dto.User;
 import ro.ldir.dto.User.Activity;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.AppUtils;
@@ -121,33 +116,10 @@ public class UserManagerBean {
         
     	//userDetails.setAcceptsMoreInfo(acceptReceiveNotifications);
     	userDetails.setProfileView(profileView);
-	
-    	 /* update date utilizator */
-        String location = JsfUtils.getInitParameter("webservice.url") + "/LDIRBackend/ws/user/" + userDetails.getUserId();
-        Client client = Client.create();
-        WebResource resource = client.resource(location);
-        Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(userDetails.getEmail(), userDetails.getPasswd()));
-        ClientResponse cr = builder.entity(userDetails, MediaType.APPLICATION_XML).put(ClientResponse.class);
-        
-        
-        int statusCode = cr.getStatus();
-        log4j.debug("---> statusCode: " + statusCode + " (" + cr.getClientResponseStatus() + ")");
-        
-        /* verificare statusCode si adaugare mesaje */
-        if(statusCode == 200){
-        	  JsfUtils.addInfoBundleMessage("success_edit_message");
-        	  return NavigationValues.USER_EDIT_FAIL;
-        }else if(statusCode == 403){
-        	JsfUtils.addWarnBundleMessage("access_policy_violated");
-              return NavigationValues.USER_EDIT_FAIL;
-        }else if(statusCode == 404){
-        		JsfUtils.addWarnBundleMessage("user_not_exist_message");
-        	  return NavigationValues.USER_EDIT_FAIL;
-        }else{
-//        	 return NavigationValues.USER_EDIT_FAIL;
-        }
-
-          return NavigationValues.USER_EDIT_SUCCESS;
+    	
+    	wsi.updateUser(userDetails);
+    	JsfUtils.addInfoBundleMessage("success_edit_message");
+        return NavigationValues.USER_EDIT_SUCCESS;
 
     }
 	public String actionPassword(){
@@ -168,31 +140,10 @@ public class UserManagerBean {
 		}
 		userDetails.setPasswd(password);
 		
-   	 /* update date utilizator */
-        String location = JsfUtils.getInitParameter("webservice.url") + "/LDIRBackend/ws/user/" + userDetails.getUserId();
-        Client client = Client.create();
-        WebResource resource = client.resource(location);
-        Builder builder = resource.header(HttpHeaders.AUTHORIZATION, AppUtils.generateCredentials(userDetails.getEmail(), passwordCurent));
-        ClientResponse cr = builder.entity(userDetails, MediaType.APPLICATION_XML).put(ClientResponse.class);
+		wsi.updateUser(userDetails);
+		JsfUtils.addInfoBundleMessage("success_edit_message");
+        return NavigationValues.USER_EDIT_PASS_FAIL;
         
-        
-        int statusCode = cr.getStatus();
-        log4j.debug("---> statusCode: " + statusCode + " (" + cr.getClientResponseStatus() + ")");
-        
-        /* verificare statusCode si adaugare mesaje */
-        if(statusCode == 200){
-        	  JsfUtils.addInfoBundleMessage("success_edit_message");
-        	  return NavigationValues.USER_EDIT_PASS_FAIL;
-        }else if(statusCode == 403){
-        	  JsfUtils.addWarnBundleMessage("access_policy_violated");
-              return NavigationValues.USER_EDIT_PASS_FAIL;
-        }else if(statusCode == 404){
-        	  JsfUtils.addWarnBundleMessage("user_not_exist_message");
-        	  return NavigationValues.USER_EDIT_PASS_FAIL;
-        }else{
-        	
-        }
-		return NavigationValues.USER_EDIT_SUCCESS;
 	}
     
     public List<SelectItem> getDaysItems() {

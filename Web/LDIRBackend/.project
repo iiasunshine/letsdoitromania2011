@@ -7,6 +7,7 @@
 		<project>LDIRBackendEJBClient</project>
 		<project>LDIRBackendTests</project>
 		<project>LDIRBackendWeb</project>
+		<project>LDIRBackendWebJSF2</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
