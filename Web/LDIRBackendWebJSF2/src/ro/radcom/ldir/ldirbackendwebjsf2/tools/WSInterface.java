@@ -9,7 +9,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 
 import ro.ldir.beans.GarbageManagerLocal;
 import ro.ldir.beans.GeoManagerLocal;
@@ -21,6 +22,7 @@ import ro.ldir.dto.CleaningEquipment;
 import ro.ldir.dto.CountyArea;
 import ro.ldir.dto.Garbage;
 import ro.ldir.dto.Garbage.GarbageStatus;
+import ro.ldir.dto.helper.SHA256Encrypt;
 import ro.ldir.dto.GarbageEnrollment;
 import ro.ldir.dto.GpsEquipment;
 import ro.ldir.dto.Organization;
@@ -44,12 +46,18 @@ public class WSInterface {
 	private OrganizationManagerLocal orgManager;
 	private UserManagerLocal userManager;
 
-	public WSInterface(boolean custom) {
-
-	}
-
-	public WSInterface() {
-		this(false);
+	public WSInterface() throws NamingException {
+		InitialContext ic = new InitialContext();
+		userManager = (UserManagerLocal) ic
+				.lookup("java:global/LDIRBackend/LDIRBackendEJB/UserManager!ro.ldir.beans.UserManager");
+		teamManager = (TeamManagerLocal) ic
+				.lookup("java:global/LDIRBackend/LDIRBackendEJB/TeamManager!ro.ldir.beans.TeamManager");
+		orgManager = (OrganizationManagerLocal) ic
+				.lookup("java:global/LDIRBackend/LDIRBackendEJB/OrganizationManager!ro.ldir.beans.OrganizationManager");
+		garbageManager = (GarbageManagerLocal) ic
+				.lookup("java:global/LDIRBackend/LDIRBackendEJB/GarbageManager!ro.ldir.beans.GarbageManager");
+		geoManager = (GeoManagerLocal) ic
+				.lookup("java:global/LDIRBackend/LDIRBackendEJB/GeoManager!ro.ldir.beans.GeoManager");
 	}
 
 	public int addGarbage(User user, Garbage garbage) throws NoCountyException {
@@ -57,16 +65,17 @@ public class WSInterface {
 			garbageManager.updateGarbage(garbage.getGarbageId(), garbage);
 			return garbage.getGarbageId();
 		}
-	return	garbageManager.insertGarbage(garbage);
+		return garbageManager.insertGarbage(garbage);
 	}
 
-	public void addGarbageToTeam(User user, Team team, Garbage garbage) throws InvalidTeamOperationException {
+	public void addGarbageToTeam(User user, Team team, Garbage garbage)
+			throws InvalidTeamOperationException {
 		int maxbags = team.getCleaningPower().intValue() * team.countMembers();
-		teamManager.assignGarbage(team.getTeamId(), garbage.getGarbageId(), maxbags);
+		teamManager.assignGarbage(team.getTeamId(), garbage.getGarbageId(),
+				maxbags);
 	}
 
-	public void deleteGarbageFromTeam(User user, int teamId,
-			int garbageId) {
+	public void deleteGarbageFromTeam(User user, int teamId, int garbageId) {
 		teamManager.removeGarbageAssigment(teamId, garbageId);
 	}
 
@@ -82,7 +91,8 @@ public class WSInterface {
 		return garbages;
 	}
 
-	public void addChartedArea(User user, int teamId, int areaId) throws ChartedAreaAssignmentException {	
+	public void addChartedArea(User user, int teamId, int areaId)
+			throws ChartedAreaAssignmentException {
 		teamManager.assignChartArea(teamId, areaId);
 	}
 
@@ -97,15 +107,18 @@ public class WSInterface {
 		teamManager.removeChartAreaAssignment(teamId, areaId);
 	}
 
-	public void addPicture(User user, Garbage garbage, File picture) throws FileNotFoundException, IOException {
-		garbageManager.addNewImage(garbage.getGarbageId(), picture, picture.getName());
+	public void addPicture(User user, Garbage garbage, File picture)
+			throws FileNotFoundException, IOException {
+		garbageManager.addNewImage(garbage.getGarbageId(), picture,
+				picture.getName());
 	}
 
-	public File getPicture(User user, Garbage garbage, int imgNr,
-			boolean full)  {
+	public File getPicture(User user, Garbage garbage, int imgNr, boolean full) {
 		if (full)
-			return new File(garbageManager.getImageDisplayPath(garbage.getGarbageId(), imgNr));
-		return new File(garbageManager.getImageThumbnailPath(garbage.getGarbageId(), imgNr));
+			return new File(garbageManager.getImageDisplayPath(
+					garbage.getGarbageId(), imgNr));
+		return new File(garbageManager.getImageThumbnailPath(
+				garbage.getGarbageId(), imgNr));
 	}
 
 	public void deleteGarbage(User user, Garbage garbage) {
@@ -113,7 +126,8 @@ public class WSInterface {
 	}
 
 	public void setStatusGarbage(User user, Garbage garbage) {
-		garbageManager.setGarbageStatus(garbage.getGarbageId(), garbage.getStatus());
+		garbageManager.setGarbageStatus(garbage.getGarbageId(),
+				garbage.getStatus());
 	}
 
 	public Garbage getGarbage(User user, int garbageId) {
@@ -157,8 +171,7 @@ public class WSInterface {
 		userIds.add(userId);
 		Set<Date> dates = new HashSet<Date>();
 		dates.add(addDate);
-		return garbageManager.report(counties, grids, userIds,
-				dates);
+		return garbageManager.report(counties, grids, userIds, dates);
 	}
 
 	public CountyArea[] getCountyList() {
@@ -174,22 +187,13 @@ public class WSInterface {
 		return geoManager.getChartedArea(areaId);
 	}
 
-
-	public void login(String user, String pass) {
-	}
-
 	public void resetPassword(String email) {
 		userManager.passwdResetToken(email);
 	}
 
-	public void setPassword(String newPassword, String userId,
-			String token) throws NumberFormatException, InvalidTokenException {
+	public void setPassword(String newPassword, String userId, String token)
+			throws NumberFormatException, InvalidTokenException {
 		userManager.setPassword(Integer.parseInt(userId), token, newPassword);
-	}
-
-	public User getUserDetails(String user, String pass, int userId) {
-		// TODO
-		return null;
 	}
 
 	public User[] getUserListByFilters(User admin, String county,
@@ -201,22 +205,26 @@ public class WSInterface {
 
 	public Team[] getTeamListByFilters(User admin, String county,
 			int birthYear, String role, int minGarbages, int maxGarbages,
-				String accept) {
+			String accept) {
 		// TODO
 		return null;
 
 	}
 
+	public User getUser(String email) {
+		return userManager.getUser(email);
+	}
+	
 	public User reinitUser(User userDetails) {
-		return getUserDetails(userDetails.getEmail(),
-				userDetails.getPasswd(), userDetails.getUserId());
+		return userManager.getUser(userDetails.getEmail());
 	}
 
 	/**
 	 * @param teamId
 	 * @param equipment
 	 */
-	public void addCleaningEquiptment(Integer teamId, CleaningEquipment equipment) {
+	public void addCleaningEquiptment(Integer teamId,
+			CleaningEquipment equipment) {
 		teamManager.addCleaningEquipment(teamId, equipment);
 	}
 
@@ -255,16 +263,19 @@ public class WSInterface {
 	 * @param organization
 	 */
 	public void updateOrganization(Organization organization) {
-		orgManager.updateOrganization(organization.getOrganizationId(), organization);
+		orgManager.updateOrganization(organization.getOrganizationId(),
+				organization);
 	}
 
 	/**
 	 * @param org
 	 * @param userTeam
-	 * @throws InvalidTeamOperationException 
+	 * @throws InvalidTeamOperationException
 	 */
-	public void addOrganizationToTeam(Organization org, Team userTeam) throws InvalidTeamOperationException {
-		teamManager.enrollOrganization(org.getOrganizationId(), userTeam.getTeamId());
+	public void addOrganizationToTeam(Organization org, Team userTeam)
+			throws InvalidTeamOperationException {
+		teamManager.enrollOrganization(org.getOrganizationId(),
+				userTeam.getTeamId());
 	}
 
 	/**
@@ -273,15 +284,16 @@ public class WSInterface {
 	 */
 	public void removeVolunteerFromTeam(Team userTeam, int memDeleteId) {
 		teamManager.withdrawUser(memDeleteId, userTeam.getTeamId());
-		
+
 	}
 
 	/**
 	 * @param userTeam
 	 * @param userDetails
-	 * @throws InvalidTeamOperationException 
+	 * @throws InvalidTeamOperationException
 	 */
-	public void enrollVolunteerToTeam(Team userTeam, User userDetails) throws InvalidTeamOperationException {
+	public void enrollVolunteerToTeam(Team userTeam, User userDetails)
+			throws InvalidTeamOperationException {
 		teamManager.enrollUser(userDetails.getUserId(), userTeam.getTeamId());
 	}
 
@@ -295,7 +307,7 @@ public class WSInterface {
 	/**
 	 * @param teamTemp
 	 */
-	public void addTeam(Team teamTemp){
+	public void addTeam(Team teamTemp) {
 		teamManager.createTeam(teamTemp);
 	}
 
@@ -316,9 +328,10 @@ public class WSInterface {
 
 	/**
 	 * @param regiterUser
-	 * @throws InvalidUserException 
+	 * @throws InvalidUserException
 	 */
 	public void registerUser(User regiterUser) throws InvalidUserException {
+		regiterUser.setPasswd(SHA256Encrypt.encrypt(regiterUser.getPasswd()));
 		userManager.addUser(regiterUser);
 	}
 }

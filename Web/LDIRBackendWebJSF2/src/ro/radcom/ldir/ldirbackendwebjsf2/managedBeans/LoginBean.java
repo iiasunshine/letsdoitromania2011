@@ -4,9 +4,11 @@
  */
 package ro.radcom.ldir.ldirbackendwebjsf2.managedBeans;
 
+import javax.naming.NamingException;
+
 import org.apache.log4j.Logger;
+
 import ro.ldir.dto.User;
-import ro.radcom.ldir.ldirbackendwebjsf2.tools.AppUtils;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.JsfUtils;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.WSInterface;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.customObjects.NavigationValues;
@@ -18,13 +20,15 @@ import ro.radcom.ldir.ldirbackendwebjsf2.tools.customObjects.NavigationValues;
 public class LoginBean {
 
     private static final Logger log4j = Logger.getLogger(LoginBean.class.getCanonicalName());
-    private WSInterface wsi = new WSInterface(true);
+    private WSInterface wsi;
     /* variabile afisare */
     private String loginMail="";
     private String loginPassword="";
 
-    /** Creates a new instance of LoginBean */
-    public LoginBean() {
+    /** Creates a new instance of LoginBean 
+     * @throws NamingException */
+    public LoginBean() throws NamingException {
+    	wsi = new WSInterface();
         /* adaugare mesaj info de pe sesiune daca exista */
         String infoMessage = (String) JsfUtils.getHttpSession().getAttribute("INFO_MESSAGE");
         if (infoMessage != null) {
@@ -35,37 +39,15 @@ public class LoginBean {
 
     public String actionLogin() {
         try {
-            /* cerere autentificare */
-             wsi.login(loginMail, loginPassword);
-//            int statusCode = cr.getStatus();
-//            log4j.debug("---> statusCode login: " + statusCode + " (" + cr.getClientResponseStatus() + ")");
-//
-//            /* verificare status code */
-//            if (statusCode == 403 || statusCode == 401) {
-//                JsfUtils.addWarnBundleMessage("login_fail");
-//            } else if (statusCode != 200) {
-//                JsfUtils.addWarnBundleMessage("internal_err");
-//            } else {
-//                /* obtinere id user */
-//                int userId = AppUtils.parseToInt(cr.getEntity(String.class));
-//
-//                /* cerere informatii user */
-//                cr = wsi.getUserDetails(loginMail, loginPassword, userId);
-//                statusCode = cr.getStatus();
-//                if (statusCode != 200) {
-//                    JsfUtils.addWarnBundleMessage("internal_err");
-//                } else {
-//                    User userDetails = cr.getEntity(User.class);
-//                    userDetails.setPasswd(loginPassword);
-//                    JsfUtils.getHttpSession().setAttribute("USER_DETAILS", userDetails);
-//                    return NavigationValues.LOGIN_SUCCESS;
-//                }
-//            }
+        	 JsfUtils.getHttpRequest().login(loginMail, loginPassword);
+        	 User userDetails = wsi.getUser(loginMail);
+        	 userDetails.setPasswd(loginPassword);
+             JsfUtils.getHttpSession().setAttribute("USER_DETAILS", userDetails);
+             return NavigationValues.LOGIN_SUCCESS;
         } catch (Exception ex) {
             log4j.fatal("Eroare: " + ex);
             JsfUtils.addWarnBundleMessage("internal_err");
         }
-
         return NavigationValues.LOGIN_FAIL;
     }
 

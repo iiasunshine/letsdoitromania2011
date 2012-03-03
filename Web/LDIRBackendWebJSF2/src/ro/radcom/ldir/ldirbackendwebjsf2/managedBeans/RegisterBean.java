@@ -8,17 +8,19 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import javax.faces.model.SelectItem;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
+import javax.naming.NamingException;
+
 import nl.captcha.Captcha;
 import nl.captcha.backgrounds.GradiatedBackgroundProducer;
 import nl.captcha.gimpy.DropShadowGimpyRenderer;
 import nl.captcha.text.producer.DefaultTextProducer;
+
 import org.apache.log4j.Logger;
+
 import ro.ldir.dto.User;
 import ro.ldir.exceptions.InvalidUserException;
-import ro.radcom.ldir.ldirbackendwebjsf2.tools.AppUtils;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.JsfUtils;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.WSInterface;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.customObjects.CountyNames;
@@ -29,7 +31,7 @@ import ro.radcom.ldir.ldirbackendwebjsf2.tools.customObjects.NavigationValues;
  * @author dan.grigore
  */
 public class RegisterBean {
-	private WSInterface wsi = new WSInterface();
+	private WSInterface wsi;
 
     private static final Logger log4j = Logger.getLogger(LoginBean.class.getCanonicalName());
 
@@ -46,8 +48,10 @@ public class RegisterBean {
     private boolean acceptReceiveNotifications = true;
     private String antispam;
 
-    /** Creates a new instance of RegisterBean */
-    public RegisterBean() {
+    /** Creates a new instance of RegisterBean 
+     * @throws NamingException */
+    public RegisterBean() throws NamingException {
+    	wsi = new WSInterface();
         initCaptcha();
     }
 

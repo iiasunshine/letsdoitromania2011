@@ -4,11 +4,11 @@
  */
 package ro.radcom.ldir.ldirbackendwebjsf2.managedBeans;
 
-import javax.validation.ValidationException;
+import javax.naming.NamingException;
+
 import org.apache.log4j.Logger;
 
 import ro.ldir.exceptions.InvalidTokenException;
-import ro.radcom.ldir.ldirbackendwebjsf2.tools.AppUtils;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.JsfUtils;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.WSInterface;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.customObjects.NavigationValues;
@@ -20,7 +20,7 @@ import ro.radcom.ldir.ldirbackendwebjsf2.tools.customObjects.NavigationValues;
 public class ResetBean {
 
     private static final Logger log4j = Logger.getLogger(ResetBean.class.getCanonicalName());
-    private WSInterface wsi = new WSInterface(true);
+    private WSInterface wsi;
     /* variabile afisare */
     private String loginMail = "";
     private String password = "";
@@ -28,8 +28,10 @@ public class ResetBean {
     private String userId = "";
     private String token = "";
 
-    /** Creates a new instance of ResetBean */
-    public ResetBean() {
+    /** Creates a new instance of ResetBean 
+     * @throws NamingException */
+    public ResetBean() throws NamingException {
+    	wsi = new WSInterface();
         log4j.info("---> init");
         /* adaugare mesaj info de pe sesiune daca exista */
         String infoMessage = (String) JsfUtils.getHttpSession().getAttribute("INFO_MESSAGE");

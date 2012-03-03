@@ -1,32 +1,21 @@
 package ro.radcom.ldir.ldirbackendwebjsf2.managedBeans;
 
-import java.awt.geom.Point2D;
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import javax.faces.model.SelectItem;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
+import javax.naming.NamingException;
 
 import org.apache.log4j.Logger;
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import ro.ldir.dto.ChartedArea;
 import ro.ldir.dto.CountyArea;
 import ro.ldir.dto.Garbage;
 import ro.ldir.dto.GarbageEnrollment;
 import ro.ldir.dto.Team;
 import ro.ldir.dto.User;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.AppUtils;
-import ro.radcom.ldir.ldirbackendwebjsf2.tools.ImageInfo;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.JsfUtils;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.MyGarbage;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.WSInterface;
@@ -36,7 +25,7 @@ import ro.radcom.ldir.ldirbackendwebjsf2.tools.customObjects.MyGarbageComparator
 public class AreaCleanManagerBean {
 	
     private static final Logger log4j = Logger.getLogger(LoginBean.class.getCanonicalName());
-    WSInterface wsi = new WSInterface();
+    WSInterface wsi;
     private CountyArea[] countyAreas = null;
 
     /* variabile afisare */
@@ -60,7 +49,8 @@ public class AreaCleanManagerBean {
     private String currentLng="26.1015844";
 	
     private int teamSelectedId=-1;
-	public AreaCleanManagerBean(){
+	public AreaCleanManagerBean() throws NamingException{
+		wsi = new WSInterface();
 	  
 	/**
      * obtinere detalii utilizator

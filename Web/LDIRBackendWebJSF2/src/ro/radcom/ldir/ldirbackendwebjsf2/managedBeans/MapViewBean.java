@@ -7,13 +7,16 @@ package ro.radcom.ldir.ldirbackendwebjsf2.managedBeans;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.faces.model.SelectItem;
+import javax.naming.NamingException;
+
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
+
 import ro.ldir.dto.CountyArea;
 import ro.ldir.dto.Garbage;
-import ro.ldir.dto.User;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.AppUtils;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.JsfUtils;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.MyGarbage;
@@ -26,7 +29,7 @@ import ro.radcom.ldir.ldirbackendwebjsf2.tools.WSInterface;
 public class MapViewBean {
 
     private static final Logger log4j = Logger.getLogger(LoginBean.class.getCanonicalName());
-    private WSInterface wsi = new WSInterface();
+    private WSInterface wsi;
     private CountyArea[] countyAreas = null;
     /* variabile afisare */
     private List<MyGarbage> myGarbageList = new ArrayList<MyGarbage>();
@@ -34,8 +37,10 @@ public class MapViewBean {
     private int selectedImgIndex = 0;
     private String debugText = "TEST";
 
-    /** Creates a new instance of MapViewBean */
-    public MapViewBean() {
+    /** Creates a new instance of MapViewBean 
+     * @throws NamingException */
+    public MapViewBean() throws NamingException {
+    	wsi = new WSInterface();
             countyAreas = wsi.getCountyList();
     }
 

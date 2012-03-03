@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.model.SelectItem;
+import javax.naming.NamingException;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 
@@ -23,7 +24,7 @@ import ro.radcom.ldir.ldirbackendwebjsf2.tools.customObjects.NavigationValues;
 
 public class OrganizationManagementBean {
 	    private static final Logger log4j = Logger.getLogger(ResetBean.class.getCanonicalName());
-	    private WSInterface wsi = new WSInterface(true);
+	    private WSInterface wsi;
 	    /* variabile afisare */
 	    private User userDetails = new User();
 	    private String teamName;
@@ -34,7 +35,8 @@ public class OrganizationManagementBean {
 		private int teamId;
 
 
-	    public OrganizationManagementBean(){
+	    public OrganizationManagementBean() throws NamingException{
+	    	wsi = new WSInterface();
 	    	userDetails = (User)JsfUtils.getHttpSession().getAttribute("USER_DETAILS");
 	    	
 	    	teamId = AppUtils.parseToInt(JsfUtils.getRequestParameter("teamId"));

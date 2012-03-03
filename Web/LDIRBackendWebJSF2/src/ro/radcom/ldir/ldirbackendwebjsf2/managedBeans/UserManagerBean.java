@@ -1,20 +1,16 @@
 package ro.radcom.ldir.ldirbackendwebjsf2.managedBeans;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import javax.faces.model.SelectItem;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
+import javax.naming.NamingException;
 
 import org.apache.log4j.Logger;
 
 import ro.ldir.dto.User;
 import ro.ldir.dto.User.Activity;
-import ro.radcom.ldir.ldirbackendwebjsf2.tools.AppUtils;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.DataValidation;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.JsfUtils;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.WSInterface;
@@ -29,7 +25,7 @@ import ro.radcom.ldir.ldirbackendwebjsf2.tools.customObjects.NavigationValues;
 public class UserManagerBean {
 
     private static final Logger log4j = Logger.getLogger(ResetBean.class.getCanonicalName());
-    private WSInterface wsi = new WSInterface(true);
+    private WSInterface wsi;
     /* variabile afisare */
     private User userDetails = new User();
     private int day;
@@ -43,7 +39,8 @@ public class UserManagerBean {
     private boolean acceptReceiveNotifications = true;
     private boolean profileView;
     
-    public UserManagerBean(){
+    public UserManagerBean() throws NamingException{
+    	wsi = new WSInterface();
     	userDetails = (User)JsfUtils.getHttpSession().getAttribute("USER_DETAILS");
     	populateData();
     }
