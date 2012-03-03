@@ -118,7 +118,7 @@ public class Team extends FieldAccessBean {
 	/**
 	 * @return the cleaningPower
 	 */
-	@Column(nullable = false, columnDefinition = "DEFAULT '4' NOT NULL")
+	@Column(nullable = false)
 	public Integer getCleaningPower() {
 		return cleaningPower;
 	}

@@ -91,8 +91,8 @@ public class User extends FieldAccessBean implements Serializable {
 	}
 
 	private static final long serialVersionUID = 1L;
-	private boolean acceptsMoreInfo;
-	private boolean profileView;
+	private boolean acceptsMoreInfo = false;
+	private boolean profileView = false;
 	private List<Activity> activities;
 	private Date birthday;
 	private String county;
@@ -135,7 +135,7 @@ public class User extends FieldAccessBean implements Serializable {
 	/**
 	 * @return the acceptsMoreInfo
 	 */
-	@Column(nullable = false, columnDefinition = "DEFAULT '0' NOT NULL")
+	@Column(nullable = false)
 	public boolean isAcceptsMoreInfo() {
 		return acceptsMoreInfo;
 	}
@@ -144,11 +144,11 @@ public class User extends FieldAccessBean implements Serializable {
 	 * 
 	 * @return the profileView
 	 */
-	@Column(nullable = false, columnDefinition = "DEFAULT '0' not NULL")
+	@Column(nullable = false)
 	public boolean isProfileView() {
 		return profileView;
 	}
-	
+
 	/**
 	 * @return the activities
 	 */
@@ -344,12 +344,12 @@ public class User extends FieldAccessBean implements Serializable {
 	/**
 	 * 
 	 * @param profileView
-	 * 			the profileView to set
+	 *            the profileView to set
 	 */
-	public void setProfileView(boolean profileView){
-		this.profileView=profileView;
+	public void setProfileView(boolean profileView) {
+		this.profileView = profileView;
 	}
-	
+
 	/**
 	 * @param activities
 	 *            the activities to set
@@ -546,15 +546,13 @@ public class User extends FieldAccessBean implements Serializable {
 		if (recordDate == null)
 			recordDate = new Date();
 	}
-	
-	
-    public boolean getProfileView() {
-        return profileView;
-    }
 
-   public boolean getAcceptsMoreInfo() {
-	   return acceptsMoreInfo;
-   }
-	
-	
+	public boolean getProfileView() {
+		return profileView;
+	}
+
+	public boolean getAcceptsMoreInfo() {
+		return acceptsMoreInfo;
+	}
+
 }

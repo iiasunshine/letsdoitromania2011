@@ -52,7 +52,7 @@ public class ChartedArea extends ClosedArea {
 	private String description;
 	private Set<Garbage> garbages = new HashSet<Garbage>();
 	private String name;
-	private int percentageCompleted;
+	private int percentageCompleted = 0;
 	private double perimeter;
 	private int score;
 
@@ -118,7 +118,7 @@ public class ChartedArea extends ClosedArea {
 	/**
 	 * @return the percentageCompleted
 	 */
-	@Column(nullable = false, columnDefinition = "DEFAULT '0' NOT NULL")
+	@Column(nullable = false)
 	public int getPercentageCompleted() {
 		return percentageCompleted;
 	}
