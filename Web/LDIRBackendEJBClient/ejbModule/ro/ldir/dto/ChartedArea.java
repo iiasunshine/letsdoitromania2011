@@ -118,7 +118,7 @@ public class ChartedArea extends ClosedArea {
 	/**
 	 * @return the percentageCompleted
 	 */
-	@Column(nullable = false)
+	@Column
 	public int getPercentageCompleted() {
 		return percentageCompleted;
 	}
