@@ -5,6 +5,7 @@
 package ro.radcom.ldir.ldirbackendwebjsf2.managedBeans;
 
 import javax.naming.NamingException;
+import javax.servlet.ServletException;
 
 import org.apache.log4j.Logger;
 
@@ -45,10 +46,9 @@ public class LoginBean {
              JsfUtils.getHttpSession().setAttribute("USER_DETAILS", userDetails);
              return NavigationValues.LOGIN_SUCCESS;
         } catch (Exception ex) {
-            log4j.fatal("Eroare: " + ex);
-            JsfUtils.addWarnBundleMessage("internal_err");
+            JsfUtils.addWarnBundleMessage("login_fail");
+            return NavigationValues.LOGIN_FAIL;
         }
-        return NavigationValues.LOGIN_FAIL;
     }
 
     /**
