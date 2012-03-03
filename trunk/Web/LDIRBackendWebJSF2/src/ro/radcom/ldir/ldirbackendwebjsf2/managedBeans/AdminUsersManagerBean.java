@@ -4,19 +4,19 @@
  */
 package ro.radcom.ldir.ldirbackendwebjsf2.managedBeans;
 
-import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import javax.faces.context.FacesContext;
+
 import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
+import javax.naming.NamingException;
+
 import org.apache.log4j.Logger;
+
 import ro.ldir.dto.CountyArea;
 import ro.ldir.dto.User;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.AppUtils;
@@ -30,7 +30,7 @@ import ro.radcom.ldir.ldirbackendwebjsf2.tools.WSInterface;
 public class AdminUsersManagerBean {
 
     private static final Logger log4j = Logger.getLogger(LoginBean.class.getCanonicalName());
-    private WSInterface wsi = new WSInterface();
+    private WSInterface wsi;
     /* variabile afisare */
     private User userDetails = new User();
     private User[] usersList;
@@ -49,8 +49,11 @@ public class AdminUsersManagerBean {
     private boolean cartare = false;
     private boolean curatenie = false;
 
-    /** Creates a new instance of AdminUsersManagerBean */
-    public AdminUsersManagerBean() {
+    /** Creates a new instance of AdminUsersManagerBean 
+     * @throws NamingException */
+    public AdminUsersManagerBean() throws NamingException {
+    	wsi = new WSInterface();
+    	
         /* obtinere detalii utilizator */
         userDetails = (User) JsfUtils.getHttpSession().getAttribute("USER_DETAILS");
         countyAreas = wsi.getCountyList();

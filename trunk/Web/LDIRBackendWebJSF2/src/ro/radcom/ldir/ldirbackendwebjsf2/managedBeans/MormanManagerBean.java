@@ -7,22 +7,17 @@ package ro.radcom.ldir.ldirbackendwebjsf2.managedBeans;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import javax.faces.model.SelectItem;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
+import javax.naming.NamingException;
 
 import org.apache.log4j.Logger;
 import org.apache.myfaces.custom.fileupload.UploadedFile;
-import org.json.JSONObject;
 
-import ro.ldir.dto.ChartedArea;
 import ro.ldir.dto.Garbage;
 import ro.ldir.dto.Team;
 import ro.ldir.dto.User;
@@ -43,7 +38,7 @@ import ro.radcom.ldir.ldirbackendwebjsf2.tools.customObjects.NavigationValues;
 public class MormanManagerBean {
 
     private static final Logger log4j = Logger.getLogger(LoginBean.class.getCanonicalName());
-    private WSInterface wsi = new WSInterface();
+    private WSInterface wsi;
 
     /* variabile afisare */
     private MyGarbage myGarbage = new MyGarbage(new Garbage());
@@ -72,10 +67,10 @@ public class MormanManagerBean {
     
     private boolean mormanAlocat = false;
 
-    /** Creates a new instance of MormanManagerBean */
-    public MormanManagerBean() {
-    	
-    	
+    /** Creates a new instance of MormanManagerBean 
+     * @throws NamingException */
+    public MormanManagerBean() throws NamingException {
+    	wsi = new WSInterface();
     	
         /* adaugare mesaj info de pe sesiune daca exista */
         String infoMessage = (String) JsfUtils.getHttpSession().getAttribute("INFO_MESSAGE");

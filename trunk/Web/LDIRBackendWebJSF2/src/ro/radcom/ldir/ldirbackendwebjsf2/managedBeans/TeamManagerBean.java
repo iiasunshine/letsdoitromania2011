@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.naming.NamingException;
 
 import org.apache.log4j.Logger;
 
@@ -29,7 +30,7 @@ public class TeamManagerBean {
 
 	private static final Logger log4j = Logger.getLogger(LoginBean.class
 			.getCanonicalName());
-	WSInterface wsi = new WSInterface();
+	WSInterface wsi;
 
 	public final String PAGE_ORGANIZATION = "echipa-org-detalii";
 	public final String PAGE_EQIPMENTS = "echipa-equip-detalii";
@@ -58,8 +59,8 @@ public class TeamManagerBean {
 	private int teamId = 0;
 
 
-	public TeamManagerBean() {
-
+	public TeamManagerBean() throws NamingException {
+		wsi = new WSInterface();
 		userDetails = (User) JsfUtils.getHttpSession().getAttribute(
 				"USER_DETAILS");
 		log4j.info("user ->" + userDetails + ", team ->" + userTeam);

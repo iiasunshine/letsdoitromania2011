@@ -13,6 +13,7 @@ import java.util.List;
 
 import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
+import javax.naming.NamingException;
 
 import org.apache.log4j.Logger;
 
@@ -31,7 +32,7 @@ import ro.radcom.ldir.ldirbackendwebjsf2.tools.WSInterface;
 public class AdminGarbageManagerBean {
 
     private static final Logger log4j = Logger.getLogger(LoginBean.class.getCanonicalName());
-    private WSInterface wsi = new WSInterface();
+    private WSInterface wsi;
     /* variabile afisare */
     private User userDetails = new User();
     private Garbage[] garbageList;
@@ -48,8 +49,11 @@ public class AdminGarbageManagerBean {
     private Garbage selectedGarbage = new Garbage();
     private int selectedImgIndex = 0;
 
-    /** Creates a new instance of AdminGarbageManagerBean */
-    public AdminGarbageManagerBean() {
+    /** Creates a new instance of AdminGarbageManagerBean 
+     * @throws NamingException */
+    public AdminGarbageManagerBean() throws NamingException {
+    	wsi = new WSInterface();
+    	
     	countyAreas = wsi.getCountyList();
         userDetails = (User) JsfUtils.getHttpSession().getAttribute("USER_DETAILS");
     }
