@@ -6,7 +6,10 @@
 	<path id="geoinit.classpath">
 		<pathelement location="bin" />
 		<path refid="GlassFish 3.1 [GlassFish 3.1].libraryclasspath" />
-		<path refid="EAR Libraries.libraryclasspath" />
+        <path refid="EAR Libraries.libraryclasspath" />
+        <fileset dir="lib">
+            <include name="**/*.jar"/>
+        </fileset>
 	</path>
 
 	<target name="build-ejbclient">
