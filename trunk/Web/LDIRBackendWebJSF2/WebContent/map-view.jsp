@@ -50,7 +50,7 @@
                                 </m:map>
                             </a4j:form>
 
-                            <!--script type="text/javascript"  src="{pageContext.servletContext.contextPath}/layout/scripts/gmap.js"></script-->
+                            <script type="text/javascript"  src="${pageContext.servletContext.contextPath}/layout/scripts/gmap.js"></script>
 
                         </div>
                     </div>
