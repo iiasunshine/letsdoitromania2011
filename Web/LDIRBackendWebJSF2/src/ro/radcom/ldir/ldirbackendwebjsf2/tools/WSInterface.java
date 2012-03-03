@@ -301,7 +301,10 @@ public class WSInterface {
 	 * @param selectedUser
 	 */
 	public void updateUser(User selectedUser) {
+		String password = selectedUser.getPasswd();
+		selectedUser.setPasswd(SHA256Encrypt.encrypt(password));
 		userManager.updateUser(selectedUser.getUserId(), selectedUser);
+		selectedUser.setPasswd(password);
 	}
 
 	/**
