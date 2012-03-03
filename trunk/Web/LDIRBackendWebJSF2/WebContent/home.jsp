@@ -48,20 +48,20 @@
 									<h:outputText value="7. Daca esti leaderul echipei iti alegi mormanele pentru Curatenie" escape="false"/>                                    
                                     <br/>
                                     <br/>
-                                    <h:outputText value="<a href=\"http://app.letsdoitromania.ro/LDIRBackendWebJSF2/docs/manualcartare.pdf\" target=\"_blank\">Descarca Manual Cartare 2011</a>" escape="false"/>
+                                    <h:outputText value="<a href=\"docs/manualcartare.pdf\" target=\"_blank\">Descarca Manual Cartare 2011</a>" escape="false"/>
                                     <br/>
-                                    <h:outputText value="<a href=\"http://app.letsdoitromania.ro/LDIRBackendWebJSF2/docs/fisademorman.pdf\" target=\"_blank\">Descarca Fisa de Morman 2011</a>" escape="false"/>
+                                    <h:outputText value="<a href=\"docs/fisademorman.pdf\" target=\"_blank\">Descarca Fisa de Morman 2011</a>" escape="false"/>
                                     <br/>
-                                    <h:outputText value="<a href=\"http://app.letsdoitromania.ro/LDIRBackendWebJSF2/docs/prezentarecartare.pdf\" target=\"_blank\">Descarca Prezentare Cartare 2011</a>" escape="false"/>
+                                    <h:outputText value="<a href=\"docs/prezentarecartare.pdf\" target=\"_blank\">Descarca Prezentare Cartare 2011</a>" escape="false"/>
                                     <br/>
                                     <h:outputText value="<a href=\"http://itunes.apple.com/us/app/lets-do-it-ro/id449110019\">Descarca aplicatia de cartare pentru iPhone</a>" escape="false"/>
                                     <br/>
                                     <br/>                                    
-                                    <h:outputText value="<a href=\"http://app.letsdoitromania.ro/LDIRBackendWebJSF2/docs/prezentareinscriereechipevoluntari.pdf\" target=\"_blank\">Descarca Prezentarea Pasilor pentru Inscrierea pentru Ziua de Curatenie Nationala</a>" escape="false"/>
+                                    <h:outputText value="<a href=\"docs/prezentareinscriereechipevoluntari.pdf\" target=\"_blank\">Descarca Prezentarea Pasilor pentru Inscrierea pentru Ziua de Curatenie Nationala</a>" escape="false"/>
                                		<br/>                                       
-                                    <h:outputText value="<a href=\"http://app.letsdoitromania.ro/LDIRBackendWebJSF2/docs/declaratieminori2011.pdf\" target=\"_blank\">Descarca Declaratia pentru Participarea Minorilor la Ziua de Curatenie Nationala</a>" escape="false"/>
+                                    <h:outputText value="<a href=\"docs/declaratieminori2011.pdf\" target=\"_blank\">Descarca Declaratia pentru Participarea Minorilor la Ziua de Curatenie Nationala</a>" escape="false"/>
                                     <br/>   
-                                    <h:outputText value="<a href=\"http://app.letsdoitromania.ro/LDIRBackendWebJSF2/docs/normedesiguranta2011.pdf\" target=\"_blank\">Descarca Normele de Siguranta pentru Ziua de Curatenie Nationala </a>" escape="false"/>
+                                    <h:outputText value="<a href=\"docs/normedesiguranta2011.pdf\" target=\"_blank\">Descarca Normele de Siguranta pentru Ziua de Curatenie Nationala </a>" escape="false"/>
                                     <br/>
                                     <br/>
                                     <h:outputText value="<a href=\"http://www.letsdoitromania.ro/wp-content/uploads/2011/07/Manual-Curatenie-2011.pdf\" target=\"_blank\">Downloadeaza Manual Pentru Ziua de Curatenie 24 Septembrie 2011</a>" escape="false"/>
@@ -95,20 +95,20 @@
                                     <h:outputText value="7. Daca esti leaderul echipei iti alegi mormanele pentru Curatenie" escape="false"/>
                                     <br/>
                                     <br/>                                    
-                                    <h:outputText value="<a href=\"http://app.letsdoitromania.ro/LDIRBackendWebJSF2/docs/manualcartare.pdf\" target=\"_blank\">Descarca Manual Cartare 2011</a>" escape="false"/>
+                                    <h:outputText value="<a href=\"docs/manualcartare.pdf\" target=\"_blank\">Descarca Manual Cartare 2011</a>" escape="false"/>
                                     <br/>
-                                    <h:outputText value="<a href=\"http://app.letsdoitromania.ro/LDIRBackendWebJSF2/docs/fisademorman.pdf\" target=\"_blank\">Descarca Fisa de Morman 2011</a>" escape="false"/>
+                                    <h:outputText value="<a href=\"docs/fisademorman.pdf\" target=\"_blank\">Descarca Fisa de Morman 2011</a>" escape="false"/>
                                     <br/>
-                                    <h:outputText value="<a href=\"http://app.letsdoitromania.ro/LDIRBackendWebJSF2/docs/prezentarecartare.pdf\" target=\"_blank\">Descarca Prezentare Cartare 2011</a>" escape="false"/>
+                                    <h:outputText value="<a href=\"docs/prezentarecartare.pdf\" target=\"_blank\">Descarca Prezentare Cartare 2011</a>" escape="false"/>
                                     <br/>
                                     <h:outputText value="<a href=\"http://itunes.apple.com/us/app/lets-do-it-ro/id449110019\">Descarca aplicatia de cartare pentru iPhone</a>" escape="false"/>
                                     <br/>
                                     <br/>                                    
-                                    <h:outputText value="<a href=\"http://app.letsdoitromania.ro/LDIRBackendWebJSF2/docs/prezentareinscriereechipevoluntari.pdf\" target=\"_blank\">Descarca Prezentarea Pasilor pentru Inscrierea pentru Ziua de Curatenie Nationala</a>" escape="false"/>
+                                    <h:outputText value="<a href=\"docs/prezentareinscriereechipevoluntari.pdf\" target=\"_blank\">Descarca Prezentarea Pasilor pentru Inscrierea pentru Ziua de Curatenie Nationala</a>" escape="false"/>
                                		<br/>                                       
-                                    <h:outputText value="<a href=\"http://app.letsdoitromania.ro/LDIRBackendWebJSF2/docs/declaratieminori2011.pdf\" target=\"_blank\">Descarca Declaratia pentru Participarea Minorilor la Ziua de Curatenie Nationala</a>" escape="false"/>
+                                    <h:outputText value="<a href=\"docs/declaratieminori2011.pdf\" target=\"_blank\">Descarca Declaratia pentru Participarea Minorilor la Ziua de Curatenie Nationala</a>" escape="false"/>
                                     <br/>   
-                                    <h:outputText value="<a href=\"http://app.letsdoitromania.ro/LDIRBackendWebJSF2/docs/normedesiguranta2011.pdf\" target=\"_blank\">Descarca Normele de Siguranta pentru Ziua de Curatenie Nationala </a>" escape="false"/>
+                                    <h:outputText value="<a href=\"docs/normedesiguranta2011.pdf\" target=\"_blank\">Descarca Normele de Siguranta pentru Ziua de Curatenie Nationala </a>" escape="false"/>
                                     <br/>
                                     <br/>
                                     <h:outputText value="<a href=\"http://www.letsdoitromania.ro/wp-content/uploads/2011/07/Manual-Curatenie-2011.pdf\" target=\"_blank\">Downloadeaza Manual Pentru Ziua de Curatenie 24 Septembrie 2011</a>" escape="false"/>
