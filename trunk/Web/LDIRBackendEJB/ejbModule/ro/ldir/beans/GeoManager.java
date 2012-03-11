@@ -32,6 +32,8 @@ import ro.ldir.dto.TownArea;
 public class GeoManager implements GeoManagerLocal {
 	private static Logger logger = Logger.getLogger(GeoManagerLocal.class
 			.getName());
+	private List<CountyArea> countyCache = null;
+
 	@Resource
 	private SessionContext ctx;
 
@@ -91,6 +93,31 @@ public class GeoManager implements GeoManagerLocal {
 		Query query = em
 				.createQuery("SELECT ca FROM CountyArea ca ORDER BY ca.name");
 		return (List<CountyArea>) query.getResultList();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ro.ldir.beans.GeoManagerLocal#getCacheAllCounties()
+	 */
+	@Override
+	public synchronized List<CountyArea> getCacheAllCounties() {
+		if (countyCache != null)
+			return countyCache;
+
+		Query query = em
+				.createQuery("SELECT ca FROM CountyArea ca ORDER BY ca.name");
+
+		@SuppressWarnings("unchecked")
+		List<CountyArea> persistenceData = (List<CountyArea>) query
+				.getResultList();
+
+		countyCache = new ArrayList<CountyArea>();
+		for (CountyArea county : persistenceData) {
+			em.detach(county);
+			countyCache.add(county);
+		}
+		return countyCache;
 	}
 
 	/*
