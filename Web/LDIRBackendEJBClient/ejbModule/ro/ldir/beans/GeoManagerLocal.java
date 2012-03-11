@@ -43,6 +43,12 @@ public interface GeoManagerLocal {
 	public List<CountyArea> getAllCounties();
 
 	/**
+	 * Get a cached list of all counties. Useful only to fetch non-volatile
+	 * properties of a county.
+	 */
+	public List<CountyArea> getCacheAllCounties();
+
+	/**
 	 * Finds a chart area by ID.
 	 * 
 	 * @param chartedAreaId

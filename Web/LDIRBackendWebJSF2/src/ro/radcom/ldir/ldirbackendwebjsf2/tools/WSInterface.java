@@ -175,7 +175,7 @@ public class WSInterface {
 	}
 
 	public CountyArea[] getCountyList() {
-		List<CountyArea> areas = geoManager.getAllCounties();
+		List<CountyArea> areas = geoManager.getCacheAllCounties();
 		CountyArea[] result = new CountyArea[areas.size()];
 		int i = 0;
 		for (CountyArea area : areas)
