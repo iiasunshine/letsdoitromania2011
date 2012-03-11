@@ -12,5 +12,8 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
+	<classpathentry kind="src" path="/LDIRBackendEJBClient"/>
+	<classpathentry kind="lib" path="/LDIRBackend/EarContent/lib/itext-xtra-5.1.2.jar"/>
+	<classpathentry kind="lib" path="/LDIRBackend/EarContent/lib/itextpdf-5.1.2.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

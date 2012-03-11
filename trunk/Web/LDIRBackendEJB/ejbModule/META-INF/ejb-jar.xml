@@ -96,5 +96,19 @@
 			</env-entry>
 		</session>
 	</enterprise-beans>
+
+	<interceptors>
+		<interceptor>
+			<interceptor-class>ro.ldir.profiler.ProfilerInterceptor</interceptor-class>
+		</interceptor>
+	</interceptors>
+
+	<assembly-descriptor>
+		<interceptor-binding>
+			<ejb-name>*</ejb-name>
+			<interceptor-class>ro.ldir.profiler.ProfilerInterceptor</interceptor-class>
+		</interceptor-binding>
+	</assembly-descriptor>
+
 	<ejb-client-jar>LDIRBackendEJBClient.jar</ejb-client-jar>
 </ejb-jar>
