@@ -394,14 +394,15 @@ public class GarbageManager implements GarbageManagerLocal {
 	 */
 	@Override
 	public int insertGarbage(Garbage garbage) throws NoCountyException {
-		User user = SecurityHelper.getUser(userManager, ctx);
-
 		setGeoFeatures(garbage);
 
-		if (user.getGarbages() == null)
-			user.setGarbages(new HashSet<Garbage>());
-		user.getGarbages().add(garbage);
-		garbage.setInsertedBy(user);
+		User user = SecurityHelper.getUser(userManager, ctx);
+		if (user != null) {
+			if (user.getGarbages() == null)
+				user.setGarbages(new HashSet<Garbage>());
+			user.getGarbages().add(garbage);
+			garbage.setInsertedBy(user);
+		}
 
 		garbageGroupManager.findGroup(garbage, false);
 

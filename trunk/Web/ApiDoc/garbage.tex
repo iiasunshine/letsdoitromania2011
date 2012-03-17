@@ -24,6 +24,7 @@ in the database.
   A \texttt{garbage} entity describing the new garbage tag.
 \end{apidata}
 \begin{apidata}{returns}
+  The ID of the recently inserted garbage (if successful) and
   \begin{datalist}
     \replyitem{200}{if the operation succeeds.}
     \replyitem{400}{if the garbage coordinates are wrong, i.e., they do not
@@ -31,6 +32,31 @@ in the database.
     \replyitem{500}{if another error occurs.}
   \end{datalist}
 \end{apidata}
+
+\subsection{Anonymously adding a new garbage tag}
+
+This call inserts a new garbage in the system by a user that is not
+authenticated.
+
+
+The town, county and charting area of the new garbage tag will be set
+automatically by the system using the tag's coordinates and the entities stored
+in the database.
+
+\apilocation{post}{garbage/ws}
+\begin{apidata}{contents}
+  A \texttt{garbage} entity describing the new garbage tag.
+\end{apidata}
+\begin{apidata}{returns}
+  The ID of the recently inserted garbage (if successful) and
+  \begin{datalist}
+    \replyitem{200}{if the operation succeeds.}
+    \replyitem{400}{if the garbage coordinates are wrong, i.e., they do not
+    belong to any county.}
+    \replyitem{500}{if another error occurs.}
+  \end{datalist}
+\end{apidata}
+
 
 
 \subsection{Getting garbage tag information}

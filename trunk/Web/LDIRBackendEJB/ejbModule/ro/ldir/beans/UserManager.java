@@ -140,16 +140,15 @@ public class UserManager implements UserManagerLocal {
 
 		em.persist(user);
 		em.flush();
-		
+
 		query = em
 				.createQuery("SELECT x FROM User x WHERE x.email = :emailParam");
 		query.setParameter("emailParam", email);
 		user = (User) query.getSingleResult();
 
-		activateUser(user.getUserId(),user.getRegistrationToken());
-		
+		activateUser(user.getUserId(), user.getRegistrationToken());
 
-		//userMailer.sendWelcomeMessage(user.getEmail());
+		// userMailer.sendWelcomeMessage(user.getEmail());
 	}
 
 	/**
@@ -191,7 +190,12 @@ public class UserManager implements UserManagerLocal {
 		Query query = em
 				.createQuery("SELECT x FROM User x WHERE x.email = :emailParam");
 		query.setParameter("emailParam", email);
-		User user = (User) query.getSingleResult();
+
+		@SuppressWarnings("unchecked")
+		List<User> users = (List<User>) query.getResultList();
+		if (users == null || users.size() == 0)
+			return null;
+		User user = users.get(0);
 		SecurityHelper.checkAccessToUser(this, user, ctx);
 		return user;
 	}
