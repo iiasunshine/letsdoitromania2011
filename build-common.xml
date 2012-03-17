@@ -20,7 +20,7 @@
 	<property name="webservice.location" value="${common.basedir}/Web/LDIRBackendWeb" />
 	<property name="webservice.war" value="${webservice.location}/LDIRBackendWeb.war" />
 
-    <property name="jsf.location" value="${common.basedir}/Web/LDIRBackendWebJSF2" />
+	<property name="jsf.location" value="${common.basedir}/Web/LDIRBackendWebJSF2" />
 	<property name="jsf.war" value="${jsf.location}/LDIRBackendWebJSF2.war" />
 
 	<property name="geoinit.location" value="${common.basedir}/Web/LDIRBackendGeoInit" />
@@ -99,7 +99,7 @@
 		<path refid="EAR Libraries.libraryclasspath" />
 		<fileset dir="${webservice.location}/WebContent/WEB-INF/lib" includes="**/*.jar" />
 	</path>
-	
+
 	<path id="LDIRBackendWebJSF2.libraryclasspath">
 		<path refid="GlassFish 3.1 [GlassFish 3.1].libraryclasspath" />
 		<path refid="EAR Libraries.libraryclasspath" />
@@ -107,8 +107,9 @@
 	</path>
 
 	<path id="tests.classpath">
-		<pathelement location="${tests.location}/lib/junit-4.8.2.jar" />
-		<pathelement location="${tests.location}/lib/mysql-connector-java-5.1.15-bin.jar" />
+		<fileset dir="${tests.location}/lib">
+			<include name="**/*.jar" />
+		</fileset>
 		<pathelement location="${tests.location}/bin" />
 		<path refid="GlassFish 3.1 [GlassFish 3.1].libraryclasspath" />
 		<path refid="EAR Libraries.libraryclasspath" />
