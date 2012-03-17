@@ -28,6 +28,20 @@
 		<url-pattern>/ws/*</url-pattern>
 	</servlet-mapping>
 
+	<display-name>ro.ldir.garbage</display-name>
+	<servlet>
+		<servlet-name>LDIR Garbage Anonymous Web Service</servlet-name>
+		<servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
+		<init-param>
+			<param-name>com.sun.jersey.config.property.packages</param-name>
+			<param-value>ro.ldir.garbage</param-value>
+		</init-param>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>LDIR Garbage Anonymous Web Service</servlet-name>
+		<url-pattern>/garbage/*</url-pattern>
+	</servlet-mapping>
+
 	<display-name>ro.ldir.registration</display-name>
 	<servlet>
 		<servlet-name>LDIR Web Registration Service</servlet-name>

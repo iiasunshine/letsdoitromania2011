@@ -93,6 +93,15 @@ public abstract class GarbageTest {
 		assertFalse(rs.next());
 	}
 
+	protected static void removeGarbage(int garbageId)
+			throws ClassNotFoundException, SQLException {
+		Connection c = DatabaseHelper.getDbConnection();
+		PreparedStatement s = c
+				.prepareStatement("DELETE FROM GARBAGE WHERE GARBAGEID=?");
+		s.setInt(1, garbageId);
+		System.out.println("Deleted " + s.executeUpdate() + " garbages");
+	}
+
 	protected static void removeAllGarbages() throws ClassNotFoundException,
 			SQLException {
 		Connection c = DatabaseHelper.getDbConnection();

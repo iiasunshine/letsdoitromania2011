@@ -25,13 +25,17 @@ package ro.ldir.tests.garbage;
 
 import static org.junit.Assert.assertEquals;
 
+import java.sql.SQLException;
+
 import javax.ws.rs.core.MediaType;
 
 import org.junit.Test;
 
 import ro.ldir.dto.Garbage;
 
+import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
 
 /**
  * Tester for inserting garbages.
@@ -48,6 +52,25 @@ public class GarbageInsertTest extends GarbageTest {
 		assertEquals(200, cr.getStatus());
 		String id = cr.getEntity(String.class);
 		System.out.println("Inserted garbage " + id);
+	}
+
+	@Test
+	public void anonymousInsertGarbage() throws NumberFormatException,
+			ClassNotFoundException, SQLException {
+		Client client = Client.create();
+		WebResource resource = client.resource(baseLocation + "garbage/ws");
+
+		System.out.println("anonymousInsertGarbageTest " + baseLocation
+				+ "/garbage/ws");
+		Garbage garbage = new Garbage();
+		garbage.setX(5);
+		garbage.setY(5);
+		ClientResponse cr = resource.entity(garbage, MediaType.APPLICATION_XML)
+				.post(ClientResponse.class);
+		assertEquals(200, cr.getStatus());
+		String id = cr.getEntity(String.class);
+		System.out.println("Anonymously inserted garbage " + id);
+		removeGarbage(Integer.parseInt(id));
 	}
 
 	@Test
