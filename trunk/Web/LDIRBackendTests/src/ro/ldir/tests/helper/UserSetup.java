@@ -44,7 +44,7 @@ public class UserSetup {
 
 		PreparedStatement s = c
 				.prepareStatement("INSERT INTO USER SET "
-						+ " email=?, passwd=?, role=?",
+						+ " email=?, passwd=?, role=?, invalidaccesscount=0",
 						Statement.RETURN_GENERATED_KEYS);
 		s.setString(1, username);
 		s.setString(2, SHA256Encrypt.encrypt(username));
