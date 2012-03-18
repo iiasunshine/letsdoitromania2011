@@ -158,8 +158,12 @@ public class TeamManager implements TeamManagerLocal {
 		SecurityHelper.checkTeamMember(userManager, team, ctx);
 		Garbage garbage = em.find(Garbage.class, garbageId);
 
+		if (!garbage.isToClean())
+			throw new InvalidTeamOperationException(
+					"The garbage is not selected for cleaning!");
+
 		GarbageEnrollment existingEnrollment = null;
-		
+
 		int allocatedBags = 0;
 		int totalCapacity = team.countMembers() * team.getCleaningPower();
 
@@ -168,26 +172,25 @@ public class TeamManager implements TeamManagerLocal {
 				existingEnrollment = enrollment;
 			else
 				allocatedBags += enrollment.getAllocatedBags();
-				
-		int teamBagsLeft=totalCapacity - allocatedBags;
-		int garbageBagsLeft=garbage.getBagCount()-garbage.getCountBagsEnrollments();
-		
-		if(teamBagsLeft<=0)
+
+		int teamBagsLeft = totalCapacity - allocatedBags;
+		int garbageBagsLeft = garbage.getBagCount()
+				- garbage.getCountBagsEnrollments();
+
+		if (teamBagsLeft <= 0)
 			throw new InvalidTeamOperationException(
 					"The total cleaning capacity for this team is "
 							+ totalCapacity + " bags, " + allocatedBags
 							+ " bags already allocated, cannot allocate more!");
-		if(garbageBagsLeft<=0)
+		if (garbageBagsLeft <= 0)
 			throw new InvalidTeamOperationException(
 					"All the bags in this morman have been allocated");
-		
-		if(teamBagsLeft<=garbageBagsLeft)
-			bagCount=teamBagsLeft;
-		
-		
+
+		if (teamBagsLeft <= garbageBagsLeft)
+			bagCount = teamBagsLeft;
+
 		if (teamBagsLeft > garbageBagsLeft)
-			bagCount=garbageBagsLeft;
-			
+			bagCount = garbageBagsLeft;
 
 		if (existingEnrollment != null) {
 			existingEnrollment.setAllocatedBags(bagCount);

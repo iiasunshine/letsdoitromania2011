@@ -32,7 +32,7 @@ import ro.ldir.dto.User;
 import ro.ldir.dto.User.Activity;
 import ro.ldir.dto.User.SecurityRole;
 import ro.ldir.exceptions.InvalidTokenException;
-import ro.ldir.exceptions.InvalidUserException;
+import ro.ldir.exceptions.InvalidUserOperationException;
 
 /**
  * The local business interface of the bean managing users.
@@ -49,22 +49,22 @@ public interface UserManagerLocal {
 	 *            The user id to change.
 	 * @param key
 	 *            The key to mark the user as registered.
-	 * @throws InvalidUserException
+	 * @throws InvalidUserOperationException
 	 *             If the user is in an invalid state.
 	 */
 	public void activateUser(int userId, String key)
-			throws InvalidUserException;
+			throws InvalidUserOperationException;
 
 	/**
 	 * Inserts a new user in the system in the system.
 	 * 
 	 * @param user
 	 *            The new insert to be inserted in the system.
-	 * @throws InvalidUserException
+	 * @throws InvalidUserOperationException
 	 *             When the insertion cannot be completed successfully. This can
 	 *             be triggered for instance by a duplicate email address.
 	 */
-	public void addUser(User user) throws InvalidUserException;
+	public void addUser(User user) throws InvalidUserOperationException;
 
 	/**
 	 * Returns the User object corresponding to a given user ID.

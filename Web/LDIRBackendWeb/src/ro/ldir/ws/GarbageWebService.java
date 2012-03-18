@@ -49,6 +49,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
@@ -58,6 +59,7 @@ import ro.ldir.dto.ChartedArea;
 import ro.ldir.dto.CountyArea;
 import ro.ldir.dto.Garbage;
 import ro.ldir.dto.TownArea;
+import ro.ldir.exceptions.InvalidUserOperationException;
 import ro.ldir.exceptions.NoCountyException;
 import ro.ldir.report.formatter.ExcelFormatter;
 import ro.ldir.report.formatter.GarbageCsvFormatter;
@@ -395,6 +397,36 @@ public class GarbageWebService {
 		return Response.ok().build();
 	}
 
+	@PUT
+	@Consumes({ "application/json", "application/xml" })
+	@Path("{garbageId:[0-9]+}/toClean")
+	public Response setGarbageToClean(@PathParam("garbageId") int garbageId,
+			String toClean) {
+		try {
+			garbageManager.setGarbageToClean(garbageId, new Boolean(toClean));
+		} catch (EJBException e) {
+			if (e.getCausedByException() instanceof NullPointerException)
+				throw new WebApplicationException(404);
+			throw new WebApplicationException(500);
+		}
+		return Response.ok().build();
+	}
+
+	@PUT
+	@Consumes({ "application/json", "application/xml" })
+	@Path("{garbageId:[0-9]+}/toVote")
+	public Response setGarbageToVote(@PathParam("garbageId") int garbageId,
+			String toVote) {
+		try {
+			garbageManager.setGarbageToVote(garbageId, new Boolean(toVote));
+		} catch (EJBException e) {
+			if (e.getCausedByException() instanceof NullPointerException)
+				throw new WebApplicationException(404);
+			throw new WebApplicationException(500);
+		}
+		return Response.ok().build();
+	}
+
 	@POST
 	@Consumes({ "application/json", "application/xml" })
 	@Path("{garbageId:[0-9]+}")
@@ -406,6 +438,22 @@ public class GarbageWebService {
 			return Response.status(Status.BAD_REQUEST)
 					.entity("No county was found to contain this garbage.")
 					.type("text/plain").build();
+		}
+		return Response.ok().build();
+	}
+
+	@PUT
+	@Path("{garbageId:[0-9]+}/vote")
+	public Response voteGarbage(@PathParam("garbageId") int garbageId) {
+		try {
+			garbageManager.voteGarbage(garbageId);
+		} catch (EJBException e) {
+			if (e.getCausedByException() instanceof NullPointerException)
+				throw new WebApplicationException(404);
+			throw new WebApplicationException(500);
+		} catch (InvalidUserOperationException e) {
+			return Response.status(Status.BAD_REQUEST).entity(e.getMessage())
+					.type(MediaType.TEXT_PLAIN).build();
 		}
 		return Response.ok().build();
 	}

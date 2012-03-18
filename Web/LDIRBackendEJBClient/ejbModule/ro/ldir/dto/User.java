@@ -36,6 +36,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
@@ -92,7 +93,6 @@ public class User extends FieldAccessBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private boolean acceptsMoreInfo = false;
-	private boolean profileView = false;
 	private List<Activity> activities;
 	private Date birthday;
 	private String county;
@@ -107,6 +107,7 @@ public class User extends FieldAccessBean implements Serializable {
 	private List<Organization> organizations;
 	private String passwd;
 	private String phone;
+	private boolean profileView = false;
 	private Date recordDate;
 	private String registrationToken;
 	private Date resetDate;
@@ -114,6 +115,7 @@ public class User extends FieldAccessBean implements Serializable {
 	private String role;
 	private String town;
 	private Integer userId;
+	private Set<Garbage> votedGarbages;
 
 	public User() {
 	}
@@ -132,21 +134,8 @@ public class User extends FieldAccessBean implements Serializable {
 		return userId.equals(((User) obj).userId);
 	}
 
-	/**
-	 * @return the acceptsMoreInfo
-	 */
-	@Column(nullable = false)
-	public boolean isAcceptsMoreInfo() {
+	public boolean getAcceptsMoreInfo() {
 		return acceptsMoreInfo;
-	}
-
-	/**
-	 * 
-	 * @return the profileView
-	 */
-	@Column(nullable = false)
-	public boolean isProfileView() {
-		return profileView;
 	}
 
 	/**
@@ -265,6 +254,10 @@ public class User extends FieldAccessBean implements Serializable {
 		return phone;
 	}
 
+	public boolean getProfileView() {
+		return profileView;
+	}
+
 	/**
 	 * @return the recordDate
 	 */
@@ -325,6 +318,21 @@ public class User extends FieldAccessBean implements Serializable {
 		return userId;
 	}
 
+	@ManyToMany(cascade = CascadeType.ALL, mappedBy = "votedBy")
+	@NonComparableField
+	@XmlIDREF
+	public Set<Garbage> getVotedGarbages() {
+		return votedGarbages;
+	}
+
+	/**
+	 * @return the acceptsMoreInfo
+	 */
+	@Column(nullable = false)
+	public boolean isAcceptsMoreInfo() {
+		return acceptsMoreInfo;
+	}
+
 	/** Checks whether the role of this user allows multiple teams. */
 	public boolean isMultiRole() {
 		for (SecurityRole sr : SecurityRole.getMultiRoles())
@@ -334,20 +342,20 @@ public class User extends FieldAccessBean implements Serializable {
 	}
 
 	/**
+	 * 
+	 * @return the profileView
+	 */
+	@Column(nullable = false)
+	public boolean isProfileView() {
+		return profileView;
+	}
+
+	/**
 	 * @param acceptsMoreInfo
 	 *            the acceptsMoreInfo to set
 	 */
 	public void setAcceptsMoreInfo(boolean acceptsMoreInfo) {
 		this.acceptsMoreInfo = acceptsMoreInfo;
-	}
-
-	/**
-	 * 
-	 * @param profileView
-	 *            the profileView to set
-	 */
-	public void setProfileView(boolean profileView) {
-		this.profileView = profileView;
 	}
 
 	/**
@@ -469,6 +477,15 @@ public class User extends FieldAccessBean implements Serializable {
 	}
 
 	/**
+	 * 
+	 * @param profileView
+	 *            the profileView to set
+	 */
+	public void setProfileView(boolean profileView) {
+		this.profileView = profileView;
+	}
+
+	/**
 	 * @param recordDate
 	 *            the recordDate to set
 	 */
@@ -529,6 +546,11 @@ public class User extends FieldAccessBean implements Serializable {
 		this.userId = userId;
 	}
 
+	@NonTransferableField
+	public void setVotedGarbages(Set<Garbage> votedGarbages) {
+		this.votedGarbages = votedGarbages;
+	}
+
 	/**
 	 * Tests the given password.
 	 * 
@@ -545,14 +567,6 @@ public class User extends FieldAccessBean implements Serializable {
 	public void timestampRecord() {
 		if (recordDate == null)
 			recordDate = new Date();
-	}
-
-	public boolean getProfileView() {
-		return profileView;
-	}
-
-	public boolean getAcceptsMoreInfo() {
-		return acceptsMoreInfo;
 	}
 
 }

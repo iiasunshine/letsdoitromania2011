@@ -113,6 +113,13 @@ public abstract class GarbageTest {
 		System.out.println("Deleted " + s.executeUpdate()
 				+ " garbage groups for " + userId);
 
+		c = DatabaseHelper.getDbConnection();
+		s = c.prepareStatement("DELETE FROM GARBAGE_VOTES "
+				+ "WHERE votedBy_USERID =?");
+		s.setInt(1, userId);
+		System.out.println("Deleted " + s.executeUpdate()
+				+ " garbage votes for " + userId);
+
 		s = c.prepareStatement("DELETE FROM GARBAGE WHERE INSERTEDBY=?");
 		s.setInt(1, userId);
 		System.out.println("Deleted " + s.executeUpdate() + " garbages");

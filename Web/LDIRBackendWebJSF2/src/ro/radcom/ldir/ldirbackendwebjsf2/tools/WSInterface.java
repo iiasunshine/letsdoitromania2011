@@ -32,7 +32,7 @@ import ro.ldir.dto.User;
 import ro.ldir.exceptions.ChartedAreaAssignmentException;
 import ro.ldir.exceptions.InvalidTeamOperationException;
 import ro.ldir.exceptions.InvalidTokenException;
-import ro.ldir.exceptions.InvalidUserException;
+import ro.ldir.exceptions.InvalidUserOperationException;
 import ro.ldir.exceptions.NoCountyException;
 
 /**
@@ -331,9 +331,9 @@ public class WSInterface {
 
 	/**
 	 * @param regiterUser
-	 * @throws InvalidUserException
+	 * @throws InvalidUserOperationException
 	 */
-	public void registerUser(User regiterUser) throws InvalidUserException {
+	public void registerUser(User regiterUser) throws InvalidUserOperationException {
 		regiterUser.setPasswd(SHA256Encrypt.encrypt(regiterUser.getPasswd()));
 		userManager.addUser(regiterUser);
 	}

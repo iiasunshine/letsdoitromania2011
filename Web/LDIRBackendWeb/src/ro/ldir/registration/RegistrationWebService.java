@@ -45,7 +45,7 @@ import javax.ws.rs.core.UriInfo;
 import ro.ldir.beans.UserManagerLocal;
 import ro.ldir.dto.User;
 import ro.ldir.exceptions.InvalidTokenException;
-import ro.ldir.exceptions.InvalidUserException;
+import ro.ldir.exceptions.InvalidUserOperationException;
 
 import com.sun.jersey.api.Responses;
 
@@ -74,7 +74,7 @@ public class RegistrationWebService {
 			@PathParam("key") String key) {
 		try {
 			userManager.activateUser(userId, key);
-		} catch (InvalidUserException e) {
+		} catch (InvalidUserOperationException e) {
 			try {
 				return Response
 						.seeOther(
@@ -104,7 +104,7 @@ public class RegistrationWebService {
 	public Response addNewUser(User user) {
 		try {
 			userManager.addUser(user);
-		} catch (InvalidUserException e) {
+		} catch (InvalidUserOperationException e) {
 			return Response.status(Responses.CONFLICT).entity(e.getMessage())
 					.type("text/plain").build();
 		} catch (EJBException e) {

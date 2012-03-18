@@ -33,6 +33,7 @@ import java.util.Set;
 import javax.ejb.Local;
 
 import ro.ldir.dto.Garbage;
+import ro.ldir.exceptions.InvalidUserOperationException;
 import ro.ldir.exceptions.NoCountyException;
 
 /**
@@ -215,6 +216,22 @@ public interface GarbageManagerLocal {
 	public void setGarbageStatus(int garbageId, Garbage.GarbageStatus status);
 
 	/**
+	 * Sets a garbage to be cleaned.
+	 * 
+	 * @param garbageId
+	 * @param toClean
+	 */
+	public void setGarbageToClean(int garbageId, boolean toClean);
+
+	/**
+	 * Sets a garbage to be voted.
+	 * 
+	 * @param garbageId
+	 * @param toVote
+	 */
+	public void setGarbageToVote(int garbageId, boolean toVote);
+
+	/**
 	 * Updates a garbage.
 	 * 
 	 * @param garbageId
@@ -226,4 +243,11 @@ public interface GarbageManagerLocal {
 	 */
 	public void updateGarbage(Integer garbageId, Garbage garbage)
 			throws NoCountyException;
+
+	/**
+	 * Vote a garbage
+	 * 
+	 * @param garbageId
+	 */
+	public void voteGarbage(int garbageId) throws InvalidUserOperationException;
 }

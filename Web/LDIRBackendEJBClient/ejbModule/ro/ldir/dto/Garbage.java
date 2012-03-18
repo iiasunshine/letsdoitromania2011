@@ -26,6 +26,7 @@ package ro.ldir.dto;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -33,6 +34,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
@@ -57,7 +60,8 @@ import ro.ldir.dto.helper.NonTransferableField;
 @XmlRootElement
 public class Garbage extends FieldAccessBean {
 	public enum AllocatedStatus {
-		COMPLETELY("COMPLETELY"), PARTIALLY("PARTIALLY"), UNALLOCATED("UNALLOCATED");
+		COMPLETELY("COMPLETELY"), PARTIALLY("PARTIALLY"), UNALLOCATED(
+				"UNALLOCATED");
 		private String translation;
 
 		AllocatedStatus(String translation) {
@@ -96,14 +100,19 @@ public class Garbage extends FieldAccessBean {
 	private GarbageGroup garbageGroup;
 	private Integer garbageId;
 	private User insertedBy;
+	private String name;
 	private int percentageGlass;
 	private int percentageMetal;
 	private int percentagePlastic;
 	private int percentageWaste;
 	private List<String> pictures = new ArrayList<String>();
+	private double radius;
 	private Date recordDate;
 	private GarbageStatus status;
+	private boolean toClean;
+	private boolean toVote;
 	private TownArea town;
+	private Set<User> votedBy;
 	private double x;
 	private double y;
 
@@ -147,6 +156,16 @@ public class Garbage extends FieldAccessBean {
 		return chartedArea;
 	}
 
+	@Transient
+	public int getCountBagsEnrollments() {
+
+		int suma = 0;
+		for (GarbageEnrollment ge : garbageEnrollements) {
+			suma = suma + ge.getAllocatedBags();
+		}
+		return suma;
+	}
+
 	/**
 	 * @return the county
 	 */
@@ -180,17 +199,6 @@ public class Garbage extends FieldAccessBean {
 	public List<GarbageEnrollment> getGarbageEnrollements() {
 		return garbageEnrollements;
 	}
-	
-	@Transient
-	public int getCountBagsEnrollments()
-	{
-		
-		int suma=0;
-		for (GarbageEnrollment ge:garbageEnrollements){
-			suma=suma+ge.getAllocatedBags();
-		}
-		return suma;
-	}
 
 	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinColumn(name = "GARBAGEGROUPID")
@@ -219,6 +227,10 @@ public class Garbage extends FieldAccessBean {
 	@XmlIDREF
 	public User getInsertedBy() {
 		return insertedBy;
+	}
+
+	public String getName() {
+		return name;
 	}
 
 	/**
@@ -256,6 +268,10 @@ public class Garbage extends FieldAccessBean {
 		return pictures;
 	}
 
+	public double getRadius() {
+		return radius;
+	}
+
 	/**
 	 * @return the recordDate
 	 */
@@ -282,6 +298,23 @@ public class Garbage extends FieldAccessBean {
 		return town;
 	}
 
+	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE,
+			CascadeType.DETACH, CascadeType.REFRESH })
+	@JoinTable(name = "GARBAGE_VOTES")
+	@XmlIDREF
+	@NonComparableField
+	public Set<User> getVotedBy() {
+		return votedBy;
+	}
+
+	@Transient
+	@NonComparableField
+	public long getVotes() {
+		if (votedBy == null)
+			return 0;
+		return votedBy.size();
+	}
+
 	/**
 	 * @return the x
 	 */
@@ -301,6 +334,14 @@ public class Garbage extends FieldAccessBean {
 	 */
 	public boolean isDispersed() {
 		return dispersed;
+	}
+
+	public boolean isToClean() {
+		return toClean;
+	}
+
+	public boolean isToVote() {
+		return toVote;
 	}
 
 	// TODO check whether this must be set
@@ -399,6 +440,10 @@ public class Garbage extends FieldAccessBean {
 		this.insertedBy = insertedBy;
 	}
 
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	/**
 	 * @param percentageGlass
 	 *            the percentageGlass to set
@@ -440,6 +485,10 @@ public class Garbage extends FieldAccessBean {
 		this.pictures = pictures;
 	}
 
+	public void setRadius(double radius) {
+		this.radius = radius;
+	}
+
 	/**
 	 * @param recordDate
 	 *            the recordDate to set
@@ -458,6 +507,16 @@ public class Garbage extends FieldAccessBean {
 		this.status = status;
 	}
 
+	@NonTransferableField
+	public void setToClean(boolean toClean) {
+		this.toClean = toClean;
+	}
+
+	@NonTransferableField
+	public void setToVote(boolean toVote) {
+		this.toVote = toVote;
+	}
+
 	/**
 	 * @param town
 	 *            the town to set
@@ -465,6 +524,15 @@ public class Garbage extends FieldAccessBean {
 	@NonTransferableField
 	public void setTown(TownArea town) {
 		this.town = town;
+	}
+
+	@NonTransferableField
+	public void setVotedBy(Set<User> votedBy) {
+		this.votedBy = votedBy;
+	}
+
+	@NonTransferableField
+	public void setVotes(long votes) {
 	}
 
 	/**

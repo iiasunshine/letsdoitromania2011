@@ -31,14 +31,14 @@ package ro.ldir.exceptions;
  * an existing email address.
  * 
  */
-public class InvalidUserException extends Exception {
+public class InvalidUserOperationException extends Exception {
 
 	private static final long serialVersionUID = 1L;
 
-	public InvalidUserException() {
+	public InvalidUserOperationException() {
 	}
 
-	public InvalidUserException(String arg0) {
+	public InvalidUserOperationException(String arg0) {
 		super(arg0);
 	}
 }
