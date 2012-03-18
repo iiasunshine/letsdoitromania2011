@@ -53,7 +53,7 @@ import ro.ldir.dto.User.Activity;
 import ro.ldir.dto.User.SecurityRole;
 import ro.ldir.dto.helper.SHA256Encrypt;
 import ro.ldir.exceptions.InvalidTokenException;
-import ro.ldir.exceptions.InvalidUserException;
+import ro.ldir.exceptions.InvalidUserOperationException;
 
 /**
  * Session bean managing users.
@@ -102,10 +102,10 @@ public class UserManager implements UserManagerLocal {
 	 */
 	@Override
 	public void activateUser(int userId, String key)
-			throws InvalidUserException {
+			throws InvalidUserOperationException {
 		User user = em.find(User.class, userId);
 		if (!user.getRole().equals(SecurityRole.PENDING.toString()))
-			throw new InvalidUserException("The user is not pending.");
+			throw new InvalidUserOperationException("The user is not pending.");
 		user.setRole(SecurityRole.VOLUNTEER.toString());
 
 		try {
@@ -125,14 +125,14 @@ public class UserManager implements UserManagerLocal {
 	 * @see ro.ldir.beans.UserManagerLocal#addUser(ro.ldir.dto.User)
 	 */
 	@Override
-	public void addUser(User user) throws InvalidUserException {
+	public void addUser(User user) throws InvalidUserOperationException {
 		String email = new String(user.getEmail());
 
 		Query query = em
 				.createQuery("SELECT x FROM User x WHERE x.email = :emailParam");
 		query.setParameter("emailParam", email);
 		if (query.getResultList().size() > 0)
-			throw new InvalidUserException("Email " + email
+			throw new InvalidUserOperationException("Email " + email
 					+ " already in use.");
 
 		user.setRole(User.SecurityRole.PENDING.toString());

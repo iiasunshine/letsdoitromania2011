@@ -74,16 +74,6 @@ public class GarbageOperations extends GarbageTest {
 	}
 
 	@Test
-	public void getGarbageInsertedBy() {
-		System.out.println("get");
-		WebResource r = client.resource(location + "/" + garbageId);
-		ClientResponse cr = r.accept(MediaType.APPLICATION_XML).get(
-				ClientResponse.class);
-		Garbage garbage = cr.getEntity(Garbage.class);
-		assertEquals(USER, garbage.getInsertedBy().getEmail());
-	}
-
-	@Test
 	public void getGarbageCountyArea() {
 		System.out.println("get");
 		WebResource r = client.resource(location + "/" + garbageId);
@@ -91,6 +81,16 @@ public class GarbageOperations extends GarbageTest {
 				ClientResponse.class);
 		Garbage garbage = cr.getEntity(Garbage.class);
 		assertEquals(countyArea.getName(), garbage.getCounty().getName());
+	}
+
+	@Test
+	public void getGarbageInsertedBy() {
+		System.out.println("get");
+		WebResource r = client.resource(location + "/" + garbageId);
+		ClientResponse cr = r.accept(MediaType.APPLICATION_XML).get(
+				ClientResponse.class);
+		Garbage garbage = cr.getEntity(Garbage.class);
+		assertEquals(USER, garbage.getInsertedBy().getEmail());
 	}
 
 	@Test
@@ -223,6 +223,26 @@ public class GarbageOperations extends GarbageTest {
 		ClientResponse cr = r
 				.entity(insertedGarbage, MediaType.APPLICATION_XML).post(
 						ClientResponse.class);
+		assertEquals(400, cr.getStatus());
+	}
+
+	@Test
+	public void voteGarbage() {
+		WebResource r = client.resource(location + "/" + garbageId + "/toVote");
+		ClientResponse cr = r.entity("true", MediaType.APPLICATION_XML).put(
+				ClientResponse.class);
+		assertEquals(200, cr.getStatus());
+
+		r = client.resource(location + "/" + garbageId + "/vote");
+		cr = r.accept(MediaType.APPLICATION_XML).put(ClientResponse.class);
+		assertEquals(200, cr.getStatus());
+	}
+
+	@Test
+	public void voteUnselectedGarbage() {
+		WebResource r = client.resource(location + "/" + garbageId + "/vote");
+		ClientResponse cr = r.accept(MediaType.APPLICATION_XML).put(
+				ClientResponse.class);
 		assertEquals(400, cr.getStatus());
 	}
 }

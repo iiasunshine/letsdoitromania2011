@@ -20,7 +20,7 @@ import nl.captcha.text.producer.DefaultTextProducer;
 import org.apache.log4j.Logger;
 
 import ro.ldir.dto.User;
-import ro.ldir.exceptions.InvalidUserException;
+import ro.ldir.exceptions.InvalidUserOperationException;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.JsfUtils;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.WSInterface;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.customObjects.CountyNames;
@@ -121,7 +121,7 @@ public class RegisterBean {
 
         try {
 			wsi.registerUser(regiterUser);
-		} catch (InvalidUserException e) {   
+		} catch (InvalidUserOperationException e) {   
             JsfUtils.addWarnBundleMessage("register_err_duplicate_mail");
             return NavigationValues.REGISTER_FAIL;
 		}

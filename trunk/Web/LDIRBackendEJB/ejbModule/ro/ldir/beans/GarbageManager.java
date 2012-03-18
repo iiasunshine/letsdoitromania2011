@@ -73,6 +73,7 @@ import ro.ldir.dto.Garbage.GarbageStatus;
 import ro.ldir.dto.GarbageEnrollment;
 import ro.ldir.dto.TownArea;
 import ro.ldir.dto.User;
+import ro.ldir.exceptions.InvalidUserOperationException;
 import ro.ldir.exceptions.NoCountyException;
 
 import com.sun.image.codec.jpeg.ImageFormatException;
@@ -532,6 +533,32 @@ public class GarbageManager implements GarbageManagerLocal {
 		em.merge(garbage);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ro.ldir.beans.GarbageManagerLocal#setGarbageToClean(int, boolean)
+	 */
+	@Override
+	@RolesAllowed({ "ADMIN", "ORGANIZER", "ORGANIZER_MULTI" })
+	public void setGarbageToClean(int garbageId, boolean toClean) {
+		Garbage garbage = em.find(Garbage.class, garbageId);
+		garbage.setToClean(toClean);
+		em.merge(garbage);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ro.ldir.beans.GarbageManagerLocal#setGarbageToVote(int, boolean)
+	 */
+	@Override
+	@RolesAllowed({ "ADMIN", "ORGANIZER", "ORGANIZER_MULTI" })
+	public void setGarbageToVote(int garbageId, boolean toVote) {
+		Garbage garbage = em.find(Garbage.class, garbageId);
+		garbage.setToVote(toVote);
+		em.merge(garbage);
+	}
+
 	/**
 	 * Sets the geographical features, i.e., the charted area, town and county
 	 * this garbage is located.
@@ -647,5 +674,26 @@ public class GarbageManager implements GarbageManagerLocal {
 			newTown.getGarbages().add(existing);
 			em.merge(newTown);
 		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ro.ldir.beans.GarbageManagerLocal#voteGarbage(int)
+	 */
+	@Override
+	public void voteGarbage(int garbageId) throws InvalidUserOperationException {
+		Garbage garbage = em.find(Garbage.class, garbageId);
+		if (!garbage.isToVote())
+			throw new InvalidUserOperationException(
+					"The garbage has not been selected for voting!");
+
+		User user = SecurityHelper.getUser(userManager, ctx);
+		if (garbage.getVotedBy().contains(user))
+			throw new InvalidUserOperationException(
+					"Cannot vote for a garbage twicxe!");
+		garbage.getVotedBy().add(user);
+		user.getVotedGarbages().add(garbage);
+		em.merge(garbage);
 	}
 }

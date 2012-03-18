@@ -261,9 +261,10 @@ The logged in user must be an ``ADMIN'' or the team's manager.
     \replyitem{200}{If the operation succeeds.}
     \replyitem{404}{If one of the team or garbage are not found.}
     \replyitem{406}{If the user is trying to allocated too many bags to this
-    garbage than it has available, or if the garbage requires a smaller amount
-    of bags. An accompanying text will be returned to specified the exact cause
-    of error.}
+    garbage than it has available, if the garbage requires a smaller amount of
+    bags, or if the garbage has not been selected for cleaning by an organizer.
+    An accompanying text will be returned to specified the exact cause of
+    error.}
     \replyitem{415}{If the posted number of allocated garbages is not a valid
     integer.}
   \end{datalist}
