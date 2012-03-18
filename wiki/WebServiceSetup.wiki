@@ -12,6 +12,7 @@
 == Java tools ==
  # Install Java JDK 1.6.
  # Install Apache Ant from [http://ant.apache.org/ here].
+ # Download and install MySQL JDBC driver from [http://dev.mysql.com/downloads/connector/j/]
 
 == GlassFish ==
  # Download the GlassFish Server Open Source Edition - 3.1 Final from [http://glassfish.java.net/downloads/3.1-final.html here]. Make sure you use the *full platform* distribution.
