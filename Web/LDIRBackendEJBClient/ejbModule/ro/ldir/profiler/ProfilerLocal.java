@@ -17,34 +17,25 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- *  Filename: ProfilerInterceptor.java
+ *  Filename: ProfilerLocal.java
  *  Author(s): Stefan Guna, svguna@gmail.com
  *
  */
 package ro.ldir.profiler;
 
 import java.lang.reflect.Method;
+import java.util.Map;
+import java.util.SortedSet;
 
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.Interceptor;
-import javax.interceptor.InvocationContext;
+/**
+ *
+ */
+public interface ProfilerLocal {
 
-/** Intercepts calls to EJB methods to build profiling information. */
-@Interceptor
-public class ProfilerInterceptor {
-	public ProfilerInterceptor() {
-	}
+	public abstract Map<Method, SortedSet<ProfilerSample>> getSamplesMovingWindow();
 
-	@AroundInvoke
-	public Object profile(InvocationContext ctx) throws Exception {
-		Method method = null;
-		long start = System.currentTimeMillis();
-		try {
-			method = ctx.getMethod();
-			return ctx.proceed();
-		} finally {
-			long duration = System.currentTimeMillis() - start;
-			Profiler.recordCall(method, duration);
-		}
-	}
+	public abstract Map<Method, Long> getTotalCount();
+
+	public abstract Map<Method, Long> getTotalDuration();
+
 }

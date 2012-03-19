@@ -17,34 +17,41 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- *  Filename: ProfilerInterceptor.java
+ *  Filename: ProfilerSample.java
  *  Author(s): Stefan Guna, svguna@gmail.com
  *
  */
 package ro.ldir.profiler;
 
-import java.lang.reflect.Method;
+import java.util.Date;
 
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.Interceptor;
-import javax.interceptor.InvocationContext;
+/** A profiler sample, holding a timestamp and execution duration. */
+public class ProfilerSample implements Comparable<ProfilerSample> {
+	private long duration;
+	private Date timestamp = new Date();
 
-/** Intercepts calls to EJB methods to build profiling information. */
-@Interceptor
-public class ProfilerInterceptor {
-	public ProfilerInterceptor() {
+	public ProfilerSample(long duration) {
+		this.duration = duration;
 	}
 
-	@AroundInvoke
-	public Object profile(InvocationContext ctx) throws Exception {
-		Method method = null;
-		long start = System.currentTimeMillis();
-		try {
-			method = ctx.getMethod();
-			return ctx.proceed();
-		} finally {
-			long duration = System.currentTimeMillis() - start;
-			Profiler.recordCall(method, duration);
-		}
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Comparable#compareTo(java.lang.Object)
+	 */
+	public int compareTo(ProfilerSample o) {
+		return timestamp.compareTo(o.timestamp);
+	}
+
+	public long getDuration() {
+		return duration;
+	}
+
+	public Date getTimestamp() {
+		return timestamp;
+	}
+
+	public void setDuration(long duration) {
+		this.duration = duration;
 	}
 }
