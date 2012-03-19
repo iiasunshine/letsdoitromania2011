@@ -38,9 +38,9 @@ import javax.ejb.Stateless;
  */
 @Stateless
 @LocalBean
-public class Profiler /*implements ProfilerLocal*/ {
+public class Profiler implements ProfilerLocal {
 	private static final int MAX_SAMPLE_BUCKET = 30;
-/*	private static Map<Method, SortedSet<ProfilerSample>> movingWindow = new HashMap<Method, SortedSet<ProfilerSample>>();
+	private static Map<Method, SortedSet<ProfilerSample>> movingWindow = new HashMap<Method, SortedSet<ProfilerSample>>();
 	private static Map<Method, Long> totalCount = new HashMap<Method, Long>();
 	private static Map<Method, Long> totalDuration = new HashMap<Method, Long>();
 
@@ -102,5 +102,5 @@ public class Profiler /*implements ProfilerLocal*/ {
 				result.put(entry.getKey(), entry.getValue());
 		}
 		return result;
-	}*/
+	}
 }
