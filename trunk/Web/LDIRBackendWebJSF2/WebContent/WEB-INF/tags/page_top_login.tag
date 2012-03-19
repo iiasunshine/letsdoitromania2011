@@ -14,7 +14,7 @@
         <div id="topMenu">
             <ul>
                 <li><a href="${pageContext.servletContext.contextPath}/index.jsf" class="${selected eq 'home' ? 'active' : ''}"><span>${msg.meniu_home}</span></a></li>
-                <li><a href="${pageContext.servletContext.contextPath}/users/cartare-zone-lista.jsf" class="${selected eq 'zone' ? 'active' : ''}"><span>${msg.meniu_zona_cartare}</span></a></li>
+             <%-- removed from 2012 ldir  <li><a href="${pageContext.servletContext.contextPath}/users/cartare-zone-lista.jsf" class="${selected eq 'zone' ? 'active' : ''}"><span>${msg.meniu_zona_cartare}</span></a></li>--%>
                 <li><a href="${pageContext.servletContext.contextPath}/users/cartare-mormane-lista.jsf" class="${selected eq 'mormane' ? 'active' : ''}"><span>${msg.meniu_cartare_mormane}</span></a></li>
                 <c:if test="${not (role eq 'VOLUNTEER')}">
                     <li><a href="${pageContext.servletContext.contextPath}/admin/admin-lista-voluntari.jsf" class="${selected eq 'lista_utilizatori' ? 'active' : ''}"><span>${msg.meniu_lista_utilizatori}</span></a></li>
