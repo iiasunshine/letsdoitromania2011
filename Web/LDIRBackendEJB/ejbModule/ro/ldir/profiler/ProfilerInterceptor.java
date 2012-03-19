@@ -44,7 +44,7 @@ public class ProfilerInterceptor {
 			return ctx.proceed();
 		} finally {
 			long duration = System.currentTimeMillis() - start;
-			Profiler.recordCall(method, duration);
+//			Profiler.recordCall(method, duration);
 		}
 	}
 }
