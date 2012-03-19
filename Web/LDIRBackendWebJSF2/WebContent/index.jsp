@@ -6,5 +6,5 @@
 
 <%@page contentType="text/html" pageEncoding="windows-1250"%>
 <%
-response.sendRedirect("home.jsf");
+response.sendRedirect("user-login.jsf");
 %>

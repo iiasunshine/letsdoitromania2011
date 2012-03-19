@@ -20,7 +20,7 @@
                 <div id="pageContainer">
                     <div id="content">
                         <%-- Left Column --%>
-                        <div id="leftColumn" style="">
+                        <div id="leftColumn" style=""l>
                             <h:panelGroup rendered="#{fn:length(mormanManager.myGarbageList) eq 0}">
                                 <h1><h:outputText value="#{msg.chart_empty_list}"/></h1>
                             </h:panelGroup>
