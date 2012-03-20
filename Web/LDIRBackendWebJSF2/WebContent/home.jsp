@@ -1,36 +1,33 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<jsp:directive.include file="/WEB-INF/jspf/page-header.jspf"/>
+<jsp:directive.include file="/WEB-INF/jspf/page-header.jspf" />
 <f:view>
-    <html xmlns="http://www.w3.org/1999/xhtml">
-        <head>
-            <jsp:directive.include file="/WEB-INF/jspf/page-meta.jspf"/>
-            <title>Let's do it Romania</title>
-        </head>
-        <body>
-            <center>
-                <%-- page Top --%>
-                <h:panelGroup rendered="#{sessionScope['USER_DETAILS'] eq null}">
-                    <custom:page_top selected="home"/>
-                </h:panelGroup>
-                <h:panelGroup rendered="#{not (sessionScope['USER_DETAILS'] eq null)}">
-                    <custom:page_top_login selected="home" role="${sessionScope['USER_DETAILS'].role}"/>
-                </h:panelGroup>
+	<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<jsp:directive.include file="/WEB-INF/jspf/page-meta.jspf" />
+<title>Let's do it Romania</title>
+</head>
+<body>
+	<center>
+		<%-- page Top --%>
+		<h:panelGroup rendered="#{sessionScope['USER_DETAILS'] eq null}">
+			<custom:page_top selected="home" />
+		</h:panelGroup>
+		<h:panelGroup rendered="#{not (sessionScope['USER_DETAILS'] eq null)}">
+			<custom:page_top_login selected="home"
+				role="${sessionScope['USER_DETAILS'].role}" />
+		</h:panelGroup>
 
-                <%-- page Content --%>
-                <div id="pageContainer">
-                    <div id="content">
-                        <div id="leftColumn">
-                        </div>
+		<%-- page Content --%>
+		<div id="pageContainer">
+			<div id="content">
+				<div id="leftColumn"></div>
 
-                        <div id="rightColumn" style="height: 450px;">
-                            <br/>
-                            <br/>
-                            <h:panelGroup rendered="#{not (sessionScope['USER_DETAILS'] eq null)}">
-                                <h3>
-                                    <h:outputText value="Bine ai venit pe aplicatia Let`s Do It, Romania!" escape="false"/>
-                                    <br/>
-                                    <br/>
-                                    <h:outputText value="Aici ai posibilitatea sa:" escape="false"/>
+				<div id="rightColumn" style="height: 450px;">
+					<br /> <br />
+					<h:panelGroup
+						rendered="#{not (sessionScope['USER_DETAILS'] eq null)}">
+
+						<%--   <h:outputText value="Aici ai posibilitatea sa:" escape="false"/>
                                     <br/>
                                     <h:outputText value="1. Te inscrii in baza noastra de date ca voluntar LDIR (butonul \"Inscrie-te ca voluntar\" de mai sus)" escape="false"/>
                                 	<br/>
@@ -69,15 +66,33 @@
                                     <br/>
 									<h:outputText value="<a href=\"http://app-test1.letsdoitromania.ro/legitimatiiCFR/#{sessionScope['USER_DETAILS'].county}-#{sessionScope['USER_DETAILS'].userId}.pdf\" target=\"_blank\">Downloadeaza Legitimatia CFR de calatorie, cu reducere</a>" escape="false"/>									
 									<br/>  
-                                    
-                                </h3>
-                            </h:panelGroup>
-                            <h:panelGroup rendered="#{sessionScope['USER_DETAILS'] eq null}">
-                                <h3>
-                                    <h:outputText value="Bine ai venit pe aplicatia Let`s Do It, Romania!" escape="false"/>
-                                    <br/>
-                                    <br/>
-                                    <h:outputText value="Aici ai posibilitatea sa:" escape="false"/>
+                                    --%>
+						<h2>
+							<h:outputText
+								value="Bine ai venit pe aplicatia Let`s Do It, Romania! 2012"
+								escape="false" />
+							<br /> <br />
+						</h2>
+						<h3>
+							<h:outputText
+								value=" Aceasta aplicatie are urmatoarele obiective:"
+								escape="false" />
+							<br />
+							<h:outputText
+								value=" * Inregistrarea mormanelor de gunoi de pe suprafata Romaniei"
+								escape="false" />
+							<br />
+							<h:outputText value=" * Gestionarea activitatilor de curatenie"
+								escape="false" />
+							<br />
+							<h:outputText
+								value=" * Monitorizarea suprafetelor curatate de mormanele de gunoi"
+								escape="false" />
+							<br /> <br />
+					</h:panelGroup>
+					<h:panelGroup rendered="#{sessionScope['USER_DETAILS'] eq null}">
+
+						<%--     <h:outputText value="Aici ai posibilitatea sa:" escape="false"/>
                                     <br/>
                                     <h:outputText value="1. Te inscrii in baza noastra de date ca voluntar LDIR (butonul \"Inscrie-te ca voluntar\" de mai sus)" escape="false"/>
                                 	<br/>
@@ -112,17 +127,37 @@
                                     <br/>
                                     <br/>
                                     <h:outputText value="<a href=\"http://www.letsdoitromania.ro/wp-content/uploads/2011/07/Manual-Curatenie-2011.pdf\" target=\"_blank\">Downloadeaza Manual Pentru Ziua de Curatenie 24 Septembrie 2011</a>" escape="false"/>
-									<br/>  
-                                </h3>
-                                <br/>
-                            </h:panelGroup>
-                        </div>
-                    </div>
-                </div>
+									<br/>  --%>
+						<h2>
+							<h:outputText
+								value="Bine ai venit pe aplicatia Let`s Do It, Romania! 2012"
+								escape="false" />
+							<br /> <br />
+						</h2>
+						<h3>
+							<h:outputText
+								value=" Aceasta aplicatie are urmatoarele obiective:"
+								escape="false" />
+							<br />
+							<h:outputText
+								value=" * Inregistrarea mormanelor de gunoi de pe suprafata Romaniei"
+								escape="false" />
+							<br />
+							<h:outputText value=" * Gestionarea activitatilor de curatenie"
+								escape="false" />
+							<br />
+							<h:outputText
+								value=" * Monitorizarea suprafetelor curatate de mormanele de gunoi"
+								escape="false" />
+							<br /> <br /> <br />
+					</h:panelGroup>
+				</div>
+			</div>
+		</div>
 
-                <%-- page Bottom --%>
-                <custom:page_bottom/>
-            </center>
-        </body>
-    </html>
+		<%-- page Bottom --%>
+		<custom:page_bottom />
+	</center>
+</body>
+	</html>
 </f:view>

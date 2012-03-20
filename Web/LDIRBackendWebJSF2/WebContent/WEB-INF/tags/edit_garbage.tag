@@ -11,12 +11,11 @@
 <%@tag isELIgnored="false" body-content="tagdependent"%>
 <%@attribute name="role"%>
 
-<div id="pageContainer">
-	<div id="content">
 
-		<%-- Left Column (lista mormane adaugate pana acum) --%>
+
+		<%-- Left Column (lista mormane adaugate pana acum) 
 		<div id="leftColumn">
-			<h:panelGroup
+		<h:panelGroup
 				rendered="#{not (sessionScope['USER_DETAILS'] eq null)}">
 				<h:panelGroup
 					rendered="#{fn:length(mormanManager.myGarbageList) eq 0}">
@@ -55,9 +54,9 @@
 						</a4j:repeat>
 					</h:panelGroup>
 				</h:panelGroup>
-			</h:panelGroup>
+			</h:panelGroup> 
 		</div>
-
+--%>
 
 		<%-- Right Column (formular adaugare/editare morman) --%>
 		<div id="rightColumn">
@@ -237,17 +236,19 @@
 				</div>
 				<h:selectBooleanCheckbox
 					value="#{mormanManager.myGarbage.garbage.dispersed}"
-					styleClass="formDate" id="dispersat" />
+					styleClass="formDate" id="dispersat" >
+					<a4j:support event="onclick" ajaxSingle="true" reRender="radius"/>
+					</h:selectBooleanCheckbox>
 				<br />
 
-				<!--  cat de dispersat: Vezi ca e diametru iar eu voi pastra sub forma de raza -->
+				<!--  cat de dispersat: -->
 				<div class="label">
-					<h:outputText value="#{msg.chart_add_diameter}" />
+					<h:outputText value="#{msg.chart_add_radius}" />
 				</div>
 				<h:inputText value="#{mormanManager.myGarbage.garbage.radius}"
-					styleClass="formTextfield" id="diameter"
-					validatorMessage="#{msg.chart_err_diameter}"
-					converterMessage="#{msg.chart_err_diameter}">
+					styleClass="formTextfield" id="radius"
+					validatorMessage="#{msg.chart_err_radius}"
+					converterMessage="#{msg.chart_err_radius}" disabled="#{mormanManager.radiusDisabled}">
 					<f:validateLongRange maximum="10000" minimum="1" />
 				</h:inputText>
 				<br />
@@ -391,5 +392,4 @@
 				</div>
 			</h:form>
 		</div>
-	</div>
-</div>
+
