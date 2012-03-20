@@ -14,8 +14,17 @@
 		<custom:page_top_login selected="mormane"
 			role="${mormanManager.userDetails.role}" />
 
-		<%-- page Content --%>
+		
+<div id="pageContainer">
+	<div id="content">
+	<div id="leftColumn">
+	</div>
+	
+<%-- page Content --%>
 		<custom:edit_garbage role="${mormanManager.userDetails.role}"/>
+
+	</div>
+</div>
 
 		<%-- page Bottom --%>
 		<custom:page_bottom />
@@ -23,3 +32,4 @@
 </body>
 	</html>
 </f:view>
+

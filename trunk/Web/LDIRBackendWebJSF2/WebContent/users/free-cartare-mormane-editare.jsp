@@ -14,15 +14,17 @@
 
 		<custom:page_top selected="mormane"/>
 
+<div id="pageContainer">
+	<div id="content">
+	<div id="leftColumn">
+	</div>
+	
 		<%-- page Content --%>
-		<custom:edit_garbage/>
-		
-		
-							<h:selectBooleanCheckbox
-						value="#{mormanManager.myGarbage.garbage.toVote}" styleClass="formDate"
-						id="dispersat" />
-						
-						
+		<custom:edit_garbage />
+
+	</div>
+</div>
+
 		<%-- page Bottom --%>
 		<custom:page_bottom />
 	</center>

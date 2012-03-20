@@ -37,6 +37,7 @@ public class NavigationValues {
     public static final String NEW_PASS_SUCCESS = "new_pass_success";
     
     public static final String MORMAN_ADD_FAIL = "morman_add_fail";
+    public static final String MORMAN_ADD_FAIL_FREE = "morman_add_fail_free";
     public static final String MORMAN_ADD_SUCCESS = "morman_add_success";
     public static final String MORMAN_DELETE_FAIL = "morman_delete_fail";
     public static final String MORMAN_DELETE_SUCCESS = "morman_delete_success";

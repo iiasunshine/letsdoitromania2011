@@ -22,6 +22,7 @@ import ro.ldir.dto.Garbage;
 import ro.ldir.dto.Team;
 import ro.ldir.dto.User;
 import ro.ldir.exceptions.InvalidTeamOperationException;
+import ro.ldir.exceptions.NoCountyException;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.AppUtils;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.ImageInfo;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.JsfUtils;
@@ -155,9 +156,22 @@ public class MormanManagerBean {
 
 			lat_sec = String.valueOf(lat_sec1);
 			long_sec = String.valueOf(long_sec1);
-			lat_sec = lat_sec.substring(0, lat_sec.indexOf(".") + 3);
-			long_sec = long_sec.substring(0, long_sec.indexOf(".") + 3);
-
+			int latSecStringSize = lat_sec.length();
+			int longSecStringSize = long_sec.length();
+			int latIndex = lat_sec.indexOf(".");
+			int longIndex = long_sec.indexOf(".");
+			int diffLat = latSecStringSize - latIndex;
+			int diffLong = longSecStringSize - longIndex;
+			if (diffLat > 0)
+				if (diffLat >= 3)
+					lat_sec = lat_sec.substring(0, latIndex + 3);
+				else
+					lat_sec = lat_sec.substring(0, latIndex + diffLat);
+			if (diffLong > 0)
+				if (diffLong >= 3)
+					long_sec = long_sec.substring(0, longIndex + 3);
+				else
+					long_sec = long_sec.substring(0, longIndex + diffLong);
 			/* obtinere numar poze */
 			for (int i = 0; i < g.getPictures().size(); i++) {
 				int height = 0;
@@ -521,7 +535,7 @@ public class MormanManagerBean {
 			}
 
 			/* cerere informatii user */
-			if(userDetails!=null)
+			if (userDetails != null)
 				wsi.reinitUser(userDetails);
 			/* mesaj info referitor la adaugarea/modificarea mormanului */
 			String infoText = "";
@@ -529,6 +543,8 @@ public class MormanManagerBean {
 				infoText = JsfUtils.getBundleMessage("details_modify_confirm");
 				infoText = infoText.replaceAll("\\{0\\}",
 						"" + garbage.getGarbageId());
+				// test to see: nu functioneaza ceva. Toaate mormanele adaugate sunt vazute ca modificate. //TODO
+				//init(garbage.getGarbageId());
 			} else {
 				init(0);
 				garbage = myGarbageList.get(0).getGarbage();
@@ -539,11 +555,21 @@ public class MormanManagerBean {
 
 			JsfUtils.getHttpSession().setAttribute("INFO_MESSAGE", infoText);
 			return NavigationValues.MORMAN_ADD_SUCCESS;
-
+		} catch (NoCountyException e) {
+			log4j.fatal("Eroare apelare WS - no county: "
+					+ AppUtils.printStackTrace(e));
+			JsfUtils.addWarnBundleMessage("chart_err_nocounty");
+			if (userDetails != null) // do fwd to a jsp used in logged
+										// enviroment
+				return NavigationValues.MORMAN_ADD_FAIL;
+			return NavigationValues.MORMAN_ADD_FAIL_FREE;
 		} catch (Exception ex) {
 			log4j.fatal("Eroare apelare WS: " + AppUtils.printStackTrace(ex));
 			JsfUtils.addWarnBundleMessage("internal_err");
-			return NavigationValues.MORMAN_ADD_FAIL;
+			if (userDetails != null) // do fwd to a jsp used in logged
+										// enviroment
+				return NavigationValues.MORMAN_ADD_FAIL;
+			return NavigationValues.MORMAN_ADD_FAIL_FREE;
 		}
 	}
 
@@ -659,24 +685,24 @@ public class MormanManagerBean {
 
 	public List<SelectItem> getSaciNrItems() {
 		List<SelectItem> saciNrItems = new ArrayList<SelectItem>();
-		int i=1;
-		while(i<=1000) {
+		int i = 1;
+		while (i <= 1000) {
 			saciNrItems.add(new SelectItem(i, "" + i));
-			if(i<10){
+			if (i < 10) {
 				i++;
 				continue;
-			}else{
-				if(i<50){
-					i+=5;
+			} else {
+				if (i < 50) {
+					i += 5;
 					continue;
-				}else{
-					if(i<100){
-						i+=10;
+				} else {
+					if (i < 100) {
+						i += 10;
 						continue;
-					}else{
-						if(i<1000){
-							
-							i+=50;
+					} else {
+						if (i < 1000) {
+
+							i += 50;
 							continue;
 						}
 					}
@@ -981,5 +1007,13 @@ public class MormanManagerBean {
 
 	public List<Integer> getPosterHeights() {
 		return posterHeights;
+	}
+
+	public boolean isRadiusDisabled() {
+		if (myGarbage != null) {
+			if (myGarbage.getGarbage() != null)
+				return !myGarbage.getGarbage().isDispersed();
+		}
+		return false;
 	}
 }

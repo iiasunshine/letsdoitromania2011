@@ -19,7 +19,7 @@
                        class="${selected eq 'login' ? 'active' : ''}"><span>${msg.meniu_login}</span></a></li>
                 <li><a href="${pageContext.servletContext.contextPath}/user-register.jsf"
                        class="${selected eq 'register' ? 'active' : ''}"><span>${msg.meniu_inscriere_voluntar}</span></a></li> --%>
-                <li><a href="${pageContext.servletContext.contextPath}/users/free-cartare-mormane-editare.jsf" class="${selected eq 'mormane' ? 'active' : ''}"><span>${msg.meniu_cartare_mormane}</span></a></li>
+                <li><a href="${pageContext.servletContext.contextPath}/users/free-cartare-mormane-editare.jsf" class="${selected eq 'mormane' ? 'active' : ''}"><span>${msg.meniu_cartare_mormane_free}</span></a></li>
                 <li><a href="${pageContext.servletContext.contextPath}/map-view.jsf" 
                        class="${selected eq 'view' ? 'active' : ''}"><span>${msg.meniu_harta}</span></a></li>
             </ul>

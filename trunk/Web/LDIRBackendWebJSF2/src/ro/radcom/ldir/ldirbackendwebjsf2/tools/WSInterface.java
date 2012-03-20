@@ -163,14 +163,17 @@ public class WSInterface {
 
 	public List<Garbage> getGarbageListByFilters(User admin, String countyId,
 			int gridId, int userId, Date addDate, String accept) {
+		Set<Date> dates = null;
 		Set<String> counties = new HashSet<String>();
 		counties.add(countyId);
 		Set<String> grids = new HashSet<String>();
 		grids.add(new Integer(gridId).toString());
 		Set<Integer> userIds = new HashSet<Integer>();
 		userIds.add(userId);
-		Set<Date> dates = new HashSet<Date>();
-		dates.add(addDate);
+		if (addDate != null) {
+			dates = new HashSet<Date>();
+			dates.add(addDate);
+		}
 		return garbageManager.report(counties, grids, userIds, dates);
 	}
 
@@ -214,7 +217,7 @@ public class WSInterface {
 	public User getUser(String email) {
 		return userManager.getUser(email);
 	}
-	
+
 	public User reinitUser(User userDetails) {
 		return userManager.getUser(userDetails.getEmail());
 	}
@@ -333,7 +336,8 @@ public class WSInterface {
 	 * @param regiterUser
 	 * @throws InvalidUserOperationException
 	 */
-	public void registerUser(User regiterUser) throws InvalidUserOperationException {
+	public void registerUser(User regiterUser)
+			throws InvalidUserOperationException {
 		regiterUser.setPasswd(SHA256Encrypt.encrypt(regiterUser.getPasswd()));
 		userManager.addUser(regiterUser);
 	}
