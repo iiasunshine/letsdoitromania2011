@@ -25,7 +25,7 @@ public class ConnectionUtils
 	public final static String _ldir_host_prod    = "app.letsdoitromania.ro";
 	public final static String _ldir_host_test    = "app-test.letsdoitromania.ro";
 	public final static String _ldir_host_test_ip    = "85.204.235.19";
-	public final static String _ldir_host    = _ldir_host_test;
+	public final static String _ldir_host    = _ldir_host_prod;
 	public final static int    _ldir_port    = 8080;
 	public final static String _ldir_proto   = "http";
 	public final static String _ldir_ws_auth = "LDIRBackend";

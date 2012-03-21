@@ -159,7 +159,7 @@
 	<string name="chart_js_err_metal">Procentul de metal trebuie sa fie o valoare
 		intreaga intre 0 si 100.</string>
 	<string name="meniu_cartare_mormane">Cartare Mormane</string>
-	<string name="login_passowrd">Parola:</string>
+	<string name="login_password">Parola:</string>
 	<string name="meniu_home">Home</string>
 	<string name="chart_modify_morman">Modifica morman</string>
 	<string name="register_antispam_info">Introdu textul din imaginea de mai jos.</string>
@@ -224,4 +224,5 @@
 	<string name="login_progress">In curs de autentificare....</string>
 	<string name="login_required">Trebuie sa fiti autentificat pentru a efectua aceasta comanda</string>
 	<string name="details_img_required">Trebuie sa atasati cel putin o imagine acestui morman de gunoi</string>
+	<string name="btn_view_map">View map</string>
 </resources>

@@ -15,7 +15,7 @@ public class LDIRActivity extends Activity implements IErrDialogActivity
 		this.errorMessage = errMsg;
 	}
 
-	public String getErroeMessage()
+	public String getErrorMessage()
 	{
 		return errorMessage;
 	}

@@ -3,25 +3,21 @@ package ro.ldir.android.views;
 import ro.ldir.R;
 import ro.ldir.android.entities.User;
 import ro.ldir.android.remote.BackendFactory;
-import ro.ldir.android.remote.IBackend;
+import ro.ldir.android.remote.JsonBackend;
 import ro.ldir.android.remote.RemoteConnError;
 import ro.ldir.android.util.ErrorDialogHandler;
 import ro.ldir.android.util.IDialogIds;
-import ro.ldir.android.util.IErrDialogActivity;
 import ro.ldir.android.util.LDIRActivity;
 import ro.ldir.android.util.LDIRApplication;
-import ro.ldir.android.util.Utils;
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 public class SettingsActivity extends LDIRActivity{
 	
@@ -42,16 +38,36 @@ public class SettingsActivity extends LDIRActivity{
 	private void setupLoginButton(boolean isLoggedIn)
 	{
 		Button submitButton = (Button)findViewById(R.id.btnLoginSubmit);
+		TextView lblLoginEmail = ((TextView)findViewById(R.id.lblLoginEmail));		
         if (isLoggedIn)
         {
         	submitButton.setOnClickListener(new LogoutClicklistener());
         	submitButton.setText(R.string.logout_button_submit);
+        	showLoginForm(View.INVISIBLE);
+        	lblLoginEmail.setText(((LDIRApplication) getApplication()).getUserDetails().getEmail());
+        	lblLoginEmail.setVisibility(View.VISIBLE);
         }
         else
         {
         	submitButton.setOnClickListener(new LoginClickListener());
         	submitButton.setText(R.string.login_button_submit);
+        	showLoginForm(View.VISIBLE);
+        	lblLoginEmail.setVisibility(View.INVISIBLE);
         }
+	}
+	/**
+	 * Helper method used to show/hide (depends on param) entries for email and password
+	 * @author Catalin Mincu
+	 * @param visible
+	 */
+	private void showLoginForm(int visible)	{
+		EditText txt = ((EditText)findViewById(R.id.txtLoginEmail));
+		txt.setVisibility(visible);
+		txt = ((EditText)findViewById(R.id.txtLoginPass));
+		txt.setVisibility(visible);
+						
+		TextView lbl = ((TextView)findViewById(R.id.lblLoginPassword));
+		lbl.setVisibility(visible);
 	}
 	
 	/**
@@ -64,7 +80,6 @@ public class SettingsActivity extends LDIRActivity{
 		txt.setText("crl@mailinator.com");
 		txt = ((EditText)findViewById(R.id.txtLoginPass));
 		txt.setText("crl");
-		
 	}
 	
 	@Override
@@ -142,7 +157,7 @@ public class SettingsActivity extends LDIRActivity{
 			String email = ((EditText)findViewById(R.id.txtLoginEmail)).getText().toString();
 			String password = ((EditText)findViewById(R.id.txtLoginPass)).getText().toString();
 			
-			IBackend backend = BackendFactory.createBackend();
+			JsonBackend backend = BackendFactory.createBackend();
 			try
 			{
 				return backend.signIn(email, password);
