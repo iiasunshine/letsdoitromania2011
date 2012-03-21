@@ -3,13 +3,27 @@
 	android:orientation="vertical" android:layout_width="fill_parent"
 	android:layout_height="fill_parent">
 
-	<TextView android:text="@string/login_mail"
-		android:layout_width="fill_parent" android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/TextView01"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/login_mail" />
+
+	<TextView
+	    android:id="@+id/lblLoginEmail"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:visibility="invisible" />
+
 	<EditText android:id="@+id/txtLoginEmail"
 		android:layout_width="fill_parent" android:layout_height="wrap_content" />
 
-	<TextView android:text="@string/login_passowrd"
-		android:layout_width="fill_parent" android:layout_height="wrap_content" />
+	<TextView
+	    android:id="@+id/lblLoginPassword"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:text="@string/login_password" />
+
 	<EditText android:id="@+id/txtLoginPass" android:password="true"
 		android:layout_width="fill_parent" android:layout_height="wrap_content" />
 

@@ -4,5 +4,5 @@ public interface IErrDialogActivity
 {
 	void setErrorMessage(String errMsg);
 	
-	String getErroeMessage();
+	String getErrorMessage();
 }

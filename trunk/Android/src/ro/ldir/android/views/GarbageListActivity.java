@@ -11,13 +11,11 @@ import ro.ldir.android.remote.IBackend;
 import ro.ldir.android.remote.RemoteConnError;
 import ro.ldir.android.sqlite.LdirDbManager;
 import ro.ldir.android.util.ErrorDialogHandler;
-import ro.ldir.android.util.IErrDialogActivity;
 import ro.ldir.android.util.LDIRActivity;
 import ro.ldir.android.util.LDIRApplication;
 import ro.ldir.android.util.LLog;
 import ro.ldir.android.util.Utils;
 import android.app.Dialog;
-import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -32,6 +30,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -63,6 +62,15 @@ public class GarbageListActivity extends LDIRActivity{
         
         GarbageListAdapter adapter = new GarbageListAdapter(this, garbageList);
         setListAdapter(adapter);
+
+        // show map
+        Button btnViewMap = (Button)findViewById(R.id.btnViewMap);
+        btnViewMap.setOnClickListener(new View.OnClickListener(){
+			public void onClick(View view) {
+				Intent intent = new Intent(getBaseContext(), GarbageMapActivity.class);
+				startActivityForResult(intent, 0);
+			}
+		});
         
         getListView().setOnItemClickListener(new OnItemClickListener() {
 
@@ -96,7 +104,6 @@ public class GarbageListActivity extends LDIRActivity{
 		outState.putSerializable(SAVED_GARBAGE_LIST, garbageList);
 		super.onSaveInstanceState(outState);
 	}
-
 
 
 	private ArrayList<Garbage> load()

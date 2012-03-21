@@ -47,7 +47,7 @@ public class MainActivity extends Activity implements LocationListener{
 		});
        
         // afisează lista de mormane adăugate deja de către utilizator
-        // TODO - dacă afișăm lista ar trebui să poată selecta fiecare morman și să-i vadă paramtrii
+        // TODO - dacă afișăm lista ar trebui să poată selecta fiecare morman și să-i vadă parametrii
         //      - plus eventual să-l editeze
        ((Button)findViewById(R.id.ButtonListaMormane)).setOnClickListener(new View.OnClickListener() {
     	   public void onClick(View arg0) {
