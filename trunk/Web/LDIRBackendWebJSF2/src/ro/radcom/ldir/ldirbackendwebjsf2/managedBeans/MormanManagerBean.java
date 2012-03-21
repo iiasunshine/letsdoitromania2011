@@ -62,6 +62,7 @@ public class MormanManagerBean {
 
 	private boolean coord_zecimale = true;
 	private boolean coord_grade = false;
+	private boolean allocable=false;
 	private UploadedFile uploadedFile1 = null;
 	private UploadedFile uploadedFile2 = null;
 	private UploadedFile uploadedFile3 = null;
@@ -414,6 +415,30 @@ public class MormanManagerBean {
 			}
 		}
 	}
+	
+	public void actionToVote(){
+		if(myGarbage!=null){
+			Garbage g=myGarbage.getGarbage();
+			if(g!=null){
+				boolean toVote=false;
+				toVote=g.isToVote();
+				wsi.setGarbageToVote(g.getGarbageId(), !toVote);
+				g.setToVote(!toVote);
+			}
+		}
+	}
+	
+	public void actionToClean(){
+		boolean toClean=false;
+		if(myGarbage!=null){
+			Garbage g=myGarbage.getGarbage();
+			if(g!=null){
+				toClean=g.isToClean();
+				wsi.setGarbageToClean(g.getGarbageId(),!toClean);
+				g.setToClean(!toClean);
+			}
+		}
+	}
 
 	public void actionSetSelectedImage() {
 		log4j.debug("---> imagine selectata");
@@ -500,6 +525,7 @@ public class MormanManagerBean {
 		 * procesare
 		 */
 		garbage.setRecordDate(new Date());
+		//TODO to check if it change old status.
 		garbage.setStatus(Garbage.GarbageStatus.IDENTIFIED);
 
 		try {
@@ -729,7 +755,20 @@ public class MormanManagerBean {
 	public boolean getMormanAlocat() {
 		return this.mormanAlocat;
 	}
+	
+	public boolean getAllocable(){
+		this.allocable=!getMormanAlocat()&&this.myGarbage.getGarbage().isToVote();
+		return this.allocable;
+		}
+	
+	public boolean isAllocable(){
+		this.allocable=!getMormanAlocat()&&this.myGarbage.getGarbage().isToVote();
+		return this.allocable;
+	}
 
+	public void setAllocable(boolean a){
+		this.allocable=a;
+	}
 	public void setUserDetails(User userDetails) {
 		this.userDetails = userDetails;
 	}
