@@ -1,0 +1,29 @@
+1. Google Maps API :
+
+Beginning with the Android SDK release v1.0, you need to apply for a free Google Maps API key 
+before you can integrate Google Maps into your Android application. To apply for a key, you 
+need to follow the series of steps outlined below. You can also refer to Google's detailed 
+documentation on the process at http://code.google.com/android/toolbox/apis/mapkey.html.
+
+First, if you are testing the application on the Android emulator, locate the SDK debug 
+certificate located in the default folder of "C:\Documents and Settings\<username>\Local 
+Settings\Application Data\Android". The filename of the debug keystore is debug.keystore. 
+For deploying to a real Android device, substitute the debug.keystore file with your own 
+keystore file. In a future article I will discuss how you can generate your own keystore file.
+
+For simplicity, copy this file (debug.keystore) to a folder in C:\ (for example, create 
+a folder called "C:\Android").
+
+Using the debug keystore, you need to extract its MD5 fingerprint using the Keytool.exe
+application included with your JDK installation. This fingerprint is needed to apply for 
+the free Google Maps key. You can usually find the Keytool.exe from the 
+"C:\Program Files\Java\<JDK_version_number>\bin" folder.
+
+Issue the following command to extract the MD5 fingerprint:
+keytool.exe -list -alias androiddebugkey -keystore "C:\android\debug.keystore" -storepass 
+android -keypass android
+
+Copy the MD5 certificate fingerprint and navigate your web browser to: 
+http://code.google.com/android/maps-api-signup.html. Follow the instructions on the page 
+to complete the application and obtain the Google Maps key.
+
