@@ -150,7 +150,7 @@
                                 </h3>
                                 
                                 <h3>
-                                    <h:form rendered="#{not mormanManager.mormanAlocat}">
+                                    <h:form rendered="#{mormanManager.allocable}"> <%-- only voted garbage zones can be cleaned --%>
                                         <h:commandLink action="#{mormanManager.actionAssignMorman}">
                                             <f:param name="addGarbageId" value="#{mormanManager.myGarbage.garbage.garbageId}"/>
                                             <h:outputText value="#{msg.details_assign_link}" escape="false"/>

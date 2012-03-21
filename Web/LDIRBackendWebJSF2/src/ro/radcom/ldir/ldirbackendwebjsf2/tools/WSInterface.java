@@ -39,6 +39,18 @@ import ro.ldir.exceptions.NoCountyException;
  * 
  * @author dan.grigore
  */
+/**
+ * @author glassfish
+ *
+ */
+/**
+ * @author glassfish
+ *
+ */
+/**
+ * @author glassfish
+ *
+ */
 public class WSInterface {
 	private GeoManagerLocal geoManager;
 	private GarbageManagerLocal garbageManager;
@@ -220,6 +232,14 @@ public class WSInterface {
 
 	public User reinitUser(User userDetails) {
 		return userManager.getUser(userDetails.getEmail());
+	}
+	
+	public void setGarbageToClean(int garbageId, boolean toClean){
+		garbageManager.setGarbageToClean(garbageId, toClean);
+	}
+	
+	public void setGarbageToVote(int garbageId, boolean toVote){
+		garbageManager.setGarbageToVote(garbageId, toVote);
 	}
 
 	/**
