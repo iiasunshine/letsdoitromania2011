@@ -9,7 +9,11 @@
 		<ant dir="${ejbclient.location}" target="jar" />
 	</target>
 
-	<target depends="build-ejbclient" name="init">
+	<target name="build-reportformatter">
+		<ant dir="${reportformatter.location}" target="jar" />
+	</target>
+
+	<target depends="build-ejbclient, build-reportformatter" name="init">
 		<mkdir dir="build/classes" />
 		<copy includeemptydirs="false" todir="build/classes">
 			<fileset dir="src">
@@ -41,7 +45,7 @@
 			<fileset dir="WebContent" />
 		</war>
 	</target>
-	
+
 	<target name="javadoc">
 		<javadoc destdir="${webservice.location}/WebContent" author="true" version="true" windowtitle="LDIR Backend API" overview="overview.html">
 			<fileset dir="${webservice.location}/src" />
@@ -56,9 +60,9 @@
 
 			<doctitle>
 				<![CDATA[<h1>LDIR Backend API</h1>]]></doctitle>
-			<bottom>
+		<bottom>
 			<![CDATA[<i>Copyright &#169; 2011 Stefan Guna. All Rights Reserved.</i>]]></bottom>
-	</javadoc>
+</javadoc>
 </target>
 
 </project>

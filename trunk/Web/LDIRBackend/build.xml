@@ -14,6 +14,10 @@
 	<target name="build-ejbclient">
 		<ant dir="${ejbclient.location}" target="jar" />
 	</target>
+	
+	<target name="build-reportformatter">
+		<ant dir="${reportformatter.location}" target="jar" />
+	</target>
 
 	<target name="build-jsf">
 		<ant dir="${jsf.location}" target="war" />
@@ -30,6 +34,7 @@
 			<fileset file="${ejbclient.jar}" />
 			<fileset file="${webservice.war}" />
 			<fileset file="${jsf.war}" />
+			<fileset file="${reportformatter.jar}" />
 		</ear>
 	</target>
 </project>
