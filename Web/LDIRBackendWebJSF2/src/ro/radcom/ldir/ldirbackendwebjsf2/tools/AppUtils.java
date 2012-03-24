@@ -34,7 +34,7 @@ public class AppUtils {
         return parseToInt(str, 0);
     }
 
-    public static int parseToInt(String str, int defaultValue) {
+    public static Integer parseToInt(String str, Integer defaultValue) {
         try {
             return Integer.parseInt(str);
         } catch (Exception ex) {

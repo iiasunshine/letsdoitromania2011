@@ -33,7 +33,7 @@ public class AdminUsersManagerBean {
     private WSInterface wsi;
     /* variabile afisare */
     private User userDetails = new User();
-    private User[] usersList;
+    private List<User> usersList;
     private CountyArea[] countyAreas;
     private String selectedCounty;
     private int selectedBirthYear;
@@ -152,55 +152,60 @@ public class AdminUsersManagerBean {
         return days;
     }
 
-    public void actionSelectUser(ActionEvent event) {
-        int userId = AppUtils.parseToInt(JsfUtils.getHttpRequest().getParameter("userId"));
+	public void actionSelectUser(ActionEvent event) {
+		int userId = AppUtils.parseToInt(JsfUtils.getHttpRequest()
+				.getParameter("userId"));
+		
+		for (User user : usersList) {
+			if (userId != user.getUserId().intValue())
+				continue;
 
-        for (int i = 0; i < usersList.length; i++) {
-            if (userId == usersList[i].getUserId().intValue()) {
-                selectedUser = usersList[i];
-                day = selectedUser.getBirthday().getDate();
-                month = 1+selectedUser.getBirthday().getMonth();
-                year = 1900 + selectedUser.getBirthday().getYear();
-                if (selectedUser.getActivities() != null) {
-                    for (int j = 0; j < selectedUser.getActivities().size(); j++) {
-                        if (selectedUser.getActivities().get(j).equals(User.Activity.CHART)) {
-                            cartare = true;
-                        }
-                        if (selectedUser.getActivities().get(j).equals(User.Activity.CLEAN)) {
-                            curatenie = true;
-                        }
-                    }
-                }
-                break;
-            }
-        }
-    }
+			selectedUser = user;
+			day = selectedUser.getBirthday().getDate();
+			month = 1 + selectedUser.getBirthday().getMonth();
+			year = 1900 + selectedUser.getBirthday().getYear();
+			if (selectedUser.getActivities() != null) {
+				for (int j = 0; j < selectedUser.getActivities().size(); j++) {
+					if (selectedUser.getActivities().get(j)
+							.equals(User.Activity.CHART)) {
+						cartare = true;
+					}
+					if (selectedUser.getActivities().get(j)
+							.equals(User.Activity.CLEAN)) {
+						curatenie = true;
+					}
+				}
+			}
+			break;
+		}
+	}
 
     public void actionApplyFilter() {
         initUsersList();
     }
 
-    private void initUsersList() {
-        if ((selectedCounty == null || selectedCounty.length() == 0)
-                && (selectedBirthYear <= 0)
-                && (selectedRole == null || selectedRole.length() == 0)
-                && AppUtils.parseToInt(selectedMinGarbages, -1) == -1
-                && AppUtils.parseToInt(selectedMaxGarbages, -1) == -1) {
-            usersList = new User[0];
-            noFilter = true;
-            return;
-        } else {
-            noFilter = false;
-        }
-        String encodeCountyId = encodeUrl(selectedCounty);
-       usersList = wsi.getUserListByFilters(userDetails,
-        		encodeCountyId,
-                selectedBirthYear,
-                selectedRole,
-                AppUtils.parseToInt(selectedMinGarbages, -1),
-                AppUtils.parseToInt(selectedMaxGarbages, -1),
-                null);
-    }
+	private void initUsersList() {
+		if ((selectedCounty == null || selectedCounty.length() == 0)
+				&& (selectedBirthYear <= 0)
+				&& (selectedRole == null || selectedRole.length() == 0)
+				&& AppUtils.parseToInt(selectedMinGarbages, -1) == -1
+				&& AppUtils.parseToInt(selectedMaxGarbages, -1) == -1) {
+			usersList = new ArrayList<User>();
+			noFilter = true;
+			return;
+		} else {
+			noFilter = false;
+		}
+		usersList = wsi
+				.getUserListByFilters(
+						(selectedCounty != null && selectedCounty.length() > 0) ? selectedCounty
+								: null,
+						(selectedBirthYear != 0) ? selectedBirthYear : null,
+						(selectedRole != null && selectedRole.length() > 0) ? selectedRole
+								: null, AppUtils.parseToInt(
+								selectedMinGarbages, null), AppUtils
+								.parseToInt(selectedMaxGarbages, null), null);
+	}
     
 	 public String encodeUrl(String arg){
 		  try{
@@ -222,7 +227,7 @@ public class AdminUsersManagerBean {
     /**
      * @return the usersList
      */
-    public User[] getUsersList() {
+    public List<User> getUsersList() {
         return usersList;
     }
 
