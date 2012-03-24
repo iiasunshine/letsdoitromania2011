@@ -8,7 +8,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -220,13 +219,13 @@ public class WSInterface {
 	public List<User> getUserListByFilters(final String county,
 			final Integer birthYear, final String role, Integer minGarbages,
 			Integer maxGarbages, String accept) {
-		Set<String> counties = new TreeSet<String>();
+		Set<String> counties = new HashSet<String>();
 		if (county != null)
 			counties.add(county);
-		Set<Integer> birthYears = new TreeSet<Integer>();
+		Set<Integer> birthYears = new HashSet<Integer>();
 		if (birthYear != null)
 			birthYears.add(birthYear);
-		Set<String> roles = new TreeSet<String>();
+		Set<String> roles = new HashSet<String>();
 		if (role != null)
 			roles.add(role);
 		return userManager.report(counties, birthYears, roles, minGarbages,
