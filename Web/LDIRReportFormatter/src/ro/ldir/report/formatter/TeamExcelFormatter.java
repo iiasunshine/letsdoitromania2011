@@ -26,7 +26,6 @@ package ro.ldir.report.formatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -41,13 +40,10 @@ import ro.ldir.dto.GpsEquipment;
 import ro.ldir.dto.Organization;
 import ro.ldir.dto.Team;
 import ro.ldir.dto.TransportEquipment;
-import org.apache.log4j.Logger;
 
 /** Converts a list of teams to an Excel workbook. */
 public class TeamExcelFormatter implements ExcelFormatter {
-	
-	private static final Logger log4j = Logger.getLogger("ro.radcom.ldir.ldirbackendwebjsf2.managedBeans.LoginBean");
-	
+
 	private static int getCleaningType(Team team,
 			CleaningEquipment.CleaningType cleaningType) {
 		int count = 0;
@@ -107,7 +103,7 @@ public class TeamExcelFormatter implements ExcelFormatter {
 			row.createCell(20, Cell.CELL_TYPE_NUMERIC).setCellValue(
 					getCleaningType(team, CleaningType.SHOVEL));
 		}
-		
+
 		row.createCell(21).setCellValue("TBD");
 
 		if (team.getGarbageEnrollements() == null
@@ -117,31 +113,31 @@ public class TeamExcelFormatter implements ExcelFormatter {
 		} else {
 			row.createCell(22, Cell.CELL_TYPE_NUMERIC).setCellValue(
 					team.getGarbageEnrollements().size());
-			
+
 			StringBuffer buf = new StringBuffer();
 			int volume = 0, i = 0;
 			Garbage leftover = null;
 			for (GarbageEnrollment enrollment : team.getGarbageEnrollements()) {
-				if(enrollment.getGarbage()==null)
+				if (enrollment.getGarbage() == null)
 					continue;
 				if (i == team.getGarbageEnrollements().size() - 1) {
 					leftover = enrollment.getGarbage();
 					break;
 				}
-				
+
 				buf.append(enrollment.getGarbage().getGarbageId() + ", ");
 				volume += enrollment.getGarbage().getBagCount();
 				i++;
 
 			}
-			
+
 			if (leftover != null) {
 				buf.append(leftover.getGarbageId() + "");
 				volume += leftover.getBagCount();
 			}
 			row.createCell(23).setCellValue(buf.toString());
 			row.createCell(24, Cell.CELL_TYPE_NUMERIC).setCellValue(volume);
-			
+
 		}
 	}
 
@@ -200,7 +196,7 @@ public class TeamExcelFormatter implements ExcelFormatter {
 		row.createCell(23).setCellValue("List\u04d1 mormane alocate");
 		row.createCell(24).setCellValue("Sum\u04d1 volum mormane alocate");
 
-		int i = 0; 
+		int i = 0;
 		for (Team team : teams) {
 			if (team.getOrganizationMembers() == null
 					|| team.getOrganizationMembers().size() == 0) {

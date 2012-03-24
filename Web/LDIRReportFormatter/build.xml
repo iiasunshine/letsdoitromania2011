@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<project basedir="." default="build" name="LDIRReportFormatter">
+	<include file="../../build-common.xml" as="build-common" />
+
+	<target name="init">
+		<mkdir dir="build/classes" />
+		<copy includeemptydirs="false" todir="build/classes">
+			<fileset dir="src">
+				<exclude name="**/*.launch" />
+				<exclude name="**/*.g" />
+				<exclude name="**/*.java" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="clean">
+		<delete dir="build/classes" />
+		<delete file="${reportformatter.jar}" />
+	</target>
+
+	<target depends="init" name="build">
+		<echo message="${ant.project.name}: ${ant.file}" />
+		<javac destdir="build/classes">
+			<src path="src" />
+			<classpath refid="LDIRReportFormatter.classpath" />
+		</javac>
+	</target>
+
+	<target depends="build" name="jar">
+		<jar destfile="${reportformatter.jar}" basedir="build/classes" filesetmanifest="merge" />
+	</target>
+</project>
