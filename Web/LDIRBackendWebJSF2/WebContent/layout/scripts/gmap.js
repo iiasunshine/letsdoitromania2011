@@ -7,7 +7,36 @@ var bboxGarbageOverlay_old = null;
 
 var startDrag=false;
 var addEvent=false;
+var xhr = new XMLHttpRequest();;
+var xmlfrombackend="";
+var oldxml="";
+var exml = new EGeoXml("exml", myMap, ""); //for testing googlemapp on localhost
 
+//loadEvents()
+
+
+function getXMLonlocal(url){
+//for testing googlemaps on localhost	
+xhr = new XMLHttpRequest();
+xhr.onreadystatechange = process;
+xhr.open("GET", url, true);
+xhr.send();
+}
+function process(){
+//for testing googlemaps on localhost
+if (xhr.readyState == 4) {
+	oldxml=xmlfrombackend;
+    xmlfrombackend = xhr.responseText;
+
+    if(oldxml!=xmlfrombackend){
+    exml = new EGeoXml("exml", myMap, null,{nozoom:true});    
+    exml.parseString(xmlfrombackend);
+    
+  }
+}
+}
+
+ 
 
 
 function showlinks(element) {
@@ -43,7 +72,6 @@ function showlinks(element) {
 }
 
 function onBoundsChanged(){
-	
 	zoomLevel = myMap.getZoom();
     if(zoomLevel<10)
     	myMap.setZoom(10)
@@ -81,7 +109,7 @@ function loadBBoxGarbageOverlay(ne,sw){
     bottomRightX=neLng;
     bottomRightY=swLat;
 
-
+    
     var url = WS_URL;
     
     url += '/LDIRBackend/map/ws/garbages/';
@@ -91,9 +119,9 @@ function loadBBoxGarbageOverlay(ne,sw){
     url += '&topLeftY='+topLeftY
     url += '&bottomRightX='+bottomRightX
     url += '&bottomRightY='+bottomRightY;
-    url += '&cb=' + escape('<a style="color: #4D751F;" href="curatenie-morman-detalii.jsf?garbageId={{{ID}}}">&raquo; Detalii // Aloca mormanul pentru echipa ta</a>');
-    
-    alert(url)
+    url += '&cb=' + escape('<a style="color: #4D751F;" href="/users/curatenie-morman-detalii.jsf?garbageId={{{ID}}}">&raquo; Detalii // Aloca mormanul pentru echipa ta</a>');
+
+
     /* adaugare layer lista gunoaie din judetul selectat */
     var bboxGarbageOverlay = new GGeoXml(url);
     myMap.addOverlay(bboxGarbageOverlay);
@@ -101,8 +129,9 @@ function loadBBoxGarbageOverlay(ne,sw){
         myMap.removeOverlay(bboxGarbageOverlay_old);
     }
     bboxGarbageOverlay_old = bboxGarbageOverlay;
-
-
+    
+    //FOR LOCALHOST TESTING
+//    getXMLonlocal(url);
 }
 
 
@@ -226,10 +255,10 @@ function loadCountyGarbageDetailOverlay(value){
 }
 
 
-function loadCountyGarbageOverlay222(value){
+function loadCountyGarbageOverlay(value){
     if(value){
         var jsonObject = JSON.parse(value);
-
+        
         var url = WS_URL;
         url += '/LDIRBackend/map/ws/countySearch/garbages/';
         url += '?county='+jsonObject.name.replace(' ','%20');
@@ -308,8 +337,5 @@ function loadChartedAreasOverlayOld2(team){
         refreshOverlay();
     });*/
 }
-
-
-
 
 
