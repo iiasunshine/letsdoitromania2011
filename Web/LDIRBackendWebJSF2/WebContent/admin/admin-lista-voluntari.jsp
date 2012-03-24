@@ -88,7 +88,7 @@
                                         </h:outputFormat>
                                         <br/>
                                         <br/>
-                                        <a4j:commandButton actionListener="#{adminUsersManagerBean.actionGenerateExcel}"
+                                        <h:commandButton actionListener="#{adminUsersManagerBean.actionGenerateExcel}"
                                                            rendered="#{fn:length(adminUsersManagerBean.usersList) gt 0}"
                                                    styleClass="formButtonLeft"
                                                    value="Export lista utilizatori"/>
