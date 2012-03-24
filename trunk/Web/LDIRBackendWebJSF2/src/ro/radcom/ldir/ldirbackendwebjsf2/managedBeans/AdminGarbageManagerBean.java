@@ -207,17 +207,13 @@ public class AdminGarbageManagerBean {
 			noFilter = false;
 		}
 
-		String encodeCountyId = encodeUrl(countyId);
 		if ((countyId.equals("Toate") == true || countyId.equals("") == true)
-				&& userDetails.getRole().equals("ADMIN")) {
-			encodeCountyId = null;
-			countyId = "Toate";
-		}
-		;
+				&& userDetails.getRole().equals("ADMIN")) 
+			countyId = null;
 
 		List<Garbage> garbages = wsi.getGarbageListByFilters(userDetails,
-				encodeCountyId, AppUtils.parseToInt(gridId),
-				AppUtils.parseToInt(userId), addDate, null);
+				countyId, AppUtils.parseToInt(gridId, null),
+				AppUtils.parseToInt(userId, null), addDate, null);
 		garbageList = new Garbage[garbages.size()];
 		garbages.toArray(garbageList);
 
