@@ -76,7 +76,7 @@
                                         </h:outputFormat>
                                         <br/>
                                         <br/>
-                                        <a4j:commandButton actionListener="#{adminGarbageManagerBean.actionGenerateExcel}"
+                                        <h:commandButton actionListener="#{adminGarbageManagerBean.actionGenerateExcel}"
                                                            rendered="#{fn:length(adminGarbageManagerBean.garbageList) gt 0}"
                                                            styleClass="formButtonLeft"
                                                            value="Export lista mormane"/>
