@@ -179,18 +179,20 @@ public class WSInterface {
 	}
 
 	public List<Garbage> getGarbageListByFilters(User admin, String countyId,
-			int gridId, int userId, Date addDate, String accept) {
-		Set<Date> dates = null;
-		Set<String> counties = new HashSet<String>();
-		counties.add(countyId);
-		Set<String> grids = new HashSet<String>();
-		grids.add(new Integer(gridId).toString());
-		Set<Integer> userIds = new HashSet<Integer>();
-		userIds.add(userId);
-		if (addDate != null) {
-			dates = new HashSet<Date>();
+			Integer gridId, Integer userId, Date addDate, String accept) {
+		Set<Date> dates = new HashSet<Date>();
+		if (addDate != null)
 			dates.add(addDate);
-		}
+		Set<String> counties = new HashSet<String>();
+		if (countyId != null)
+			counties.add(countyId);
+		Set<String> grids = new HashSet<String>();
+		if (gridId != null)
+			grids.add(gridId.toString());
+		Set<Integer> userIds = new HashSet<Integer>();
+		if (userId != null)
+			userIds.add(userId);
+
 		return garbageManager.report(counties, grids, userIds, dates);
 	}
 

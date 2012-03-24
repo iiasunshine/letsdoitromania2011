@@ -99,6 +99,8 @@ import com.sun.image.codec.jpeg.JPEGImageEncoder;
 @LocalBean
 @DeclareRoles({ "ADMIN", "ORGANIZER", "ORGANIZER_MULTI" })
 public class GarbageManager implements GarbageManagerLocal {
+	private static Logger log = Logger
+			.getLogger(GarbageManager.class.getName());
 	private static final String DISPLAY_PREFIX = "display";
 	private static final String IMAGE_JPG = "JPEG";
 	private static Logger logger = Logger.getLogger(GarbageManagerLocal.class
@@ -424,6 +426,9 @@ public class GarbageManager implements GarbageManagerLocal {
 	public List<Garbage> report(Set<String> counties,
 			Set<String> chartedAreaNames, Set<Integer> userIds,
 			Set<Date> insertDates) {
+		log.info("Request report counties=" + counties + ", chartedAreaNames="
+				+ chartedAreaNames + ", userIds=" + userIds + ", insertDates="
+				+ insertDates);
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<Garbage> cq = cb.createQuery(Garbage.class);
 		Root<Garbage> garbage = cq.from(Garbage.class);
