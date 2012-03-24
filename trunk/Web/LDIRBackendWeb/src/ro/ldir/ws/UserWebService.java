@@ -249,7 +249,7 @@ public class UserWebService {
 		return Response
 				.ok(report)
 				.header("Content-Disposition",
-						"attachment; filename=userreport.xls").build();
+						"attachment; filename=userreport.xlsx").build();
 	}
 
 	@GET

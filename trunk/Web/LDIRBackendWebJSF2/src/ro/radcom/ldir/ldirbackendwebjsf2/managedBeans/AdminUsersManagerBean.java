@@ -4,6 +4,8 @@
  */
 package ro.radcom.ldir.ldirbackendwebjsf2.managedBeans;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
@@ -11,14 +13,19 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 import javax.naming.NamingException;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
 import ro.ldir.dto.CountyArea;
 import ro.ldir.dto.User;
+import ro.ldir.report.formatter.ExcelFormatter;
+import ro.ldir.report.formatter.GenericXlsxFormatter;
+import ro.ldir.report.formatter.UserExcelFormatter;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.AppUtils;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.JsfUtils;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.WSInterface;
@@ -106,15 +113,27 @@ public class AdminUsersManagerBean {
     }
 
     
-        public void actionGenerateExcel() {
-        	
-       
-    }
-        
-        public void actionGenerateTeamExcel() {
-       
-        }
+	public void actionGenerateExcel() throws IOException {
+		ExcelFormatter fmt = new UserExcelFormatter(usersList);
+		byte report[] = new GenericXlsxFormatter(fmt).getBytes();
 
+		FacesContext fc = FacesContext.getCurrentInstance();
+		HttpServletResponse response = (HttpServletResponse) fc
+				.getExternalContext().getResponse();
+		OutputStream out = response.getOutputStream();
+		out.write(report);
+		out.flush();
+
+		response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+		response.addHeader("Content-Disposition",
+				"attachment; filename=userreport.xlsx");
+		out.close();
+		FacesContext.getCurrentInstance().responseComplete();
+	}
+
+	public void actionGenerateTeamExcel() {
+
+	}
 
     public List<SelectItem> getCountyItems() {
         List<SelectItem> items = new ArrayList<SelectItem>();
