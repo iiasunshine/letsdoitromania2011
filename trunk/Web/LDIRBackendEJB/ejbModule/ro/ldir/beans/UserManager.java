@@ -370,6 +370,10 @@ public class UserManager implements UserManagerLocal {
 	@RolesAllowed({ "ADMIN", "ORGANIZER", "ORGANIZER_MULTI" })
 	public List<User> report(Set<String> counties, Set<Integer> birthYears,
 			Set<String> roles, Integer minGarbages, Integer maxGarbages) {
+		log.info("Requesting user report for counties=" + counties
+				+ ", birthYears=" + birthYears + ", roles=" + roles + ", "
+				+ minGarbages + " < garbages < " + maxGarbages);
+
 		StringBuffer buf = new StringBuffer();
 
 		if (minGarbages != null || maxGarbages != null)

@@ -8,9 +8,12 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+
+import org.apache.log4j.Logger;
 
 import ro.ldir.beans.GarbageManagerLocal;
 import ro.ldir.beans.GeoManagerLocal;
@@ -22,13 +25,13 @@ import ro.ldir.dto.CleaningEquipment;
 import ro.ldir.dto.CountyArea;
 import ro.ldir.dto.Garbage;
 import ro.ldir.dto.Garbage.GarbageStatus;
-import ro.ldir.dto.helper.SHA256Encrypt;
 import ro.ldir.dto.GarbageEnrollment;
 import ro.ldir.dto.GpsEquipment;
 import ro.ldir.dto.Organization;
 import ro.ldir.dto.Team;
 import ro.ldir.dto.TransportEquipment;
 import ro.ldir.dto.User;
+import ro.ldir.dto.helper.SHA256Encrypt;
 import ro.ldir.exceptions.ChartedAreaAssignmentException;
 import ro.ldir.exceptions.InvalidTeamOperationException;
 import ro.ldir.exceptions.InvalidTokenException;
@@ -52,6 +55,9 @@ import ro.ldir.exceptions.NoCountyException;
  *
  */
 public class WSInterface {
+	
+	private static final Logger log4j = Logger.getLogger(WSInterface.class.getCanonicalName());
+	 
 	private GeoManagerLocal geoManager;
 	private GarbageManagerLocal garbageManager;
 	private TeamManagerLocal teamManager;
@@ -211,11 +217,20 @@ public class WSInterface {
 		userManager.setPassword(Integer.parseInt(userId), token, newPassword);
 	}
 
-	public User[] getUserListByFilters(User admin, String county,
-			int birthYear, String role, int minGarbages, int maxGarbages,
-			String accept) {
-		// TODO
-		return null;
+	public List<User> getUserListByFilters(final String county,
+			final Integer birthYear, final String role, Integer minGarbages,
+			Integer maxGarbages, String accept) {
+		Set<String> counties = new TreeSet<String>();
+		if (county != null)
+			counties.add(county);
+		Set<Integer> birthYears = new TreeSet<Integer>();
+		if (birthYear != null)
+			birthYears.add(birthYear);
+		Set<String> roles = new TreeSet<String>();
+		if (role != null)
+			roles.add(role);
+		return userManager.report(counties, birthYears, roles, minGarbages,
+				maxGarbages);
 	}
 
 	public Team[] getTeamListByFilters(User admin, String county,

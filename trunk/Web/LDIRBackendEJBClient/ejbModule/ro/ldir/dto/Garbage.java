@@ -23,6 +23,7 @@
  */
 package ro.ldir.dto;
 
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -86,9 +87,10 @@ public class Garbage extends FieldAccessBean {
 		}
 	}
 
+	private static final double CIRCLE_INCREMENT = 0.1;
 	public static final int DESCRIPTION_LENGTH = 20;
-	public static final int DETAILS_LENGTH = 30;
 
+	public static final int DETAILS_LENGTH = 30;
 	private int bagCount;
 	private String bigComponentsDescription;
 	private ChartedArea chartedArea;
@@ -106,7 +108,8 @@ public class Garbage extends FieldAccessBean {
 	private int percentagePlastic;
 	private int percentageWaste;
 	private List<String> pictures = new ArrayList<String>();
-	private double radius;
+	private List<Point2D.Double> polyline;
+	private Double radius;
 	private Date recordDate;
 	private GarbageStatus status;
 	private boolean toClean;
@@ -114,9 +117,76 @@ public class Garbage extends FieldAccessBean {
 	private TownArea town;
 	private Set<User> votedBy;
 	private double x;
+
 	private double y;
 
 	public Garbage() {
+	}
+
+	private void buildRadius() {
+		if (radius == null)
+			return;
+
+		polyline = new ArrayList<Point2D.Double>();
+
+		double error = -radius;
+		double x = radius, y = 0;
+		while (x > 0) {
+			polyline.add(new Point2D.Double(this.x + x, this.y + y));
+			error += x;
+			x -= CIRCLE_INCREMENT;
+			error += x;
+			if (error >= 0) {
+				error -= y;
+				y += CIRCLE_INCREMENT;
+				error -= y;
+			}
+		}
+
+		error = -radius + CIRCLE_INCREMENT;
+		x = CIRCLE_INCREMENT;
+		y = radius;
+		while (y > 0) {
+			polyline.add(new Point2D.Double(this.x - x, this.y + y));
+			error += y;
+			y -= CIRCLE_INCREMENT;
+			error += y;
+			if (error >= 0) {
+				error -= x;
+				x += CIRCLE_INCREMENT;
+				error -= x;
+			}
+		}
+
+		error = -radius - CIRCLE_INCREMENT;
+		x = -radius;
+		y = -CIRCLE_INCREMENT;
+		while (x < 0) {
+			polyline.add(new Point2D.Double(this.x + x, this.y + y));
+			error -= y;
+			y -= CIRCLE_INCREMENT;
+			error -= y;
+			if (error >= 0) {
+				error += x;
+				x += CIRCLE_INCREMENT;
+				error += x;
+			}
+		}
+
+		error = radius;
+		x = 0;
+		y = -radius;
+		while (y < -CIRCLE_INCREMENT) {
+			polyline.add(new Point2D.Double(this.x + x, this.y + y));
+			error += x;
+			x += CIRCLE_INCREMENT;
+			error += x;
+			if (error >= 0) {
+				error -= y;
+				y += CIRCLE_INCREMENT;
+				error -= y;
+			}
+		}
 	}
 
 	@Transient
@@ -268,7 +338,11 @@ public class Garbage extends FieldAccessBean {
 		return pictures;
 	}
 
-	public double getRadius() {
+	public List<Point2D.Double> getPolyline() {
+		return polyline;
+	}
+
+	public Double getRadius() {
 		return radius;
 	}
 
@@ -342,6 +416,12 @@ public class Garbage extends FieldAccessBean {
 
 	public boolean isToVote() {
 		return toVote;
+	}
+
+	@PrePersist
+	public void onPrePersist() {
+		timestampRecord();
+		buildRadius();
 	}
 
 	// TODO check whether this must be set
@@ -485,7 +565,11 @@ public class Garbage extends FieldAccessBean {
 		this.pictures = pictures;
 	}
 
-	public void setRadius(double radius) {
+	public void setPolyline(List<Point2D.Double> polyline) {
+		this.polyline = polyline;
+	}
+
+	public void setRadius(Double radius) {
 		this.radius = radius;
 	}
 
@@ -551,9 +635,7 @@ public class Garbage extends FieldAccessBean {
 		this.y = y;
 	}
 
-	/** Set up the recordDate timestamp. */
-	@PrePersist
-	public void timestampRecord() {
+	private void timestampRecord() {
 		if (recordDate == null)
 			recordDate = new Date();
 	}
