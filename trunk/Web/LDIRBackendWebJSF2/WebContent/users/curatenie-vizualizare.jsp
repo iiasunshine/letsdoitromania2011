@@ -208,8 +208,8 @@
                             <a4j:form>
                                 <m:map latitude="#{areaCleanManager.currentLat}"
                                        longitude="#{areaCleanManager.currentLng}"
-                                       width="710px"
-                                       height="600px"
+                                       width="750px"
+                                       height="650px"
                                        zoom="11"
                                        jsVariable="myMap" 
                                        
@@ -233,6 +233,7 @@
                                     <!-- zoom si focus pe zona de cartare -->
                                     <m:eventListener eventName="bounds_changed" jsFunction="onBoundsChanged" />     
                                     <m:eventListener eventName="bounds_changed" jsFunction="loadEvents()" />
+                                     <m:eventListener eventName="load" jsFunction="onBoundsChanged()" />
                                 </m:map>
                             </a4j:form>
                         </div>

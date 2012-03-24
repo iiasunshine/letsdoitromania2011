@@ -5,6 +5,9 @@
     var WS_URL = '${initParam["webservice.url"]}';
 </script>
 <script type="text/javascript" 
+        src="${pageContext.servletContext.contextPath}/layout/scripts/egeoxml.js">
+</script>
+<script type="text/javascript" 
         src="${pageContext.servletContext.contextPath}/layout/scripts/gmap.js">
 </script>
 

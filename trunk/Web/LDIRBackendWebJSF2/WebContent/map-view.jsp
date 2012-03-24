@@ -32,7 +32,7 @@
                         <%-- righ column (harta cu gunoaie) --%>
                         <div id="rightColumn">
                             <a4j:form>
-                                <m:map width="710px" height="600px" latitude="44.4317879" longitude="26.1015844" zoom="10" jsVariable="myMap"  >
+                                <m:map width="750px" height="650px" latitude="44.4317879" longitude="26.1015844" zoom="10" jsVariable="myMap"  >
                                     <m:mapControl name="GLargeMapControl3D"/>
                                     <m:mapControl name="GMapTypeControl" position="G_ANCHOR_TOP_RIGHT"/>
                                     <m:mapControl name="GScaleControl" position="G_ANCHOR_BOTTOM_RIGHT" />
@@ -47,6 +47,9 @@
                                             <xm:htmlInformationWindow htmlText="{gunoi.infoHtml}"/>
                                         </xm:marker>
                                     </xa4j:repeat-->
+                                    <m:eventListener eventName="bounds_changed" jsFunction="onBoundsChanged" />     
+                                    <m:eventListener eventName="bounds_changed" jsFunction="loadEvents()" />
+                                    <m:eventListener eventName="load" jsFunction="onBoundsChanged()" />
                                 </m:map>
                             </a4j:form>
 
