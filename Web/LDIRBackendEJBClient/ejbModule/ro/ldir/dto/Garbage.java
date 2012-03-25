@@ -26,6 +26,7 @@ package ro.ldir.dto;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -35,8 +36,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
@@ -47,6 +46,7 @@ import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import ro.ldir.dto.adapters.IntegerAdapter;
@@ -115,7 +115,7 @@ public class Garbage extends FieldAccessBean {
 	private boolean toClean;
 	private boolean toVote;
 	private TownArea town;
-	private Set<User> votedBy;
+	private Set<GarbageVote> votes = new HashSet<GarbageVote>();
 	private double x;
 
 	private double y;
@@ -372,21 +372,17 @@ public class Garbage extends FieldAccessBean {
 		return town;
 	}
 
-	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE,
-			CascadeType.DETACH, CascadeType.REFRESH })
-	@JoinTable(name = "GARBAGE_VOTES")
-	@XmlIDREF
-	@NonComparableField
-	public Set<User> getVotedBy() {
-		return votedBy;
-	}
-
 	@Transient
 	@NonComparableField
-	public long getVotes() {
-		if (votedBy == null)
-			return 0;
-		return votedBy.size();
+	public long getVoteCount() {
+		return getVotes().size();
+	}
+
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "garbage", orphanRemoval = true)
+	@NonComparableField
+	@XmlTransient
+	public Set<GarbageVote> getVotes() {
+		return votes;
 	}
 
 	/**
@@ -611,12 +607,17 @@ public class Garbage extends FieldAccessBean {
 	}
 
 	@NonTransferableField
-	public void setVotedBy(Set<User> votedBy) {
-		this.votedBy = votedBy;
+	public void setVoteCount(long voteCount) {
+
 	}
 
 	@NonTransferableField
 	public void setVotes(long votes) {
+	}
+
+	@NonTransferableField
+	public void setVotes(Set<GarbageVote> votes) {
+		this.votes = votes;
 	}
 
 	/**

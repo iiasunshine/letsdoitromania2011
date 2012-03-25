@@ -26,13 +26,21 @@
 	<property name="geoinit.location" value="${common.basedir}/Web/LDIRBackendGeoInit" />
 	<property name="tests.location" value="${common.basedir}/Web/LDIRBackendTests" />
 
+	<property name="reportformatter.location" value="${common.basedir}/Web/LDIRReportFormatter" />
+	<property name="reportformatter.jar" value="${reportformatter.location}/LDIRReportFormatter.jar" />
+
 	<path id="EAR Libraries.libraryclasspath">
 		<pathelement location="${ejbclient.jar}" />
+		<pathelement location="${reportformatter.jar}" />
 	</path>
 
 	<path id="itext.libraryclasspath">
 		<pathelement location="${app.location}/EarContent/lib/itextpdf-5.1.2.jar" />
+		<pathelement location="${app.location}/EarContent/lib/itextpdf-5.1.2.jar" />
 		<pathelement location="${app.location}/EarContent/lib/itext-xtra-5.1.2.jar" />
+		<pathelement location="${app.location}/EarContent/lib/poi-3.8-beta3-20110606.jar" />
+		<pathelement location="${app.location}/EarContent/lib/poi-ooxml-3.8-beta3-20110606.jar" />
+		<pathelement location="${app.location}/EarContent/lib/poi-ooxml-schemas-3.8-beta3-20110606.jar" />
 	</path>
 
 	<path id="GlassFish 3.1 [GlassFish 3.1].libraryclasspath">
@@ -91,8 +99,15 @@
 	<path id="LDIRBackendEJBClient.classpath">
 		<pathelement location="${ejbclient.location}/build/classes" />
 		<path refid="GlassFish 3.1 [GlassFish 3.1].libraryclasspath" />
+		<path refid="itext.libraryclasspath" />
 	</path>
 
+	<path id="LDIRReportFormatter.classpath">
+		<pathelement location="${ejbclient.location}/build/classes" />
+		<path refid="GlassFish 3.1 [GlassFish 3.1].libraryclasspath" />
+		<path refid="itext.libraryclasspath" />
+	</path>
+			
 	<path id="LDIRBackendWeb.classpath">
 		<pathelement location="build/classes" />
 		<path refid="GlassFish 3.1 [GlassFish 3.1].libraryclasspath" />

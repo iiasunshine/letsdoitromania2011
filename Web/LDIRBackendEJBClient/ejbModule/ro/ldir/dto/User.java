@@ -36,7 +36,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
@@ -115,7 +114,6 @@ public class User extends FieldAccessBean implements Serializable {
 	private String role;
 	private String town;
 	private Integer userId;
-	private Set<Garbage> votedGarbages;
 
 	public User() {
 	}
@@ -316,13 +314,6 @@ public class User extends FieldAccessBean implements Serializable {
 	@XmlJavaTypeAdapter(IntegerAdapter.class)
 	public Integer getUserId() {
 		return userId;
-	}
-
-	@ManyToMany(cascade = CascadeType.ALL, mappedBy = "votedBy")
-	@NonComparableField
-	@XmlIDREF
-	public Set<Garbage> getVotedGarbages() {
-		return votedGarbages;
 	}
 
 	/**
@@ -546,11 +537,6 @@ public class User extends FieldAccessBean implements Serializable {
 		this.userId = userId;
 	}
 
-	@NonTransferableField
-	public void setVotedGarbages(Set<Garbage> votedGarbages) {
-		this.votedGarbages = votedGarbages;
-	}
-
 	/**
 	 * Tests the given password.
 	 * 
@@ -568,5 +554,4 @@ public class User extends FieldAccessBean implements Serializable {
 		if (recordDate == null)
 			recordDate = new Date();
 	}
-
 }

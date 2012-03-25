@@ -45,6 +45,7 @@ import org.junit.Test;
 import ro.ldir.dto.Garbage;
 import ro.ldir.tests.helper.DatabaseHelper;
 
+import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.multipart.FormDataMultiPart;
@@ -234,6 +235,21 @@ public class GarbageOperations extends GarbageTest {
 		assertEquals(200, cr.getStatus());
 
 		r = client.resource(location + "/" + garbageId + "/vote");
+		cr = r.accept(MediaType.APPLICATION_XML).put(ClientResponse.class);
+		assertEquals(200, cr.getStatus());
+	}
+
+	@Test
+	public void anonymousVoteGarbage() throws NumberFormatException,
+			ClassNotFoundException, SQLException {
+		WebResource r = client.resource(location + "/" + garbageId + "/toVote");
+		ClientResponse cr = r.entity("true", MediaType.APPLICATION_XML).put(
+				ClientResponse.class);
+		assertEquals(200, cr.getStatus());
+
+		Client newClient = Client.create();
+		r = newClient.resource(baseLocation + "garbage/ws/" + garbageId
+				+ "/vote");
 		cr = r.accept(MediaType.APPLICATION_XML).put(ClientResponse.class);
 		assertEquals(200, cr.getStatus());
 	}

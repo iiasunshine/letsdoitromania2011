@@ -446,7 +446,7 @@ public class GarbageWebService {
 	@Path("{garbageId:[0-9]+}/vote")
 	public Response voteGarbage(@PathParam("garbageId") int garbageId) {
 		try {
-			garbageManager.voteGarbage(garbageId);
+			garbageManager.voteGarbage(garbageId, null);
 		} catch (EJBException e) {
 			if (e.getCausedByException() instanceof NullPointerException)
 				throw new WebApplicationException(404);
@@ -457,5 +457,4 @@ public class GarbageWebService {
 		}
 		return Response.ok().build();
 	}
-
 }

@@ -33,7 +33,7 @@ in the database.
   \end{datalist}
 \end{apidata}
 
-\subsection{Anonymously adding a new garbage tag}
+\s ubsection{Anonymously adding a new garbage tag}
 
 This call inserts a new garbage in the system by a user that is not
 authenticated.
@@ -144,10 +144,28 @@ The logged in user must be an ``ADMIN'', ``ORGANIZER'' or ``ORGANIZER\_MULTI''.
 The logged in user must be an ``ADMIN'', ``ORGANIZER'' or ``ORGANIZER\_MULTI''.
 \end{apidata}
 
+\subsection{Anonymously voting for a garbage}
+
+An IP can vote for a garbage only once in a 24h period. Only a garbage that has
+been selected for voting by an organizer can be voted.
+
+\apilocation{post}{garbage/ws/\param{garbageId}/vote}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyitem{200}{if the operation succeeds.}
+    \replyitem{400}{if the garbage cannot be voted, either because the user has
+    already voted for the garbage, or because no organizer selected the garbage
+    for voting.}
+    \replyitem{404}{if the garbage does not exist.}
+    \replyitem{500}{if another error occurs.}
+  \end{datalist}
+\end{apidata}
+
 \subsection{Voting for a garbage}
 
-A user can vote for a garbage only once. Only a garbage that has been selected
-for voting by an organizer can be voted.
+A user can vote for a garbage only once in a 24h period, even if it votes from a
+location where it has been previously voted. Only a garbage that has been
+selected for voting by an organizer can be voted.
 
 \apilocation{post}{ws/garbage/\param{garbageId}/vote}
 \begin{apidata}{returns}

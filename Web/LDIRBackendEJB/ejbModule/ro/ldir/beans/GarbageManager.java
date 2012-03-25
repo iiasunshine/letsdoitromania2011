@@ -71,6 +71,7 @@ import ro.ldir.dto.CountyArea;
 import ro.ldir.dto.Garbage;
 import ro.ldir.dto.Garbage.GarbageStatus;
 import ro.ldir.dto.GarbageEnrollment;
+import ro.ldir.dto.GarbageVote;
 import ro.ldir.dto.TownArea;
 import ro.ldir.dto.User;
 import ro.ldir.exceptions.InvalidUserOperationException;
@@ -99,10 +100,10 @@ import com.sun.image.codec.jpeg.JPEGImageEncoder;
 @LocalBean
 @DeclareRoles({ "ADMIN", "ORGANIZER", "ORGANIZER_MULTI" })
 public class GarbageManager implements GarbageManagerLocal {
-	private static Logger log = Logger
-			.getLogger(GarbageManager.class.getName());
 	private static final String DISPLAY_PREFIX = "display";
 	private static final String IMAGE_JPG = "JPEG";
+	private static Logger log = Logger
+			.getLogger(GarbageManager.class.getName());
 	private static Logger logger = Logger.getLogger(GarbageManagerLocal.class
 			.getName());
 	private static final String THUMB_PREFIX = "thumb";
@@ -687,18 +688,60 @@ public class GarbageManager implements GarbageManagerLocal {
 	 * @see ro.ldir.beans.GarbageManagerLocal#voteGarbage(int)
 	 */
 	@Override
-	public void voteGarbage(int garbageId) throws InvalidUserOperationException {
+	public void voteGarbage(int garbageId, String ip)
+			throws InvalidUserOperationException {
 		Garbage garbage = em.find(Garbage.class, garbageId);
 		if (!garbage.isToVote())
 			throw new InvalidUserOperationException(
 					"The garbage has not been selected for voting!");
 
 		User user = SecurityHelper.getUser(userManager, ctx);
-		if (garbage.getVotedBy().contains(user))
+		if (user != null) {
+			voteGarbageWithCredentials(garbage, user);
+			return;
+		}
+		if (ip == null)
+			throw new NullPointerException();
+		voteGarbageWithIp(garbage, ip);
+	}
+
+	private void voteGarbageWithCredentials(Garbage garbage, User user)
+			throws InvalidUserOperationException {
+		Query query = em
+				.createQuery("SELECT COUNT(gv) FROM GarbageVote gv WHERE "
+						+ "gv.garbage=:garbage AND gv.user=:user AND "
+						+ "gv.timestamp > :allowed");
+		query.setParameter("garbage", garbage);
+		query.setParameter("user", user);
+		query.setParameter("allowed", new Date(
+				new Date().getTime() - 1000 * 3600 * 24));
+		Number count = (Number) query.getSingleResult();
+		if (count.longValue() > 0)
 			throw new InvalidUserOperationException(
-					"Cannot vote for a garbage twicxe!");
-		garbage.getVotedBy().add(user);
-		user.getVotedGarbages().add(garbage);
+					"You have alread voted for this garbage in the past 24h");
+
+		GarbageVote garbageVote = new GarbageVote(garbage, user);
+		garbage.getVotes().add(garbageVote);
+		em.merge(garbage);
+	}
+
+	private void voteGarbageWithIp(Garbage garbage, String ip)
+			throws InvalidUserOperationException {
+		Query query = em
+				.createQuery("SELECT COUNT(gv) FROM GarbageVote gv WHERE "
+						+ "gv.garbage=:garbage AND gv.ip=:ip AND "
+						+ "gv.timestamp > :allowed");
+		query.setParameter("garbage", garbage);
+		query.setParameter("ip", ip);
+		query.setParameter("allowed", new Date(
+				new Date().getTime() - 1000 * 3600 * 24));
+		Number count = (Number) query.getSingleResult();
+		if (count.longValue() > 0)
+			throw new InvalidUserOperationException(
+					"You have alread voted for this garbage in the past 24h");
+
+		GarbageVote garbageVote = new GarbageVote(garbage, ip);
+		garbage.getVotes().add(garbageVote);
 		em.merge(garbage);
 	}
 }

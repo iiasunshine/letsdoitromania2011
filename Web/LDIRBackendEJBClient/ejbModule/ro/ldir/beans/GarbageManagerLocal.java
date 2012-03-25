@@ -248,6 +248,9 @@ public interface GarbageManagerLocal {
 	 * Vote a garbage
 	 * 
 	 * @param garbageId
+	 * @param ip
+	 *            the IP from where the vote comes
 	 */
-	public void voteGarbage(int garbageId) throws InvalidUserOperationException;
+	public void voteGarbage(int garbageId, String ip)
+			throws InvalidUserOperationException;
 }
