@@ -5,21 +5,27 @@
 package ro.radcom.ldir.ldirbackendwebjsf2.managedBeans;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 import javax.naming.NamingException;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
 import ro.ldir.dto.CountyArea;
 import ro.ldir.dto.Garbage;
 import ro.ldir.dto.User;
+import ro.ldir.report.formatter.GarbageExcelFormatter;
+import ro.ldir.report.formatter.GenericXlsxFormatter;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.AppUtils;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.ImageInfo;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.JsfUtils;
@@ -36,7 +42,7 @@ public class AdminGarbageManagerBean {
 	private WSInterface wsi;
 	/* variabile afisare */
 	private User userDetails = new User();
-	private Garbage[] garbageList;
+	private List<Garbage> garbageList;
 	private CountyArea[] countyAreas;
 	private String userId;
 	private String gridId;
@@ -72,9 +78,9 @@ public class AdminGarbageManagerBean {
 				.getParameter("garbageId"));
 
 		/* identificare morman */
-		for (int i = 0; i < garbageList.length; i++) {
-			if (garbageId == garbageList[i].getGarbageId().intValue()) {
-				selectedGarbage = garbageList[i];
+		for (Garbage garbage: garbageList) {
+			if (garbageId == garbage.getGarbageId().intValue()) {
+				selectedGarbage = garbage;
 				break;
 			}
 		}
@@ -200,7 +206,7 @@ public class AdminGarbageManagerBean {
 		if ((countyId == null) && (gridId == null || gridId.length() == 0)
 				&& (userId == null || userId.length() == 0)
 				&& (addDate == null)) {
-			garbageList = new Garbage[0];
+			garbageList = new ArrayList<Garbage>();
 			noFilter = true;
 			return;
 		} else {
@@ -211,12 +217,9 @@ public class AdminGarbageManagerBean {
 				&& userDetails.getRole().equals("ADMIN")) 
 			countyId = null;
 
-		List<Garbage> garbages = wsi.getGarbageListByFilters(userDetails,
+		garbageList = wsi.getGarbageListByFilters(userDetails,
 				countyId, AppUtils.parseToInt(gridId, null),
 				AppUtils.parseToInt(userId, null), addDate, null);
-		garbageList = new Garbage[garbages.size()];
-		garbages.toArray(garbageList);
-
 	}
 
 	public String encodeUrl(String arg) {
@@ -230,8 +233,22 @@ public class AdminGarbageManagerBean {
 		return arg;
 	}
 
-	public void actionGenerateExcel() {
+	public void actionGenerateExcel() throws IOException {
+		GarbageExcelFormatter fmt = new GarbageExcelFormatter(garbageList);
+		byte report[] = new GenericXlsxFormatter(fmt).getBytes();
 
+		FacesContext fc = FacesContext.getCurrentInstance();
+		HttpServletResponse response = (HttpServletResponse) fc
+				.getExternalContext().getResponse();
+		OutputStream out = response.getOutputStream();
+		out.write(report);
+		out.flush();
+
+		response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+		response.addHeader("Content-Disposition",
+				"attachment; filename=garbagereport.xlsx");
+		out.close();
+		FacesContext.getCurrentInstance().responseComplete();
 	}
 
 	public List<SelectItem> getCountyItems() {
@@ -260,7 +277,7 @@ public class AdminGarbageManagerBean {
 	/**
 	 * @return the garbageList
 	 */
-	public Garbage[] getGarbageList() {
+	public List<Garbage> getGarbageList() {
 		return garbageList;
 	}
 

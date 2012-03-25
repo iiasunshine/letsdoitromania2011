@@ -23,22 +23,32 @@
  */
 package ro.ldir.garbage;
 
+import javax.ejb.EJBException;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import ro.ldir.beans.GarbageManagerLocal;
 import ro.ldir.dto.Garbage;
+import ro.ldir.exceptions.InvalidUserOperationException;
 import ro.ldir.exceptions.NoCountyException;
 
 /** Serves anonymous calls to handle garbages. */
 @Path("ws")
 public class GarbageAnonymousWebService {
 	private GarbageManagerLocal garbageManager;
+	@Context
+	HttpServletRequest req;
 
 	public GarbageAnonymousWebService() throws NamingException {
 		InitialContext ic = new InitialContext();
@@ -56,5 +66,21 @@ public class GarbageAnonymousWebService {
 			throw new WebApplicationException(Status.BAD_REQUEST);
 		}
 		return new Integer(insertedId).toString();
+	}
+
+	@PUT
+	@Path("{garbageId:[0-9]+}/vote")
+	public Response voteGarbage(@PathParam("garbageId") int garbageId) {
+		try {
+			garbageManager.voteGarbage(garbageId, req.getRemoteAddr());
+		} catch (EJBException e) {
+			if (e.getCausedByException() instanceof NullPointerException)
+				throw new WebApplicationException(404);
+			throw new WebApplicationException(500);
+		} catch (InvalidUserOperationException e) {
+			return Response.status(Status.BAD_REQUEST).entity(e.getMessage())
+					.type(MediaType.TEXT_PLAIN).build();
+		}
+		return Response.ok().build();
 	}
 }
