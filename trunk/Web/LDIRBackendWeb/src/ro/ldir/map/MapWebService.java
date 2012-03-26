@@ -173,7 +173,8 @@ public class MapWebService {
 	@Path("countySearch/garbages")
 	public String getGarbageByCounty(@QueryParam("county") String county,
 			@QueryParam("cb") String callbackPattern) {
-		List<Garbage> garbages = garbageManager.getGarbagesByCounty(county);
+		List<Garbage> garbages = garbageManager.getGarbagesByCounty(county,
+				null, null);
 		return new GarbagesKMLFormatter(garbages, callbackPattern).toString();
 	}
 
@@ -190,6 +191,22 @@ public class MapWebService {
 						bottomRightY);
 		return new GarbageGroupsKMLFormatter(garbageGroups, callbackPattern)
 				.toString();
+	}
+
+	@GET
+	@Produces({ "application/json", "application/xml" })
+	@Path("garbages")
+	public List<Garbage> getGarbages(@QueryParam("topLeftX") double topLeftX,
+			@QueryParam("topLeftY") double topLeftY,
+			@QueryParam("bottomRightX") double bottomRightX,
+			@QueryParam("bottomRightY") double bottomRightY,
+			@QueryParam("maxResults") Integer maxResults) {
+		List<Garbage> garbages = garbageManager.getGarbages(topLeftX, topLeftY,
+				bottomRightX, bottomRightY);
+		if (maxResults != null && maxResults > 0
+				&& garbages.size() > maxResults)
+			throw new WebApplicationException(Status.NOT_ACCEPTABLE);
+		return garbages;
 	}
 
 	@GET
