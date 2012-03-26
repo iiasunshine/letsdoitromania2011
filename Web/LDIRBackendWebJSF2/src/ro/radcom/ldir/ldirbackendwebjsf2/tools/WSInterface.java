@@ -96,8 +96,9 @@ public class WSInterface {
 		teamManager.removeGarbageAssigment(teamId, garbageId);
 	}
 
-	public List<Garbage> getGarbageFromCounty(User user, String county) {
-		return garbageManager.getGarbagesByCounty(county);
+	public List<Garbage> getGarbageFromCounty(User user, String county,
+			Boolean toVote, Boolean toClean) {
+		return garbageManager.getGarbagesByCounty(county, toVote, toClean);
 	}
 
 	public List<Garbage> getGarbageofTeam(User user, int teamId) {

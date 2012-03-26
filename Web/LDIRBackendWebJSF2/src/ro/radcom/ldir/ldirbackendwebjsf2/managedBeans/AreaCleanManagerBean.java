@@ -142,7 +142,7 @@ public class AreaCleanManagerBean {
 	
 	public void init(){
 		
-        areaGarbages = wsi.getGarbageFromCounty(userDetails, country);
+        areaGarbages = wsi.getGarbageFromCounty(userDetails, country, null, null);
         
 //
 
