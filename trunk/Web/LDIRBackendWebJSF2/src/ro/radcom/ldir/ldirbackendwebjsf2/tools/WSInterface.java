@@ -84,6 +84,10 @@ public class WSInterface {
 		}
 		return garbageManager.insertGarbage(garbage);
 	}
+	
+	public void vote(Garbage garbage, String ip) throws InvalidUserOperationException{
+		garbageManager.voteGarbage(garbage.getGarbageId(), ip);
+	}
 
 	public void addGarbageToTeam(User user, Team team, Garbage garbage)
 			throws InvalidTeamOperationException {
