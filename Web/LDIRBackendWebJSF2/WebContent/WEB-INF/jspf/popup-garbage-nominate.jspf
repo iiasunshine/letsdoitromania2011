@@ -1,0 +1,63 @@
+<%@ include file="/WEB-INF/jspf/page-header.jspf"%>
+
+<!-- create new issue form dialog -->
+<rich:modalPanel id="popup_garbage_nominate" height="170" width="400"
+	resizeable="false">
+
+	<%-- HEADER --%>
+	<f:facet name="header">
+		<h:outputText value="Nominalizare morman pt votare" />
+	</f:facet>
+
+	<%-- CONTROLS --%>
+	<f:facet name="controls">
+		<h:panelGroup>
+			<h:graphicImage value="/layout/images/close.png"
+				styleClass="hidelink">
+				<rich:componentControl for="popup_garbage_nominate" operation="hide"
+					event="onclick" />
+			</h:graphicImage>
+		</h:panelGroup>
+	</f:facet>
+
+	<%-- BODY POPUP --%>
+	<a4j:outputPanel>
+		<div style="height: 100px; margin-top: 15px; overflow: hidden;">
+			<h3>
+				<h:panelGroup
+					rendered="#{not adminGarbageManagerBean.selectedGarbage.toVote}">
+					<h:outputText
+						value="Esti sigur ca vrei sa nominalizezi pentru votare mormanul cu id-ul #{adminGarbageManagerBean.selectedGarbage.garbageId}?" />
+				</h:panelGroup>
+				
+				<h:panelGroup
+					rendered="#{adminGarbageManagerBean.selectedGarbage.toVote}">
+					<h:outputText
+						value="Esti sigur ca vrei sa scoti din lista de nominalizari mormanul cu id-ul #{adminGarbageManagerBean.selectedGarbage.garbageId}?" />
+				</h:panelGroup>
+				<h:outputText
+					value="<br/><br/>(#{adminGarbageManagerBean.selectedGarbage.name})"
+					escape="false"
+					rendered="#{fn:length(adminGarbageManagerBean.selectedGarbage.name) gt 0}" />
+			</h3>
+		</div>
+
+		<!-- BUTOANE -->
+		<div style="text-align: center;">
+			<a4j:form>
+				<a4j:commandButton
+					actionListener="#{adminGarbageManagerBean.actionToVote}"
+					value="DA" reRender="lista-gunoaie"
+					oncomplete="#{rich:component('popup-loading')}.hide();"
+					onclick="#{rich:component('popup_garbage_nominate')}.hide(); #{rich:component('popup-loading')}.show();"
+					styleClass="formButton" />
+				<a4j:commandButton value="NU"
+					onclick="#{rich:component('popup_garbage_nominate')}.hide();"
+					styleClass="formButton" />
+			</a4j:form>
+		</div>
+	</a4j:outputPanel>
+</rich:modalPanel>
+
+
+

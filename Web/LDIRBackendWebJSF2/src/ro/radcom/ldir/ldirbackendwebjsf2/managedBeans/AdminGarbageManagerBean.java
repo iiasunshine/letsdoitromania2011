@@ -73,12 +73,33 @@ public class AdminGarbageManagerBean {
 		initGarbageList();
 	}
 
+	public void actionToVote() {
+
+		if (selectedGarbage != null) {
+			boolean toVote = false;
+			toVote = selectedGarbage.isToVote();
+			wsi.setGarbageToVote(selectedGarbage.getGarbageId(), !toVote);
+			selectedGarbage.setToVote(!toVote);
+		}
+	}
+
+	public void actionToClean() {
+
+		if (selectedGarbage != null) {
+			boolean toClean = false;
+			toClean = selectedGarbage.isToClean();
+			wsi.setGarbageToClean(selectedGarbage.getGarbageId(), !toClean);
+			selectedGarbage.setToClean(!toClean);
+		}
+
+	}
+
 	public void actionSelectGarbage(ActionEvent event) {
 		int garbageId = AppUtils.parseToInt(JsfUtils.getHttpRequest()
 				.getParameter("garbageId"));
 
 		/* identificare morman */
-		for (Garbage garbage: garbageList) {
+		for (Garbage garbage : garbageList) {
 			if (garbageId == garbage.getGarbageId().intValue()) {
 				selectedGarbage = garbage;
 				break;
@@ -88,7 +109,16 @@ public class AdminGarbageManagerBean {
 		if (event.getComponent().getClientId().indexOf("delete") >= 0) {
 			return;
 		}
-
+		
+		if (event.getComponent().getClientId().indexOf("popupLinkNominate") >= 0) {
+			return;
+		}
+		
+		
+		if (event.getComponent().getClientId().indexOf("popupLinkToClean") >= 0) {
+			return;
+		}		
+		
 		/* resetare parametri folositi */
 		posters = new ArrayList<String>();
 		thumbnails = new ArrayList<String>();
@@ -214,11 +244,11 @@ public class AdminGarbageManagerBean {
 		}
 
 		if ((countyId.equals("Toate") == true || countyId.equals("") == true)
-				&& userDetails.getRole().equals("ADMIN")) 
+				&& userDetails.getRole().equals("ADMIN"))
 			countyId = null;
 
-		garbageList = wsi.getGarbageListByFilters(userDetails,
-				countyId, AppUtils.parseToInt(gridId, null),
+		garbageList = wsi.getGarbageListByFilters(userDetails, countyId,
+				AppUtils.parseToInt(gridId, null),
 				AppUtils.parseToInt(userId, null), addDate, null);
 	}
 

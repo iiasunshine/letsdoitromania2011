@@ -49,7 +49,7 @@ body { margin: 0px 0px 0px 0px; background-color: #fefefe; font: Tahoma; }
 #listHeaderContainer .listHeaderLarge { width: 119px; height: 30px; vertical-align: top; margin: 0px 0px 0px 0px; padding: 5px 5px 5px 5px; display: inline-block; font-weight: bold; border-right: 2px solid #ffffff; }
 #listEntryContainer { padding: 0px 0px 0px 0px; border-top: 2px solid #ffffff;; background-color: #f5f5f5; }
 #listEntryContainer .listEntry { width: 59px; min-height: 20px; vertical-align: top; margin: 0px 0px 0px 0px; padding: 5px 5px 5px 5px; display: inline-block; border-right: 1px solid #ffffff;  overflow: hidden;}
-#listEntryContainer .listEntryLarge { width: 119px; height: 30px;; vertical-align: top; margin: 0px 0px 0px 0px; padding: 5px 5px 5px 5px; display: inline-block; border-right: 2px solid #ffffff; overflow: hidden;}
+#listEntryContainer .listEntryLarge { width: 119px; height: 50px;; vertical-align: top; margin: 0px 0px 0px 0px; padding: 5px 5px 5px 5px; display: inline-block; border-right: 2px solid #ffffff; overflow: hidden;}
 #listEntryContainer a { text-decoration: none; color: #4d751f; }
 #listEntryContainer a:hover { color: #4d751f; }
 
