@@ -40,6 +40,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -159,8 +160,16 @@ public class GarbageWebService {
 	@GET
 	@Produces({ "application/json", "application/xml" })
 	@Path("countySearch")
-	public List<Garbage> getGarbageByCounty(@QueryParam("county") String county) {
-		return garbageManager.getGarbagesByCounty(county);
+	public List<Garbage> getGarbageByCounty(
+			@QueryParam("county") String county,
+			@QueryParam("toVote") @DefaultValue("") String toVoteS,
+			@QueryParam("toClean") @DefaultValue("") String toCleanS) {
+		Boolean toVote = null, toClean = null;
+		if (toVoteS.length() > 0)
+			toVote = new Boolean(toVoteS);
+		if (toCleanS.length() > 0)
+			toClean = new Boolean(toCleanS);
+		return garbageManager.getGarbagesByCounty(county, toVote, toClean);
 	}
 
 	@GET

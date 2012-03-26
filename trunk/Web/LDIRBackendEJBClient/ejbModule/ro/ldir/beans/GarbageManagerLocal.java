@@ -119,9 +119,16 @@ public interface GarbageManagerLocal {
 	 * 
 	 * @param county
 	 *            The county of interest.
+	 * @param toVote
+	 *            Whether the garbages have been selected for voting. Use
+	 *            {@code null} as wildcar.
+	 * @param toClean
+	 *            Whether the garbages have been selected for cleaning. Use
+	 *            {@code null} as wildcar.
 	 * @return a list of garbages in the given county.
 	 */
-	public List<Garbage> getGarbagesByCounty(String county);
+	public List<Garbage> getGarbagesByCounty(String county, Boolean toVote,
+			Boolean toClean);
 
 	/**
 	 * Searches garbages by town.

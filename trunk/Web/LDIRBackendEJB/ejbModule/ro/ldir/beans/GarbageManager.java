@@ -330,10 +330,23 @@ public class GarbageManager implements GarbageManagerLocal {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Garbage> getGarbagesByCounty(String county) {
-		Query query = em
-				.createQuery("SELECT x FROM Garbage x WHERE x.county.name = :countyParam");
+	public List<Garbage> getGarbagesByCounty(String county, Boolean toVote,
+			Boolean toClean) {
+		StringBuffer buf = new StringBuffer(
+				"SELECT x FROM Garbage x WHERE x.county.name = :countyParam");
+		if (toVote != null)
+			buf.append(" AND x.toVote=:toVote");
+		if (toClean != null)
+			buf.append(" AND x.toClean=:toClean");
+		
+		Query query = em.createQuery(buf.toString());
+		
 		query.setParameter("countyParam", county);
+		if (toVote != null)
+			query.setParameter("toVote", toVote);
+		if (toClean != null)
+			query.setParameter("toClean", toClean);
+		
 		return query.getResultList();
 	}
 

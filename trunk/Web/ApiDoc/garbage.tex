@@ -33,7 +33,7 @@ in the database.
   \end{datalist}
 \end{apidata}
 
-\s ubsection{Anonymously adding a new garbage tag}
+\subsection{Anonymously adding a new garbage tag}
 
 This call inserts a new garbage in the system by a user that is not
 authenticated.
@@ -317,7 +317,11 @@ The logged in user must be an ``ADMIN'' or the garbage tag's owner.
 
 \subsection{Searching for garbages in a given county}
 
-\apilocation{get}{ws/garbage/countySearch/?county=\param{county\_name}}
+Searches for all the garbages in a specified county. It can optionally filter
+the garbages according to whether they have been selected for voting and/or
+cleaning.
+
+\apilocation{get}{ws/garbage/countySearch/?county=\param{county\_name}\\\&toVote=\param{toVote}\&toClean=\param{toClean}}
 \begin{apidata}{returns}
   \begin{datalist}
     \replyditem{A list of \texttt{garbage} entities of the garbages in the given
