@@ -26,26 +26,41 @@ in a call.
 \end{apidata}
 
 
-\subsection{Obtaining the garbage tags in a bounding box}
+\subsection{Obtaining the garbage tags in a bounding box (KML)}
 
-\apilocation{get}{map/ws/garbages/?topLeftX=\param{topLeftX}\&\\topLeftY=\param{topLeftY}\&bottomRightX=\param{bottomRightX}\&bottomRightY=\param{bottomRightY}\&\\cb=\param{callback\_url}\&maxResults=\param{maxResults}}
+\apilocation{get}{map/ws/garbages/?topLeftX=\param{topLeftX}\&\\topLeftY=\param{topLeftY}\&bottomRightX=\param{bottomRightX}\&bottomRightY=\param{bottomRightY}}
 \begin{apidata}{parameters}
   \begin{datalist}
     \replyditem{\texttt{callback\_url} a pattern inserted in the KML description
     where \texttt{\{\{\{ID\}\}\}} is replaced with the entity ID. This parameter
     is valid only when requesting a XML.}
+  \end{datalist}
+\end{apidata}
+\begin{apidata}{returns}
+  \begin{datalist}
+    \replyditem{A KML of all the garbages in the bounding box,
+    according to the ``Accept'' headers specified by the calling client.}
+  \end{datalist}
+\end{apidata}
+
+\subsection{Obtaining the garbage tags in a bounding box (entities)}
+
+\apilocation{get}{map/ws/garbageList/?topLeftX=\param{topLeftX}\&\\topLeftY=\param{topLeftY}\&bottomRightX=\param{bottomRightX}\&bottomRightY=\param{bottomRightY}\&\\maxResults=\param{maxResults}}
+\begin{apidata}{parameters}
+  \begin{datalist}
     \replyditem{\texttt{maxResults} the maximum number of results to be
     returned, when asking for a XML or JSON.}
   \end{datalist}
 \end{apidata}
 \begin{apidata}{returns}
   \begin{datalist}
-    \replyditem{A KML/XML/JSON of all the garbages in the bounding box,
+    \replyditem{A XML/JSON of all the garbages in the bounding box,
     according to the ``Accept'' headers specified by the calling client.}
     \replyditem{HTTP 406: If there are two many garbage tags w.r.t the
     \texttt{maxResults} parameter in the specified bounding box.}
   \end{datalist}
 \end{apidata}
+
 
 \subsection{Obtaining the chart areas intersecting a bounding box}
 

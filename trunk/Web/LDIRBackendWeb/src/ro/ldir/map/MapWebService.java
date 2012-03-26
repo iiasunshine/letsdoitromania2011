@@ -195,8 +195,8 @@ public class MapWebService {
 
 	@GET
 	@Produces({ "application/json", "application/xml" })
-	@Path("garbages")
-	public List<Garbage> getGarbages(@QueryParam("topLeftX") double topLeftX,
+	@Path("garbageList")
+	public List<Garbage> getGarbageList(@QueryParam("topLeftX") double topLeftX,
 			@QueryParam("topLeftY") double topLeftY,
 			@QueryParam("bottomRightX") double bottomRightX,
 			@QueryParam("bottomRightY") double bottomRightY,
