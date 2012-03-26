@@ -266,6 +266,7 @@ public class Garbage extends FieldAccessBean {
 	 */
 	@OneToMany(cascade = { CascadeType.ALL }, mappedBy = "garbage")
 	@NonComparableField
+	@XmlTransient
 	public List<GarbageEnrollment> getGarbageEnrollements() {
 		return garbageEnrollements;
 	}
@@ -273,6 +274,7 @@ public class Garbage extends FieldAccessBean {
 	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinColumn(name = "GARBAGEGROUPID")
 	@NonComparableField
+	@XmlIDREF
 	public GarbageGroup getGarbageGroup() {
 		return garbageGroup;
 	}
