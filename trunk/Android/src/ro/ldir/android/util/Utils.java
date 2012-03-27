@@ -4,12 +4,9 @@ import java.io.File;
 import java.io.IOException;
 
 import ro.ldir.R;
-
 import android.app.AlertDialog.Builder;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.Environment;
 import android.widget.Toast;
 
@@ -17,6 +14,7 @@ public class Utils {
 	
 	private static final String APP_PATH = Environment.getExternalStorageDirectory() + File.separator + "LDIR";
 	private static final String CAMERA_PATH = APP_PATH + File.separator + "camera";
+	public static final int MAX_RESULTS = 100;
 	
 	public static final Dialog displayDialog(Context context, int messageId)
 	{
