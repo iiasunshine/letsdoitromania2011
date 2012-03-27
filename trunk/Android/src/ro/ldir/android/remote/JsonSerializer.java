@@ -1,5 +1,6 @@
 package ro.ldir.android.remote;
 
+
 import java.util.Map;
 
 import org.json.simple.JSONObject;
@@ -44,6 +45,8 @@ public class JsonSerializer
 			Map jsonObj = (Map)parser.parse(jsonGarbage);
 			garbage.setBagCount((Integer)jsonObj.get("bagCount"));
 			garbage.setBigComponentsDescription((String)jsonObj.get("bigComponentsDescription"));
+			garbage.setLatitude((Double)jsonObj.get("y"));
+			garbage.setLongitude((Double)jsonObj.get("x"));
 			// TODO -- add the rest of the fields
 			
 		} catch (ParseException e)
@@ -61,7 +64,7 @@ public class JsonSerializer
 		JSONParser parser = new JSONParser();
 		try
 		{
-			Map jsonObj = (Map)parser.parse(jsonUser);
+			Map<?, ?> jsonObj = (Map<?, ?>)parser.parse(jsonUser);
 			String value = (String)jsonObj.get("acceptsMoreInfo");
 			user.setAcceptsMoreInfo(Boolean.parseBoolean(value));
 			

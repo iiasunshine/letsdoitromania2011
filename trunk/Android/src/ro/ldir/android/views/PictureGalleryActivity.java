@@ -52,7 +52,7 @@ public class PictureGalleryActivity extends Activity
 	    setBigPicture(position);
 
 	    g.setOnItemClickListener(new OnItemClickListener() {
-	        public void onItemClick(AdapterView parent, View v, int position, long id) {
+	        public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 	        	PictureGalleryActivity.this.position = position;
 	            setBigPicture(position);
 	        }
