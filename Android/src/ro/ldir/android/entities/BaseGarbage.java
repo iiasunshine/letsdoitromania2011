@@ -3,6 +3,9 @@ package ro.ldir.android.entities;
 import java.util.ArrayList;
 import java.util.Date;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonProperty;
+
 import ro.ldir.android.remote.GarbageStatus;
 import ro.ldir.android.remote.IBackendGarbage;
 
@@ -34,8 +37,19 @@ public class BaseGarbage implements IBackendGarbage{
     private int percentageWaste;
     private ArrayList<String> pictures = new ArrayList<String>();
     private Date recordDate;
-    private double xLatitude;
-    private double yLongitude;
+    private double yLatitude;
+    private double xLongitude;
+    private int county;
+    private int town;
+	private int garbageGroup;    
+    private int insertedBy;
+    private String name;
+    private boolean toClean;
+    private boolean toVote;
+    private int voteCount;
+    private int chartedArea;
+    
+    
     /**
      * Remote (backend) database id
      */
@@ -110,16 +124,16 @@ public class BaseGarbage implements IBackendGarbage{
 		this.recordDate = recordDate;
 	}
 	public double getLatitude() {
-		return xLatitude;
+		return getyLatitude();
 	}
-	public void setLatitude(double xLatitude) {
-		this.xLatitude = xLatitude;
+	public void setLatitude(double yLatitude) {
+		this.setyLatitude(yLatitude);
 	}
 	public double getLongitude() {
-		return yLongitude;
+		return getxLongitude();
 	}
-	public void setLongitude(double yLongitude) {
-		this.yLongitude = yLongitude;
+	public void setLongitude(double xLongitude) {
+		this.setxLongitude(xLongitude);
 	}
 	
 	public String getCSVPictures()
@@ -153,6 +167,8 @@ public class BaseGarbage implements IBackendGarbage{
 	{
 		return status;
 	}
+	
+	@JsonIgnore
 	public void setStatus(GarbageStatus status)
 	{
 		this.status = status;
@@ -162,6 +178,7 @@ public class BaseGarbage implements IBackendGarbage{
 	{
 		return status.getTranslation();
 	}
+	@JsonProperty("allocatedStatus")
 	public void setStatus(String status)
 	{
 		if (GarbageStatus.CLEANED.getTranslation().equals(status))
@@ -173,5 +190,74 @@ public class BaseGarbage implements IBackendGarbage{
 			this.status = GarbageStatus.IDENTIFIED;
 		}
 	}
-	
+	public int getCounty() {
+		return county;
+	}
+	public void setCounty(int county) {
+		this.county = county;
+	}
+
+    
+	public int getTown() {
+		return town;
+	}
+	public void setTown(int town) {
+		this.town = town;
+	}
+	public int getGarbageGroup() {
+		return garbageGroup;
+	}
+	public void setGarbageGroup(int garbageGroup) {
+		this.garbageGroup = garbageGroup;
+	}
+	public int getInsertedBy() {
+		return insertedBy;
+	}
+	public void setInsertedBy(int insertedBy) {
+		this.insertedBy = insertedBy;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public boolean isToClean() {
+		return toClean;
+	}
+	public void setToClean(boolean toClean) {
+		this.toClean = toClean;
+	}
+	public boolean isToVote() {
+		return toVote;
+	}
+	public void setToVote(boolean toVote) {
+		this.toVote = toVote;
+	}
+	public int getVoteCount() {
+		return voteCount;
+	}
+	public void setVoteCount(int voteCount) {
+		this.voteCount = voteCount;
+	}
+	public int getChartedArea() {
+		return chartedArea;
+	}
+	public void setChartedArea(int chartedArea) {
+		this.chartedArea = chartedArea;
+	}
+	@JsonProperty("y")
+	public double getyLatitude() {
+		return yLatitude;
+	}
+	public void setyLatitude(double yLatitude) {
+		this.yLatitude = yLatitude;
+	}
+	@JsonProperty("x")
+	public double getxLongitude() {
+		return xLongitude;
+	}
+	public void setxLongitude(double xLongitude) {
+		this.xLongitude = xLongitude;
+	}	
 }

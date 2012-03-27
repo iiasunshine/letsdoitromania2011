@@ -6,4 +6,8 @@ public class BackendFactory
 	{
 		return new JsonBackend();
 	}
+
+	public static JerseyBackend createJerseyBackend() {
+		return new JerseyBackend();
+	}
 }

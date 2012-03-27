@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
     
@@ -7,9 +7,9 @@
         android:id="@+id/mapView"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:enabled="true"
+        android:state_enabled="true"
         android:clickable="true"
-        android:apiKey="0BAY8Z9edeOTObmEl7qrfWQylOL_uH0GUGHWS4Q"
+        android:apiKey="0BAY8Z9edeOTGItuszOMrPd-SuJ_0E13M23WQUw"        				
         />
  
-</RelativeLayout>
+</LinearLayout>

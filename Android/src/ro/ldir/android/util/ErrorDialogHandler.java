@@ -1,6 +1,7 @@
 package ro.ldir.android.util;
 
 import ro.ldir.R;
+import ro.ldir.android.views.GarbageMapActivity;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -36,6 +37,18 @@ public class ErrorDialogHandler
 		activity.showDialog(IDialogIds.DLG_ERROR);
 	}
 
+	/**
+	 * This method is called whenever an error message must be displayed, for a status code
+	 * @param statusCode
+	 */
+	public static void showErrorDialog(GarbageMapActivity activity, int statusCode)
+	{
+		LLog.d("Showing error dialog for error code: " + statusCode);
+		String errorMessage = activity.getResources().getString(getErrorMessage(statusCode));
+		activity.setErrorMessage(errorMessage);
+		activity.showDialog(IDialogIds.DLG_ERROR);
+	}
+	
 	/**
 	 * Converts the error code received from the backend into an id of the message
 	 * @param statusCode status code received from the backend
