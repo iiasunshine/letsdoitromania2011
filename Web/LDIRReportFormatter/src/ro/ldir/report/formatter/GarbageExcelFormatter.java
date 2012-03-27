@@ -41,7 +41,7 @@ public class GarbageExcelFormatter implements ExcelFormatter {
 	}
 
 	public final Workbook convert(Workbook wb) {
-		Sheet sheet = wb.createSheet("Mormane gunoi");
+		Sheet sheet = wb.createSheet("Lista Mormane gunoi");
 
 		Row row = sheet.createRow(0);
 		row.createCell(0).setCellValue("ID");
@@ -59,6 +59,10 @@ public class GarbageExcelFormatter implements ExcelFormatter {
 		row.createCell(12).setCellValue("Descriere");
 		row.createCell(13).setCellValue("Stare");
 		row.createCell(14).setCellValue("Zon\u04d1 cartare");
+
+		row.createCell(15).setCellValue("Numele mormanului");
+		row.createCell(16).setCellValue("Raza");
+		row.createCell(17).setCellValue("Numar de voturi");
 
 		for (int i = 0; i < garbages.size(); i++) {
 			row = sheet.createRow(i + 1);
@@ -100,6 +104,26 @@ public class GarbageExcelFormatter implements ExcelFormatter {
 			if (garbage.getChartedArea() != null)
 				row.createCell(14).setCellValue(
 						garbage.getChartedArea().getName());
+
+			try {
+				if (garbage.getName() != null)
+					row.createCell(15).setCellValue(garbage.getName());
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+			try {
+				row.createCell(16, Cell.CELL_TYPE_NUMERIC).setCellValue(
+						garbage.getRadius());
+			} catch (Exception e1) {
+				// TODO: handle exception
+			}
+			try {
+				if (garbage.getVotes() != null)
+					row.createCell(17, Cell.CELL_TYPE_NUMERIC).setCellValue(
+							garbage.getVoteCount());
+			} catch (Exception ee) {
+
+			}
 		}
 		return wb;
 	}
