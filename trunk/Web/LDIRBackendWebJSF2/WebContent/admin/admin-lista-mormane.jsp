@@ -112,6 +112,7 @@
 								<div class="listHeader">Dispersat</div>
 								<div class="listHeader">Raza[m]</div>
 								<div class="listHeader">Numar saci</div>
+								<div class="listHeader">Numar voturi</div>
 								<div class="listHeaderLarge">Galerie foto</div>
 								<div class="listHeaderLarge">Optiuni</div>
 							</div>
@@ -165,6 +166,9 @@
                                             </div> --%>
 									<div class="listEntry">
 										<h:outputText value="#{garbage.bagCount}" />
+									</div>
+									<div class="listEntry">
+										<h:outputText value="#{garbage.voteCount}" />
 									</div>
 									<%--div class="listEntryLarge">
                                                 <h:outputText value="#{garbage.x}">
