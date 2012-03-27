@@ -1,6 +1,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <jsp:directive.include file="/WEB-INF/jspf/page-header.jspf" />
-<jsp:directive.include file="/WEB-INF/jspf/notlogin-checkpoint.jspf" />
+<jsp:directive.include file="/WEB-INF/jspf/login-checkpoint.jspf" />
 
 <f:view>
 	<html xmlns="http://www.w3.org/1999/xhtml">
@@ -13,7 +13,7 @@
 		<%-- page Top --%>
 		<%-- 	<custom:page_top selected="lista_mormane"
 			role="${voteGarbageManagerBean.userDetails.role}" /> --%>
-		<custom:page_top selected="freeGarbageVote" />
+		<custom:page_top_login selected="garbageVote" />
 		<%-- page Content --%>
 		<div id="pageContainer">
 			<div id="contentList">

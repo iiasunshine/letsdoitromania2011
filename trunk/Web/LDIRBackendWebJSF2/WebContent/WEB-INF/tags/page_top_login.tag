@@ -29,6 +29,7 @@
                  <c:if test="${false}">
                  <li><a href="${pageContext.servletContext.contextPath}/users/curatenie-vizualizare.jsf" class="${selected eq 'curatenie' ? 'active': ''}"><span>${msg.meniu_curatenie_list}</span></a></li>
                  </c:if>
+                 <li><a href="${pageContext.servletContext.contextPath}/users/garbage-vote.jsf" class="${selected eq 'garbageVote' ? 'active' : ''}"><span>VOTEAZA ZONA</span></a></li>
                  <li><a href="${pageContext.servletContext.contextPath}/users/user-vizualizare.jsf" class="${selected eq 'user_edit' ? 'active': ''}"><span>${msg.meniu_user_edit}</span></a></li>
                 <li><a href="${pageContext.servletContext.contextPath}/logout.jsf"><span>${msg.meniu_logout}</span></a></li>
             </ul>

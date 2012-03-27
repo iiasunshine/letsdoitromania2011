@@ -81,14 +81,20 @@ public class VoteGarbageManagerBean {
 	public void actionVote() {
 		try {
 			wsi.vote(selectedGarbage, ip);
-			JsfUtils.addInfoMessage("Mormanul a fost votat");
+			JsfUtils.addInfoMessage("Mormanul a fost votat cu succes!");
 			JsfUtils.getHttpSession().removeAttribute("INFO_MESSAGE");
 		} catch (InvalidUserOperationException e) {
-			JsfUtils.addInfoMessage("Nu se mai poate vota. Depasit numarul de voturi permis pe 24 ore!");
-			JsfUtils.getHttpSession().removeAttribute("INFO_MESSAGE");
+			String errMessage="";
+			if(userDetails==null){
+				errMessage="Nu se mai poate vota. Ai depasit numarul de voturi/zona permis pe 24 ore de la acest IP!";
+			}else{
+				errMessage="Nu se mai poate vota. Ai depasit numarul de voturi/zona permis pe 24 ore cu acest user!";
+			}
+			JsfUtils.addErrorMessage(errMessage);
+			JsfUtils.getHttpSession().removeAttribute("WARN_MESSAGE");
 		} catch (NullPointerException e1) {
-			JsfUtils.addInfoMessage("Eroare: Nu se poate vota!");
-			JsfUtils.getHttpSession().removeAttribute("INFO_MESSAGE");
+			JsfUtils.addErrorMessage("Eroare: Nu se poate vota!");
+			JsfUtils.getHttpSession().removeAttribute("WARN_MESSAGE");
 		}
 
 	}
