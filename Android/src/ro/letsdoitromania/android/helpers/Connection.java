@@ -160,10 +160,7 @@ public class Connection {
 	    	return false;
         }
 	        
-	    if (response != null)
-	    	return true;
-	    else
-	    	return false;
+	    return true;
 	    
 	};
 	

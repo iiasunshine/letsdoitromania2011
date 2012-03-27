@@ -14,8 +14,8 @@ public class CentralActivity extends TabActivity
 		String tag;
 		int messageKey;
 		int drawableKey;
-		Class activityClass;
-		private Tabs(String tag, int messageKey, int drawableKey, Class activityClass) {
+		Class<?> activityClass;
+		private Tabs(String tag, int messageKey, int drawableKey, Class<?> activityClass) {
 			this.tag = tag;
 			this.messageKey = messageKey;
 			this.drawableKey = drawableKey;
