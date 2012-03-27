@@ -169,7 +169,7 @@
                                                    longitude="#{gunoi.coordXToString}"
                                                    showInformationEvent="mouseover"
                                                    rendered="#{not (gunoi.garbage.garbageId eq mormanManager.myGarbage.garbage.garbageId)}">
-                                            <m:icon imageURL="http://app.letsdoitromania.ro:8080/LDIRBackendWebJSF2/icons/morman-rosu-20x20.png"
+                                            <m:icon imageURL="http://app.letsdoitromania.ro:8080/icons/morman-rosu-20x20.png"
                                                     width="20"
                                                     height="20"/>
                                             <m:htmlInformationWindow htmlText="#{gunoi.infoHtml}"/>
@@ -178,7 +178,7 @@
                                     <m:marker  latitude="#{mormanManager.myGarbage.coordYToString}"
                                                longitude="#{mormanManager.myGarbage.coordXToString}"
                                                showInformationEvent="mouseover">
-                                        <m:icon imageURL="http://app.letsdoitromania.ro:8080/LDIRBackendWebJSF2/icons/morman-galben-20x20.png"
+                                        <m:icon imageURL="http://app.letsdoitromania.ro:8080/icons/morman-galben-20x20.png"
                                                 width="20"
                                                 height="20"/>
                                         <m:htmlInformationWindow htmlText="<strong>Morman curent (#{mormanManager.myGarbage.idToString})</strong><br/>#{msg.details_area} #{mormanManager.myGarbage.garbage.chartedArea.name} <br/>#{msg.details_county} #{mormanManager.myGarbage.garbage.county.name} <br/>"/>

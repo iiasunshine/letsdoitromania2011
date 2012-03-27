@@ -53,13 +53,13 @@
 						<br />
 						<br />
 						<h3>
-							<h:outputLink value="reset-password.jsf">
-								<h:outputText value="#{msg.reset_link}" escape="false" />
-							</h:outputLink>
-							<br /> <br />
 							<h:outputLink value="user-register.jsf">
 								<h:outputText value="#{msg.meniu_inscriere_voluntar}"
 									escape="false" />
+							</h:outputLink>
+							<br /> <br />
+							<h:outputLink value="reset-password.jsf">
+								<h:outputText value="#{msg.reset_link}" escape="false" />
 							</h:outputLink>
 						</h3>
 					</h:panelGroup>
@@ -86,7 +86,7 @@
 						<br />
 						<h:outputText value=" * Gestionarea activitatilor de curatenie"
 							escape="false" />
-							<br />
+						<br />
 						<h:outputText
 							value=" * Monitorizarea suprafetelor curatate de mormanele de gunoi"
 							escape="false" />

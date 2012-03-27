@@ -82,7 +82,7 @@
 
 						<a4j:form>
 							<h1>
-								<h:outputFormat value="Lista mormane({0})">
+								<h:outputFormat value="Lista gunoaielor({0})">
 									<f:param
 										value="#{fn:length(adminGarbageManagerBean.garbageList)}" />
 								</h:outputFormat>
@@ -90,27 +90,27 @@
 								<h:commandButton
 									actionListener="#{adminGarbageManagerBean.actionGenerateExcel}"
 									rendered="#{fn:length(adminGarbageManagerBean.garbageList) gt 0}"
-									styleClass="formButtonLeft" value="Export lista mormane" />
+									styleClass="formButtonLeft" value="Export lista in format excel" />
 							</h1>
 							<h:outputText
 								value="Exporturile Excel contin mai multe campuri decat sunt afisate pe pagina web."
 								rendered="#{fn:length(adminGarbageManagerBean.garbageList) gt 0}" />
 							<br />
 							<h:outputText
-								value="Daca modifici un morman folosind butonul din tabelul de mai jos trebuie sa reincarci lista pentru a vedea modificarile."
+								value="Daca modifici un gunoi folosind butonul din tabelul de mai jos trebuie sa reincarci lista pentru a vedea modificarile."
 								rendered="#{fn:length(adminGarbageManagerBean.garbageList) gt 0}" />
 							<br />
 							<br />
 
 							<div id="listHeaderContainer">
 								<div class="listHeader">ID</div>
-								<div class="listHeader">Nume morman</div>
+								<div class="listHeader">Nume</div>
 								<div class="listHeader">Judet</div>
 								<div class="listHeaderLarge">Descriere</div>
 
-								<div class="listHeader">Stare morman</div>
-								<div class="listHeader">Dispersat</div>
-								<div class="listHeader">Raza[m]</div>
+								<div class="listHeader">Starea gunoiului</div>
+								<div class="listHeader">Zona cu gunoaie</div>
+								<div class="listHeader">Raza zonei[m]</div>
 								<div class="listHeader">Numar saci</div>
 								<div class="listHeader">Numar voturi</div>
 								<div class="listHeaderLarge">Galerie foto</div>
@@ -168,7 +168,7 @@
 										<h:outputText value="#{garbage.bagCount}" />
 									</div>
 									<div class="listEntry">
-										<h:outputText value="#{garbage.voteCount}" />
+										<h:outputText value="#{garbage.voteCount eq 0 ? 'N/A': garbage.voteCount}" />
 									</div>
 									<%--div class="listEntryLarge">
                                                 <h:outputText value="#{garbage.x}">
