@@ -47,7 +47,7 @@
 							<a4j:repeat value="#{mormanManager.myGarbageList}"
 								var="myGarbage">
 								<div class="entryLeft">
-									<h:outputText value="Morman:" />
+									<h:outputText value="#{myGarbage.garbage.dispersed ? msg.zone : msg.morman}"/>
 									<strong><h:outputText
 											value="#{myGarbage.garbage.garbageId}" /></strong> <br />
 									<h:outputLink

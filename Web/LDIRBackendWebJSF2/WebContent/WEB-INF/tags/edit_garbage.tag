@@ -84,16 +84,46 @@
 		<br />
 		<br />
 
-		<!--  garbage name -->
+		<!-- gunoi dispersat -->
+
 		<div class="label">
-			<h:outputText value="#{msg.chart_add_name}" />
+			<h:outputText value="#{msg.chart_add_dispersat}" />
 		</div>
-		<h:inputText value="#{mormanManager.myGarbage.garbage.name}" id="name"
-			styleClass="formTextfieldLeft" />
+		<h:selectBooleanCheckbox
+			value="#{mormanManager.myGarbage.garbage.dispersed}"
+			styleClass="formDate" id="dispersat">
+			<a4j:support event="onclick" ajaxSingle="true" reRender="radius,name" />
+		</h:selectBooleanCheckbox>
+		<br />
+
+		<!--  cat de dispersat: -->
+		<div class="label">
+			<h:outputText value="#{msg.chart_add_radius}" />
+		</div>
+		<h:inputText value="#{mormanManager.myGarbage.garbage.radius}"
+			styleClass="formTextfield" id="radius"
+			validatorMessage="#{msg.chart_err_radius}"
+			converterMessage="#{msg.chart_err_radius}"
+			disabled="#{mormanManager.radiusDisabled}">
+			<f:validateLongRange maximum="10000" minimum="1" />
+		</h:inputText>
 		<br />
 		<br />
 
+		<c:if
+			test="${(role eq 'ADMIN') or (role eq 'ORGANIZER')or (role eq 'ORGANIZER_MULTI') }">
+			<!--  garbage name -->
+			<div class="label">
+				<h:outputText value="#{msg.chart_add_name}" />
+			</div>
 
+
+			<h:inputText value="#{mormanManager.myGarbage.garbage.name}"
+				id="name" styleClass="formTextfieldLeft" />
+			<br />
+			<br />
+
+		</c:if>
 		<c:if
 			test="${(role eq 'ADMIN') or (role eq 'ORGANIZER')or (role eq 'ORGANIZER_MULTI') and (mormanManager.myGarbage.garbage.garbageId > 0) }">
 			<!-- nominalizat si de curatat -->
@@ -101,17 +131,19 @@
 			<h:commandButton styleClass="formButton" id="toVoteButton"
 				value="#{mormanManager.myGarbage.garbage.toVote ? msg.chart_add_removeNominate : msg.chart_add_nominate}"
 				action="#{mormanManager.actionToVote}">
-				<a4j:support event="onclick" ajaxSingle="true" reRender="toVoteButton" />
+				<a4j:support event="onclick" ajaxSingle="true"
+					reRender="toVoteButton" />
 			</h:commandButton>
-			
+
 			<h:commandButton styleClass="formButton" id="toCleanButton"
 				value="#{mormanManager.myGarbage.garbage.toClean ? msg.chart_add_removeToClean : msg.chart_add_toClean}"
 				action="#{mormanManager.actionToClean}">
-				<a4j:support event="onclick" ajaxSingle="true" reRender="toCleanButton" />
+				<a4j:support event="onclick" ajaxSingle="true"
+					reRender="toCleanButton" />
 			</h:commandButton>
-			<br/>
-			<br/>
-			
+			<br />
+			<br />
+
 		</c:if>
 
 		<!-- reprezentare coordonate (zecimale/grade) -->
@@ -232,31 +264,6 @@
 			<br />
 		</h:panelGroup>
 
-		<!-- gunoi dispersat -->
-
-		<div class="label">
-			<h:outputText value="#{msg.chart_add_dispersat}" />
-		</div>
-		<h:selectBooleanCheckbox
-			value="#{mormanManager.myGarbage.garbage.dispersed}"
-			styleClass="formDate" id="dispersat">
-			<a4j:support event="onclick" ajaxSingle="true" reRender="radius" />
-		</h:selectBooleanCheckbox>
-		<br />
-
-		<!--  cat de dispersat: -->
-		<div class="label">
-			<h:outputText value="#{msg.chart_add_radius}" />
-		</div>
-		<h:inputText value="#{mormanManager.myGarbage.garbage.radius}"
-			styleClass="formTextfield" id="radius"
-			validatorMessage="#{msg.chart_err_radius}"
-			converterMessage="#{msg.chart_err_radius}"
-			disabled="#{mormanManager.radiusDisabled}">
-			<f:validateLongRange maximum="10000" minimum="1" />
-		</h:inputText>
-		<br />
-		<br />
 
 		<!-- numar saci -->
 		<div class="label">

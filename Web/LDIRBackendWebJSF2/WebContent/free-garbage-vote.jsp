@@ -64,7 +64,7 @@
 
 						<a4j:form>
 							<h1>
-								<h:outputFormat value="Zonele de gunoaie({0})">
+								<h:outputFormat value="Zonele cu gunoaie ce trebuiesc votate({0})">
 									<f:param
 										value="#{fn:length(voteGarbageManagerBean.garbageList)}" />
 								</h:outputFormat>
@@ -74,12 +74,10 @@
 
 							<div id="listHeaderContainer">
 								<div class="listHeader">ID</div>
-								<div class="listHeaderLarge">Nume morman</div>
+								<div class="listHeaderLarge">Numele zonei cu gunoaie</div>
 								<div class="listHeader">Judet</div>
 								<div class="listHeaderLarge">Descriere</div>
 
-								<div class="listHeader">Voturi</div>
-								<div class="listHeader">Dispersat</div>
 								<div class="listHeader">Raza[m]</div>
 								<div class="listHeader">Numar saci</div>
 								<div class="listHeaderLarge">Galerie foto</div>
@@ -112,12 +110,7 @@
 										</rich:panel>
 									</div>
 
-									<div class="listEntry">
-										<h:outputText value="#{garbage.voteCount}" />
-									</div>
-									<div class="listEntry">
-										<h:outputText value="#{garbage.dispersed ? 'DA' : 'NU'}" />
-									</div>
+
 									<div class="listEntry">
 										<h:outputText value="#{garbage.radius}" />
 									</div>
@@ -163,7 +156,7 @@
 							<br />
 							<br />
 							<h3>
-								<h:outputText value="Selecteaza un judet pentru a vota!" />
+								<h:outputText value="Selecteaza un judet pentru a afisa zonele cu gunoaie vota!" />
 							</h3>
 						</h:panelGroup>
 					</a4j:outputPanel>
