@@ -95,8 +95,7 @@ public class JsonBackend implements IBackend {
 	 */
 
 	public GarbageList getGarbagesInArea(String topLeftX, String topLeftY,
-			String bottomRightX, String bottomRightY, String username,
-			String password) throws RemoteConnError {
+			String bottomRightX, String bottomRightY) throws RemoteConnError {
 
 		String query = "?topLeftX=" + topLeftX + "&topLeftY=" + topLeftY
 				+ "&bottomRightX=" + bottomRightX + "&bottomRightY="
@@ -106,7 +105,7 @@ public class JsonBackend implements IBackend {
 		HttpResponse response = null;
 
 		try {
-			response = ConnectionUtils.getHttpConn(username, password).execute(
+			response = ConnectionUtils.getHttpConn(null, null).execute(
 					request);
 			int statusCode = response.getStatusLine().getStatusCode();
 			if (statusCode != 200) {

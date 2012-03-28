@@ -89,10 +89,7 @@ public class ConnectionUtils {
 			cp.setCredentials(new AuthScope(targetHost.getHostName(),
 					targetHost.getPort()), new UsernamePasswordCredentials(
 					user, password));
-		} else {
-			cp.getCredentials(new AuthScope(targetHost.getHostName(),
-					targetHost.getPort()));
-		}
+		} 
 
 		return httpClient;
 
