@@ -41,12 +41,10 @@ public interface IBackend {
 	 * @param topLeftY
 	 * @param bottomRightX
 	 * @param bottomRightY
-	 * @param username
-	 * @param password
 	 * @throws RemoteConnError
 	 */
 	public GarbageList getGarbagesInArea(String topLeftX, String topLeftY,
-			String bottomRightX, String bottomRightY, String username, String password) throws RemoteConnError;
+			String bottomRightX, String bottomRightY) throws RemoteConnError;
 
 	/**
 	 * 

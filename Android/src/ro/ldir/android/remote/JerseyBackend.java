@@ -51,8 +51,7 @@ public class JerseyBackend implements IBackend {
 	}
 
 	public GarbageList getGarbagesInArea(String topLeftX, String topLeftY,
-			String bottomRightX, String bottomRightY, String username,
-			String password) throws RemoteConnError {
+			String bottomRightX, String bottomRightY) throws RemoteConnError {
 
 		List<Garbage> garbageList = new LinkedList<Garbage>();
 

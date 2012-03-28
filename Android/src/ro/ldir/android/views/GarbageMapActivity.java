@@ -9,6 +9,7 @@ import ro.ldir.R;
 import ro.ldir.android.entities.Garbage;
 import ro.ldir.android.entities.GarbageList;
 import ro.ldir.android.remote.BackendFactory;
+import ro.ldir.android.remote.GarbageStatus;
 import ro.ldir.android.remote.JsonBackend;
 import ro.ldir.android.remote.RemoteConnError;
 import ro.ldir.android.util.ErrorDialogHandler;
@@ -98,9 +99,8 @@ public class GarbageMapActivity extends MapActivity implements IErrDialogActivit
 				
 		garbageList = getGarbagesInArea();
 		for (Garbage garbage : garbageList.getGarbage()) {
-			p = new GeoPoint((int) (garbage.getyLatitude()* 1E6 ), (int) (garbage.getxLongitude()* 1E6));
-			// add an overlay on map
-			addOverlayOnMap(mapView, p);
+			// add garbage on map
+			addGarbageOnMap(mapView, garbage);
 		}
 		mapView.invalidate();		
 	}
@@ -110,17 +110,26 @@ public class GarbageMapActivity extends MapActivity implements IErrDialogActivit
 	 * 
 	 * @param mv
 	 *            - map view
-	 * @param point
+	 * @param garbage
 	 *            - geoPoint
 	 */
-	private void addOverlayOnMap(MapView mv, GeoPoint point) {
+	private void addGarbageOnMap(MapView mv, Garbage garbage) {
 
-		List<Overlay> mapOverlays = mv.getOverlays();
-		Drawable drawable = this.getResources().getDrawable(
-				R.drawable.morman_galben_10x10);
+		GeoPoint p = new GeoPoint((int) (garbage.getyLatitude()* 1E6 ), (int) (garbage.getxLongitude()* 1E6));
+		int imageId  = R.drawable.mm_20_red;
+		if (garbage.getStatus().equals(GarbageStatus.IDENTIFIED))	{
+			imageId = R.drawable.mm_20_red;
+		}	else if (garbage.getStatus().equals(GarbageStatus.ALLOCATED))	{
+			imageId = R.drawable.mm_20_yellow;
+		}	else if (garbage.getStatus().equals(GarbageStatus.CLEANED))	{
+			imageId = R.drawable.mm_20_purple;	
+		}
+		
+		List<Overlay> mapOverlays = mv.getOverlays();		
+		Drawable drawable = this.getResources().getDrawable(imageId);
 		GarbagesOverMap garbagesOverlay = new GarbagesOverMap(drawable, this);
 
-		OverlayItem overlayitem = new OverlayItem(point, "Garbage", "Clean it");
+		OverlayItem overlayitem = new OverlayItem(p, "Garbage", "Clean it");
 
 		garbagesOverlay.addOverlay(overlayitem);
 		mapOverlays.add(garbagesOverlay);
@@ -147,7 +156,7 @@ public class GarbageMapActivity extends MapActivity implements IErrDialogActivit
 		JsonBackend backend = BackendFactory.createBackend();
 		try {
 			return backend.getGarbagesInArea(topLeftX, topLeftY, bottomRightX,
-					bottomRightY, "crl@mailinator.com", "crl");
+					bottomRightY);
 		} catch (RemoteConnError e) {
 			ErrorDialogHandler.showErrorDialog(GarbageMapActivity.this,
 					e.getStatusCode());
