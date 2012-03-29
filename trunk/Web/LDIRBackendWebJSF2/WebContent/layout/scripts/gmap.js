@@ -8,12 +8,83 @@ var bboxGarbageOverlay_old = null;
 var startDrag=false;
 var addEvent=false;
 var xhr = new XMLHttpRequest();;
+var votx = new XMLHttpRequest();;
+var nomx = new XMLHttpRequest();;
 var xmlfrombackend="";
 var oldxml="";
 var exml = new EGeoXml("exml", myMap, ""); //for testing googlemapp on localhost
-
+var tid=-1;
 //loadEvents()
 
+
+function voteMorman(id){
+	url=WS_URL+"/admin/admin-vote-from-map.jsf?garbageId="+id;
+	tid=id;
+	votx = new XMLHttpRequest();
+	votx.onreadystatechange = processvot;
+	//alert(url);
+//	if(userRole!='anon')
+//		votx.open("put", url, true, username, password);
+//	else
+//		votx.open("put", url, true);
+	votx.open("GET",url,true)
+	votx.setRequestHeader('Content-Type', 'text/html'); 
+	votx.send();
+	
+}
+
+function processvot(){
+	if (votx.readyState == 4) {
+	response=votx.responseText;
+	element="infovot"+tid;
+	//alert(element)
+	if(response.indexOf("morman votat succes")>-1)
+		{
+			document.getElementById(element).style.display = 'block';
+			document.getElementById(element).innerHTML ='Mormanul a fost votat cu succes';
+		}
+	if(response.indexOf("morman votat fail")>-1)
+		if(response.indexOf("Ai depasit numarul de voturi")>-1)
+			{
+			document.getElementById(element).style.display = 'block';
+			document.getElementById(element).innerHTML ='Ai votat deja mormanul in ultimele 24 de ore.';
+			}
+		else
+			{
+			document.getElementById(element).style.display = 'block';
+			document.getElementById(element).innerHTML ='Eroare nedefinita.';
+			}
+
+	//alert(response)
+//    public static final String MORMAN_VOTAT_SUCCES="morman votat succes";
+//    public static final String MORMAN_VOTAT_FAIL="morman votat fail";
+//
+//    public static final String MORMAN_NOMINALIZAT_SUCCES="morman nominalizat succes";
+//    public static final String MORMAN_NOMINALIZAT_FAIL="morman nominalizat fail";
+//	9 127.0.0.1 [[[[morman votat]]]]
+//  9 127.0.0.1 [[[[morman fail|Nu se mai poate vota. Ai depasit numarul de voturi/zona permis pe 24 ore cu acest user!|9 127.0.0.1]]]]
+//		
+	
+	
+	}
+}
+
+
+
+function nominalizeazaMorman(id){
+	url=WS_URL+"/admin/admin-nominate-from-map.jsf?garbageId="+id;
+	tid=id;
+	votx = new XMLHttpRequest();
+	votx.onreadystatechange = processvot;
+	alert(url);
+//	if(userRole!='anon')
+//		votx.open("put", url, true, username, password);
+//	else
+//		votx.open("put", url, true);
+	votx.open("GET",url,true)
+	votx.setRequestHeader('Content-Type', 'text/html'); 
+	votx.send();
+}
 
 function getXMLonlocal(url){
 //for testing googlemaps on localhost	
@@ -21,6 +92,7 @@ xhr = new XMLHttpRequest();
 xhr.onreadystatechange = process;
 xhr.open("GET", url, true);
 xhr.send();
+
 }
 function process(){
 //for testing googlemaps on localhost
@@ -29,7 +101,9 @@ if (xhr.readyState == 4) {
     xmlfrombackend = xhr.responseText;
 
     if(oldxml!=xmlfrombackend){
-    exml = new EGeoXml("exml", myMap, null,{nozoom:true});    
+    	
+    exml = new EGeoXml("exml", myMap, null,{nozoom:true});
+    //alert(xmlfrombackend)
     exml.parseString(xmlfrombackend);
     
   }
@@ -72,6 +146,7 @@ function showlinks(element) {
 }
 
 function onBoundsChanged(){
+	
 	zoomLevel = myMap.getZoom();
     if(zoomLevel<10)
     	myMap.setZoom(10)
@@ -98,7 +173,7 @@ function loadBBoxGarbageOverlay(ne,sw){
  	
 	//ne=points[0];
 	//sw=points[1];
-	
+	//alert(userRole)
     neLat=ne.lat()
     neLng=ne.lng()
     swLat=sw.lat()
@@ -119,8 +194,10 @@ function loadBBoxGarbageOverlay(ne,sw){
     url += '&topLeftY='+topLeftY
     url += '&bottomRightX='+bottomRightX
     url += '&bottomRightY='+bottomRightY;
-    url += '&cb=' + escape('<a style="color: #4D751F;" href="/users/curatenie-morman-detalii.jsf?garbageId={{{ID}}}">&raquo; Detalii // Aloca mormanul pentru echipa ta</a>');
-
+    //var voteLinks=''
+    //if(userRole=='ORGANIZER' || userRole=='ORGANIZER_MULTI' || userRole=='ADMIN')
+    url += '&cb=' + escape('<a style="color: #4D751F;" href="/users/curatenie-morman-detalii.jsf?garbageId={{{ID}}}">&raquo; Detalii morman</a>xxxXXXxxx'+userRole);
+    //alert(url)
 
     /* adaugare layer lista gunoaie din judetul selectat */
     var bboxGarbageOverlay = new GGeoXml(url);
@@ -131,7 +208,7 @@ function loadBBoxGarbageOverlay(ne,sw){
     bboxGarbageOverlay_old = bboxGarbageOverlay;
     
     //FOR LOCALHOST TESTING
-//    getXMLonlocal(url);
+    //getXMLonlocal(url);
 }
 
 
@@ -256,13 +333,13 @@ function loadCountyGarbageDetailOverlay(value){
 
 
 function loadCountyGarbageOverlay(value){
-    if(value){
+	if(value!=null){
         var jsonObject = JSON.parse(value);
         
         var url = WS_URL;
         url += '/LDIRBackend/map/ws/countySearch/garbages/';
         url += '?county='+jsonObject.name.replace(' ','%20');
-        
+       // alert(url)
         /* adaugare layer lista gunoaie din judetul selectat */
         var countyGarbageOverlay = new GGeoXml(url);
         myMap.addOverlay(countyGarbageOverlay);
@@ -290,6 +367,9 @@ function loadCountyGarbageOverlay(value){
         myMap.panTo(bounds.getCenter());
     }
 }
+
+
+
 
 function loadChartedAreasOverlayOld(value){
     //alert(value);
