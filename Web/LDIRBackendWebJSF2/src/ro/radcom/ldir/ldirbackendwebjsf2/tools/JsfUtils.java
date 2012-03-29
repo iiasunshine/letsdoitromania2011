@@ -163,6 +163,11 @@ public class JsfUtils {
     public static HttpServletRequest getHttpRequest() {
         return (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
     }
+    
+    public static String getRemoteIp() {
+    	HttpServletRequest t=(HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+    	return t.getRemoteAddr();
+    }
 
     public static Object getObjectFromRequestParameter(String requestParameterName, Converter converter, UIComponent component) {
         String theId = JsfUtils.getRequestParameter(requestParameterName);

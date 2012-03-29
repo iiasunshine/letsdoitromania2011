@@ -56,6 +56,11 @@ public class NavigationValues {
     public static final String MORMAN_STARE_UPDATE_SUCCES = "morman_stare_updatare_success";
     public static final String MORMAN_STARE_UPDATE_FAIL = "morman_stare_updatare_fail";
     
+    public static final String MORMAN_VOTAT_SUCCES="morman votat succes";
+    public static final String MORMAN_VOTAT_FAIL="morman votat fail";
+
+    public static final String MORMAN_NOMINALIZAT_SUCCES="morman nominalizat succes";
+    public static final String MORMAN_NOMINALIZAT_FAIL="morman nominalizat fail";
     
     
 }

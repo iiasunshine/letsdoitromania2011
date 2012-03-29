@@ -27,6 +27,7 @@ import ro.radcom.ldir.ldirbackendwebjsf2.tools.AppUtils;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.ImageInfo;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.JsfUtils;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.WSInterface;
+import ro.radcom.ldir.ldirbackendwebjsf2.tools.customObjects.NavigationValues;
 
 /**
  * 
@@ -54,7 +55,9 @@ public class VoteGarbageManagerBean {
 	private int selectedImgIndex = 0;
 	private boolean showList = true;
 	private String ip;
-
+	
+	private int garbageId;
+	
 	/**
 	 * Creates a new instance of VoteGarbageManagerBean
 	 * 
@@ -66,6 +69,7 @@ public class VoteGarbageManagerBean {
 		countyAreas = wsi.getCountyList();
 		userDetails = (User) JsfUtils.getHttpSession().getAttribute(
 				"USER_DETAILS");
+		//ip=(String) JsfUtils.getRemoteIp();
 	}
 
 	public void actionApplyFilterAsList() {
@@ -78,11 +82,9 @@ public class VoteGarbageManagerBean {
 
 	}
 
-	public void actionVote() {
+	public String actionVote() {
 		try {
-			wsi.vote(selectedGarbage, ip);
-			JsfUtils.addInfoMessage("Mormanul a fost votat cu succes!");
-			JsfUtils.getHttpSession().removeAttribute("INFO_MESSAGE");
+			wsi.vote(selectedGarbage, ip);						
 		} catch (InvalidUserOperationException e) {
 			String errMessage="";
 			if(userDetails==null){
@@ -92,13 +94,33 @@ public class VoteGarbageManagerBean {
 			}
 			JsfUtils.addErrorMessage(errMessage);
 			JsfUtils.getHttpSession().removeAttribute("WARN_MESSAGE");
+			return NavigationValues.MORMAN_VOTAT_FAIL+"|"+errMessage+"|"+""+selectedGarbage.getGarbageId()+" "+ip;
 		} catch (NullPointerException e1) {
 			JsfUtils.addErrorMessage("Eroare: Nu se poate vota!");
 			JsfUtils.getHttpSession().removeAttribute("WARN_MESSAGE");
+			return NavigationValues.MORMAN_VOTAT_FAIL+"|Eroare: Nu se poate vota!"+"|"+""+selectedGarbage.getGarbageId()+" "+ip+"  "+""+garbageId;
 		}
+		JsfUtils.addInfoMessage("Mormanul a fost votat cu succes!");
+		JsfUtils.getHttpSession().removeAttribute("INFO_MESSAGE");
+		return NavigationValues.MORMAN_VOTAT_SUCCES;
 
 	}
 
+	public String actionVoteFromMap() {
+		//int garbageId = _garbageId;
+		/* identificare morman */
+		selectedGarbage = wsi.getGarbage(userDetails, garbageId);
+//		if (garbageList != null)
+//			for (Garbage garbage : garbageList) {
+//				if (garbageId == garbage.getGarbageId().intValue()) {
+//					
+//					selectedGarbage = garbage;
+//					break;
+//				}
+//			}
+	return actionVote();
+	};
+	
 	public void actionSelectGarbage(ActionEvent event) {
 		int garbageId = AppUtils.parseToInt(JsfUtils.getHttpRequest()
 				.getParameter("garbageId"));
@@ -263,6 +285,11 @@ public class VoteGarbageManagerBean {
 		return garbageList;
 	}
 
+	public int getGarbageId(){
+		return this.garbageId;
+	}
+	
+
 	/**
 	 * @return the userId
 	 */
@@ -318,11 +345,19 @@ public class VoteGarbageManagerBean {
 	/**
 	 * @param addDate
 	 *            the addDate to set
-	 */
+	 */	
+	
 	public void setAddDate(Date addDate) {
 		this.addDate = addDate;
 	}
+	
+	public void setGarbageId(String _garbageId){
+		this.garbageId= AppUtils.parseToInt(_garbageId);
+	}
 
+	public void setIp(String _ip){
+		this.ip= _ip;
+	}
 	/**
 	 * @return the noFilter
 	 */

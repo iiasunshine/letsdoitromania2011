@@ -149,6 +149,29 @@
 	</navigation-rule>
 
 	<navigation-rule>
+		<from-view-id>/admin/admin-vote-from-map.jsp</from-view-id>
+		<navigation-case>
+			<from-outcome>morman_votat_succes</from-outcome>
+			<to-view-id>/admin/admin-vote-from-map.jsp</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>morman_votat_fail</from-outcome>
+			<to-view-id>/admin/admin-vote-from-map.jsp</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/admin/admin-nominate-from-map.jsp</from-view-id>
+		<navigation-case>
+			<from-outcome>morman_nominalizat_succes</from-outcome>
+			<to-view-id>/admin/admin-nominate-from-map.jsp</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+
+	
+	<navigation-rule>
 		<from-view-id>/new-password.jsp</from-view-id>
 		<navigation-case>
 			<from-outcome>new_pass_success</from-outcome>

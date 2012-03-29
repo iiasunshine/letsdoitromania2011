@@ -24,12 +24,14 @@ import org.apache.log4j.Logger;
 import ro.ldir.dto.CountyArea;
 import ro.ldir.dto.Garbage;
 import ro.ldir.dto.User;
+import ro.ldir.exceptions.InvalidUserOperationException;
 import ro.ldir.report.formatter.GarbageExcelFormatter;
 import ro.ldir.report.formatter.GenericXlsxFormatter;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.AppUtils;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.ImageInfo;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.JsfUtils;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.WSInterface;
+import ro.radcom.ldir.ldirbackendwebjsf2.tools.customObjects.NavigationValues;
 
 /**
  * 
@@ -55,6 +57,7 @@ public class AdminGarbageManagerBean {
 	/* pentru editare detalii morman */
 	private Garbage selectedGarbage = new Garbage();
 	private int selectedImgIndex = 0;
+	private int garbageId;
 
 	/**
 	 * Creates a new instance of AdminGarbageManagerBean
@@ -83,6 +86,26 @@ public class AdminGarbageManagerBean {
 		}
 	}
 
+	public String actionToVoteFromMap() {
+		
+
+		selectedGarbage = wsi.getGarbage(userDetails, garbageId);
+		if (selectedGarbage != null) {
+			boolean toVote = false;
+			toVote = selectedGarbage.isToVote();
+			
+			try {
+				wsi.setGarbageToVote(selectedGarbage.getGarbageId(), !toVote);
+			} catch (NullPointerException e1) {
+				return NavigationValues.MORMAN_NOMINALIZAT_FAIL+"|NULLPOINTER"+"^"+""+selectedGarbage.getGarbageId()+""+garbageId;
+			}
+			selectedGarbage.setToVote(!toVote);
+			String toc=new Boolean(!toVote).toString();
+			return NavigationValues.MORMAN_VOTAT_SUCCES+"|"+toc;
+		}
+		return NavigationValues.MORMAN_NOMINALIZAT_FAIL+"|GARBAGEIDFAIL";
+	}
+	
 	public void actionToClean() {
 
 		if (selectedGarbage != null) {
@@ -419,5 +442,9 @@ public class AdminGarbageManagerBean {
 	 */
 	public int getSelectedImgIndex() {
 		return selectedImgIndex;
+	}
+	
+	public void setGarbageId(String _garbageId){
+		this.garbageId= AppUtils.parseToInt(_garbageId);
 	}
 }

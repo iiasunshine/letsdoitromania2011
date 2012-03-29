@@ -8,6 +8,7 @@
             <title>Let's do it Romania</title>
         </head>
         <body onunload="GUnload()">
+        <jsp:directive.include file="/WEB-INF/jspf/usermeta.jspf"/>
             <center>
                 <%-- page Top --%>
                 <h:panelGroup rendered="#{sessionScope['USER_DETAILS'] eq null}">
