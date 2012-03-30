@@ -65,6 +65,8 @@ public class ErrorDialogHandler
 			return R.string.chart_err_coords; //add garbage
 		case 404:
 			return R.string.internal_err; // if the garbage tag does not exist when uploading an image
+		case 406: 
+			return R.string.too_many_results; // the service return too many results for a getGarbages in area 
 		case 500: 
 			return R.string.internal_err; 
 			default:

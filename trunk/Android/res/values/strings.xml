@@ -150,6 +150,8 @@
 	<string name="details_percent_metal">Procent metale:</string>
 	<string name="internal_err">Eroare interna, va rugam contactati administratorul
 		site-ului si incercati mai tarziu!</string>
+	<string name="too_many_results">Prea multe rezultate. Incercati sa modificati zona afisata (zoom/move)</string>
+			
 	<string name="chart_js_err_glass">Procentul de sticla trebuie sa fie o valoare
 		intreaga intre 0 si 100.</string>
 	<string name="register_button_confirm">Confirma inregistrarea</string>
