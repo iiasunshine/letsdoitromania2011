@@ -3,7 +3,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
     
- <com.google.android.maps.MapView 
+ <ro.letsdoitromania.android.helpers.MyMapView 
         android:id="@+id/mapView"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"

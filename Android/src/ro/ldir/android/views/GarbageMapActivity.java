@@ -1,6 +1,3 @@
-/**
- * 
- */
 package ro.ldir.android.views;
 
 import java.util.List;
@@ -15,7 +12,13 @@ import ro.ldir.android.remote.RemoteConnError;
 import ro.ldir.android.util.ErrorDialogHandler;
 import ro.ldir.android.util.GarbagesOverMap;
 import ro.ldir.android.util.IErrDialogActivity;
+import ro.ldir.android.util.LLog;
+import ro.letsdoitromania.android.helpers.MyMapView;
+import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 
 import com.google.android.maps.GeoPoint;
@@ -26,85 +29,123 @@ import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
 
 /**
- *  This file is part of the LDIRAndroid - the Android client for the Let's Do It
- *  Romania 2011 Garbage collection campaign.
- *  Copyright (C) 2011 by the LDIR development team, further referred to 
- *  as "authors".
- *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- *  Filename: GarbageMapActivity.java
- *  Author(s): Catalin Mincu, cata.mincu@gmail.com
- *
+ * This file is part of the LDIRAndroid - the Android client for the Let's Do It
+ * Romania 2011 Garbage collection campaign. Copyright (C) 2011 by the LDIR
+ * development team, further referred to as "authors".
+ * 
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any later
+ * version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Filename: GarbageMapActivity.java Author(s): Catalin Mincu,
+ * cata.mincu@gmail.com
+ * 
  */
 
-public class GarbageMapActivity extends MapActivity implements IErrDialogActivity {
+public class GarbageMapActivity extends MapActivity implements
+		IErrDialogActivity {
 
-	MapView mapView;
-	MapController mc;
-	GeoPoint p;
+	private MyMapView mapView;
+	private MapController mc;
+	private LocationManager locationManager;
+	private Location currentLocation = null;
+	private GeoPoint currentPoint;
+
 	// coordinates to Bucharest center
 	double lat = Double.parseDouble("44.437711");
 	double lng = Double.parseDouble("26.097367");
 
 	private String errorMessage;
 	private GarbageList garbageList;
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.garbage_map);
 
 		garbageList = new GarbageList();
-		
-		mapView = (MapView) findViewById(R.id.mapView);
+
+		mapView = (MyMapView) findViewById(R.id.mapView);
 		mapView.setBuiltInZoomControls(true);
+		
+        // Add listener
+        mapView.setOnChangeListener(new MapViewChangeListener());		
 
 		// center the map to the given coordinates
-		p = new GeoPoint((int) (lat * 1E6), (int) (lng * 1E6));
+		currentPoint = new GeoPoint((int) (lat * 1E6), (int) (lng * 1E6));
 		mc = mapView.getController();
 		mc.setZoom(13);
-		mc.setCenter(p);
-		mc.animateTo(p);
-		
+		mc.setCenter(currentPoint);
+		mc.animateTo(currentPoint);
+
+		getLastLocation();
+
 		// we need a thread to wait until map is ready for getting borders
 		Runnable waitForMapTimeTask = new Runnable() {
 			public void run() {
-				if(mapView.getLatitudeSpan()==0||mapView.getLongitudeSpan()== 360000000) {
+				if (mapView.getLatitudeSpan() == 0
+						|| mapView.getLongitudeSpan() == 360*1E6) {
 					mapView.postDelayed(this, 100);
-			    } else {
+				} else {
 					drawGarbagesOnMap();
-			    }
+				}
 			}
-		};	
+		};
 		mapView.postDelayed(waitForMapTimeTask, 100);
-		mapView.invalidate();
+		mapView.invalidate();		
+	}
+
+	
+	
+	private void getLastLocation() {
+		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		Criteria crit = new Criteria();
+		crit.setAccuracy(Criteria.ACCURACY_FINE);
+		String provider = locationManager.getBestProvider(crit, true);
+		currentLocation = locationManager.getLastKnownLocation(provider);
+	}
+
+	@Override
+	protected boolean isRouteDisplayed() {
+		return false;
+	}
+
+	public void setErrorMessage(String errMsg) {
+		this.errorMessage = errMsg;
+	}
+
+	public String getErrorMessage() {
+		return errorMessage;
 	}
 
 	/**
 	 * Helper method that put garbage icons on map
 	 */
-	private void drawGarbagesOnMap()	{
-				
+	private void drawGarbagesOnMap() {
 		garbageList = getGarbagesInArea();
-		for (Garbage garbage : garbageList.getGarbage()) {
-			// add garbage on map
-			addGarbageOnMap(mapView, garbage);
-		}
-		mapView.invalidate();		
+		
+		// run on UI Thread to avoid ConcurrentModification exception
+		runOnUiThread(new Runnable() {
+		    public void run() {
+		    	if (garbageList!= null)	
+				for (Garbage garbage : garbageList.getGarbage()) {
+					// add garbage on map
+					addGarbageOnMap(mapView, garbage);
+				}
+		    }
+		});
+		
 	}
-	
+
 	/**
 	 * Helper method to add an overlay point to a mapView
 	 * 
@@ -115,33 +156,43 @@ public class GarbageMapActivity extends MapActivity implements IErrDialogActivit
 	 */
 	private void addGarbageOnMap(MapView mv, Garbage garbage) {
 
-		GeoPoint p = new GeoPoint((int) (garbage.getyLatitude()* 1E6 ), (int) (garbage.getxLongitude()* 1E6));
-		int imageId  = R.drawable.mm_20_red;
-		if (garbage.getStatus().equals(GarbageStatus.IDENTIFIED))	{
+		GeoPoint p = new GeoPoint((int) (garbage.getyLatitude() * 1E6),
+				(int) (garbage.getxLongitude() * 1E6));
+		int imageId = R.drawable.mm_20_red;
+		String title = "Gunoi";
+		String snipet = "De curatat";
+		if (garbage.getStatus().equals(GarbageStatus.IDENTIFIED)) {
 			imageId = R.drawable.mm_20_red;
-		}	else if (garbage.getStatus().equals(GarbageStatus.ALLOCATED))	{
+			title = "Gunoi";
+			snipet = "De curatat";
+		} else if (garbage.getStatus().equals(GarbageStatus.ALLOCATED)) {
 			imageId = R.drawable.mm_20_yellow;
-		}	else if (garbage.getStatus().equals(GarbageStatus.CLEANED))	{
-			imageId = R.drawable.mm_20_purple;	
+			title = "Gunoi";
+			snipet = "Alocat";
+		} else if (garbage.getStatus().equals(GarbageStatus.CLEANED)) {
+			imageId = R.drawable.mm_20_purple;
+			title = "Gunoi";
+			snipet = "Curatat";
 		}
-		
-		List<Overlay> mapOverlays = mv.getOverlays();		
+
+		List<Overlay> mapOverlays = mv.getOverlays();
 		Drawable drawable = this.getResources().getDrawable(imageId);
 		GarbagesOverMap garbagesOverlay = new GarbagesOverMap(drawable, this);
-
-		OverlayItem overlayitem = new OverlayItem(p, "Garbage", "Clean it");
+		
+		OverlayItem overlayitem = new OverlayItem(p, title, snipet);
 
 		garbagesOverlay.addOverlay(overlayitem);
 		mapOverlays.add(garbagesOverlay);
 	}
 
-	@Override
-	protected boolean isRouteDisplayed() {
-		return false;
-	}
-
+	/**
+	 * Helper method that calls webservice and returns garbage list from an area
+	 * defined by top-left and bottom-right corners
+	 * 
+	 * @return
+	 */
 	private GarbageList getGarbagesInArea() {
-		
+
 		GeoPoint topLeft = mapView.getProjection().fromPixels(
 				mapView.getLeft(), mapView.getTop());
 		String topLeftX = String.valueOf(topLeft.getLongitudeE6() / 1E6);
@@ -164,14 +215,34 @@ public class GarbageMapActivity extends MapActivity implements IErrDialogActivit
 		return null;
 	}
 	
-	public void setErrorMessage(String errMsg)
-	{
-		this.errorMessage = errMsg;
-	}
-
-	public String getErrorMessage()
-	{
-		return errorMessage;
-	}
-
+	private class MapViewChangeListener implements MyMapView.OnChangeListener
+    {
+ 
+        public void onChange(MapView view, GeoPoint newCenter, GeoPoint oldCenter, int newZoom, int oldZoom)
+        {
+            // Check values
+            if ((!newCenter.equals(oldCenter)) && (newZoom != oldZoom))
+            {
+        		if (newCenter!= currentPoint)	{
+        			//LLog.d("New Center : " + newCenter.getLatitudeE6() + "," + newCenter.getLongitudeE6());
+        			drawGarbagesOnMap();
+        		}
+            }
+            else if (!newCenter.equals(oldCenter))
+            {
+        		if (newCenter!= currentPoint)	{
+        			//LLog.d("New Center : " + newCenter.getLatitudeE6() + "," + newCenter.getLongitudeE6());
+        			drawGarbagesOnMap();
+        		}
+            }
+            else if (newZoom != oldZoom)
+            {
+        		if (newCenter!= currentPoint)	{
+        			//LLog.d("New Center : " + newCenter.getLatitudeE6() + "," + newCenter.getLongitudeE6());
+        			drawGarbagesOnMap();
+        		}
+            }
+        }
+    }	
+	
 }
