@@ -1,0 +1,5 @@
+     <script type="text/javascript" language="javascript">  
+        var userRole = '${sessionScope["USER_DETAILS"].role}';
+        if(userRole=='')
+        	userRole='anon'
+    </script>  
