@@ -9,8 +9,9 @@ import android.widget.TabHost;
 public class CentralActivity extends TabActivity 
 {
 	private enum Tabs{
-		GarbageList("list", R.string.details_lista_link, R.drawable.garbage_list, GarbageListActivity.class), // TODO - use settings icon; 
-		Settings("settings", R.string.key_settings, R.drawable.icon_settings, SettingsActivity.class); // TODO - use mormane icon
+		GarbageList("list", R.string.details_lista_link, R.drawable.garbage_list, GarbageListActivity.class), // TODO - use mormane icon 
+		GarbageMap("map", R.string.view_map, R.drawable.garbage_list, GarbageMapActivity.class), // TODO - use customized icon icon		
+		Settings("settings", R.string.key_settings, R.drawable.icon_settings, SettingsActivity.class); // TODO - use settings icon
 		String tag;
 		int messageKey;
 		int drawableKey;

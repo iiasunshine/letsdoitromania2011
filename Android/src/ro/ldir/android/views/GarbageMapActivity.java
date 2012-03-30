@@ -12,7 +12,6 @@ import ro.ldir.android.remote.RemoteConnError;
 import ro.ldir.android.util.ErrorDialogHandler;
 import ro.ldir.android.util.GarbagesOverMap;
 import ro.ldir.android.util.IErrDialogActivity;
-import ro.ldir.android.util.LLog;
 import ro.letsdoitromania.android.helpers.MyMapView;
 import android.content.Context;
 import android.graphics.drawable.Drawable;

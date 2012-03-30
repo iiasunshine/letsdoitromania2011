@@ -63,15 +63,6 @@ public class GarbageListActivity extends LDIRActivity{
         GarbageListAdapter adapter = new GarbageListAdapter(this, garbageList);
         setListAdapter(adapter);
 
-        // show map
-        Button btnViewMap = (Button)findViewById(R.id.btnViewMap);
-        btnViewMap.setOnClickListener(new View.OnClickListener(){
-			public void onClick(View view) {
-				Intent intent = new Intent(getBaseContext(), GarbageMapActivity.class);
-				startActivityForResult(intent, 0);
-			}
-		});
-        
         getListView().setOnItemClickListener(new OnItemClickListener() {
 
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

@@ -227,4 +227,5 @@
 	<string name="login_required">Trebuie sa fiti autentificat pentru a efectua aceasta comanda</string>
 	<string name="details_img_required">Trebuie sa atasati cel putin o imagine acestui morman de gunoi</string>
 	<string name="btn_view_map">View map</string>
+	<string name="view_map">Harta gunoaie</string>
 </resources>
