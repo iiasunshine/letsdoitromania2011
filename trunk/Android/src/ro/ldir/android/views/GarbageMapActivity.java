@@ -13,11 +13,8 @@ import ro.ldir.android.util.ErrorDialogHandler;
 import ro.ldir.android.util.GarbagesOverMap;
 import ro.ldir.android.util.IErrDialogActivity;
 import ro.letsdoitromania.android.helpers.MyMapView;
-import android.content.Context;
+import android.app.Dialog;
 import android.graphics.drawable.Drawable;
-import android.location.Criteria;
-import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 
 import com.google.android.maps.GeoPoint;
@@ -55,9 +52,8 @@ public class GarbageMapActivity extends MapActivity implements
 
 	private MyMapView mapView;
 	private MapController mc;
-	private LocationManager locationManager;
-	private Location currentLocation = null;
-	private GeoPoint currentPoint;
+	private GeoPoint currentPoint, topLeft, bottomRight;
+	private static final String DLG_ERROR_MESSAGE = "ro.ldir.views.error.msg";
 
 	// coordinates to Bucharest center
 	double lat = Double.parseDouble("44.437711");
@@ -86,8 +82,6 @@ public class GarbageMapActivity extends MapActivity implements
 		mc.setCenter(currentPoint);
 		mc.animateTo(currentPoint);
 
-		getLastLocation();
-
 		// we need a thread to wait until map is ready for getting borders
 		Runnable waitForMapTimeTask = new Runnable() {
 			public void run() {
@@ -103,21 +97,45 @@ public class GarbageMapActivity extends MapActivity implements
 		mapView.invalidate();		
 	}
 
-	
-	
-	private void getLastLocation() {
-		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		Criteria crit = new Criteria();
-		crit.setAccuracy(Criteria.ACCURACY_FINE);
-		String provider = locationManager.getBestProvider(crit, true);
-		currentLocation = locationManager.getLastKnownLocation(provider);
-	}
-
 	@Override
 	protected boolean isRouteDisplayed() {
 		return false;
 	}
 
+	
+	@Override
+	protected Dialog onCreateDialog(int id)
+	{
+		Dialog d = ErrorDialogHandler.onCreateDialog(this, id, errorMessage);
+		if (d != null)
+		{
+			return d;
+		}
+		return super.onCreateDialog(id);
+	}
+	
+	@Override
+	protected void onPrepareDialog(int id, Dialog dialog)
+	{
+		ErrorDialogHandler.onPrepareDialog(id, dialog, errorMessage);
+		super.onPrepareDialog(id, dialog);
+	}
+	
+	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState)
+	{
+		super.onRestoreInstanceState(savedInstanceState);
+		errorMessage = savedInstanceState.getString(DLG_ERROR_MESSAGE);
+	}
+
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState)
+	{
+		outState.putString(DLG_ERROR_MESSAGE, errorMessage);
+		super.onSaveInstanceState(outState);
+	}
+	
 	public void setErrorMessage(String errMsg) {
 		this.errorMessage = errMsg;
 	}
@@ -192,13 +210,21 @@ public class GarbageMapActivity extends MapActivity implements
 	 */
 	private GarbageList getGarbagesInArea() {
 
-		GeoPoint topLeft = mapView.getProjection().fromPixels(
+		GeoPoint lTopLeft = mapView.getProjection().fromPixels(
 				mapView.getLeft(), mapView.getTop());
+		GeoPoint lBottomRight = mapView.getProjection().fromPixels(
+				mapView.getRight(), mapView.getBottom());
+
+		// if we have same corners we exit without making the call to webservice
+		if ((lTopLeft == topLeft)&&(lBottomRight == bottomRight))	{
+			return null;
+		}
+		
+		topLeft = lTopLeft;
 		String topLeftX = String.valueOf(topLeft.getLongitudeE6() / 1E6);
 		String topLeftY = String.valueOf(topLeft.getLatitudeE6() / 1E6);
 
-		GeoPoint bottomRight = mapView.getProjection().fromPixels(
-				mapView.getRight(), mapView.getBottom());
+		bottomRight = lBottomRight;
 		String bottomRightX = String
 				.valueOf(bottomRight.getLongitudeE6() / 1E6);
 		String bottomRightY = String.valueOf(bottomRight.getLatitudeE6() / 1E6);
@@ -208,8 +234,13 @@ public class GarbageMapActivity extends MapActivity implements
 			return backend.getGarbagesInArea(topLeftX, topLeftY, bottomRightX,
 					bottomRightY);
 		} catch (RemoteConnError e) {
-			ErrorDialogHandler.showErrorDialog(GarbageMapActivity.this,
-					e.getStatusCode());
+			final int statusCode = e.getStatusCode();
+			// we have to run through ui thread to show it on screen
+			runOnUiThread(new Runnable() {
+			    public void run() {
+			    	ErrorDialogHandler.showErrorDialog(GarbageMapActivity.this,statusCode);
+			    }
+			});
 		}
 		return null;
 	}
@@ -223,23 +254,20 @@ public class GarbageMapActivity extends MapActivity implements
             if ((!newCenter.equals(oldCenter)) && (newZoom != oldZoom))
             {
         		if (newCenter!= currentPoint)	{
-        			//LLog.d("New Center : " + newCenter.getLatitudeE6() + "," + newCenter.getLongitudeE6());
+        			currentPoint = newCenter;
         			drawGarbagesOnMap();
         		}
             }
             else if (!newCenter.equals(oldCenter))
             {
         		if (newCenter!= currentPoint)	{
-        			//LLog.d("New Center : " + newCenter.getLatitudeE6() + "," + newCenter.getLongitudeE6());
+        			currentPoint = newCenter;
         			drawGarbagesOnMap();
         		}
             }
             else if (newZoom != oldZoom)
             {
-        		if (newCenter!= currentPoint)	{
-        			//LLog.d("New Center : " + newCenter.getLatitudeE6() + "," + newCenter.getLongitudeE6());
-        			drawGarbagesOnMap();
-        		}
+       			drawGarbagesOnMap();
             }
         }
     }	
