@@ -8,6 +8,7 @@ import android.app.AlertDialog.Builder;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Environment;
+import android.os.Looper;
 import android.widget.Toast;
 
 public class Utils {
@@ -25,7 +26,7 @@ public class Utils {
 	{
 		Builder builder = new Builder(context);
 		builder.setMessage(message).setCancelable(true);
-		builder.setPositiveButton(R.string.details_ok, null);
+		builder.setPositiveButton(R.string.details_ok, null);		
 		return builder.create(); 
 	}
 	
