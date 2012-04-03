@@ -4,9 +4,12 @@ import java.io.File;
 import java.io.IOException;
 
 import ro.ldir.R;
+import android.app.Activity;
 import android.app.AlertDialog.Builder;
 import android.app.Dialog;
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Environment;
 import android.os.Looper;
 import android.widget.Toast;
@@ -85,6 +88,28 @@ public class Utils {
 		}
 		return cameraDir;
 	}
+	
+	/**
+	 * Check if we have a network connection
+	 * 
+	 * @return network status 
+	 */
+	public static boolean haveNetworkConnection(Activity activity) {
+	    boolean haveConnectedWifi = false;
+	    boolean haveConnectedMobile = false;
+
+	    ConnectivityManager cm = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
+	    NetworkInfo[] netInfo = cm.getAllNetworkInfo();
+	    for (NetworkInfo ni : netInfo) {
+	        if (ni.getTypeName().equalsIgnoreCase("WIFI"))
+	            if (ni.isConnected())
+	                haveConnectedWifi = true;
+	        if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
+	            if (ni.isConnected())
+	                haveConnectedMobile = true;
+	    }
+	    return haveConnectedWifi || haveConnectedMobile;
+	}	
 	
 
 }
