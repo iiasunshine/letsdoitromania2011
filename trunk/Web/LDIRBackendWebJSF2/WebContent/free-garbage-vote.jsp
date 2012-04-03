@@ -48,13 +48,13 @@
 
 						<a4j:commandButton
 							actionListener="#{voteGarbageManagerBean.actionApplyFilterAsList}"
-							reRender="rightColumnList" styleClass="formButtonLeft"
+							reRender="garbageVoteList" styleClass="formButtonLeft"
 							onclick="#{rich:component('popup-loading')}.show();"
 							oncomplete="#{rich:component('popup-loading')}.hide();"
 							value="Vezi zonele in tabel" />
 						<a4j:commandButton
 							actionListener="#{voteGarbageManagerBean.actionApplyFilterAsMap}"
-							reRender="rightColumnList" styleClass="formButtonLeft"
+							reRender="mapVote" styleClass="formButtonLeft"
 							onclick="#{rich:component('popup-loading')}.show();"
 							oncomplete="#{rich:component('popup-loading')}.hide();"
 							value="Vezi zonele pe harta" />
