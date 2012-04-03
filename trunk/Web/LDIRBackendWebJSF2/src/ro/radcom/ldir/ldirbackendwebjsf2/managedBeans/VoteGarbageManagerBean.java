@@ -73,11 +73,12 @@ public class VoteGarbageManagerBean {
 	}
 
 	public void actionApplyFilterAsList() {
+		showList = true;
 		initGarbageList();
 	}
 
 	public void actionApplyFilterAsMap() {
-		showList = true;
+		showList = false;
 		initGarbageList();
 
 	}

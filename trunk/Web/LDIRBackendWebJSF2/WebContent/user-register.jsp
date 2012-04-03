@@ -22,9 +22,9 @@
 
                         <%-- right column --%>
                         <div id="rightColumn" style="min-height: 200px;">
-                            <div class="label">
-                                <h1><h:outputText value="#{msg.register_title}"/></h1>
-                            </div>
+
+                                <h2><h:outputText value="#{msg.register_title}"/></h2>
+
 
                             <!-- mesaj eroare -->
                             <h:messages warnClass="registerMessageError" infoClass="registerMessageOk"/>
