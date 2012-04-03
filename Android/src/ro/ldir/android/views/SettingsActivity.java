@@ -9,6 +9,7 @@ import ro.ldir.android.util.ErrorDialogHandler;
 import ro.ldir.android.util.IDialogIds;
 import ro.ldir.android.util.LDIRActivity;
 import ro.ldir.android.util.LDIRApplication;
+import ro.ldir.android.util.Utils;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
@@ -49,10 +50,16 @@ public class SettingsActivity extends LDIRActivity{
         }
         else
         {
-        	submitButton.setOnClickListener(new LoginClickListener());
-        	submitButton.setText(R.string.login_button_submit);
-        	showLoginForm(View.VISIBLE);
-        	lblLoginEmail.setVisibility(View.INVISIBLE);
+        	if (Utils.haveNetworkConnection(this)){
+            	submitButton.setOnClickListener(new LoginClickListener());
+            	submitButton.setText(R.string.login_button_submit);
+            	showLoginForm(View.VISIBLE);
+            	lblLoginEmail.setVisibility(View.INVISIBLE);
+        	}	else	{
+        		showLoginForm(View.INVISIBLE);
+        		ErrorDialogHandler.showErrorDialog(this, 4010);
+        	}
+        	
         }
 	}
 	/**
@@ -103,7 +110,7 @@ public class SettingsActivity extends LDIRActivity{
 	 */
 	private class LoginClickListener implements OnClickListener
 	{
-		public void onClick(View v) {
+		public void onClick(View v) {			
 			LoginTask task = new LoginTask();
 			task.execute();
 		}

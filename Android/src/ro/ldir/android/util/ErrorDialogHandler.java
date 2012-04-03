@@ -33,7 +33,7 @@ public class ErrorDialogHandler
 	public static void showErrorDialog(LDIRActivity activity, int statusCode)
 	{
 		LLog.d("Showing error dialog for error code: " + statusCode);
-		String errorMessage = activity.getResources().getString(getErrorMessage(statusCode));
+		String errorMessage = getErrorMessage(activity, statusCode);
 		activity.setErrorMessage(errorMessage);
 		activity.showDialog(IDialogIds.DLG_ERROR);
 	}
@@ -41,7 +41,7 @@ public class ErrorDialogHandler
 	public static void showErrorDialog(GarbageMapActivity activity,
 			int statusCode) {
 		LLog.d("Showing error dialog for error code: " + statusCode);
-		String errorMessage = activity.getResources().getString(getErrorMessage(statusCode));
+		String errorMessage = getErrorMessage(activity, statusCode);
 		activity.setErrorMessage(errorMessage);
 		activity.showDialog(IDialogIds.DLG_ERROR);		
 	}
@@ -56,6 +56,8 @@ public class ErrorDialogHandler
 	{
 		switch(statusCode)
 		{
+		case 4010:
+			return R.string.err_network_not_connected; // custom error code : network not available 
 		case 403:
 		case 401:
 			return R.string.login_fail;

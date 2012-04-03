@@ -12,11 +12,11 @@ import ro.ldir.android.remote.RemoteConnError;
 import ro.ldir.android.util.ErrorDialogHandler;
 import ro.ldir.android.util.GarbagesOverMap;
 import ro.ldir.android.util.IErrDialogActivity;
+import ro.ldir.android.util.Utils;
 import ro.letsdoitromania.android.helpers.MyMapView;
 import android.app.Dialog;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
@@ -148,7 +148,11 @@ public class GarbageMapActivity extends MapActivity implements
 	 * Helper method that put garbage icons on map
 	 */
 	private void drawGarbagesOnMap() {
-		garbageList = getGarbagesInArea();
+    	if (Utils.haveNetworkConnection(this)){
+    		garbageList = getGarbagesInArea();
+    	}	else	{
+    		ErrorDialogHandler.showErrorDialog(this, 4010);
+    	}
 		
 		// run on UI Thread to avoid ConcurrentModification exception
 		runOnUiThread(new Runnable() {
@@ -270,6 +274,6 @@ public class GarbageMapActivity extends MapActivity implements
        			drawGarbagesOnMap();
             }
         }
-    }	
+    }
 	
 }

@@ -228,4 +228,5 @@
 	<string name="details_img_required">Trebuie sa atasati cel putin o imagine acestui morman de gunoi</string>
 	<string name="btn_view_map">View map</string>
 	<string name="view_map">Harta gunoaie</string>
+	<string name="err_network_not_connected">Nu exista conexiune la internet</string>
 </resources>
