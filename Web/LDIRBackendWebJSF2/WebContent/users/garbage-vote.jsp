@@ -16,7 +16,7 @@
 		<%-- page Top --%>
 		<%-- 	<custom:page_top selected="lista_mormane"
 			role="${voteGarbageManagerBean.userDetails.role}" /> --%>
-		<custom:page_top_login selected="garbageVote" />
+		<custom:page_top_login selected="garbageVote" role="${voteGarbageManagerBean.userDetails.role}"/>
 		<%-- page Content --%>
 		<div id="pageContainer">
 			<div id="contentList">
