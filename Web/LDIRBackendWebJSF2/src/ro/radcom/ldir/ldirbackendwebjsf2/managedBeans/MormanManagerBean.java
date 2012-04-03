@@ -462,6 +462,7 @@ public class MormanManagerBean {
 		 * validari
 		 */
 		Garbage garbage = myGarbage.getGarbage();
+		boolean b=true;
 		if (garbage.getDescription() == null
 				|| garbage.getDescription().trim().length() == 0) {
 			JsfUtils.addWarnBundleMessage("err_mandatory_fields");
@@ -529,8 +530,14 @@ public class MormanManagerBean {
 		garbage.setStatus(Garbage.GarbageStatus.IDENTIFIED);
 
 		try {
+			if(garbage.getGarbageId()!=null){
+				b=true;
+			}
+			else{
+				b=false;
+			}
 			garbage.setGarbageId(wsi.addGarbage(userDetails, garbage));
-
+			
 			/* adaugare imagini */
 
 			String warn_text = "";
@@ -561,11 +568,12 @@ public class MormanManagerBean {
 			}
 
 			/* cerere informatii user */
-			if (userDetails != null)
-				wsi.reinitUser(userDetails);
+			if (userDetails != null){
+				userDetails=wsi.reinitUser(userDetails);
+			}
 			/* mesaj info referitor la adaugarea/modificarea mormanului */
 			String infoText = "";
-			if (garbage.getGarbageId() != null && garbage.getGarbageId() > 0) {
+			if (garbage.getGarbageId() != null && garbage.getGarbageId() > 0 && b) {
 				infoText = JsfUtils.getBundleMessage("details_modify_confirm");
 				infoText = infoText.replaceAll("\\{0\\}",
 						"" + garbage.getGarbageId());
@@ -573,10 +581,35 @@ public class MormanManagerBean {
 				//init(garbage.getGarbageId());
 			} else {
 				init(0);
-				garbage = myGarbageList.get(0).getGarbage();
+				//garbage = myGarbageList.get(0).getGarbage();
 				infoText = JsfUtils.getBundleMessage("details_add_confirm");
 				infoText = infoText.replaceAll("\\{0\\}",
 						"" + garbage.getGarbageId());
+				
+				String infoHtml = "<strong>"
+						+ JsfUtils.getBundleMessage("details_morman") + " "
+						+ garbage.getGarbageId() + "</strong><br/>";
+				infoHtml += JsfUtils.getBundleMessage("details_area")
+						+ " "
+						+ (garbage.getChartedArea() != null ? garbage.getChartedArea()
+								.getName() : "unknown") + "<br/>";
+				infoHtml += JsfUtils.getBundleMessage("details_county")
+						+ " "
+						+ (garbage.getCounty() != null ? garbage.getCounty().getName()
+								: "unknown") + "<br/>";
+				infoHtml += JsfUtils.getBundleMessage("details_state")
+						+ " "
+						+ (garbage.getStatus() != null ? garbage.getStatus().name()
+								: "unknown") + "<br/><br/>";
+				infoHtml += (garbage.getDescription() != null ? garbage
+						.getDescription() : "") + "<br/>";
+				infoHtml += "<br/><a href=\"cartare-mormane-detalii.jsf?garbageId="
+						+ garbage.getGarbageId()
+						+ "\" style=\"color: #4D751F;\">"
+						+ JsfUtils.getBundleMessage("details_view_link")
+						+ "</a>";
+				myGarbageList.add(new MyGarbage(garbage, infoHtml));
+				
 			}
 
 			JsfUtils.getHttpSession().setAttribute("INFO_MESSAGE", infoText);
