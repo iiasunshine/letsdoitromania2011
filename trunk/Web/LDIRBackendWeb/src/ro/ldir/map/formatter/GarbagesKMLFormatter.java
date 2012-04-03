@@ -61,8 +61,12 @@ public class GarbagesKMLFormatter {
 		for (Garbage garbage : garbages) {
 						
 			buf.append("<Placemark>\n");
-			buf.append("<styleUrl>#" + garbage.getAllocatedStatus()
-					+ "</styleUrl>\n");
+			Boolean b=new Boolean(garbage.isToVote());
+			if(b==true)
+				buf.append("<styleUrl>#ZONAVOTARENEVOTAT</styleUrl>\n");
+			else
+				buf.append("<styleUrl>#" + garbage.getAllocatedStatus()
+						+ "</styleUrl>\n");
 			buf.append("<name>Garbage " + garbage.getGarbageId() + "</name>\n");
 			buf.append("<description><![CDATA[");
 			buf.append("<p>" + garbage.getDescription() + "</p>\n");
@@ -130,7 +134,6 @@ public class GarbagesKMLFormatter {
 								garbage.getGarbageId().toString()) + "</p>\n");
 			}}
 			buf.append("<p></p>\n");
-			Boolean b=new Boolean(garbage.isToVote());
 			if(b==true)
 				nominalizeazaString="De-Nominalizeaza";
 			else 
@@ -172,6 +175,22 @@ public class GarbagesKMLFormatter {
 		buf.append("<IconStyle>\n");
 		buf.append("<Icon>\n");
 		buf.append("<href>http:////maps.gstatic.com/mapfiles/ms2/micons/yellow.png</href>");
+		buf.append("</Icon>\n");
+		buf.append("</IconStyle>\n");
+		buf.append("</Style>\n");
+		
+		buf.append("<Style id=\"ZONAVOTARENEVOTAT\">\n");
+		buf.append("<IconStyle>\n");
+		buf.append("<Icon>\n");
+		buf.append("<href>http://app.letsdoitromania.ro/icons/ldirzona64px.png</href>");
+		buf.append("</Icon>\n");
+		buf.append("</IconStyle>\n");
+		buf.append("</Style>\n");
+		
+		buf.append("<Style id=\"ZONAVOTAREVOTAT\">\n");
+		buf.append("<IconStyle>\n");
+		buf.append("<Icon>\n");
+		buf.append("<href>http://app.letsdoitromania.ro/icons/ldirzona64pxGrey.png</href>");
 		buf.append("</Icon>\n");
 		buf.append("</IconStyle>\n");
 		buf.append("</Style>\n");
