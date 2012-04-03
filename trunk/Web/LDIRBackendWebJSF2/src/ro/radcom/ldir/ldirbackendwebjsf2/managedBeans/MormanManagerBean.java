@@ -62,7 +62,7 @@ public class MormanManagerBean {
 
 	private boolean coord_zecimale = true;
 	private boolean coord_grade = false;
-	private boolean allocable=false;
+	private boolean allocable = false;
 	private UploadedFile uploadedFile1 = null;
 	private UploadedFile uploadedFile2 = null;
 	private UploadedFile uploadedFile3 = null;
@@ -415,26 +415,26 @@ public class MormanManagerBean {
 			}
 		}
 	}
-	
-	public void actionToVote(){
-		if(myGarbage!=null){
-			Garbage g=myGarbage.getGarbage();
-			if(g!=null){
-				boolean toVote=false;
-				toVote=g.isToVote();
+
+	public void actionToVote() {
+		if (myGarbage != null) {
+			Garbage g = myGarbage.getGarbage();
+			if (g != null) {
+				boolean toVote = false;
+				toVote = g.isToVote();
 				wsi.setGarbageToVote(g.getGarbageId(), !toVote);
 				g.setToVote(!toVote);
 			}
 		}
 	}
-	
-	public void actionToClean(){
-		boolean toClean=false;
-		if(myGarbage!=null){
-			Garbage g=myGarbage.getGarbage();
-			if(g!=null){
-				toClean=g.isToClean();
-				wsi.setGarbageToClean(g.getGarbageId(),!toClean);
+
+	public void actionToClean() {
+		boolean toClean = false;
+		if (myGarbage != null) {
+			Garbage g = myGarbage.getGarbage();
+			if (g != null) {
+				toClean = g.isToClean();
+				wsi.setGarbageToClean(g.getGarbageId(), !toClean);
 				g.setToClean(!toClean);
 			}
 		}
@@ -457,23 +457,32 @@ public class MormanManagerBean {
 		return NavigationValues.MORMAN_STARE_UPDATE_SUCCES;
 	}
 
+	/**
+	 * @return
+	 */
 	public String actionEditMorman() {
 		/**
 		 * validari
 		 */
 		Garbage garbage = myGarbage.getGarbage();
-		boolean b=true;
+		boolean b = true;
 		if (garbage.getDescription() == null
 				|| garbage.getDescription().trim().length() == 0) {
 			JsfUtils.addWarnBundleMessage("err_mandatory_fields");
-			return NavigationValues.MORMAN_ADD_FAIL;
+			if (userDetails != null) // do fwd to a jsp used in logged
+				// enviroment
+				return NavigationValues.MORMAN_ADD_FAIL;
+			return NavigationValues.MORMAN_ADD_FAIL_FREE;
 		}
 		int totalPercents = garbage.getPercentageGlass()
 				+ garbage.getPercentageMetal() + garbage.getPercentagePlastic()
 				+ garbage.getPercentageWaste();
 		if (totalPercents != 100 && totalPercents != 0) {
 			JsfUtils.addWarnBundleMessage("chart_err_overflow_percents");
-			return NavigationValues.MORMAN_ADD_FAIL;
+			if (userDetails != null) // do fwd to a jsp used in logged
+				// enviroment
+				return NavigationValues.MORMAN_ADD_FAIL;
+			return NavigationValues.MORMAN_ADD_FAIL_FREE;
 		}
 		/* latitudine */
 
@@ -488,11 +497,17 @@ public class MormanManagerBean {
 
 			if (garbage.getY() == 0) {
 				JsfUtils.addWarnBundleMessage("chart_err_latitude");
-				return NavigationValues.MORMAN_ADD_FAIL;
+				if (userDetails != null) // do fwd to a jsp used in logged
+					// enviroment
+					return NavigationValues.MORMAN_ADD_FAIL;
+				return NavigationValues.MORMAN_ADD_FAIL_FREE;
 			}
 		} catch (Exception ex) {
 			JsfUtils.addWarnBundleMessage("chart_err_latitude");
-			return NavigationValues.MORMAN_ADD_FAIL;
+			if (userDetails != null) // do fwd to a jsp used in logged
+				// enviroment
+				return NavigationValues.MORMAN_ADD_FAIL;
+			return NavigationValues.MORMAN_ADD_FAIL_FREE;
 		}
 		/* longitudine */
 		try {
@@ -505,11 +520,17 @@ public class MormanManagerBean {
 			}
 			if (garbage.getX() == 0) {
 				JsfUtils.addWarnBundleMessage("chart_err_longitude");
-				return NavigationValues.MORMAN_ADD_FAIL;
+				if (userDetails != null) // do fwd to a jsp used in logged
+					// enviroment
+					return NavigationValues.MORMAN_ADD_FAIL;
+				return NavigationValues.MORMAN_ADD_FAIL_FREE;
 			}
 		} catch (Exception ex) {
 			JsfUtils.addWarnBundleMessage("chart_err_longitude");
-			return NavigationValues.MORMAN_ADD_FAIL;
+			if (userDetails != null) // do fwd to a jsp used in logged
+				// enviroment
+				return NavigationValues.MORMAN_ADD_FAIL;
+			return NavigationValues.MORMAN_ADD_FAIL_FREE;
 		}
 		if (garbage.getGarbageId() == null || garbage.getGarbageId() == 0) {
 			for (int i = 0; i < myGarbageList.size(); i++) {
@@ -517,7 +538,10 @@ public class MormanManagerBean {
 				if ((garbage.getX() == garbageItem.getX())
 						&& (garbage.getY() == garbageItem.getY())) {
 					JsfUtils.addWarnBundleMessage("chart_err_exists");
-					return NavigationValues.MORMAN_ADD_FAIL;
+					if (userDetails != null) // do fwd to a jsp used in logged
+						// enviroment
+						return NavigationValues.MORMAN_ADD_FAIL;
+					return NavigationValues.MORMAN_ADD_FAIL_FREE;
 				}
 			}
 		}
@@ -526,18 +550,17 @@ public class MormanManagerBean {
 		 * procesare
 		 */
 		garbage.setRecordDate(new Date());
-		//TODO to check if it change old status.
+		// TODO to check if it change old status.
 		garbage.setStatus(Garbage.GarbageStatus.IDENTIFIED);
 
 		try {
-			if(garbage.getGarbageId()!=null){
-				b=true;
-			}
-			else{
-				b=false;
+			if (garbage.getGarbageId() != null) {
+				b = true;
+			} else {
+				b = false;
 			}
 			garbage.setGarbageId(wsi.addGarbage(userDetails, garbage));
-			
+
 			/* adaugare imagini */
 
 			String warn_text = "";
@@ -568,48 +591,47 @@ public class MormanManagerBean {
 			}
 
 			/* cerere informatii user */
-			if (userDetails != null){
-				userDetails=wsi.reinitUser(userDetails);
+			if (userDetails != null) {
+				userDetails = wsi.reinitUser(userDetails);
+				JsfUtils.getHttpSession().setAttribute("USER_DETAILS",
+						userDetails); // replace the USERDETAILS from SESSION.
 			}
 			/* mesaj info referitor la adaugarea/modificarea mormanului */
 			String infoText = "";
-			if (garbage.getGarbageId() != null && garbage.getGarbageId() > 0 && b) {
+			if (garbage.getGarbageId() != null && garbage.getGarbageId() > 0
+					&& b) {
 				infoText = JsfUtils.getBundleMessage("details_modify_confirm");
 				infoText = infoText.replaceAll("\\{0\\}",
 						"" + garbage.getGarbageId());
-				// test to see: nu functioneaza ceva. Toaate mormanele adaugate sunt vazute ca modificate. //TODO
-				//init(garbage.getGarbageId());
+				// init(garbage.getGarbageId());
 			} else {
 				init(0);
-				//garbage = myGarbageList.get(0).getGarbage();
+				// garbage = myGarbageList.get(0).getGarbage();
 				infoText = JsfUtils.getBundleMessage("details_add_confirm");
 				infoText = infoText.replaceAll("\\{0\\}",
 						"" + garbage.getGarbageId());
-				
-				String infoHtml = "<strong>"
-						+ JsfUtils.getBundleMessage("details_morman") + " "
-						+ garbage.getGarbageId() + "</strong><br/>";
-				infoHtml += JsfUtils.getBundleMessage("details_area")
-						+ " "
-						+ (garbage.getChartedArea() != null ? garbage.getChartedArea()
-								.getName() : "unknown") + "<br/>";
-				infoHtml += JsfUtils.getBundleMessage("details_county")
-						+ " "
-						+ (garbage.getCounty() != null ? garbage.getCounty().getName()
-								: "unknown") + "<br/>";
-				infoHtml += JsfUtils.getBundleMessage("details_state")
-						+ " "
-						+ (garbage.getStatus() != null ? garbage.getStatus().name()
-								: "unknown") + "<br/><br/>";
-				infoHtml += (garbage.getDescription() != null ? garbage
-						.getDescription() : "") + "<br/>";
-				infoHtml += "<br/><a href=\"cartare-mormane-detalii.jsf?garbageId="
-						+ garbage.getGarbageId()
-						+ "\" style=\"color: #4D751F;\">"
-						+ JsfUtils.getBundleMessage("details_view_link")
-						+ "</a>";
-				myGarbageList.add(new MyGarbage(garbage, infoHtml));
-				
+
+				/*
+				 * String infoHtml = "<strong>" +
+				 * JsfUtils.getBundleMessage("details_morman") + " " +
+				 * garbage.getGarbageId() + "</strong><br/>"; infoHtml +=
+				 * JsfUtils.getBundleMessage("details_area") + " " +
+				 * (garbage.getChartedArea() != null ? garbage.getChartedArea()
+				 * .getName() : "unknown") + "<br/>"; infoHtml +=
+				 * JsfUtils.getBundleMessage("details_county") + " " +
+				 * (garbage.getCounty() != null ? garbage.getCounty().getName()
+				 * : "unknown") + "<br/>"; infoHtml +=
+				 * JsfUtils.getBundleMessage("details_state") + " " +
+				 * (garbage.getStatus() != null ? garbage.getStatus().name() :
+				 * "unknown") + "<br/><br/>"; infoHtml +=
+				 * (garbage.getDescription() != null ? garbage .getDescription()
+				 * : "") + "<br/>"; infoHtml +=
+				 * "<br/><a href=\"cartare-mormane-detalii.jsf?garbageId=" +
+				 * garbage.getGarbageId() + "\" style=\"color: #4D751F;\">" +
+				 * JsfUtils.getBundleMessage("details_view_link") + "</a>";
+				 * myGarbageList.add(new MyGarbage(garbage, infoHtml));
+				 */
+
 			}
 
 			JsfUtils.getHttpSession().setAttribute("INFO_MESSAGE", infoText);
@@ -788,20 +810,23 @@ public class MormanManagerBean {
 	public boolean getMormanAlocat() {
 		return this.mormanAlocat;
 	}
-	
-	public boolean getAllocable(){
-		this.allocable=!getMormanAlocat()&&this.myGarbage.getGarbage().isToVote();
-		return this.allocable;
-		}
-	
-	public boolean isAllocable(){
-		this.allocable=!getMormanAlocat()&&this.myGarbage.getGarbage().isToVote();
+
+	public boolean getAllocable() {
+		this.allocable = !getMormanAlocat()
+				&& this.myGarbage.getGarbage().isToVote();
 		return this.allocable;
 	}
 
-	public void setAllocable(boolean a){
-		this.allocable=a;
+	public boolean isAllocable() {
+		this.allocable = !getMormanAlocat()
+				&& this.myGarbage.getGarbage().isToVote();
+		return this.allocable;
 	}
+
+	public void setAllocable(boolean a) {
+		this.allocable = a;
+	}
+
 	public void setUserDetails(User userDetails) {
 		this.userDetails = userDetails;
 	}
