@@ -31,32 +31,28 @@
 					<div class="labelLeft">
 						<h1>Selecteaza judetul:</h1>
 					</div>
-					<a4j:form>
+					<a4j:form id="formjudete">
 						<div>
 							<h3>
 								Judet<br />
-								<h:selectOneMenu value="#{voteGarbageManagerBean.countyId}">
+								<h:selectOneMenu
+								onchange="document.getElementById('formjudete:butonchange').click()"
+								value="#{voteGarbageManagerBean.countyId}">
 									<f:selectItems value="#{voteGarbageManagerBean.countyItems}" />
-								</h:selectOneMenu>
-
-								<h:selectOneMenu rendered="true"
-									onchange="loadCountyGarbageOverlay(this.value);">
-									<f:selectItems value="#{mapViewBean.countyItems}" />
 								</h:selectOneMenu>
 							</h3>
 						</div>
 
-						<a4j:commandButton
+						<a4j:commandButton id="butonchange"
 							actionListener="#{voteGarbageManagerBean.actionApplyFilterAsList}"
 							reRender="garbageVoteList" styleClass="formButtonLeft"
-							onclick="#{rich:component('popup-loading')}.show();"
+							onclick="#{rich:component('popup-loading')}.show()"
 							oncomplete="#{rich:component('popup-loading')}.hide();"
 							value="Vezi zonele in tabel" />
 						<a4j:commandButton
 							actionListener="#{voteGarbageManagerBean.actionApplyFilterAsMap}"
-							reRender="mapVote" styleClass="formButtonLeft"
-							onclick="#{rich:component('popup-loading')}.show();"
-							oncomplete="#{rich:component('popup-loading')}.hide();"
+							styleClass="formButtonLeft"
+							onclick="window.location = 'free-garbage-vote-map.jsf'"							
 							value="Vezi zonele pe harta" />
 						<button type="reset" class="formButtonLeft">Anuleaza</button>
 					</a4j:form>
@@ -168,37 +164,12 @@
 								<h:outputText
 									value="Selecteaza un judet pentru a afisa zonele cu gunoaie pt a vota!" />
 							</h3>
+						
 						</h:panelGroup>
 						
-						<a4j:form rendered="true"
-						id="mapVote">
-						<m:map width="750px" height="650px" latitude="44.4317879"
-							longitude="26.1015844" zoom="10" jsVariable="myMap">
-							<m:mapControl name="GLargeMapControl3D" />
-							<m:mapControl name="GMapTypeControl"
-								position="G_ANCHOR_TOP_RIGHT" />
-							<m:mapControl name="GScaleControl"
-								position="G_ANCHOR_BOTTOM_RIGHT" />
-
-							<!--a4j:repeat value="{mapViewBean.myGarbageList}" var="gunoi">
-                                        <xm:marker  latitude="{gunoi.coordYToString}"
-                                                   longitude="{gunoi.coordXToString}"
-                                                   showInformationEvent="mouseover">
-                                            <xm:icon imageURL="http://www.google.com/mapfiles/ms/micons/red-dot.png"
-                                                    width="32"
-                                                    height="32"/>
-                                            <xm:htmlInformationWindow htmlText="{gunoi.infoHtml}"/>
-                                        </xm:marker>
-                                    </xa4j:repeat-->
-							<m:eventListener eventName="bounds_changed"
-								jsFunction="onBoundsChanged" />
-							<m:eventListener eventName="bounds_changed"
-								jsFunction="loadEvents()" />
-							<m:eventListener eventName="load" jsFunction="onBoundsChanged()" />
-						</m:map>
-					</a4j:form>
-					</a4j:outputPanel>
-
+				
+				</a4j:outputPanel>
+					
 					
 				</div>
 
