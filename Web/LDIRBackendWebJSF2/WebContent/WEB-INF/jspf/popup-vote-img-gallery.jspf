@@ -26,20 +26,21 @@
 		<h:panelGroup id="selected_image"
 			style=" display:block; text-align: center; height: 565px;">
 			<h:graphicImage
-				value="#{mormanManager.posters[mormanManager.selectedImgIndex]}" height="550"
-				styleClass="galerie" />
+				value="#{voteGarbageManagerBean.posters[voteGarbageManagerBean.selectedImgIndex]}"
+				height="550" styleClass="galerie" />
 		</h:panelGroup>
-	
+
 		<h:panelGroup
 			style="overflow: scroll; width: 800px; max-height: 150px; display:block;">
 			<a4j:form>
-				<a4j:repeat value="#{mormanManager.thumbnails}" var="thumbnail"
-					rowKeyVar="index">
+				<a4j:repeat value="#{voteGarbageManagerBean.thumbnails}"
+					var="thumbnail" rowKeyVar="index">
 					<a4j:commandLink
-						actionListener="#{mormanManager.actionSetSelectedImage}"
+						actionListener="#{voteGarbageManagerBean.actionSetSelectedImage}"
 						reRender="selected_image">
 						<f:param name="imgIndex" value="#{index}" />
-						<h:graphicImage value="#{mormanManager.thumbnails[index]}"
+						<h:graphicImage
+							value="#{voteGarbageManagerBean.thumbnails[index]}"
 							styleClass="galerie" />
 					</a4j:commandLink>
 				</a4j:repeat>

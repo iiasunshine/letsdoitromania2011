@@ -75,7 +75,7 @@ public class RegisterBean {
                 || regiterUser.getEmail() == null || regiterUser.getEmail().trim().length() == 0
                 || regiterUser.getPasswd() == null || regiterUser.getPasswd().trim().length() == 0
                 || passwordConfirm == null || passwordConfirm.length() == 0
-                || (!curatenie && !cartare)) {
+                || /*(!curatenie && !cartare)*/regiterUser.getCounty()==null || regiterUser.getCounty().trim().length()<2) {
             JsfUtils.addWarnBundleMessage("err_mandatory_fields");
             return NavigationValues.REGISTER_FAIL;
         } else {

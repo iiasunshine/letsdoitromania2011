@@ -23,7 +23,7 @@
 
 				<jsp:directive.include file="/WEB-INF/jspf/popup-loading.jspf" />
 				<jsp:directive.include
-					file="/WEB-INF/jspf/popup-admin-img-gallery.jspf" />
+					file="/WEB-INF/jspf/popup-vote-img-gallery.jspf" />
 				<jsp:directive.include file="/WEB-INF/jspf/popup-garbage-vote.jspf" />
 
 				<%-- Left Column --%>
@@ -132,6 +132,7 @@
 											onclick="#{rich:component('popup-loading')}.show();"
 											oncomplete="#{rich:component('popup-loading')}.hide(); #{rich:component('img_gallery')}.show();">
 											<f:param name="garbageId" value="#{garbage.garbageId}" />
+											<f:param name="ipAddress" value="#{request.remoteAddr}" />
 											<strong><h:outputText
 													value="DESCHIDE (#{fn:length(garbage.pictures)})" /></strong>
 										</a4j:commandLink>

@@ -85,19 +85,19 @@
                                 <h:inputText value="#{registerBean.regiterUser.town}" id="oras_resedinta" styleClass="formTextfield"/>
                                 <br />
                                 <!-- JUDET -->
-                                <div class="label"><h:outputText value="#{msg.register_area} "/></div>
+                                <div class="label"><h:outputText value="#{msg.register_area} "/><span class="important">*</span></div>
                                 <h:selectOneMenu value="#{registerBean.regiterUser.county}" id="judet_resedinta" styleClass="formDropdown">
                                     <f:selectItem itemLabel="Alege Judet" itemValue=""/>
                                     <f:selectItems value="#{registerBean.countyItems}"/>
                                 </h:selectOneMenu>
                                 <br />
-                                <!-- ACTIVITATI -->
+                                <!-- ACTIVITATI --><%-- --
                                 <div class="label"><h:outputText value="#{msg.register_activities} "/><span class="important">*</span></div>
                                 <h:selectBooleanCheckbox value="#{registerBean.cartare}" id="cartare"/>
                                 <label class="formCheckbox"><h:outputText value="#{msg.register_activities_cartare}   "/></label>
                                 <h:selectBooleanCheckbox value="#{registerBean.curatenie}" id="curatenie"/>
                                 <label class="formCheckbox"><h:outputText value="#{msg.register_activities_curatenie}"/></label>
-                                <br />
+                                <br />---%>
                                 <!-- TELEFON -->
                                 <div class="label"><h:outputText value="#{msg.register_phone} "/></div>
                                 <h:inputText value="#{registerBean.regiterUser.phone}" id="telefon" styleClass="formTextfield"/>
