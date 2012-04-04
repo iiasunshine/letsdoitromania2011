@@ -39,7 +39,7 @@ import ro.radcom.ldir.ldirbackendwebjsf2.tools.customObjects.NavigationValues;
  */
 public class AdminGarbageManagerBean {
 
-	private static final Logger log4j = Logger.getLogger(LoginBean.class
+	private static final Logger log4j = Logger.getLogger(AdminGarbageManagerBean.class
 			.getCanonicalName());
 	private WSInterface wsi;
 	/* variabile afisare */
@@ -150,74 +150,27 @@ public class AdminGarbageManagerBean {
 
 		/* obtinere poze */
 		for (int i = 0; i < selectedGarbage.getPictures().size(); i++) {
-			int height = 0;
 
 			try {
-				/**
-				 * thumbnail
-				 */
-				File tempFile = wsi.getPicture(userDetails, selectedGarbage, i,
-						false);
-				log4j.debug("---> temp file: " + tempFile.getAbsolutePath());
+				// Thumbnail
+				String thumb = JsfUtils.getInitParameter("webservice.url")+"/LDIRBackend/ws/garbage/"
+						+ selectedGarbage.getGarbageId().intValue()
+						+ "/image/"
+						+ i
+						+ "/thumb";
+				thumbnails.add(thumb);
+				log4j.warn("[ACTION]----------->S-a adaugat in thumbnails ["
+						+ i + "] temFile " + thumb);
+				//FULL PICTURE
+				String poster = JsfUtils.getInitParameter("webservice.url")+"/LDIRBackend/ws/garbage/"
+						+ selectedGarbage.getGarbageId().intValue()
+						+ "/image/"
+						+ i
+						+ "/display";
+				posters.add(poster);
 
-				String relativePath = "temp/" + userDetails.getUserId()
-						+ "/preview_" + garbageId + "_" + i + "_thumbnail.jpg";
-				String previewFilePath = JsfUtils.makeContextPath(relativePath);
-				File previewFile = new File(previewFilePath);
-				if (!previewFile.getParentFile().isDirectory()) {
-					if (!previewFile.getParentFile().mkdirs()) {
-						log4j.warn("nu s-a putut crea drectorul pentru preview: "
-								+ previewFile.getParentFile().getAbsolutePath());
-					}
-				}
-				if (previewFile.isFile()) {
-					if (!previewFile.delete()) {
-						log4j.warn("nu s-a putut sterge fisierul existent: "
-								+ previewFile.getAbsolutePath());
-					}
-				}
-				if (!tempFile.renameTo(previewFile)) {
-					log4j.warn("nu s-a putut redenumi fisierul temporar: "
-							+ tempFile.getAbsolutePath());
-				} else {
-					thumbnails.add(relativePath);
-				}
+				log4j.warn("[ACTION]---->posters add:" + poster);
 
-				/**
-				 * imagine full
-				 */
-				tempFile = wsi
-						.getPicture(userDetails, selectedGarbage, i, true);
-				log4j.debug("---> temp file: " + tempFile.getAbsolutePath());
-
-				relativePath = "temp/" + userDetails.getUserId() + "/preview_"
-						+ garbageId + "_" + i + "_full.jpg";
-				previewFilePath = JsfUtils.makeContextPath(relativePath);
-				previewFile = new File(previewFilePath);
-				if (!previewFile.getParentFile().isDirectory()) {
-					if (!previewFile.getParentFile().mkdirs()) {
-						log4j.warn("nu s-a putut crea drectorul pentru preview: "
-								+ previewFile.getParentFile().getAbsolutePath());
-					}
-				}
-				if (previewFile.isFile()) {
-					if (!previewFile.delete()) {
-						log4j.warn("nu s-a putut sterge fisierul existent: "
-								+ previewFile.getAbsolutePath());
-					}
-				}
-				if (!tempFile.renameTo(previewFile)) {
-					log4j.warn("nu s-a putut redenumi fisierul temporar: "
-							+ tempFile.getAbsolutePath());
-				} else {
-					posters.add(relativePath);
-					ImageInfo imageInfo = ImageInfo.getImageInfo(
-							previewFile.getAbsolutePath(), false);
-					if (imageInfo.getHeight() > 550) {
-						height = 550;
-					}
-					posterHeights.add(height);
-				}
 			} catch (Exception ex) {
 				log4j.fatal("Eroare obtinere imagine: "
 						+ AppUtils.printStackTrace(ex));
