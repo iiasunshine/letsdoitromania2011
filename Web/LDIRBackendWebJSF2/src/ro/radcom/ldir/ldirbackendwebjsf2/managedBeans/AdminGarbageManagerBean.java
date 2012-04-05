@@ -153,20 +153,12 @@ public class AdminGarbageManagerBean {
 
 			try {
 				// Thumbnail
-				String thumb = JsfUtils.getInitParameter("webservice.url")+"/LDIRBackend/ws/garbage/"
-						+ selectedGarbage.getGarbageId().intValue()
-						+ "/image/"
-						+ i
-						+ "/thumb";
+				String thumb = wsi.compileImagePath(selectedGarbage, i, false);
 				thumbnails.add(thumb);
 				log4j.warn("[ACTION]----------->S-a adaugat in thumbnails ["
 						+ i + "] temFile " + thumb);
 				//FULL PICTURE
-				String poster = JsfUtils.getInitParameter("webservice.url")+"/LDIRBackend/ws/garbage/"
-						+ selectedGarbage.getGarbageId().intValue()
-						+ "/image/"
-						+ i
-						+ "/display";
+				String poster = wsi.compileImagePath(selectedGarbage, i, true);
 				posters.add(poster);
 
 				log4j.warn("[ACTION]---->posters add:" + poster);
