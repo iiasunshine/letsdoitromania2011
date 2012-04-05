@@ -12,11 +12,13 @@ import ro.ldir.android.remote.RemoteConnError;
 import ro.ldir.android.util.ErrorDialogHandler;
 import ro.ldir.android.util.GarbagesOverMap;
 import ro.ldir.android.util.IErrDialogActivity;
+import ro.ldir.android.util.LLog;
 import ro.ldir.android.util.Utils;
 import ro.letsdoitromania.android.helpers.MyMapView;
 import android.app.Dialog;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
@@ -73,8 +75,8 @@ public class GarbageMapActivity extends MapActivity implements
 		mapView.setBuiltInZoomControls(true);
 		
         // Add listener
-        mapView.setOnChangeListener(new MapViewChangeListener());		
-
+        mapView.setOnChangeListener(new MapViewChangeListener());
+        
 		// center the map to the given coordinates
 		currentPoint = new GeoPoint((int) (lat * 1E6), (int) (lng * 1E6));
 		mc = mapView.getController();
@@ -257,14 +259,14 @@ public class GarbageMapActivity extends MapActivity implements
             // Check values
             if ((!newCenter.equals(oldCenter)) && (newZoom != oldZoom))
             {
-        		if (newCenter!= currentPoint)	{
+        		if (!newCenter.equals(currentPoint))	{
         			currentPoint = newCenter;
         			drawGarbagesOnMap();
         		}
             }
             else if (!newCenter.equals(oldCenter))
             {
-        		if (newCenter!= currentPoint)	{
+        		if (!newCenter.equals(currentPoint))	{
         			currentPoint = newCenter;
         			drawGarbagesOnMap();
         		}
@@ -274,6 +276,10 @@ public class GarbageMapActivity extends MapActivity implements
        			drawGarbagesOnMap();
             }
         }
+
+		public void onDblTap(MapView view, GeoPoint point) {
+			LLog.d("Dbl tap : " + point.getLatitudeE6()/1E6 + " - " + point.getLongitudeE6()/1E6);
+			
+		}
     }
-	
 }

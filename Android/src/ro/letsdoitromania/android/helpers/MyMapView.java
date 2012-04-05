@@ -42,6 +42,7 @@ public class MyMapView extends MapView {
     public interface OnChangeListener
     {
         public void onChange(MapView view, GeoPoint newCenter, GeoPoint oldCenter, int newZoom, int oldZoom);
+        public void onDblTap(MapView view, GeoPoint point);
     }
  
     // ------------------------------------------------------------------------
@@ -55,7 +56,8 @@ public class MyMapView extends MapView {
     private int mLastZoomLevel;
     private Timer mChangeDelayTimer = new Timer();
     private MyMapView.OnChangeListener mChangeListener = null;
- 
+    private long lastTouchTime = -1;
+    
     // ------------------------------------------------------------------------
     // CONSTRUCTORS
     // ------------------------------------------------------------------------
@@ -141,6 +143,31 @@ public class MyMapView extends MapView {
         }, mEventsTimeout);
     }
  
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+
+      if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+
+        long thisTime = System.currentTimeMillis();
+        if (thisTime - lastTouchTime < 250) {
+
+        	GeoPoint point = mThis.getProjection().fromPixels((int) ev.getX(),(int) ev.getY());        	
+        	
+        	// Double tap
+        	if (mChangeListener != null) mChangeListener.onDblTap(mThis, point);
+
+        	lastTouchTime = -1;
+
+        } else {
+
+          // Too slow 
+          lastTouchTime = thisTime;
+        }
+      }
+
+      return super.onInterceptTouchEvent(ev);
+    }    
+    
     // ------------------------------------------------------------------------
     // CHANGE FUNCTIONS
     // ------------------------------------------------------------------------
