@@ -200,15 +200,15 @@ function loadBBoxGarbageOverlay(ne,sw){
     //alert(url)
 
     /* adaugare layer lista gunoaie din judetul selectat */
-    var bboxGarbageOverlay = new GGeoXml(url);
-    myMap.addOverlay(bboxGarbageOverlay);
-    if(bboxGarbageOverlay_old != null){
-        myMap.removeOverlay(bboxGarbageOverlay_old);
-    }
-    bboxGarbageOverlay_old = bboxGarbageOverlay;
+//    var bboxGarbageOverlay = new GGeoXml(url);
+//    myMap.addOverlay(bboxGarbageOverlay);
+//    if(bboxGarbageOverlay_old != null){
+//        myMap.removeOverlay(bboxGarbageOverlay_old);
+//    }
+//    bboxGarbageOverlay_old = bboxGarbageOverlay;
     
     //FOR LOCALHOST TESTING
-    //getXMLonlocal(url);
+    getXMLonlocal(url);
 }
 
 
@@ -304,13 +304,14 @@ function loadCountyGarbageDetailOverlay(value){
 
         
         /* adaugare layer lista gunoaie din judetul selectat */
-        var countyGarbageOverlay = new GGeoXml(url);
-        myMap.addOverlay(countyGarbageOverlay);
-        if(countyGarbageOverlay_old != null){
-            myMap.removeOverlay(countyGarbageOverlay_old);
-        }
-        countyGarbageOverlay_old = countyGarbageOverlay;
-
+//        var countyGarbageOverlay = new GGeoXml(url);
+//        myMap.addOverlay(countyGarbageOverlay);
+//        if(countyGarbageOverlay_old != null){
+//            myMap.removeOverlay(countyGarbageOverlay_old);
+//        }
+//        countyGarbageOverlay_old = countyGarbageOverlay;
+        getXMLonlocal(url);
+        
         /* adaugare layer contur judet */
         var points = new Array();
         for (var i=0; i<(jsonObject.border.length/2); i++){

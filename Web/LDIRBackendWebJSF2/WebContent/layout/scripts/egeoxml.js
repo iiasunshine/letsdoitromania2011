@@ -333,10 +333,24 @@ EGeoXml.prototype.processing = function(doc) {
             that.styles["#"+styleID] = new GIcon(that.opts.baseicon,href);
           } else {
             that.styles["#"+styleID] = new GIcon(G_DEFAULT_ICON,href);
-            that.styles["#"+styleID].iconSize = new GSize(32,32);
+            
+            if(styleID=="ZONAVOTARENEVOTAT"){
+            	that.styles["#"+styleID].iconSize = new GSize(64,94)
+            	that.styles["#"+styleID].imageMap = [0,0, 64,0, 64,94,0,94]} 
+            else
+            	that.styles["#"+styleID].iconSize = new GSize(32,32)
             that.styles["#"+styleID].shadowSize = new GSize(59,32);
-            that.styles["#"+styleID].dragCrossAnchor = new GPoint(2,8);
-            that.styles["#"+styleID].iconAnchor = new GPoint(16,32);
+            
+            if(styleID=="ZONAVOTARENEVOTAT")
+            	that.styles["#"+styleID].dragCrossAnchor = new GPoint(64,94);
+            else
+            	that.styles["#"+styleID].dragCrossAnchor = new GPoint(2,8);
+            
+            if(styleID=="ZONAVOTARENEVOTAT")
+            	that.styles["#"+styleID].iconAnchor = new GPoint(32,94);
+            else
+            	that.styles["#"+styleID].iconAnchor = new GPoint(16,32);
+            
             if (that.opts.printgif) {
               var bits = href.split("/");
               var gif = bits[bits.length-1];
