@@ -12,10 +12,12 @@ import ro.ldir.android.remote.RemoteConnError;
 import ro.ldir.android.util.ErrorDialogHandler;
 import ro.ldir.android.util.GarbagesOverMap;
 import ro.ldir.android.util.IErrDialogActivity;
+import ro.ldir.android.util.LDIRApplication;
 import ro.ldir.android.util.LLog;
 import ro.ldir.android.util.Utils;
 import ro.letsdoitromania.android.helpers.MyMapView;
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
@@ -279,6 +281,12 @@ public class GarbageMapActivity extends MapActivity implements
 
 		public void onDblTap(MapView view, GeoPoint point) {
 			LLog.d("Dbl tap : " + point.getLatitudeE6()/1E6 + " - " + point.getLongitudeE6()/1E6);
+			
+			// open AddGarbage view to create a new garbage
+			Garbage garbage = null;			
+			((LDIRApplication)getApplication()).putCachedGarbage(garbage);			
+			Intent intent = new Intent(getBaseContext(), AddGarbageActivity.class);
+			startActivityForResult(intent, 0);
 			
 		}
     }
