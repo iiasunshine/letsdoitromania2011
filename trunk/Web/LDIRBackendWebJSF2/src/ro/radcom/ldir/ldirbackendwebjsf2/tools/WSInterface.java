@@ -51,12 +51,13 @@ import ro.ldir.exceptions.NoCountyException;
  */
 /**
  * @author glassfish
- *
+ * 
  */
 public class WSInterface {
-	
-	private static final Logger log4j = Logger.getLogger(WSInterface.class.getCanonicalName());
-	 
+
+	private static final Logger log4j = Logger.getLogger(WSInterface.class
+			.getCanonicalName());
+
 	private GeoManagerLocal geoManager;
 	private GarbageManagerLocal garbageManager;
 	private TeamManagerLocal teamManager;
@@ -84,8 +85,9 @@ public class WSInterface {
 		}
 		return garbageManager.insertGarbage(garbage);
 	}
-	
-	public void vote(Garbage garbage, String ip) throws InvalidUserOperationException{
+
+	public void vote(Garbage garbage, String ip)
+			throws InvalidUserOperationException {
 		garbageManager.voteGarbage(garbage.getGarbageId(), ip);
 	}
 
@@ -254,12 +256,12 @@ public class WSInterface {
 	public User reinitUser(User userDetails) {
 		return userManager.getUser(userDetails.getEmail());
 	}
-	
-	public void setGarbageToClean(int garbageId, boolean toClean){
+
+	public void setGarbageToClean(int garbageId, boolean toClean) {
 		garbageManager.setGarbageToClean(garbageId, toClean);
 	}
-	
-	public void setGarbageToVote(int garbageId, boolean toVote){
+
+	public void setGarbageToVote(int garbageId, boolean toVote) {
 		garbageManager.setGarbageToVote(garbageId, toVote);
 	}
 
@@ -381,5 +383,33 @@ public class WSInterface {
 			throws InvalidUserOperationException {
 		regiterUser.setPasswd(SHA256Encrypt.encrypt(regiterUser.getPasswd()));
 		userManager.addUser(regiterUser);
+	}
+
+	public String getThumbnail(int garbageId, int imageId) {
+		return garbageManager.getImageThumbnailPath(garbageId, imageId);
+	}
+
+	public String getDisplay(int garbageId, int imageId) {
+		return garbageManager.getImageDisplayPath(garbageId, imageId);
+	}
+
+	public String compileImagePath(Garbage garbage, int imageIndex,
+			boolean isDisplay) {
+		try {
+			if (isDisplay) {
+				return JsfUtils.getInitParameter("webservice.url")+"/ImageLoaderServlet?garbageID="
+						+ garbage.getGarbageId().intValue()
+						+ "&imageIndex="
+						+ imageIndex
+						+ "&display=1";
+			} else {
+				return JsfUtils.getInitParameter("webservice.url")
+						+ "/ImageLoaderServlet?garbageID="
+						+ garbage.getGarbageId().intValue() + "&imageIndex="
+						+ imageIndex;
+			}
+		} catch (Exception err) {
+			return ""; // TODO: null picture
+		}
 	}
 }

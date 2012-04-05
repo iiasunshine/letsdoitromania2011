@@ -162,22 +162,14 @@ public class VoteGarbageManagerBean {
 			log4j.warn("[ACTION]-----la picture "+i);
 
 			try {
-				//TODO de optimizat pe aici.
 				// Thumbnail
-				String thumb = JsfUtils.getInitParameter("webservice.url")+"/LDIRBackend/ws/garbage/"
-						+ selectedGarbage.getGarbageId().intValue()
-						+ "/image/"
-						+ i
-						+ "/thumb";
+				log4j.warn("[ACTION] -> garbage["+i+"]: "+selectedGarbage.getPictures().get(i));
+				String thumb = wsi.compileImagePath(selectedGarbage, i, false);
 				thumbnails.add(thumb);
 				log4j.warn("[ACTION]----------->S-a adaugat in thumbnails ["
-						+ i + "] temFile " + thumb);
+						+ i + "]  " + thumb);
 				//FULL PICTURE
-				String poster = JsfUtils.getInitParameter("webservice.url")+"/LDIRBackend/ws/garbage/"
-						+ selectedGarbage.getGarbageId().intValue()
-						+ "/image/"
-						+ i
-						+ "/display";
+				String poster = wsi.compileImagePath(selectedGarbage, i, true);
 				posters.add(poster);
 
 				log4j.warn("[ACTION]---->posters add:" + poster);
