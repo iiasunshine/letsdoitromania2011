@@ -140,11 +140,18 @@ public class JsonBackend implements IBackend {
 		try {
 			// set content description and content
 			request.setHeader("Content-Type", "application/json");
-			JsonSerializer serializer = new JsonSerializer();
+			// serialize with Jackson
+			ObjectMapper mapper = new ObjectMapper();
+			String garbageJsonString = mapper.writeValueAsString(garbage);
+					
+			/*JsonSerializer serializer = new JsonSerializer();
 			String garbageJsonString = serializer.serialize(garbage);
+			*/
+			
 			LLog.d("garbageJsonString: " + garbageJsonString);
 			request.setEntity(new StringEntity(garbageJsonString, "ASCII"));
 
+			
 			response = ConnectionUtils.getHttpConn(user.getEmail(),
 					user.getPasswd()).execute(request);
 
@@ -153,7 +160,7 @@ public class JsonBackend implements IBackend {
 			HttpEntity entity = response.getEntity();
 			String message = null;
 			if (statusCode != STATUS_CODE_OK) {
-				// requestul nu a funcționat
+				// requestul nu a functionat
 				String mesaj = status.toString();
 				LLog.d("error: " + mesaj);
 				throw new RemoteConnError(statusCode);

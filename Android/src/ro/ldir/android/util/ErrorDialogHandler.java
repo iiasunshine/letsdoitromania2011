@@ -57,7 +57,9 @@ public class ErrorDialogHandler
 		switch(statusCode)
 		{
 		case 4010:
-			return R.string.err_network_not_connected; // custom error code : network not available 
+			return R.string.err_network_not_connected; // custom error code : network not available
+		case 4011:
+			return R.string.err_user_not_connected; // custom error code : user not connected 
 		case 403:
 		case 401:
 			return R.string.login_fail;

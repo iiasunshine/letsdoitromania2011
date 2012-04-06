@@ -11,7 +11,6 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
-import android.os.Looper;
 import android.widget.Toast;
 
 public class Utils {

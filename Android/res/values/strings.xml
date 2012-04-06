@@ -49,7 +49,8 @@
 		intreaga intre 0 si 100.</string>
 	<string name="chart_add_image3">Incarca imagine 3:</string>
 	<string name="chart_list_title">Ai cartat urmatoarele mormane:</string>
-	<string name="details_coords_longitude">Coordonate (longitudine):</string>
+	<string name="details_coords">Coordonate:</string>
+	<string name="details_coords_longitude">Longitudine:</string>
 	<string name="chart_add_image2">Incarca imagine 2:</string>
 	<string name="chart_add_image1">Incarca imagine 1:</string>
 	<string name="details_morman">Morman:</string>
@@ -136,7 +137,7 @@
 	<string name="chart_err_latitude">Introduceti latitudinea intre 43.0 si 49.0.
 	</string>
 	<string name="chart_add_metal">Procent metal:</string>
-	<string name="details_coords_latitude">Coordonate (latitudine):</string>
+	<string name="details_coords_latitude">Latitudine:</string>
 	<string name="area_remove_confirm">Zona de cartare %s v-a fost dezalocata</string>
 	<string name="details_percent_glass">Procent sticla:</string>
 	<string name="reset_title">Resetare Parola</string>
@@ -229,4 +230,5 @@
 	<string name="btn_view_map">View map</string>
 	<string name="view_map">Harta gunoaie</string>
 	<string name="err_network_not_connected">Nu exista conexiune la internet</string>
+	<string name="err_user_not_connected">Userul nu este conectat</string>
 </resources>
