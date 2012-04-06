@@ -24,11 +24,13 @@
 package ro.ldir.report.formatter;
 
 import java.util.List;
-
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.ss.usermodel.CellStyle;
 
 import ro.ldir.dto.Garbage;
 
@@ -63,6 +65,8 @@ public class GarbageExcelFormatter implements ExcelFormatter {
 		row.createCell(15).setCellValue("Numele mormanului");
 		row.createCell(16).setCellValue("Raza");
 		row.createCell(17).setCellValue("Numar de voturi");
+		
+		row.createCell(18).setCellValue("Data introducerii");
 
 		for (int i = 0; i < garbages.size(); i++) {
 			row = sheet.createRow(i + 1);
@@ -124,6 +128,23 @@ public class GarbageExcelFormatter implements ExcelFormatter {
 			} catch (Exception ee) {
 
 			}
+			
+			try {
+				Cell cell;
+				DataFormat df = wb.createDataFormat();
+				CellStyle cs = wb.createCellStyle();
+						  cs.setDataFormat(df.getFormat("dd-mm-yyyy"));
+						  
+				if (garbage.getRecordDate()!= null)
+					{
+						cell=row.createCell(18, Cell.CELL_TYPE_STRING);
+						cell.setCellValue(garbage.getRecordDate());
+						cell.setCellStyle(cs);
+					}
+			} catch (Exception ee) {
+
+			}
+
 		}
 		return wb;
 	}
