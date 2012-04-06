@@ -32,6 +32,11 @@
 
                         <%-- righ column (harta cu gunoaie) --%>
                         <div id="rightColumn">
+                       <h:selectOneRadio id="layers" value="toate" onchange="showhidemarkers(this)">
+					  <f:selectItem id="item0" itemLabel="Toate" itemValue="toate" />
+					  <f:selectItem id="item1" itemLabel="Mormane" itemValue="mormane" />
+					  <f:selectItem id="item2" itemLabel="Zone de votat" itemValue="zonedevotat" />
+					</h:selectOneRadio>
                             <a4j:form>
                                 <m:map width="750px" height="650px" latitude="44.4317879" longitude="26.1015844" zoom="10" jsVariable="myMap"  >
                                     <m:mapControl name="GLargeMapControl3D"/>

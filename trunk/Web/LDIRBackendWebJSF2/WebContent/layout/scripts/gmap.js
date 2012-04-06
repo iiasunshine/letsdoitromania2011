@@ -17,6 +17,38 @@ var tid=-1;
 //loadEvents()
 
 
+function showhidemarkers(element)
+{
+	
+	 for(var i=0;i<exml.gmarkers.length;i++)
+		 {
+		 	marker=exml.gmarkers[i];
+		 	
+		 	if(element.id=="layers:0")
+		 		marker.show()
+		 		
+		 	if(element.id=="layers:1")
+			 	if(marker.id!=undefined)
+			 	{
+				 		 	
+				 	
+			 		if(String(marker.id).indexOf("Zona:")>-1)
+			 			marker.hide()
+				 	if(String(marker.id).indexOf("Morman:")>-1)
+				 		marker.show()
+				 	
+			 	}
+			if(element.id=="layers:2")
+			 	if(marker.id!=undefined)
+			 	{
+			 		if(marker.id.indexOf("Zona:")>-1)
+			 			marker.show()
+				 	if(marker.id.indexOf("Morman:")>-1)
+			 	 		marker.hide()
+			 	}
+		 }		
+}
+
 function voteMorman(id){
 	url=WS_URL+"/admin/admin-vote-from-map.jsf?garbageId="+id;
 	tid=id;
@@ -105,7 +137,7 @@ if (xhr.readyState == 4) {
     exml = new EGeoXml("exml", myMap, null,{nozoom:true});
     //alert(xmlfrombackend)
     exml.parseString(xmlfrombackend);
-    
+    //alert(exml.gmarkers.length)
   }
 }
 }

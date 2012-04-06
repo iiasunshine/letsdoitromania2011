@@ -67,7 +67,11 @@ public class GarbagesKMLFormatter {
 			else
 				buf.append("<styleUrl>#" + garbage.getAllocatedStatus()
 						+ "</styleUrl>\n");
-			buf.append("<name>Garbage " + garbage.getGarbageId() + "</name>\n");
+			if(b==true)				
+				buf.append("<name>Zona: " + garbage.getGarbageId() + "</name>\n");
+			else
+				buf.append("<name>Morman: " + garbage.getName() + "</name>\n");
+
 			buf.append("<description><![CDATA[");
 			buf.append("<p>" + garbage.getDescription() + "</p>\n");
 			
@@ -182,7 +186,7 @@ public class GarbagesKMLFormatter {
 		buf.append("<Style id=\"ZONAVOTARENEVOTAT\">\n");
 		buf.append("<IconStyle>\n");
 		buf.append("<Icon>\n");
-		buf.append("<href>http://app.letsdoitromania.ro/icons/ldirzona64px.png</href>");
+		buf.append("<href>http://localhost:8080/icons/ldirzona64px.png</href>");
 		buf.append("</Icon>\n");
 		buf.append("</IconStyle>\n");
 		buf.append("</Style>\n");
@@ -190,7 +194,7 @@ public class GarbagesKMLFormatter {
 		buf.append("<Style id=\"ZONAVOTAREVOTAT\">\n");
 		buf.append("<IconStyle>\n");
 		buf.append("<Icon>\n");
-		buf.append("<href>http://app.letsdoitromania.ro/icons/ldirzona64pxGrey.png</href>");
+		buf.append("<href>http://localhost:8080/icons/ldirzona64pxGrey.png</href>");
 		buf.append("</Icon>\n");
 		buf.append("</IconStyle>\n");
 		buf.append("</Style>\n");

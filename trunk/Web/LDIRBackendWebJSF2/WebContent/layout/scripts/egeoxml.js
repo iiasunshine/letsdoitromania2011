@@ -193,7 +193,10 @@ EGeoXml.prototype.createMarker = function(point,name,desc,style) {
   } else {
     var html1 = html;
   }
+  
+  
 
+  m.id=name;
   GEvent.addListener(m, "click", function() {
     eval(myvar+".lastmarker = m");
     m.openInfoWindowHtml(html1 + "</div>",iwoptions);
@@ -207,6 +210,7 @@ EGeoXml.prototype.createMarker = function(point,name,desc,style) {
   if (this.opts.sidebarid || this.opts.dropboxid) {
     var n = this.gmarkers.length-1;
     this.side_bar_list.push (name + "$$$marker$$$" + n +"$$$" );
+    
   }
 }
 
