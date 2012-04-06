@@ -280,12 +280,17 @@ public class GarbageMapActivity extends MapActivity implements
         }
 
 		public void onDblTap(MapView view, GeoPoint point) {
-			LLog.d("Dbl tap : " + point.getLatitudeE6()/1E6 + " - " + point.getLongitudeE6()/1E6);
+			double latitude = point.getLatitudeE6()/1E6;
+			double longitude = point.getLongitudeE6()/1E6;
+			
+			LLog.d("Dbl tap : " + latitude + " - " + longitude);
 			
 			// open AddGarbage view to create a new garbage
 			Garbage garbage = null;			
 			((LDIRApplication)getApplication()).putCachedGarbage(garbage);			
 			Intent intent = new Intent(getBaseContext(), AddGarbageActivity.class);
+			intent.putExtra("latitude", latitude);
+			intent.putExtra("longitude", longitude);
 			startActivityForResult(intent, 0);
 			
 		}

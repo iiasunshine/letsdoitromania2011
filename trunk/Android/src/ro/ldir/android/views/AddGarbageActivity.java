@@ -11,8 +11,14 @@ import java.util.List;
 
 import ro.ldir.R;
 import ro.ldir.android.entities.Garbage;
+import ro.ldir.android.entities.User;
 import ro.ldir.android.location.LocationGetter;
+import ro.ldir.android.remote.BackendFactory;
+import ro.ldir.android.remote.JsonBackend;
+import ro.ldir.android.remote.RemoteConnError;
 import ro.ldir.android.sqlite.LdirDbManager;
+import ro.ldir.android.util.ErrorDialogHandler;
+import ro.ldir.android.util.LDIRActivity;
 import ro.ldir.android.util.LDIRApplication;
 import ro.ldir.android.util.LLog;
 import ro.ldir.android.util.LdirPrefferences;
@@ -40,7 +46,7 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class AddGarbageActivity extends Activity 
+public class AddGarbageActivity extends LDIRActivity
 {
 	private static final String SAVED_GARBAGE = "ro.ldir.android.views.saved.garbage";
 	protected static final String SAVED_GARBAGE_ID = "ro.ldir.android.views.saved.garbage.id";
@@ -68,6 +74,14 @@ public class AddGarbageActivity extends Activity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_garbage);
+        double latitude = 0, longitude = 0;
+        
+        Bundle extras = getIntent().getExtras(); 
+        if(extras != null)
+        {
+        	latitude = extras.getDouble("latitude");
+        	longitude = extras.getDouble("longitude");
+        }
         
         if (savedInstanceState == null)
         {
@@ -75,11 +89,10 @@ public class AddGarbageActivity extends Activity
 	        if (garbage == null)// add operation
 	        {
 	        	garbage = new Garbage();
+	        	garbage.setLatitude(latitude);
+	        	garbage.setLongitude(longitude);
 	        }
-	        else
-	        {
-	        	writeControls(garbage); //update operation
-	        }
+        	writeControls(garbage); 
         }
         else
         {
@@ -323,47 +336,106 @@ public class AddGarbageActivity extends Activity
 	}
 	
 	/**
+	 * Save a garbage to local Database (SQLite) 
 	 * TODO - save garbage to database
+	 * @param garbage
+	 * @param garbageId
+	 * @return status of operation (success or not)
+	 */
+	private boolean saveGarbageToLocalDb(Garbage garbage, int garbageId)	{
+		boolean success = false;
+		
+		LdirDbManager dbManager = new LdirDbManager();
+		dbManager.open(this);
+		if (garbageId == -1) // insert operation
+		{
+			garbageId = (int)dbManager.insert(garbage);
+			if (garbageId != -1)
+			{
+				garbage.setSqliteGarbageId((int)garbageId);
+				Utils.displayToast(this, getResources().getString(R.string.details_add_confirm, garbageId));
+				success = true;
+			}
+			else
+			{
+				Utils.displayToast(this, getResources().getString(R.string.adaugat_nok));
+			}
+		}
+		else // update operation
+		{
+			int rows = dbManager.update(garbage);
+			if (rows == Garbage.NO_DB_ID)
+			{
+				Utils.displayToast(this, getResources().getString(R.string.adaugat_nok));
+			}
+			else
+			{
+				Utils.displayToast(this, getResources().getString(R.string.details_modify_confirm, garbage.getSqliteGarbageId()));
+				success = true;
+			}
+		}
+		dbManager.close();
+		return success;
+	}
+	
+	/**
+	 * Save a garbage to server 
+	 * 
+	 * @param garbage
+	 * @param garbageId
+	 * @return status of operation (success or not)
+	 */
+	
+	private boolean saveGarbageToServer(Garbage garbage, int garbageId) {
+		
+		User user = ((LDIRApplication)getApplication()).getUserDetails();
+		
+		if (user == null)	{
+			runOnUiThread(new Runnable() {
+			    public void run() {
+			    	ErrorDialogHandler.showErrorDialog(AddGarbageActivity.this, 4011);
+			    }
+			});
+			
+			return false;
+		}
+		
+		JsonBackend backend = BackendFactory.createBackend();
+		try {
+			garbageId = backend.addGarbage(user, garbage);
+		} catch (RemoteConnError e) {
+			final int statusCode = e.getStatusCode();
+			// we have to run through ui thread to show it on screen
+			runOnUiThread(new Runnable() {
+			    public void run() {
+			    	ErrorDialogHandler.showErrorDialog(AddGarbageActivity.this, statusCode);
+			    }
+			});
+			
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * 
 	 * @param garbage
 	 */
 	private void saveGarbage(Garbage garbage)
 	{
 		LLog.d("Saving garbage...");
-		readControls(garbage);
+		int garbageId = garbage.getSqliteGarbageId();
+		boolean success = false;
+		
+		readControls(garbage);		
 		if (validate(garbage))
 		{
-			LdirDbManager dbManager = new LdirDbManager();
-			dbManager.open(this);
-			int garbageId = garbage.getSqliteGarbageId();
-			boolean success = false;
-			if (garbageId == -1) // insert operation
-			{
-				garbageId = (int)dbManager.insert(garbage);
-				if (garbageId != -1)
-				{
-					garbage.setSqliteGarbageId((int)garbageId);
-					Utils.displayToast(this, getResources().getString(R.string.details_add_confirm, garbageId));
-					success = true;
-				}
-				else
-				{
-					Utils.displayToast(this, getResources().getString(R.string.adaugat_nok));
-				}
+			if (Utils.haveNetworkConnection(this))	{
+				success = saveGarbageToServer(garbage, garbageId);
+			}	else	{
+				success = saveGarbageToLocalDb(garbage, garbageId);
 			}
-			else // update operation
-			{
-				int rows = dbManager.update(garbage);
-				if (rows == Garbage.NO_DB_ID)
-				{
-					Utils.displayToast(this, getResources().getString(R.string.adaugat_nok));
-				}
-				else
-				{
-					Utils.displayToast(this, getResources().getString(R.string.details_modify_confirm, garbage.getSqliteGarbageId()));
-					success = true;
-				}
-			}
-			dbManager.close();
+		
 			if (success)
 			{
 				Intent data = new Intent();
@@ -372,9 +444,9 @@ public class AddGarbageActivity extends Activity
 				finish();
 			}
 		}
-		
 	}
 	
+
 	/**
 	 * Called when saving is not wanted. Currently just finishes this activity.          
 	 */
@@ -447,11 +519,13 @@ public class AddGarbageActivity extends Activity
 			showErrorDialog(R.string.chart_js_err_waste);
 			return false;
 		}
+		/** Don't validate for pictures now 
 		if (garbage.getPictures().isEmpty())
 		{
 			showErrorDialog(R.string.details_img_required);
 			return false;
 		}
+		*/
 		return true;
 	}
 	

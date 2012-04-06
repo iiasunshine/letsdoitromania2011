@@ -3,32 +3,37 @@
 	android:layout_width="fill_parent" android:layout_height="fill_parent">
 
 	<RelativeLayout android:id = "@+id/garbage_layout" android:layout_width="fill_parent"
-		android:layout_height="fill_parent">
+		android:layout_height="wrap_content">
+	    		
 		<!-- Coordinates -->
 		<TableLayout android:id="@+id/groupCoordinates"
 			android:stretchColumns="0,1" android:layout_width="fill_parent"
 			android:layout_height="wrap_content" android:layout_alignParentTop="true">
-
 			<TableRow>
-				<TextView android:text="@string/details_coords_latitude"
-					android:layout_width="wrap_content" android:layout_height="wrap_content" />
-
+				<TextView android:text="@string/details_coords"
+				    android:layout_span="3"
+			        android:layout_gravity="center_horizontal"
+			        android:layout_height="wrap_content" />
+			</TableRow>
+			<TableRow>
+				<TextView android:text="@string/details_coords_latitude" 
+				    android:layout_gravity="center_horizontal"
+					android:layout_width="120dp" android:layout_height="wrap_content" />
 				<TextView android:text="@string/details_coords_longitude"
-					android:layout_width="wrap_content" android:layout_height="wrap_content" />
-
+				    android:layout_gravity="center_horizontal"
+					android:layout_width="120dp" android:layout_height="wrap_content" />
+				<TextView android:text=""
+					android:layout_width="60dp" android:layout_height="wrap_content" />
 			</TableRow>
 
-			<TableRow>
-				<EditText android:id="@+id/txtLatitude" android:numeric="decimal"
+			<TableRow android:baselineAligned="false" >
+				<EditText android:id="@+id/txtLatitude" android:layout_width="wrap_content"
+				    android:layout_height="wrap_content" android:inputType="numberDecimal" />
+				<EditText android:id="@+id/txtLongitude" android:inputType="numberDecimal"
 					android:layout_width="wrap_content" android:layout_height="wrap_content" />
-
-				<EditText android:id="@+id/txtLongitude" android:numeric="decimal"
-					android:layout_width="wrap_content" android:layout_height="wrap_content" />
-
 				<Button android:id="@+id/btnGPS" android:text="@string/details_btn_GPS"
 					android:layout_width="wrap_content" android:layout_height="wrap_content" />
 			</TableRow>
-
 
 
 		</TableLayout>
@@ -63,14 +68,12 @@
 
 			</TableRow>
 			<TableRow>
-
 				<EditText android:id="@+id/txtPlastic"
 					android:layout_width="fill_parent" android:layout_height="wrap_content"
-					android:numeric="integer" android:text="0"/>
-
+					android:inputType="number" android:text="0"/>
 				<EditText android:id="@+id/txtBagCount"
 					android:layout_width="fill_parent" android:layout_height="wrap_content"
-					android:numeric="integer" android:text="@integer/min_nr_of_bags"/>
+					android:inputType="number"  android:text="@integer/min_nr_of_bags"/>
 
 			</TableRow>
 			<TableRow>
@@ -84,7 +87,7 @@
 			<TableRow>
 
 				<EditText android:id="@+id/txtGlass" android:layout_width="wrap_content"
-					android:layout_height="fill_parent" android:numeric="integer"  android:text="0"/>
+					android:layout_height="fill_parent" android:inputType="number" android:text="0"/>
 
 				<CheckBox android:id="@+id/checkDispersed"
 					android:layout_width="wrap_content" android:layout_height="wrap_content" />
@@ -99,7 +102,7 @@
 			<TableRow>
 
 				<EditText android:id="@+id/txtMetal" android:layout_width="wrap_content"
-					android:layout_height="fill_parent" android:numeric="integer"  android:text="0"/>
+					android:layout_height="fill_parent" android:inputType="number"  android:text="0"/>
 
 				<LinearLayout android:id="@+id/btnPictureGallery" android:layout_width="wrap_content" 
 					android:layout_height="wrap_content" android:orientation="horizontal" 
@@ -122,7 +125,7 @@
 			<TableRow>
 
 				<EditText android:id="@+id/txtWaste" android:layout_width="wrap_content"
-					android:layout_height="wrap_content" android:numeric="integer"  android:text="0"/>
+					android:layout_height="wrap_content" android:inputType="number" android:text="0"/>
 					
 				<Button android:id="@+id/btnAddPicture" android:text="@string/details_add_picture"
 					android:layout_width="wrap_content" android:layout_height="wrap_content" />
