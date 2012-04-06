@@ -14,7 +14,8 @@
 		</h:panelGroup>
 		<h:panelGroup rendered="#{not (sessionScope['USER_DETAILS'] eq null)}">
 			<custom:page_top_login selected="home"
-				role="${sessionScope['USER_DETAILS'].role}" />
+				role="${sessionScope['USER_DETAILS'].role}" 
+				county="${sessionScope['USER_DETAILS'].county}"/>
 		</h:panelGroup>
 
 		<%-- page Content --%>

@@ -120,7 +120,7 @@
                                                      reRender="selected_image"
                                                      oncomplete="#{rich:component('img_gallery')}.show();">
                                         <f:param name="imgIndex" value="0"/>
-                                        <h:graphicImage value="#{pageContext.servletContext.contextPath}/#{mormanManager.thumbnails[0]}" 
+                                        <h:graphicImage value="#{mormanManager.thumbnails[0]}" 
                                                         width="85"
                                                         styleClass="galerie"/>
                                     </a4j:commandLink>
@@ -129,7 +129,7 @@
                                                      oncomplete="#{rich:component('img_gallery')}.show();"
                                                      rendered="#{fn:length(mormanManager.thumbnails) > 1}">
                                         <f:param name="imgIndex" value="1"/>
-                                        <h:graphicImage value="#{pageContext.servletContext.contextPath}/#{mormanManager.thumbnails[1]}" 
+                                        <h:graphicImage value="#{mormanManager.thumbnails[1]}" 
                                                         width="85"
                                                         styleClass="galerie"/>
                                     </a4j:commandLink>
