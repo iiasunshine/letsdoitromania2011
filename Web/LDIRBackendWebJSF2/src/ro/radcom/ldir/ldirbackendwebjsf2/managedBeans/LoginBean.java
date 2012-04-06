@@ -4,12 +4,18 @@
  */
 package ro.radcom.ldir.ldirbackendwebjsf2.managedBeans;
 
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+
 import javax.naming.NamingException;
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 
 import ro.ldir.dto.User;
+import ro.ldir.dto.UserSessionRecord;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.JsfUtils;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.WSInterface;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.customObjects.NavigationValues;
@@ -43,6 +49,15 @@ public class LoginBean {
         	 JsfUtils.getHttpRequest().login(loginMail, loginPassword);
         	 User userDetails = wsi.getUser(loginMail);
         	 userDetails.setPasswd(loginPassword);
+
+        	 UserSessionRecord userSessionRecord=new UserSessionRecord();
+        	 userSessionRecord.setUser(userDetails);
+
+        	 JsfUtils.getHttpSession().setAttribute("userSessionRecord", userSessionRecord);
+
+        	 Map <UserSessionRecord, HttpSession>maps=UserSessionRecord.getLoggedUsers();
+
+        	 
              JsfUtils.getHttpSession().setAttribute("USER_DETAILS", userDetails);
              return NavigationValues.LOGIN_SUCCESS;
         } catch (Exception ex) {
