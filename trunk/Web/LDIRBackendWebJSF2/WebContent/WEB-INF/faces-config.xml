@@ -32,6 +32,13 @@
 		<managed-bean-class>ro.radcom.ldir.ldirbackendwebjsf2.managedBeans.VoteGarbageManagerBean</managed-bean-class>
 		<managed-bean-scope>view</managed-bean-scope>
 	</managed-bean>
+	
+	<managed-bean>
+		<managed-bean-name>adminUserSessionBean</managed-bean-name>
+		<managed-bean-class>ro.radcom.ldir.ldirbackendwebjsf2.managedBeans.AdminUserSessionBean</managed-bean-class>
+		<managed-bean-scope>view</managed-bean-scope>
+	</managed-bean>
+
 	<managed-bean>
 		<managed-bean-name>teamBean</managed-bean-name>
 		<managed-bean-class>ro.radcom.ldir.ldirbackendwebjsf2.managedBeans.TeamManagerBean</managed-bean-class>
