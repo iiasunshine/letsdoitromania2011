@@ -6,6 +6,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@attribute name="selected"%>
 <%@attribute name="role"%>
+<%@attribute name="county"%>
 
 <div id="headerContainer">
     <div id="header">
@@ -26,7 +27,7 @@
                  <c:if test="${(role eq 'ADMIN') or (role eq 'ORGANIZER') or (role eq 'VOLUNTEER')}">
                 	<li><a href="${pageContext.servletContext.contextPath}/users/echipa-vizualizare.jsf" class="${selected eq 'echipa_edit' ? 'active': ''}"><span>${msg.meniu_echipa_edit}</span></a></li>
                  </c:if>
-                 <c:if test="${false}">
+                 <c:if test="${(county eq 'CLUJ') or (role eq 'ADMIN')}">
                  <li><a href="${pageContext.servletContext.contextPath}/users/curatenie-vizualizare.jsf" class="${selected eq 'curatenie' ? 'active': ''}"><span>${msg.meniu_curatenie_list}</span></a></li>
                  </c:if>
                  <li><a href="${pageContext.servletContext.contextPath}/users/garbage-vote.jsf" class="${selected eq 'garbageVote' ? 'active' : ''}"><span>VOTEAZA ZONA</span></a></li>
