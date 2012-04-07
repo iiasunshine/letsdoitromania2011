@@ -12,22 +12,33 @@ var votx = new XMLHttpRequest();;
 var nomx = new XMLHttpRequest();;
 var xmlfrombackend="";
 var oldxml="";
-var exml = new EGeoXml("exml", myMap, ""); //for testing googlemapp on localhost
+//var exml = new EGeoXml("exml", myMap, ""); //for testing googlemapp on localhost
+var exml = new EGeoXml("exml", myMap, null,{nozoom:true});
+
+GEvent.addListener(exml, "parsed", function(){
+	showhidemarkers("");
+	});
 var tid=-1;
 //loadEvents()
 
 
+
 function showhidemarkers(element)
 {
-	
+
+	//element=document.getElementById("layers");
+	 element0=document.getElementById("layers:0");
+	 element1=document.getElementById("layers:1");
+	 element2=document.getElementById("layers:2");
+	 
 	 for(var i=0;i<exml.gmarkers.length;i++)
 		 {
 		 	marker=exml.gmarkers[i];
 		 	
-		 	if(element.id=="layers:0")
+		 	if(element0.checked==true)
 		 		marker.show()
 		 		
-		 	if(element.id=="layers:1")
+		 	if(element1.checked==true)
 			 	if(marker.id!=undefined)
 			 	{
 				 		 	
@@ -38,7 +49,7 @@ function showhidemarkers(element)
 				 		marker.show()
 				 	
 			 	}
-			if(element.id=="layers:2")
+			if(element2.checked==true)
 			 	if(marker.id!=undefined)
 			 	{
 			 		if(marker.id.indexOf("Zona:")>-1)
@@ -133,10 +144,16 @@ if (xhr.readyState == 4) {
     xmlfrombackend = xhr.responseText;
 
     if(oldxml!=xmlfrombackend){
-    	
-    exml = new EGeoXml("exml", myMap, null,{nozoom:true});
+    
+    
     //alert(xmlfrombackend)
+    if(exml==undefined)
+    	exml = new EGeoXml("exml", myMap, null,{nozoom:true});
+    else
+    	for(var i=0;i<exml.gmarkers.length;i++) 
+    		myMap.removeOverlay(exml.gmarkers[i]);
     exml.parseString(xmlfrombackend);
+    showhidemarkers("");
     //alert(exml.gmarkers.length)
   }
 }
@@ -163,8 +180,8 @@ function showlinks(element) {
 	//alert(myMap)
 	
 	zoomLevel = myMap.getZoom();
-    if(zoomLevel<11)
-	 myMap.setZoom(11)	
+    if(zoomLevel<10)
+	 myMap.setZoom(10)	
 	myMap.panTo(new google.maps.LatLng(latoras, lngoras));
 	//alert(new google.maps.LatLng(latoras, lngoras))
 	myMap.setCenter(new google.maps.LatLng(latoras, lngoras));
@@ -187,7 +204,8 @@ function onBoundsChanged(){
     sw=bounds.getSouthWest();
     
     
-    loadBBoxGarbageOverlay(ne,sw)
+     loadBBoxGarbageOverlay(ne,sw)
+    // showhidemarkers();
     //<m:eventListener eventName="tilesloaded" jsFunction="zoomToArea('#{areaCleanManager.areaJsonBouns}')"/>
 	//    startDrag=false;
 

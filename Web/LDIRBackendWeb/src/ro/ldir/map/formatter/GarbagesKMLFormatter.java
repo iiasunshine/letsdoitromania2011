@@ -76,9 +76,13 @@ public class GarbagesKMLFormatter {
 			buf.append("<p>" + garbage.getDescription() + "</p>\n");
 			
 			
-//			if(garbage.getAllocatedStatus().toString().equals("COMPLETELY")==true)
-//				buf.append("<p  style=\"color:red;font-weight:bold;\">Acest morman a fost alocat complet.</p>\n");
-//			
+			if(garbage.getCounty().getName().equalsIgnoreCase("CLUJ"))			
+			{
+			if(garbage.getAllocatedStatus().toString().equals("COMPLETELY")==true)
+				buf.append("<p  style=\"color:red;font-weight:bold;\">Acest morman a fost alocat complet.</p>\n");
+			else buf.append("<p>Saci alocati " + String.valueOf(garbage.getCountBagsEnrollments()) + " / "+String.valueOf(garbage.getBagCount())+"</p>\n");
+			}
+			//			
 //			if(garbage.getCounty().getName().equalsIgnoreCase("TIMIS"))			
 //			{if (linkPattern != null) {
 //				buf.append("<p>Alocarea pentru judetul Timis se face offline de catre echipa locala, la punctele de inregistrare din judet.</p>\n");

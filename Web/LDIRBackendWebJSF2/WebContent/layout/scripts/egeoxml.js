@@ -206,6 +206,7 @@ EGeoXml.prototype.createMarker = function(point,name,desc,style) {
   } else {
     this.map.addOverlay(m);
   }
+  m.hide();
   this.gmarkers.push(m);
   if (this.opts.sidebarid || this.opts.dropboxid) {
     var n = this.gmarkers.length-1;
@@ -375,14 +376,14 @@ EGeoXml.prototype.processing = function(doc) {
                || href.indexOf("/pink.png")>-1 
                || href.indexOf("/orange.png")>-1 
                || href.indexOf("-dot.png")>-1 ) {
-                  that.styles["#"+styleID].shadow="http://maps.google.com/mapfiles/ms/micons/msmarker.shadow.png";
+                  that.styles["#"+styleID].shadow=""//http://maps.google.com/mapfiles/ms/micons/msmarker.shadow.png";
               }
               else if (href.indexOf("-pushpin.png")>-1) {
-                  that.styles["#"+styleID].shadow="http://maps.google.com/mapfiles/ms/micons/pushpin_shadow.png";
+                  that.styles["#"+styleID].shadow=""//http://maps.google.com/mapfiles/ms/micons/pushpin_shadow.png";
               }
               else {
                 var shadow = href.replace(".png",".shadow.png");
-                that.styles["#"+styleID].shadow=shadow;
+                //that.styles["#"+styleID].shadow=shadow;
               }
             }
           }
