@@ -27,7 +27,7 @@
 
 
                             <!-- mesaj eroare -->
-                            <h:messages warnClass="registerMessageError" infoClass="registerMessageOk"/>
+                            <h:messages warnClass="registerMessageError" infoClass="registerMessageOk"/>                            
                             <!--h:outputText value="{fn:contains(facesContext.messageList[0].severity, 'INFO')}"/-->
 
                             <!-- form inregistrare -->
@@ -102,7 +102,17 @@
                                 <div class="label"><h:outputText value="#{msg.register_phone} "/></div>
                                 <h:inputText value="#{registerBean.regiterUser.phone}" id="telefon" styleClass="formTextfield"/>
                                 <br />
+                                <br/>
+                                <!-- PARTICIPANTI -->
+                                <div class="label"><h:outputText value="Numar voluntari din echipa:"/><span class="important">*</span></div>
+                                <h:inputText value="#{registerBean.organization.membersCount}" id="participanti" styleClass="formTextfield"
+                                ><f:validateLongRange minimum="1" maximum="1000"/></h:inputText>
+                                <br />
+                                <h:outputText value="Completeaza daca vii la curatenie cu prietenii sau familia ta"/>
+                                <br/>
+                                
                                 <!-- TERMENI -->
+                                <br/>
                                 <h:selectBooleanCheckbox value="#{registerBean.acceptTerms}" id="conditii"/>
                                 <label class="formCheckbox">
                                     <h:outputText value="#{msg.register_terms} "/>
@@ -118,7 +128,7 @@
                                     <h:outputText value="#{msg.register_acceptVizibleData} "/>
                                 </label>
                                 <br/>
- 								<label class="important" id="warningPersonalData" style="display:block">
+ 								<label id="warningPersonalData" style="display:block;color:green">
 									<h:outputText value="Emailul si telefonul vor fi vizible liderului de echipa" />
                                 </label> 
                                 <!-- Accepta si alte informari -->
@@ -129,14 +139,16 @@
        
                                 <br />  
                                 <!-- ANTISPAM -->
+                                <br />
                                 <div class="label"><h:outputText value="#{msg.register_antispam} "/><span class="important">*</span></div>
                                 <h:inputText value="#{registerBean.antispam}" id="captcha_code" styleClass="formTextfield"/>
                                 <br />
                                 <span class="important" style="margin-left: 150px;"><h:outputText value="#{msg.register_antispam_info}"/></span>
+                                <br />                                
                                 <div class="formCaptchaImage"  style="margin-left: 150px;">
                                     <img src="${pageContext.servletContext.contextPath}/stickyimg" width="120" height="40" />
                                 </div>
-                                <br />
+                                
                                 <!-- BUTOANE -->
                                 <div style="margin-left: 150px;">
                                     <h:commandButton action="#{registerBean.actionRegister}"
