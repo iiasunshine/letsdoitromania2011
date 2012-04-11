@@ -208,7 +208,7 @@
 											<h:outputText value="MODIFICA" escape="false" />
 										</h:outputLink>
 										<br />
-										<h:panelGroup rendered="#{garbage.dispersed}">
+									
 											<%-- nominate to vote --%>
 											<a4j:commandLink
 												actionListener="#{adminGarbageManagerBean.actionSelectGarbage}"
@@ -234,7 +234,7 @@
 														value="De curatat" rendered="#{not garbage.toClean}" />
 												</strong>
 											</a4j:commandLink>
-										</h:panelGroup>
+									
 									</div>
 								</div>
 							</a4j:repeat>
