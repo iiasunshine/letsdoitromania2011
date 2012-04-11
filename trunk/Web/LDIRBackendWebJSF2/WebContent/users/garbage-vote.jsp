@@ -69,12 +69,16 @@ l<%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 						<a4j:form>
 							<h1>
-								<h:outputFormat value="Zonele cu gunoaie ce trebuiesc votate: ({0})">
+								<h:outputFormat
+									value="Zonele cu gunoaie ce pot fi votate:{0}" rendered="#{fn: length(voteGarbageManagerBean.garbageList) > 0 }">
 									<f:param
 										value="#{fn:length(voteGarbageManagerBean.garbageList)}" />
 								</h:outputFormat>
 								<br /> <br />
-
+								<h:outputFormat
+									value="Nu exista nici-o zona de gunoaie nominalizata pentru votare!" rendered="#{fn: length(voteGarbageManagerBean.garbageList) eq 0 }">
+								</h:outputFormat>
+								<br /> <br />
 							</h1>
 
 							<div id="listHeaderContainer">
