@@ -5,6 +5,9 @@ var markers = [];
 var mormane=[] //all mormane, up to let's say 500
 var newmormane=[] //the current ajax batch
 var xhr = new XMLHttpRequest();
+var votx = new XMLHttpRequest();;
+
+var soloMormanId=-1;
 
 var markerClusterer = null;
 var imageUrl = 'http://chart.apis.google.com/chart?cht=mm&chs=24x32&' +
@@ -190,7 +193,8 @@ xhr.onreadystatechange = processGetMormane;
 xhr.open("GET", url, true);
 xhr.setRequestHeader('Accept', 'application/json');
 xhr.send();
-document.getElementById("ajaxloader").style.display="block";
+if(document.getElementById("ajaxloader")!=null)
+	document.getElementById("ajaxloader").style.display="block";
 }
 
 function processGetMormane(){
@@ -201,14 +205,71 @@ if (xhr.readyState == 4) {
 		response=JSON.parse(xhr.responseText);
 		if(response!=null)
 			newmormane=response["garbage"];
-		
-		document.getElementById("ajaxloader").style.display="none";
+		if(response!=null&&newmormane==undefined)
+			newmormane=new Array(response);
+		if(document.getElementById("ajaxloader")!=null)
+			document.getElementById("ajaxloader").style.display="none";
 		renderData();
 		
 	}
 }
 
+function voteMorman(id){
+	url=WS_URL+"/admin/admin-vote-from-map.jsf?garbageId="+id;
+	tid=id;
+	votx = new XMLHttpRequest();
+	votx.onreadystatechange = processvot;
+	//alert(url);
+//	if(userRole!='anon')
+//		votx.open("put", url, true, username, password);
+//	else
+//		votx.open("put", url, true);
+	votx.open("GET",url,true)
+	votx.setRequestHeader('Content-Type', 'text/html'); 
+	votx.send();
+}
 
+
+function processvot(){
+	if (votx.readyState == 4) {
+	response=votx.responseText;
+	element="infovot";
+	//alert(element)
+	if(response.indexOf("morman votat succes")>-1)
+		{
+			document.getElementById(element).style.display = 'block';
+			document.getElementById(element).innerHTML ='Mormanul a fost votat cu succes';
+		}
+	if(response.indexOf("morman votat fail")>-1)
+		if(response.indexOf("Ai depasit numarul de voturi")>-1)
+			{
+			document.getElementById(element).style.display = 'block';
+			document.getElementById(element).innerHTML ='Ai votat deja mormanul in ultimele 24 de ore.';
+			}
+		else
+			{
+			document.getElementById(element).style.display = 'block';
+			document.getElementById(element).innerHTML ='Eroare nedefinita.';
+			}
+
+	//alert(response)
+//    public static final String MORMAN_VOTAT_SUCCES="morman votat succes";
+//    public static final String MORMAN_VOTAT_FAIL="morman votat fail";
+//
+//    public static final String MORMAN_NOMINALIZAT_SUCCES="morman nominalizat succes";
+//    public static final String MORMAN_NOMINALIZAT_FAIL="morman nominalizat fail";
+//	9 127.0.0.1 [[[[morman votat]]]]
+//  9 127.0.0.1 [[[[morman fail|Nu se mai poate vota. Ai depasit numarul de voturi/zona permis pe 24 ore cu acest user!|9 127.0.0.1]]]]
+//		
+	
+	
+	}
+}
+
+
+function nominalizeazaMorman(id){
+	
+}
 
 var onMarkerClick = function() {
 	dontAjax=true;
@@ -216,20 +277,29 @@ var onMarkerClick = function() {
     var morman = marker.morman;
     var latLng = marker.getPosition();
     var content="";
-    if(morman.toVote==false)
+    if(morman.toVote=="false")
     	content+="<p>Morman: "+morman.garbageId+"</p>"
     else content+="<p>Zona: "+morman.garbageId+"</p>";
     content+="<p>Descriere: "+morman.description+"</p>"
     content+="<p>Saci: "+morman.bagCount+"</p>"
     content+="<p></p>"
     content+="<p><a target=\"_self\" style=\"color: #4D751F;\" href=\""+WS_URL+"/users/curatenie-morman-detalii.jsf?garbageId="+morman.garbageId+"\">&raquo; Detalii morman</a></p>";
-    infoWindow.setContent(content);
+    
+    if(morman.toVote=="true")
+		content+="<span style=\"color: #4D751F;cursor: pointer\" onMouseOver=\"this.style.textDecoration='underline'\" onMouseOut=\"this.style.textDecoration='none'\" onclick=\"javascript:voteMorman("+morman.garbageId+")\">Voteaza</span>";
+//	if(userRole=="ORGANIZER" || userRole=="ORGANIZER_MULTI" || userRole == "ADMIN")
+//		content+=" | <span style=\"color: #4D751F;cursor: pointer\" onMouseOver=\"this.style.textDecoration='underline'\" onMouseOut=\"this.style.textDecoration='none'\" onclick=\"javascript:nominalizeazaMorman("+morman.garbageId+")\">"+nominalizeazaString+"</span>";
+	content+="</p>\n";
+	content+="<p id=\"infovot\" style=\"display:none\">YOU SHOULDN'T SEE THIS</p>\n";
+
+	infoWindow.setContent(content);
     infoWindow.open(map, marker);
     
   };
 
 
 function renderData(){
+	
 	
 	console.log('cache length: '+mormane.length,"new data: "+newmormane.length)
 	if(mormane.length+newmormane.length>1000)
@@ -418,13 +488,17 @@ function onboundschange(){
 		var url = WS_URL;
 		
 		//url = 'http://app.letsdoitromania.ro/LDIRBackend/map/ws/garbageList/';
-		url += '/LDIRBackend/map/ws/garbageList/';
+		if(soloMormanId!=-1)
+			url += '/LDIRBackend/ws/garbage/'+soloMormanId;
+		else 
+			url += '/LDIRBackend/map/ws/garbageList/';
 		url += '?topLeftX='+Number(topLeftX).toString()
 		  
 		url += '&topLeftY='+topLeftY
 		url += '&bottomRightX='+bottomRightX
 		url += '&bottomRightY='+bottomRightY;
-		
+	
+	//alert(soloMormanId);
 	getMormane(url);
 	
 	}
@@ -453,11 +527,12 @@ function load() {
 			dontAjax=false;
 			onboundschange();
 		});;
-
+		
 	};	
 	
 function somefunction(mormanId){
-	alert(mormanId)
-	}
+	//alert(mormanId)
+	soloMormanId=mormanId;
+}
 
 google.maps.event.addDomListener(window, 'load', load);
