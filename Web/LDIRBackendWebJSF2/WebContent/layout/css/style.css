@@ -32,14 +32,18 @@ body { margin: 0px 0px 0px 0px; background-color: #fefefe; font: Tahoma; }
 
 #pageContainer { width: 100%; border-bottom: 1px solid #447428; margin: 10px 0px 10px 0px; padding: 0px 0px 10px 0px; }
 #content { width: 935px; font: 11px Tahoma; }
+#content2 { width: 100%; font: 11px Tahoma; }
 #contentList { font: 11px Tahoma; }
 #leftColumn { width: 190px; display: inline-block; text-align: left; vertical-align: top; padding: 0px 10px 0px 0px; }
+#leftColumn2 { width: 15%; display: inline-block; text-align: left; vertical-align: top; padding: 0px 10px 0px 0px; }
 #leftColumn a { color: #4d751f; text-decoration: none; }
 #leftColumn a:hover { text-decoration: underline; }
 #rightColumn { width: 710px; display: inline-block; text-align: left; vertical-align: top; border-left: 1px solid #e1e1e1; padding: 0px 0px 0px 20px; }
+#rightColumn2 { width: 70%; display: inline-block; text-align: left; vertical-align: top; border-left: 1px solid #e1e1e1; padding: 0px 0px 0px 20px; }
 #rightColumnList { display: inline-block; text-align: left; vertical-align: top; border-left: 1px solid #e1e1e1; padding: 0px 0px 0px 20px; }
 
 .hartaLDIR { width: 710px; height: 600px; background-color: #e1e1e1; text-align: center; vertical-align: middle; }
+#hartaldir { width: 710px; height: 600px; background-color: #e1e1e1; text-align: center; vertical-align: middle; }
 
 .entryLeft { margin: 0px 0px 10px 0px; }
 .listENtryRight { width: 52px; margin: 0px 5px 0px 0px; padding: 5px 5px 5px 5px; display: inline-block; }
@@ -114,3 +118,15 @@ img { border: 0px; }
     border-collapse: collapse;
     padding: 0px;*/
 }
+
+.labels {
+     color: red;
+     background-color: white;
+     font-family: "Lucida Grande", "Arial", sans-serif;
+     font-size: 10px;
+     font-weight: bold;
+     text-align: center;
+     width: 40px;     
+     border: 2px solid black;
+     white-space: nowrap;
+   }

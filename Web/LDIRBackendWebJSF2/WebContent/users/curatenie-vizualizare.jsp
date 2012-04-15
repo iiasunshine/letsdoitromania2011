@@ -9,6 +9,7 @@
             <title>Let's do it Romania</title>
         </head>
         <body>
+       	 <jsp:directive.include file="/WEB-INF/jspf/usermeta.jspf" />
             <center>
                 <%-- page Top --%>
                 <custom:page_top_login selected="curatenie" role="${areaCleanManager.userDetails.role}"/>
@@ -197,45 +198,15 @@
                          
                          <br/>
                              
-                            
+                           <custom:layers_options/>  
                         </div>
 
                         <%-- Right Column (harta) --%>
                         <div id="rightColumn">
                             <!-- mesaj eroare sau info -->
                             <h:messages warnClass="registerMessageError" errorClass="registerMessageError" infoClass="registerMessageOk"/>
-
-                            <a4j:form>
-                                <m:map latitude="#{areaCleanManager.currentLat}"
-                                       longitude="#{areaCleanManager.currentLng}"
-                                       width="750px"
-                                       height="650px"
-                                       zoom="11"
-                                       jsVariable="myMap" 
-                                       
-                                       >
-                                    
-                                    <m:mapControl name="GLargeMapControl3D"/>
-                                    <m:mapControl name="GMapTypeControl" position="G_ANCHOR_TOP_RIGHT"/>
-                                    <m:mapControl name="GScaleControl" position="G_ANCHOR_BOTTOM_RIGHT" />
-									
-                                    <!-- 
-                                    <a4j:repeat value="#{areaCleanManager.garbageList}" var="gunoi">
-                                        <m:marker  latitude="#{gunoi.coordYToString}"
-                                                   longitude="#{gunoi.coordXToString}"
-                                                   showInformationEvent="mouseover">
-                                            <m:icon imageURL="http://app.letsdoitromania.ro:8080/LDIRBackendWebJSF2/icons/morman-rosu-20x20.png"
-                                                    width="20"
-                                                    height="20"/>
-                                            <m:htmlInformationWindow htmlText="#{gunoi.infoHtml}"/>
-                                        </m:marker>
-                                    </a4j:repeat>-->
-                                    <!-- zoom si focus pe zona de cartare -->
-                                    <m:eventListener eventName="bounds_changed" jsFunction="onBoundsChanged" />     
-                                    <m:eventListener eventName="bounds_changed" jsFunction="loadEvents()" />
-                                     <m:eventListener eventName="load" jsFunction="onBoundsChanged()" />
-                                </m:map>
-                            </a4j:form>
+								<div id="map" style="width: 100%; height: 600px"></div>
+                             
                         </div>
                     </div>
                 </div>

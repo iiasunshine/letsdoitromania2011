@@ -7,14 +7,13 @@
     </c:if>
     <html xmlns="http://www.w3.org/1999/xhtml">
         <head>
-            <jsp:directive.include file="/WEB-INF/jspf/page-meta.jspf"/>
-            <title>Let's do it Romania</title>
-            <script
-                src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=${initParam['google.maps.key']}"
-                type="text/javascript">
-            </script>
+            <jsp:directive.include file="/WEB-INF/jspf/googlemaps-meta.jspf"/>
+            <jsp:directive.include file="/WEB-INF/jspf/page-meta.jspf"/>            
+        	<jsp:directive.include file="/WEB-INF/jspf/usermeta.jspf"/>
+
+            <title>Let's do it Romania</title>            
         </head>
-        <body onunload="GUnload()">
+        <body onload="somefunction(${mormanManager.myGarbage.garbage.getGarbageId()})">
         
             <center>
                 <%-- page Top --%>
@@ -174,37 +173,7 @@
 
                         <%-- Right Column (harta) --%>
                         <div id="rightColumn">
-                            <a4j:form>
-                                <m:map latitude="#{mormanManager.myGarbage.coordYToString}"
-                                       longitude="#{mormanManager.myGarbage.coordXToString}"
-                                       width="710px"
-                                       height="600px"
-                                       zoom="14"
-                                       jsVariable="myMap" >
-                                    <m:mapControl name="GLargeMapControl3D"/>
-                                    <m:mapControl name="GMapTypeControl" position="G_ANCHOR_TOP_RIGHT"/>
-                                    <m:mapControl name="GScaleControl" position="G_ANCHOR_BOTTOM_RIGHT" />
-                                    <a4j:repeat value="#{mormanManager.myGarbageList}" var="gunoi">
-                                        <m:marker  latitude="#{gunoi.coordYToString}"
-                                                   longitude="#{gunoi.coordXToString}"
-                                                   showInformationEvent="mouseover"
-                                                   rendered="#{not (gunoi.garbage.garbageId eq mormanManager.myGarbage.garbage.garbageId)}">
-                                            <m:icon imageURL="http://app.letsdoitromania.ro:8080/LDIRBackendWebJSF2/icons/morman-rosu-20x20.png"
-                                                    width="20"
-                                                    height="20"/>
-                                            <m:htmlInformationWindow htmlText="#{gunoi.infoHtml}"/>
-                                        </m:marker>
-                                    </a4j:repeat>
-                                    <m:marker  latitude="#{mormanManager.myGarbage.coordYToString}"
-                                               longitude="#{mormanManager.myGarbage.coordXToString}"
-                                               showInformationEvent="mouseover">
-                                        <m:icon imageURL="http://app.letsdoitromania.ro:8080/LDIRBackendWebJSF2/icons/morman-galben-20x20.png"
-                                                width="20"
-                                                height="20"/>
-                                        <m:htmlInformationWindow htmlText="<strong>Morman curent (#{mormanManager.myGarbage.idToString})</strong><br/>#{msg.details_area} #{mormanManager.myGarbage.garbage.chartedArea.name} <br/>#{msg.details_county} #{mormanManager.myGarbage.garbage.county.name} <br/>"/>
-                                    </m:marker>
-                                </m:map>
-                            </a4j:form>
+                            <div id="map" style="width: 100%; height: 600px"></div>
                         </div>
                     </div>
                 </div>
