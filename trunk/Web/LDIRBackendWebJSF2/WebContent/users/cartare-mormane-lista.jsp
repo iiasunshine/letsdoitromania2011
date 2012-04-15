@@ -6,11 +6,6 @@
 <head>
 <jsp:directive.include file="/WEB-INF/jspf/page-meta.jspf" />
 <title>Let's do it Romania</title>
-<%--<script
-	src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=${initParam['google.maps.key']}"
-	type="text/javascript">
-	
-</script>--%>
 </head>
 <body>
 	<center>

@@ -60,7 +60,9 @@
 					  <f:selectItem id="item2" itemLabel="Zone de votat" itemValue="zonedevotat" />
 					</h:selectOneRadio>
 				 <a4j:form rendered="true">
-                                <m:map width="750px" height="650px" latitude="44.4317879" longitude="26.1015844" zoom="10" jsVariable="myMap"  >
+                                
+                                <m:map width="750px" height="650px" 
+                                latitude="44.4317879" longitude="26.1015844" zoom="10" jsVariable="myMap"  >
                                     <m:mapControl name="GLargeMapControl3D"/>
                                     <m:mapControl name="GMapTypeControl" position="G_ANCHOR_TOP_RIGHT"/>
                                     <m:mapControl name="GScaleControl" position="G_ANCHOR_BOTTOM_RIGHT" />
