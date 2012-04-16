@@ -17,6 +17,7 @@ var infoWindow = new google.maps.InfoWindow;
 
 var dontAjax=false //to stop refreshing from clicking the markers
 
+
 var styles = [[{
     url: '../images/people35.png',
     height: 35,
@@ -190,7 +191,10 @@ if(dontAjax==true)return;
 
 xhr = new XMLHttpRequest();
 xhr.onreadystatechange = processGetMormane;
-xhr.open("GET", url, true);
+if(soloMormanId!=-1)
+	xhr.open("GET", url, true,userEmail,userPasswd);
+else 
+	xhr.open("GET", url, true);
 xhr.setRequestHeader('Accept', 'application/json');
 xhr.send();
 if(document.getElementById("ajaxloader")!=null)
@@ -388,7 +392,7 @@ function renderData(){
 	var zoom = -1;
     var size = -1;
     var style =-1;
-    zoom = zoom == -1 ? null : zoom;
+    zoom = 15; 
     size = size == -1 ? null : size;
     style = style == -1 ? null: style;
     
@@ -396,6 +400,7 @@ function renderData(){
    // if(layersOptions.mormaneToate==true)
     clearClusters();
     showhidemarkers();
+    //MarkerClusterer.IMAGE_PATH = "/layout/images/m";
     markerClusterer = new MarkerClusterer(map, markers, {
       maxZoom: zoom,
       gridSize: size,
