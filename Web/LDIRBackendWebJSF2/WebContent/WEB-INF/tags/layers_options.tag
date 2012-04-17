@@ -24,7 +24,15 @@
 								<f:selectItem id="mormaneNecuratate" itemLabel="Ne-curatate" itemValue="mormaneNecuratate" />
 								<f:selectItem id="mormaneDeVotat" itemLabel="Propuse pentru curatenie" itemValue="mormaneDeVotat" />
 							 </h:selectManyCheckbox><br/>
-							 <div id="ajaxloader" style="display:none">
-							 <h:graphicImage value="/layout/images/ajaxloader.gif" width="20px"></h:graphicImage><h:outputText value="  Loading..." style="font-style:italic" />
+							 <h:outputText value="Legenda: "/><br/><br/>
+							 <h:graphicImage value="/layout/images/m1.png" width="20px"></h:graphicImage><h:outputText value=" 1-10 mormane"/><br/>
+							 <h:graphicImage value="/layout/images/m2.png" width="20px"></h:graphicImage><h:outputText value=" 10-100 mormane"/><br/>
+							 <h:graphicImage value="/layout/images/m3.png" width="20px"></h:graphicImage><h:outputText value=" 100-1000 mormane"/><br/>							 
+							<h:graphicImage value="/layout/images/m5.png" width="20px"></h:graphicImage><h:outputText value=" 1000+ mormane"/><br/>
+							<br/>							
+							 <h:graphicImage value="http://maps.gstatic.com/mapfiles/markers/marker_sprite.png" width="30px"></h:graphicImage><h:outputText value=" Morman"/><br/>
+							 <br/>
+							 <div id="ajaxloader" style="display:none">							 
+							 <h:graphicImage value="/layout/images/ajaxloader.gif" width="20px"></h:graphicImage><h:outputText value="  Loading..." style="font-style:italic" /><br/>
 							 </div>
 							 
