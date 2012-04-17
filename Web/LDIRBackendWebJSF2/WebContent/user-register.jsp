@@ -104,7 +104,7 @@
                                 <br />
                                 <br/>
                                 <!-- PARTICIPANTI -->
-                                <div class="label"><h:outputText value="Numar voluntari din echipa:"/><span class="important">*</span></div>
+                                <div class="label"><h:outputText value="Numar voluntari din echipa:"/></div>
                                 <h:inputText value="#{registerBean.organization.membersCount}" id="participanti" styleClass="formTextfield"
                                 ><f:validateLongRange minimum="1" maximum="1000"/></h:inputText>
                                 <br />

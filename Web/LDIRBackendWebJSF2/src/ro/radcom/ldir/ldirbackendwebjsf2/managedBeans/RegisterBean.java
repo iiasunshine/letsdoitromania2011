@@ -67,7 +67,8 @@ public class RegisterBean {
      * @throws NamingException */
     public RegisterBean() throws NamingException {
     	wsi = new WSInterface();
-        initCaptcha();
+        //organization.setMembersCount(0);
+    	initCaptcha();
     }
 
     private void initCaptcha() {
@@ -85,14 +86,12 @@ public class RegisterBean {
         /**
          * validare campuri
          */
-        
         if (regiterUser.getFirstName() == null || regiterUser.getFirstName().trim().length() == 0
                 || regiterUser.getLastName() == null || regiterUser.getLastName().trim().length() == 0
                 || regiterUser.getEmail() == null || regiterUser.getEmail().trim().length() == 0
                 || regiterUser.getPasswd() == null || regiterUser.getPasswd().trim().length() == 0
                 || passwordConfirm == null || passwordConfirm.length() == 0
                 || /*(!curatenie && !cartare)*/regiterUser.getCounty()==null || regiterUser.getCounty().trim().length()<2
-                || organization.getMembersCount() == null
         		) {
             JsfUtils.addWarnBundleMessage("err_mandatory_fields");
             return NavigationValues.REGISTER_FAIL;
@@ -141,7 +140,8 @@ public class RegisterBean {
 
         try {
 			wsi.registerUser(regiterUser);
-			addMembers();
+			if(organization.getMembersCount() != null)
+				addMembers();
 		} catch (InvalidUserOperationException e) {   
             JsfUtils.addWarnBundleMessage("register_err_duplicate_mail");
             return NavigationValues.REGISTER_FAIL;
