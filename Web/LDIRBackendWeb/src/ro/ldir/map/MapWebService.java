@@ -52,6 +52,7 @@ import ro.ldir.map.formatter.ChartedAreasKMLFormatter;
 import ro.ldir.map.formatter.ChartedAreasTeamKMLFormatter;
 import ro.ldir.map.formatter.GarbageGroupsKMLFormatter;
 import ro.ldir.map.formatter.GarbagesKMLFormatter;
+import ro.ldir.map.formatter.GarbagesJSONFormatter;
 
 import com.sun.jersey.api.Responses;
 import com.sun.jersey.core.header.FormDataContentDisposition;
@@ -235,7 +236,7 @@ public class MapWebService {
 					.status(Response.Status.OK)
 					.header("Access-Control-Allow-Origin", "*")
 					.header("Access-Control-Allow-Credentials", "true")
-					.entity(new GarbagesKMLFormatter(garbages, null).toString()).build();
+					.entity(new GarbagesJSONFormatter(garbages).toString()).build();
 	}
 	
 	
