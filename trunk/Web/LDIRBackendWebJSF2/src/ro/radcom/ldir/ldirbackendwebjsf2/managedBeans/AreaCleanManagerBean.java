@@ -365,7 +365,13 @@ public class AreaCleanManagerBean {
 		return currentLng;
 	}
 
-
+	public String getCountySelectedValue(){
+		return wsi.getCountySelectedValue();
+	}
+	
+	public void setCountySelectedValue(String value){
+		wsi.setCountySelectedValue(value);
+	}
 	
 	
 }

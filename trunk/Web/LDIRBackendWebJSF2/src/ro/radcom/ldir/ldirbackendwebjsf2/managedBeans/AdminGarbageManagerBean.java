@@ -218,6 +218,7 @@ public class AdminGarbageManagerBean {
 		garbageList = wsi.getGarbageListByFilters(userDetails, countyId,
 				AppUtils.parseToInt(gridId, null),
 				AppUtils.parseToInt(userId, null), addDate, null);
+		setCountySelectedValue(countyId);
 	}
 
 	public String encodeUrl(String arg) {
@@ -313,7 +314,11 @@ public class AdminGarbageManagerBean {
 	 * @return the countyId
 	 */
 	public String getCountyId() {
+		if(countyId!=null){
 		return countyId;
+		}else{
+			return getCountySelectedValue();
+		}
 	}
 
 	/**
@@ -391,5 +396,13 @@ public class AdminGarbageManagerBean {
 	
 	public void setGarbageId(String _garbageId){
 		this.garbageId= AppUtils.parseToInt(_garbageId);
+	}
+	
+	public String getCountySelectedValue(){
+		return wsi.getCountySelectedValue();
+	}
+	
+	public void setCountySelectedValue(String value){
+		wsi.setCountySelectedValue(value);
 	}
 }

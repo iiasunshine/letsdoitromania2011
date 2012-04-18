@@ -224,6 +224,8 @@ public class AdminUsersManagerBean {
 								: null, AppUtils.parseToInt(
 								selectedMinGarbages, null), AppUtils
 								.parseToInt(selectedMaxGarbages, null), null);
+		//
+		setCountySelectedValue(selectedCounty);
 	}
     
 	 public String encodeUrl(String arg){
@@ -254,7 +256,11 @@ public class AdminUsersManagerBean {
      * @return the selectedCounty
      */
     public String getSelectedCounty() {
-        return selectedCounty;
+		if(selectedCounty!=null){
+		return selectedCounty;
+		}else{
+			return getCountySelectedValue();
+		}
     }
 
     /**
@@ -403,4 +409,12 @@ public class AdminUsersManagerBean {
     public void setCuratenie(boolean curatenie) {
         this.curatenie = curatenie;
     }
+    
+	public String getCountySelectedValue(){
+		return wsi.getCountySelectedValue();
+	}
+	
+	public void setCountySelectedValue(String value){
+		wsi.setCountySelectedValue(value);
+	}
 }

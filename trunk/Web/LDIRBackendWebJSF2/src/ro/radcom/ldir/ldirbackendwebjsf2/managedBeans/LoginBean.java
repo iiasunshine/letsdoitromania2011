@@ -59,6 +59,7 @@ public class LoginBean {
 
         	 
              JsfUtils.getHttpSession().setAttribute("USER_DETAILS", userDetails);
+             JsfUtils.getHttpSession().setAttribute("COUNTY_SELECTED_VALUE", userDetails.getCounty());
              return NavigationValues.LOGIN_SUCCESS;
         } catch (Exception ex) {
             JsfUtils.addWarnBundleMessage("login_fail");
