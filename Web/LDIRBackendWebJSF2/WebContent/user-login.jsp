@@ -53,10 +53,10 @@
 						<br />
 						<br />
 						<h3>
-							<h:outputLink value="user-register.jsf">
+						<%--	<h:outputLink value="user-register.jsf">
 								<h:outputText value="#{msg.meniu_inscriere_voluntar}"
 									escape="false" />
-							</h:outputLink>
+							</h:outputLink>--%>
 							<br /> <br />
 							<h:outputLink value="reset-password.jsf">
 								<h:outputText value="#{msg.reset_link}" escape="false" />
@@ -75,23 +75,23 @@
 							escape="false" />
 						<br /> <br />
 					</h2>
-					<h3>
-						<h:outputText
-							value=" Aceasta aplicatie are urmatoarele obiective:"
-							escape="false" />
-						<br />
-						<h:outputText
-							value=" * Inregistrarea mormanelor de gunoi de pe suprafata Romaniei"
-							escape="false" />
-						<br />
-						<h:outputText value=" * Gestionarea activitatilor de curatenie"
-							escape="false" />
-						<br />
-						<h:outputText
-							value=" * Monitorizarea suprafetelor curatate de mormanele de gunoi"
-							escape="false" />
-						<br /> <br />
-					</h3>
+						<div id="homepage-grid">
+							<ul>
+								<li><a
+									href="${pageContext.servletContext.contextPath}/user-register.jsf"><img
+										src="/icons/01-inscriere-utilizator.jpg" width="230"
+										height="230" /></a></li>
+
+								<li><a
+									href="${pageContext.servletContext.contextPath}/users/free-cartare-mormane-editare.jsf"><img
+										src="/icons/02-adaugare-gunoi.jpg" width="230" height="230" /></a>
+								</li>
+								<li><a
+									href="${pageContext.servletContext.contextPath}/free-garbage-vote.jsf"><img
+										src="/icons/03-votare-zona.jpg" width="230" height="230" /></a></li>
+
+							</ul>
+						</div>
 				</div>
 			</div>
 		</div>
