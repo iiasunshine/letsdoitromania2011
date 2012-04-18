@@ -56,15 +56,15 @@ public class GarbagesJSONFormatter {
 			buf.append("{");
 			buf.append("\"allocatedStatus\""+":"+"\""+garbage.getAllocatedStatus()+"\",");
 			buf.append("\"bagCount\":\""+garbage.getBagCount()+"\",");
-			buf.append("\"bigComponentsDescription\":\""+garbage.getBigComponentsDescription()+"\",");
+			buf.append("\"bigComponentsDescription\":\""+""+"\",");
 			buf.append("\"chartedArea\":\""+garbage.getChartedArea()+"\",");
 			buf.append("\"county\":\""+garbage.getCounty().getName()+"\",");
-			buf.append("\"description\":\""+garbage.getDescription()+"\",");
+			buf.append("\"description\":\""+""+"\",");
 			buf.append("\"dispersed\":\""+garbage.isDispersed()+"\",");
 			buf.append("\"garbageGroup\":\""+garbage.getGarbageGroup()+"\",");
 			buf.append("\"garbageId\":\""+garbage.getGarbageId().toString()+"\",");
 			buf.append("\"insertedBy\":\""+garbage.getInsertedBy()+"\",");
-			buf.append("\"name\":\""+garbage.getName()+"\",");
+			buf.append("\"name\":\""+""+"\",");
 			buf.append("\"percentageGlass\":\""+garbage.getPercentageGlass()+"\",");
 			buf.append("\"percentageMetal\":\""+garbage.getPercentageMetal()+"\",");
 			buf.append("\"percentagePlastic\":\""+garbage.getPercentagePlastic()+"\",");
