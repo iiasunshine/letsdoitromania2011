@@ -14,8 +14,8 @@
 		</h:panelGroup>
 		<h:panelGroup rendered="#{not (sessionScope['USER_DETAILS'] eq null)}">
 			<custom:page_top_login selected="home"
-				role="${sessionScope['USER_DETAILS'].role}" 
-				county="${sessionScope['USER_DETAILS'].county}"/>
+				role="${sessionScope['USER_DETAILS'].role}"
+				county="${sessionScope['USER_DETAILS'].county}" />
 		</h:panelGroup>
 
 		<%-- page Content --%>
@@ -25,133 +25,82 @@
 
 				<div id="rightColumn" style="height: 450px;">
 					<br /> <br />
+					<h:panelGroup rendered="#{sessionScope['USER_DETAILS'] eq null}">
+
+						<h2>
+							<h:outputText
+								value="Bine ai venit pe aplicatia Let`s Do It, Romania! 2012"
+								escape="false" />
+							<br /> <br />
+						</h2>
+
+						<div id="homepage-grid">
+							<ul>
+								<li><a
+									href="${pageContext.servletContext.contextPath}/user-register.jsf"><img
+										src="/icons/01-inscriere-utilizator.jpg" width="230"
+										height="230" /></a></li>
+
+								<li><a
+									href="${pageContext.servletContext.contextPath}/users/free-cartare-mormane-editare.jsf"><img
+										src="/icons/02-adaugare-gunoi.jpg" width="230" height="230" /></a>
+								</li>
+								<li><a
+									href="${pageContext.servletContext.contextPath}/free-garbage-vote.jsf"><img
+										src="/icons/03-votare-zona.jpg" width="230" height="230" /></a></li>
+
+								<li>
+									<div class="button-login-logout">
+										<a
+											href="${pageContext.servletContext.contextPath}/user-login.jsf"><img
+											src="/icons/10-login.jpg" width="230" height="110" /></a>
+									</div>
+								</li>
+							</ul>
+						</div>
+
+
+					</h:panelGroup>
+
+
 					<h:panelGroup
 						rendered="#{not (sessionScope['USER_DETAILS'] eq null)}">
 
-						<%--   <h:outputText value="Aici ai posibilitatea sa:" escape="false"/>
-                                    <br/>
-                                    <h:outputText value="1. Te inscrii in baza noastra de date ca voluntar LDIR (butonul \"Inscrie-te ca voluntar\" de mai sus)" escape="false"/>
-                                	<br/>
-                                    <h:outputText value="2. Accesezi contul tau daca deja te-ai inscris (butonul \"Login\" de mai sus)" escape="false"/>
-                                    <br/>
-                                    <h:outputText value="3. Iti alegi o zona de cartare (butonul \"Zona de Cartare\" - apare dupa ce te-ai logat)" escape="false"/>
-                                    <br/>
-                                    <h:outputText value="4. Introduci mormanele pe care le-ai identificat pe teren (butonul \"Cartare Mormane\" - apare dupa ce te-ai logat)" escape="false"/>
-                                    <br/>
-                                    <h:outputText value="5. Iti gestionezi echipa (butonul \"Echipa\" - apare dupa ce te-ai logat)" escape="false"/>
-                                    <br/>
-                                    <h:outputText value="6. Te inscrii intr-o echipa, pe baza codului primit de la un voluntar inregistrat, care doreste sa isi creeze o echipa (butonul \"Echipa\" --&#62; \"Inscriere in echipa\" - apare dupa ce te-ai logat)" escape="false"/>
-                                    <br/>
-                                    <br/>
-									<h:outputText value="7. Daca esti leaderul echipei iti alegi mormanele pentru Curatenie" escape="false"/>                                    
-                                    <br/>
-                                    <br/>
-                                    <h:outputText value="<a href=\"docs/manualcartare.pdf\" target=\"_blank\">Descarca Manual Cartare 2011</a>" escape="false"/>
-                                    <br/>
-                                    <h:outputText value="<a href=\"docs/fisademorman.pdf\" target=\"_blank\">Descarca Fisa de Morman 2011</a>" escape="false"/>
-                                    <br/>
-                                    <h:outputText value="<a href=\"docs/prezentarecartare.pdf\" target=\"_blank\">Descarca Prezentare Cartare 2011</a>" escape="false"/>
-                                    <br/>
-                                    <h:outputText value="<a href=\"http://itunes.apple.com/us/app/lets-do-it-ro/id449110019\">Descarca aplicatia de cartare pentru iPhone</a>" escape="false"/>
-                                    <br/>
-                                    <br/>                                    
-                                    <h:outputText value="<a href=\"docs/prezentareinscriereechipevoluntari.pdf\" target=\"_blank\">Descarca Prezentarea Pasilor pentru Inscrierea pentru Ziua de Curatenie Nationala</a>" escape="false"/>
-                               		<br/>                                       
-                                    <h:outputText value="<a href=\"docs/declaratieminori2011.pdf\" target=\"_blank\">Descarca Declaratia pentru Participarea Minorilor la Ziua de Curatenie Nationala</a>" escape="false"/>
-                                    <br/>   
-                                    <h:outputText value="<a href=\"docs/normedesiguranta2011.pdf\" target=\"_blank\">Descarca Normele de Siguranta pentru Ziua de Curatenie Nationala </a>" escape="false"/>
-                                    <br/>
-                                    <br/>
-                                    <h:outputText value="<a href=\"http://www.letsdoitromania.ro/wp-content/uploads/2011/07/Manual-Curatenie-2011.pdf\" target=\"_blank\">Downloadeaza Manual Pentru Ziua de Curatenie 24 Septembrie 2011</a>" escape="false"/>
-									<br/>
-                                    <br/>
-									<h:outputText value="<a href=\"http://app-test1.letsdoitromania.ro/legitimatiiCFR/#{sessionScope['USER_DETAILS'].county}-#{sessionScope['USER_DETAILS'].userId}.pdf\" target=\"_blank\">Downloadeaza Legitimatia CFR de calatorie, cu reducere</a>" escape="false"/>									
-									<br/>  
-                                    --%>
 						<h2>
 							<h:outputText
 								value="Bine ai venit pe aplicatia Let`s Do It, Romania! 2012"
 								escape="false" />
 							<br /> <br />
 						</h2>
-						<h3>
-							<h:outputText
-								value=" Aceasta aplicatie are urmatoarele obiective:"
-								escape="false" />
-							<br />
-							<h:outputText
-								value=" * Inregistrarea mormanelor de gunoi de pe suprafata Romaniei"
-								escape="false" />
-							<br />
-							<h:outputText value=" * Gestionarea activitatilor de curatenie"
-								escape="false" />
-							<br />
-							<h:outputText
-								value=" * Monitorizarea suprafetelor curatate de mormanele de gunoi"
-								escape="false" />
-							<br /> <br />
-					</h:panelGroup>
-					<h:panelGroup rendered="#{sessionScope['USER_DETAILS'] eq null}">
+						<div id="homepage-grid">
+							<ul>
+								<li><a
+									href="${pageContext.servletContext.contextPath}/users/cartare-mormane-lista.jsf"><img
+										src="/icons/02-adaugare-gunoi.jpg" width="230" height="230" /></a></li>
+								<li><a
+									href="${pageContext.servletContext.contextPath}/users/garbage-vote.jsf"><img
+										src="/icons/03-votare-zona.jpg" width="230" height="230" /></a></li>
+								<c:if test="${not (role eq 'VOLUNTEER')}">
+									<li><a href="${pageContext.servletContext.contextPath}/admin/admin-lista-mormane.jsf"><img src="/icons/05-listare-gunoi.jpg"
+											width="230" height="230" /></a></li>
+									<li><a href="${pageContext.servletContext.contextPath}/admin/admin-lista-voluntari.jsf"><img src="/icons/06-listare-useri.jpg"
+											width="230" height="230" /></a></li>
+								</c:if>
+								<li>
+									<div class="button-profile">
+										<a href="${pageContext.servletContext.contextPath}/users/user-vizualizare.jsf"><img src="/icons/09-profil.jpg" width="230"
+											height="110" /></a>
+									</div>
+									<div class="button-login-logout">
+										<a href="${pageContext.servletContext.contextPath}/logout.jsf"><img src="/icons/10-logout.jpg" width="230"
+											height="110" /></a>
+									</div>
+								</li>
+							</ul>
+						</div>
 
-						<%--     <h:outputText value="Aici ai posibilitatea sa:" escape="false"/>
-                                    <br/>
-                                    <h:outputText value="1. Te inscrii in baza noastra de date ca voluntar LDIR (butonul \"Inscrie-te ca voluntar\" de mai sus)" escape="false"/>
-                                	<br/>
-                                    <h:outputText value="2. Accesezi contul tau daca deja te-ai inscris (butonul \"Login\" de mai sus)" escape="false"/>
-                                    <br/>
-                                    <h:outputText value="3. Iti alegi o zona de cartare (butonul \"Zona de Cartare\" - apare dupa ce te-ai logat)" escape="false"/>
-                                    <br/>
-                                    <h:outputText value="4. Introduci mormanele pe care le-ai identificat pe teren (butonul \"Cartare Mormane\" - apare dupa ce te-ai logat)" escape="false"/>
-                                    <br/>
-                                    <h:outputText value="5. Iti gestionezi echipa (butonul \"Echipa\" - apare dupa ce te-ai logat)" escape="false"/>
-                                    <br/>
-                                    <h:outputText value="6. Te inscrii intr-o echipa, pe baza codului primit de la un voluntar inregistrat, care doreste sa isi creeze o echipa (butonul \"Echipa\" --&#62; \"Inscriere in echipa\" - apare dupa ce te-ai logat)" escape="false"/>
-                                    <br/>
-                                    <br/>                                    
-                                    <h:outputText value="7. Daca esti leaderul echipei iti alegi mormanele pentru Curatenie" escape="false"/>
-                                    <br/>
-                                    <br/>                                    
-                                    <h:outputText value="<a href=\"docs/manualcartare.pdf\" target=\"_blank\">Descarca Manual Cartare 2011</a>" escape="false"/>
-                                    <br/>
-                                    <h:outputText value="<a href=\"docs/fisademorman.pdf\" target=\"_blank\">Descarca Fisa de Morman 2011</a>" escape="false"/>
-                                    <br/>
-                                    <h:outputText value="<a href=\"docs/prezentarecartare.pdf\" target=\"_blank\">Descarca Prezentare Cartare 2011</a>" escape="false"/>
-                                    <br/>
-                                    <h:outputText value="<a href=\"http://itunes.apple.com/us/app/lets-do-it-ro/id449110019\">Descarca aplicatia de cartare pentru iPhone</a>" escape="false"/>
-                                    <br/>
-                                    <br/>                                    
-                                    <h:outputText value="<a href=\"docs/prezentareinscriereechipevoluntari.pdf\" target=\"_blank\">Descarca Prezentarea Pasilor pentru Inscrierea pentru Ziua de Curatenie Nationala</a>" escape="false"/>
-                               		<br/>                                       
-                                    <h:outputText value="<a href=\"docs/declaratieminori2011.pdf\" target=\"_blank\">Descarca Declaratia pentru Participarea Minorilor la Ziua de Curatenie Nationala</a>" escape="false"/>
-                                    <br/>   
-                                    <h:outputText value="<a href=\"docs/normedesiguranta2011.pdf\" target=\"_blank\">Descarca Normele de Siguranta pentru Ziua de Curatenie Nationala </a>" escape="false"/>
-                                    <br/>
-                                    <br/>
-                                    <h:outputText value="<a href=\"http://www.letsdoitromania.ro/wp-content/uploads/2011/07/Manual-Curatenie-2011.pdf\" target=\"_blank\">Downloadeaza Manual Pentru Ziua de Curatenie 24 Septembrie 2011</a>" escape="false"/>
-									<br/>  --%>
-						<h2>
-							<h:outputText
-								value="Bine ai venit pe aplicatia Let`s Do It, Romania! 2012"
-								escape="false" />
-							<br /> <br />
-						</h2>
-						<h3>
-							<h:outputText
-								value=" Aceasta aplicatie are urmatoarele obiective:"
-								escape="false" />
-							<br />
-							<h:outputText
-								value=" * Inregistrarea mormanelor de gunoi de pe suprafata Romaniei"
-								escape="false" />
-							<br />
-							<h:outputText value=" * Gestionarea activitatilor de curatenie"
-								escape="false" />
-							<br />
-							<h:outputText
-								value=" * Monitorizarea suprafetelor curatate de mormanele de gunoi"
-								escape="false" />
-							<br /> <br /> <br />
 					</h:panelGroup>
+					<br /> <br /><br /> <br /><br /> <br /><br /> <br /><br /> <br />
 				</div>
 			</div>
 		</div>

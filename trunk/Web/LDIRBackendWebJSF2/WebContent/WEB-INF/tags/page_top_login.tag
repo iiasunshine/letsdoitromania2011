@@ -10,11 +10,11 @@
 
 <div id="headerContainer">
     <div id="header">
-        <div id="logo"><a href="#"><img src="${pageContext.servletContext.contextPath}/layout/images/logo.jpg" width="200" height="90" /></a></div>
-        <div id="topAdvertisement"><a href="#"><img src="${pageContext.servletContext.contextPath}/layout/images/banner_leaderboard_728x90px.gif" width="728" height="90" /></a></div>
+        <div id="logo"><a href="http://www.letsdoitromania.ro"><img src="${pageContext.servletContext.contextPath}/layout/images/logo.jpg" width="200" height="90" /></a></div>
+        <div id="topAdvertisement"><a href="${pageContext.servletContext.contextPath}/home.jsf"><img src="${pageContext.servletContext.contextPath}/layout/images/banner_leaderboard_728x90px.gif" width="728" height="90" /></a></div>
         <div id="topMenu">
             <ul>
-             <%--  <li><a href="${pageContext.servletContext.contextPath}/home.jsf" class="${selected eq 'home' ? 'active' : ''}"><span>${msg.meniu_home}</span></a></li>--%> 
+              <li><a href="${pageContext.servletContext.contextPath}/home.jsf" class="${selected eq 'home' ? 'active' : ''}"><span>${msg.meniu_home}</span></a></li> 
              <%-- removed from 2012 ldir  <li><a href="${pageContext.servletContext.contextPath}/users/cartare-zone-lista.jsf" class="${selected eq 'zone' ? 'active' : ''}"><span>${msg.meniu_zona_cartare}</span></a></li>--%>
                 <li><a href="${pageContext.servletContext.contextPath}/users/cartare-mormane-lista.jsf" class="${selected eq 'mormane' ? 'active' : ''}"><span>${msg.meniu_cartare_mormane}</span></a></li>
                 <c:if test="${not (role eq 'VOLUNTEER')}">
@@ -31,7 +31,7 @@
                  <li><a href="${pageContext.servletContext.contextPath}/users/curatenie-vizualizare.jsf" class="${selected eq 'curatenie' ? 'active': ''}"><span>${msg.meniu_curatenie_list}</span></a></li>
                  </c:if>
                  <li><a href="${pageContext.servletContext.contextPath}/users/garbage-vote.jsf" class="${selected eq 'garbageVote' ? 'active' : ''}"><span>VOTEAZA ZONA</span></a></li>
-                 <li><a href="${pageContext.servletContext.contextPath}/users/user-vizualizare.jsf" class="${selected eq 'user_edit' ? 'active': ''}"><span>${msg.meniu_user_edit}</span></a></li>
+             <%--    <li><a href="${pageContext.servletContext.contextPath}/users/user-vizualizare.jsf" class="${selected eq 'user_edit' ? 'active': ''}"><span>${msg.meniu_user_edit}</span></a></li>----%>
                 <li><a href="${pageContext.servletContext.contextPath}/logout.jsf"><span>${msg.meniu_logout}</span></a></li>
             </ul>
         </div>
