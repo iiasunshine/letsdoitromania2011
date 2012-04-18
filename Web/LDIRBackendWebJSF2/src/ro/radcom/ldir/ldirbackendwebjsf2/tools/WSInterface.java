@@ -397,11 +397,10 @@ public class WSInterface {
 			boolean isDisplay) {
 		try {
 			if (isDisplay) {
-				return JsfUtils.getInitParameter("webservice.url")+"/ImageLoaderServlet?garbageID="
-						+ garbage.getGarbageId().intValue()
-						+ "&imageIndex="
-						+ imageIndex
-						+ "&display=1";
+				return JsfUtils.getInitParameter("webservice.url")
+						+ "/ImageLoaderServlet?garbageID="
+						+ garbage.getGarbageId().intValue() + "&imageIndex="
+						+ imageIndex + "&display=1";
 			} else {
 				return JsfUtils.getInitParameter("webservice.url")
 						+ "/ImageLoaderServlet?garbageID="
@@ -410,6 +409,58 @@ public class WSInterface {
 			}
 		} catch (Exception err) {
 			return ""; // TODO: null picture
+		}
+	}
+
+	/**
+	 * Get selected county from session
+	 * 
+	 * @return
+	 */
+	public String getCountySelectedValue() {
+
+		try {
+			String str = (String) JsfUtils.getHttpSession().getAttribute(
+					"COUNTY_SELECTED_VALUE");
+			CountyArea[] countyAreas;
+			countyAreas = getCountyList();
+			if (countyAreas != null && str != null) {
+				for (int i = 0; i < countyAreas.length; i++) {
+					if (str.compareTo(countyAreas[i].getName()) == 0) {
+						return str;
+					}
+				}
+				return countyAreas[0].getName();
+			}
+			return "";
+		} catch (Exception e) {
+			return "";
+		}
+	}
+
+	/**
+	 * put on session selected county value
+	 * 
+	 * @param value
+	 */
+	public void setCountySelectedValue(String value) {
+		try {
+			CountyArea[] countyAreas;
+			countyAreas = getCountyList();
+			if (countyAreas != null && value != null) {
+				for (int i = 0; i < countyAreas.length; i++) {
+					if (value.compareTo(countyAreas[i].getName()) == 0) {
+						JsfUtils.getHttpSession().setAttribute(
+								"COUNTY_SELECTED_VALUE", value);
+						return;
+					}
+				}
+
+			}
+		}
+
+		catch (Exception err) {
+
 		}
 	}
 }

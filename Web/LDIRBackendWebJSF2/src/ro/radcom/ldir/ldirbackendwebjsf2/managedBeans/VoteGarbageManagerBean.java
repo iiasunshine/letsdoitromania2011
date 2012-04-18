@@ -195,6 +195,7 @@ public class VoteGarbageManagerBean {
 		} else {
 			noFilter = false;
 			garbageList = wsi.getGarbageFromCounty(null, countyId, true, false);
+			setCountySelectedValue(countyId);
 		}
 
 	}
@@ -278,7 +279,11 @@ public class VoteGarbageManagerBean {
 	 * @return the countyId
 	 */
 	public String getCountyId() {
+		if(countyId!=null){
 		return countyId;
+		}else{
+			return getCountySelectedValue();
+		}
 	}
 
 	/**
@@ -369,5 +374,13 @@ public class VoteGarbageManagerBean {
 
 	public void setShowList(boolean showList) {
 		this.showList = showList;
+	}
+	
+	public String getCountySelectedValue(){
+		return wsi.getCountySelectedValue();
+	}
+	
+	public void setCountySelectedValue(String value){
+		wsi.setCountySelectedValue(value);
 	}
 }

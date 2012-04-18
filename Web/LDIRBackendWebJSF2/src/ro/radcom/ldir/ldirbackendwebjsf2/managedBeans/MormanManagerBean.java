@@ -1005,4 +1005,12 @@ public class MormanManagerBean {
 		}
 		return false;
 	}
+	
+	public String getCountySelectedValue(){
+		return wsi.getCountySelectedValue();
+	}
+	
+	public void setCountySelectedValue(String value){
+		wsi.setCountySelectedValue(value);
+	}
 }
