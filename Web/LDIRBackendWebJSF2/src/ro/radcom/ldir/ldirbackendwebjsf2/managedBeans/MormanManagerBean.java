@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 import javax.naming.NamingException;
 
@@ -180,7 +181,7 @@ public class MormanManagerBean {
 					/**
 					 * thumbnail
 					 */
-				
+
 					String thumb = wsi.compileImagePath(g, i, false);
 					thumbnails.add(thumb);
 					log4j.warn("[THUMBNAIL]----------->S-a adaugat in thumbnails ["
@@ -188,8 +189,8 @@ public class MormanManagerBean {
 					/**
 					 * imagine full
 					 */
-					
-					String poster =wsi.compileImagePath(g, i, true);
+
+					String poster = wsi.compileImagePath(g, i, true);
 					posters.add(poster);
 
 					log4j.warn("[FULL]---->posters add:" + poster);
@@ -258,7 +259,8 @@ public class MormanManagerBean {
 								 * thumbnail
 								 */
 
-								String thumb = wsi.compileImagePath(g, i, false);
+								String thumb = wsi
+										.compileImagePath(g, i, false);
 								thumbnails.add(thumb);
 								log4j.warn("[INIT/THUMBNAIL]----------->S-a adaugat in thumbnails ["
 										+ i + "] temFile " + thumb);
@@ -266,9 +268,9 @@ public class MormanManagerBean {
 								/**
 								 * imagine full
 								 */
-								
 
-								String poster = wsi.compileImagePath(g, i, true);
+								String poster = wsi
+										.compileImagePath(g, i, true);
 								posters.add(poster);
 
 								log4j.warn("[INIT/FULL]---->posters add:"
@@ -339,7 +341,12 @@ public class MormanManagerBean {
 	}
 
 	public String actionChangeStare() {
-		myGarbage.getGarbage().setStatus(Garbage.GarbageStatus.CLEANED);
+		if (isCleaned()) {
+			myGarbage.getGarbage().setStatus(Garbage.GarbageStatus.IDENTIFIED);
+		} else {
+			myGarbage.getGarbage().setStatus(Garbage.GarbageStatus.CLEANED);
+		}
+		
 		wsi.setStatusGarbage(userDetails, myGarbage.getGarbage());
 		/* cerere informatii user */
 		JsfUtils.getHttpSession().setAttribute("INFO_MESSAGE",
@@ -349,6 +356,17 @@ public class MormanManagerBean {
 		return NavigationValues.MORMAN_STARE_UPDATE_SUCCES;
 	}
 
+	public boolean isCleaned() {
+		if (myGarbage.getGarbage().getStatus() == Garbage.GarbageStatus.CLEANED) {
+			return true;
+		}
+		return false;
+	}
+
+	public void actionSelectGarbage(ActionEvent event) {
+		
+	}
+	
 	/**
 	 * @return
 	 */
@@ -1005,12 +1023,12 @@ public class MormanManagerBean {
 		}
 		return false;
 	}
-	
-	public String getCountySelectedValue(){
+
+	public String getCountySelectedValue() {
 		return wsi.getCountySelectedValue();
 	}
-	
-	public void setCountySelectedValue(String value){
+
+	public void setCountySelectedValue(String value) {
 		wsi.setCountySelectedValue(value);
 	}
 }
