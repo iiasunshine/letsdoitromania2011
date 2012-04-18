@@ -26,16 +26,21 @@ package ro.ldir.map;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.activation.MimetypesFileTypeMap;
 import javax.ejb.EJBException;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+
+import com.sun.jersey.api.Responses;
 
 import ro.ldir.beans.GarbageGroupManagerLocal;
 import ro.ldir.beans.GarbageManagerLocal;
@@ -48,6 +53,9 @@ import ro.ldir.map.formatter.ChartedAreasTeamKMLFormatter;
 import ro.ldir.map.formatter.GarbageGroupsKMLFormatter;
 import ro.ldir.map.formatter.GarbagesKMLFormatter;
 
+import com.sun.jersey.api.Responses;
+import com.sun.jersey.core.header.FormDataContentDisposition;
+import com.sun.jersey.multipart.FormDataParam;
 /**
  * The map web service for serving KML.
  */
@@ -209,6 +217,28 @@ public class MapWebService {
 		return garbages;
 	}
 
+	
+	@POST
+	@Produces({ "application/json", "application/xml" })
+	@Path("garbageList2")
+	public Response getGarbageList2(@QueryParam("topLeftX") double topLeftX,
+			@QueryParam("topLeftY") double topLeftY,
+			@QueryParam("bottomRightX") double bottomRightX,
+			@QueryParam("bottomRightY") double bottomRightY,
+			@QueryParam("maxResults") Integer maxResults) {
+		List<Garbage> garbages = garbageManager.getGarbages(topLeftX, topLeftY,
+				bottomRightX, bottomRightY);
+		
+		Response response = Response.ok().build();
+		
+			return Response
+					.status(Response.Status.OK)
+					.header("Access-Control-Allow-Origin", "*")
+					.header("Access-Control-Allow-Credentials", "true")
+					.entity(new GarbagesKMLFormatter(garbages, null).toString()).build();
+	}
+	
+	
 	@GET
 	@Produces({ "application/vnd.google-earth.kml+xml" })
 	@Path("garbages")
