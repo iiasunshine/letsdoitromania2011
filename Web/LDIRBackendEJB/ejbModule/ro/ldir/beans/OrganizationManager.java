@@ -88,6 +88,7 @@ public class OrganizationManager implements OrganizationManagerLocal {
 		organization.setManager(user);
 		em.merge(user);
 		em.persist(organization);
+		em.flush();
 	}
 
 	/*

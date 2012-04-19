@@ -82,7 +82,9 @@ public class TeamManager implements TeamManagerLocal {
 		SecurityHelper.checkTeamManager(userManager, team, ctx);
 		team.getEquipments().add(equipment);
 		equipment.setTeamOwner(team);
-		em.merge(team);
+		//em.merge(team);
+		em.persist(team);
+		em.flush();
 	}
 
 	/*
@@ -97,7 +99,9 @@ public class TeamManager implements TeamManagerLocal {
 		SecurityHelper.checkTeamManager(userManager, team, ctx);
 		team.getEquipments().add(equipment);
 		equipment.setTeamOwner(team);
-		em.merge(team);
+		//em.merge(team);
+		em.persist(team);
+		em.flush();
 	}
 
 	/*
@@ -112,7 +116,9 @@ public class TeamManager implements TeamManagerLocal {
 		SecurityHelper.checkTeamManager(userManager, team, ctx);
 		team.getEquipments().add(equipment);
 		equipment.setTeamOwner(team);
-		em.merge(team);
+		//em.merge(team);
+		em.persist(team);
+		em.flush();
 	}
 
 	/*
