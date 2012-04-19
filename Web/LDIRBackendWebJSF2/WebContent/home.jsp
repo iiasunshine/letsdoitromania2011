@@ -23,7 +23,7 @@
 			<div id="content">
 				<div id="leftColumn"></div>
 
-				<div id="rightColumn" style="height: 450px;">
+				<div id="rightColumn" style="height: 700px;">
 					<br /> <br />
 					<h:panelGroup rendered="#{sessionScope['USER_DETAILS'] eq null}">
 
