@@ -12,52 +12,6 @@
 <%@attribute name="role"%>
 
 
-
-<%-- Left Column (lista mormane adaugate pana acum) 
-		<div id="leftColumn">
-		<h:panelGroup
-				rendered="#{not (sessionScope['USER_DETAILS'] eq null)}">
-				<h:panelGroup
-					rendered="#{fn:length(mormanManager.myGarbageList) eq 0}">
-					<h1>
-						<h:outputText value="#{msg.chart_empty_list}" />
-					</h1>
-				</h:panelGroup>
-				<h:panelGroup
-					rendered="#{fn:length(mormanManager.myGarbageList) gt 0}">
-					<h1>
-						<h:outputText
-							value="#{msg.chart_list_title} (#{fn:length(mormanManager.myGarbageList)})" />
-					</h1>
-					<h:panelGroup
-						rendered="#{fn:length(mormanManager.myGarbageList) gt 0}"
-						style="#{fn:length(mormanManager.myGarbageList) gt 15 ? 'max-height: 610px; overflow: scroll; display: block;' : ''}">
-						<a4j:repeat value="#{mormanManager.myGarbageList}" var="myGarbage">
-							<div class="entryLeft">
-								<h:outputText value="Morman:" />
-								<strong><h:outputText
-										value="#{myGarbage.garbage.garbageId}" /></strong> <br />
-								<c:if
-									test="${(role eq 'ORGANIZER')or (role eq 'ORGANIZER_MULTI')}">
-									<h:outputLink
-										value="cartare-mormane-detalii.jsf?garbageId=#{myGarbage.garbage.garbageId}">
-										<h:outputText value="» vizualizeaza" />
-									</h:outputLink>
-								</c:if>
-								<c:if test="${not (role eq 'VOLUNTEER')}">
-									<h:outputLink
-										value="cartare-mormane-detalii.jsf?garbageId=#{myGarbage.garbage.garbageId}">
-										<h:outputText value="» vizualizeaza" />
-									</h:outputLink>
-								</c:if>
-							</div>
-						</a4j:repeat>
-					</h:panelGroup>
-				</h:panelGroup>
-			</h:panelGroup> 
-		</div>
---%>
-
 <%-- Right Column (formular adaugare/editare morman) --%>
 <div id="rightColumn">
 	<!-- mesaj eroare sau info -->
@@ -269,10 +223,18 @@
 		<div class="label">
 			<h:outputText value="#{msg.chart_add_bags_nr}" />
 		</div>
-		<h:selectOneMenu value="#{mormanManager.myGarbage.garbage.bagCount}"
+		<%--<h:selectOneMenu value="#{mormanManager.myGarbage.garbage.bagCount}"
 			styleClass="formDropdown" id="saci">
 			<f:selectItems value="#{mormanManager.saciNrItems}" />
-		</h:selectOneMenu>
+		</h:selectOneMenu>--%>
+		<h:inputText
+			value="#{mormanManager.myGarbage.garbage.bagCount}"
+			onkeypress="return numbersonly(this, event, false);"
+			styleClass="formTextfield" id="saci"
+			validatorMessage="#{msg.chart_err_bags}"
+			converterMessage="#{msg.chart_err_bags}">
+			<f:validateLongRange maximum="10000" minimum="1" />
+		</h:inputText>
 		<br />
 
 

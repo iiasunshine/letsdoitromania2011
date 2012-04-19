@@ -35,12 +35,16 @@ public class TeamManagerBean {
 	public final String PAGE_ORGANIZATION = "echipa-org-detalii";
 	public final String PAGE_EQIPMENTS = "echipa-equip-detalii";
 	private final String ORGANIZER_MULTI = "ORGANIZER_MULTI";
+
 	private boolean managerBool = false;
 	private boolean equipmentBool = false;
 	private boolean orgBool = false;
+
 	private Team userTeam;
+
 	private User userDetails = new User();
 	private User managerDetails;
+
 	private Organization organization = new Organization();
 	private Integer teamID;
 	private List<User> volunteerMembers;
@@ -58,42 +62,54 @@ public class TeamManagerBean {
 	private String toolsUnits;
 	private int teamId = 0;
 
-
 	public TeamManagerBean() throws NamingException {
 		wsi = new WSInterface();
 		userDetails = (User) JsfUtils.getHttpSession().getAttribute(
 				"USER_DETAILS");
-		log4j.info("user ->" + userDetails + ", team ->" + userTeam);
+
 		String sourcePage = FacesContext.getCurrentInstance().getViewRoot()
 				.getViewId();
+		log4j.info("[TEAM] - operation 1");
 		teamId = AppUtils.parseToInt(JsfUtils.getRequestParameter("teamId"));
 		role = userDetails.getRole();
+		log4j.info("[TEAM] - teamId="+teamId);
 		if (teamId > 0 && role.equals(ORGANIZER_MULTI)) {
 			try {
 
 				log4j.info("role ->" + role + ", team ->" + teamId);
 
-
-					Team tmpTeam = wsi.getTeam(userDetails, teamId);
-					if (tmpTeam == null) {
-						userTeam = userDetails.getMemberOf();
-							initTeam();
-					} else {
-						userTeam = tmpTeam;
-					}
-				
-			} catch (Exception ex) {
-				log4j.info("exception ->" + ex + ", team ->" + teamId);
-			}
-		} else {
+				Team tmpTeam = wsi.getTeam(userDetails, teamId);
+				if (tmpTeam == null) {
+					log4j.info("[TEAM] - operation 2");
 					userTeam = userDetails.getMemberOf();
 					initTeam();
+				} else {
+					log4j.info("[TEAM] - operation 3");
+					userTeam = tmpTeam;
+					// TODO nu ar trebui un initteam aici?
+					//initTeam();
+				}
+
+			} catch (Exception ex) {
+				log4j.info("[TEAM] exception ->" + ex + ", team ->" + teamId);
+			}
+		} else {
+			log4j.info("[TEAM] - operation 4");
+			userTeam = userDetails.getMemberOf();
+			initTeam();
+			teamId=userTeam.getTeamId();
 		}
+
+		log4j.info("[TEAM] - initliazed team with: user ->" + userDetails
+				+ ", team ->" + userTeam);
+
 		if (userTeam != null && userTeam.getEquipments() != null
 				&& userTeam.getEquipments().size() > 0) {
+			log4j.info("[TEAM] - operation 5");
 			equipmentBool = true;
 		}
 		if (sourcePage.indexOf(PAGE_EQIPMENTS) > -1) {
+			log4j.info("[TEAM] - init equipments from begining");
 			initEquipments();
 		}
 		// if(sourcePage.indexOf(PAGE_ORGANIZATION)> -1){
@@ -101,6 +117,7 @@ public class TeamManagerBean {
 		// }
 		initManager();
 		initTeamMembers();
+		log4j.info("[TEAM] - operation 6");
 
 	}
 
@@ -148,8 +165,7 @@ public class TeamManagerBean {
 	public void initManager() {
 
 		try {
-			managerDetails = 
-					userTeam.getTeamManager();
+			managerDetails = userTeam.getTeamManager();
 			log4j.debug("managerDetails->" + managerDetails);
 		} catch (Exception e) {
 			log4j.debug("error->" + e.getMessage());
@@ -162,8 +178,8 @@ public class TeamManagerBean {
 
 		try {
 			volunteerMembers = userTeam.getVolunteerMembers();
-				if (volunteerMembers != null && managerDetails != null)
-					volunteerMembers.remove(managerDetails);
+			if (volunteerMembers != null && managerDetails != null)
+				volunteerMembers.remove(managerDetails);
 		} catch (Exception e) {
 			log4j.debug("error->" + e.getMessage());
 		}
@@ -172,39 +188,44 @@ public class TeamManagerBean {
 
 	public void initOrganization(Integer teamId) {
 
-		int statusCode = 0;
 		if (teamId > 0) {
 			try {
+				log4j.info("[TEAM] - organizatile sunt aflate prin echipa!!!");
 				organizationMembers = userTeam.getOrganizationMembers();
 			} catch (Exception e) {
 				log4j.debug("error->" + e.getMessage());
 			}
 		} else {
+			log4j.info("[TEAM] - organizatile sunt aflate prin user!!!");
 			organizationMembers = userDetails.getOrganizations();
 		}
-		if (statusCode == 200) {
-			if (organizationMembers != null && organizationMembers.size() > 0) {
-				for (Organization org : organizationMembers) {
-					if (org.getOrganizationId() != 0
-							&& org.getOrganizationId() > 0) {
-						try {
-								Team team = org.getMemberOf();
-								if (team.getTeamId().equals(
-										userTeam.getTeamId())) {
-									organization = org;
-									orgBool = true;
-									break;
-								}
-							
-						} catch (Exception ex) {
+
+		if (organizationMembers != null && organizationMembers.size() > 0) {
+			log4j.info("[TEAM] - organizationMembers!=null si size>0 ");
+			for (Organization org : organizationMembers) {
+				if (org.getOrganizationId() != 0 && org.getOrganizationId() > 0) {
+					try {
+						log4j.info("[TEAM] orgid!=0 and orgID>0");
+						
+						Team team = org.getMemberOf();
+						if (team.getTeamId().equals(userTeam.getTeamId())) {
+							log4j.info("[TEAM] - s-a gasit organizatia corecta.");
+							organization = org;
 							orgBool = true;
-							organization = organizationMembers.get(0);
+							break;
 						}
+
+					} catch (Exception ex) {
+						orgBool = true;
+						organization = organizationMembers.get(0);
+						log4j.info("[TEAM] - in exceptie");
 					}
 				}
-
 			}
-
+			if(organization!=null){
+				log4j.info("[TEAM] - organization type is: "+organization.getType().toString());
+				tipOrganization=organization.getType().toString();
+			}
 		}
 
 	}
@@ -218,16 +239,16 @@ public class TeamManagerBean {
 		userTeam = new Team();
 		userTeam.setTeamId(teamID);
 		wsi.enrollVolunteerToTeam(userTeam, userDetails);
-			JsfUtils.addInfoBundleMessage("success_add_mem_message");
-			return NavigationValues.USER_ADD_TEAM_FAIL;
+		JsfUtils.addInfoBundleMessage("success_add_mem_message");
+		return NavigationValues.USER_ADD_TEAM_FAIL;
 	}
 
 	public String actionDelFromTeam() {
 
 		wsi.removeVolunteerFromTeam(userTeam, userDetails.getUserId());
-					JsfUtils.addInfoBundleMessage("success_del_mem_message");
-			return NavigationValues.USER_REM_TEAM_FAIL;
-		
+		JsfUtils.addInfoBundleMessage("success_del_mem_message");
+		return NavigationValues.USER_REM_TEAM_FAIL;
+
 	}
 
 	public String actionWithdrawFromTeam() {
@@ -237,13 +258,12 @@ public class TeamManagerBean {
 			JsfUtils.addWarnBundleMessage("err_user_rem");
 			return NavigationValues.USER_REM_TEAM_FAIL;
 		}
-		wsi.removeVolunteerFromTeam(userTeam, Integer.parseInt(memDeleteId));			
-			User tempUser = new User();
-			tempUser.setUserId(new Integer(memDeleteId));
-			volunteerMembers.remove(tempUser);
-			JsfUtils.addInfoBundleMessage("success_del_mem_message");
-			return NavigationValues.USER_REM_TEAM_FAIL;
-		
+		wsi.removeVolunteerFromTeam(userTeam, Integer.parseInt(memDeleteId));
+		User tempUser = new User();
+		tempUser.setUserId(new Integer(memDeleteId));
+		volunteerMembers.remove(tempUser);
+		JsfUtils.addInfoBundleMessage("success_del_mem_message");
+		return NavigationValues.USER_REM_TEAM_FAIL;
 
 	}
 
@@ -251,21 +271,8 @@ public class TeamManagerBean {
 
 		if (organization.getName() == null
 				|| organization.getName().length() == 0
-				|| organization.getAddress() == null
-				|| organization.getAddress().length() == 0
-				|| organization.getTown() == null
-				|| organization.getTown().length() == 0
-				|| organization.getCounty() == null
-				|| organization.getCounty().length() == 0
-				|| organization.getContactFirstname() == null
-				|| organization.getContactFirstname().length() == 0
-				|| organization.getContactLastname() == null
-				|| organization.getContactLastname().length() == 0
-				|| organization.getContactPhone() == null
-				|| organization.getContactPhone().length() == 0
-				|| organization.getContactEmail() == null
-				|| organization.getContactEmail().length() == 0
-				|| organization.getMembersCount() == null) {
+				|| organization.getMembersCount() == null
+				|| organization.getMembersCount() <= 0) {
 			JsfUtils.addWarnBundleMessage("err_mandatory_fields");
 			if (role.equals(ORGANIZER_MULTI))
 				return NavigationValues.TEAM_ORG_MULTI_FAIL;
@@ -291,12 +298,14 @@ public class TeamManagerBean {
 				organization.setType(OrganizationType.INSTITUTIE);
 			} else if (tipOrganization.equalsIgnoreCase("ALTELE")) {
 				organization.setType(OrganizationType.ALTELE);
+			} else if (tipOrganization.equalsIgnoreCase("FRIENDS")) {
+				organization.setType(OrganizationType.FRIENDS);
 			}
 		}
 		/* create organization */
 		wsi.addOrganization(userDetails, organization);
 
-		log4j.debug("--->  organization: " + organization.getOrganizationId());
+		log4j.info("--->  organization[1]: " + organization.getOrganizationId());
 
 		initOrganization(0);
 
@@ -310,14 +319,15 @@ public class TeamManagerBean {
 					} catch (InvalidTeamOperationException e) {
 						return NavigationValues.TEAM_ADD_ORG_FAIL;
 					}
-					log4j.debug("--->  organization: "
+					log4j.info("--->  organization:[2] "
 							+ organization.getOrganizationId());
 					orgBool = true;
 					break;
-				} 
+				}
 			}
 		}
 
+		JsfUtils.addInfoBundleMessage("success_add_group_message");
 		if (role.equals(ORGANIZER_MULTI))
 			return NavigationValues.TEAM_ORG_MULTI_FAIL;
 		else {
@@ -328,20 +338,6 @@ public class TeamManagerBean {
 	public String actionEditOrg() {
 		if (organization.getName() == null
 				|| organization.getName().length() == 0
-				|| organization.getAddress() == null
-				|| organization.getAddress().length() == 0
-				|| organization.getTown() == null
-				|| organization.getTown().length() == 0
-				|| organization.getCounty() == null
-				|| organization.getCounty().length() == 0
-				|| organization.getContactFirstname() == null
-				|| organization.getContactFirstname().length() == 0
-				|| organization.getContactLastname() == null
-				|| organization.getContactLastname().length() == 0
-				|| organization.getContactPhone() == null
-				|| organization.getContactPhone().length() == 0
-				|| organization.getContactEmail() == null
-				|| organization.getContactEmail().length() == 0
 				|| organization.getMembersCount() == null
 				|| organization.getMembersCount() <= 0) {
 			JsfUtils.addWarnBundleMessage("err_mandatory_fields");
@@ -375,6 +371,7 @@ public class TeamManagerBean {
 		log4j.info("--->  organization: " + tipOrganization + ","
 				+ organization.getType().toString());
 		wsi.updateOrganization(organization);
+		JsfUtils.addInfoBundleMessage("success_change_group_message");
 		if (role.equals(ORGANIZER_MULTI))
 			return NavigationValues.TEAM_ORG_MULTI_FAIL;
 		else {
@@ -395,12 +392,11 @@ public class TeamManagerBean {
 		}
 
 		wsi.deleteOrganization(Integer.parseInt(orgDeleteId));
-		
-		
-			orgBool = false;
-			organizationMembers = null;
-			JsfUtils.addInfoBundleMessage("success_del_mem_message");
-		
+
+		orgBool = false;
+		organizationMembers = null;
+		JsfUtils.addInfoBundleMessage("success_del_mem_message");
+
 		if (role.equals(ORGANIZER_MULTI))
 			return NavigationValues.TEAM_ORG_MULTI_FAIL;
 		else {
@@ -413,7 +409,12 @@ public class TeamManagerBean {
 		// reset equipments
 		if (equipments != null) {
 			for (Equipment equi : equipments) {
-				wsi.deleteEquipment(userTeam.getTeamId(), equi.getEquipmentId());
+				log4j.warn("[TEAM] - TeamID: " + userTeam.getTeamId()
+						+ " with name: " + userTeam.getTeamName()
+						+ "  Deleting equipment " + equi.getEquipmentId());
+				if (equi.getEquipmentId() != null)
+					wsi.deleteEquipment(userTeam.getTeamId(),
+							equi.getEquipmentId());
 			}
 		}
 		if (gpsUnits != null && gpsUnits > 0) {
@@ -431,7 +432,7 @@ public class TeamManagerBean {
 			CleaningEquipment gloves = new CleaningEquipment();
 			gloves.setCleaningType(CleaningType.GLOVES);
 			gloves.setCount(glovesUnits);
-			wsi.addCleaningEquiptment(userTeam.getTeamId(), gloves); 
+			wsi.addCleaningEquiptment(userTeam.getTeamId(), gloves);
 		}
 		if (shovelUnits != null && shovelUnits > 0) {
 			CleaningEquipment shovel = new CleaningEquipment();
@@ -453,7 +454,10 @@ public class TeamManagerBean {
 			wsi.addTransportEquipment(userTeam.getTeamId(), trans);
 		}
 
-		JsfUtils.addInfoBundleMessage("success_add_equi_message");
+		if (!equipmentBool)
+			JsfUtils.addInfoBundleMessage("success_add_equi_message");
+		else
+			JsfUtils.addInfoBundleMessage("success_change_equi_message");
 		if (role.equals(ORGANIZER_MULTI))
 			return NavigationValues.TEAM_ORG_MULTI_FAIL;
 		else {
@@ -461,8 +465,6 @@ public class TeamManagerBean {
 			return NavigationValues.TEAM_ADD_EQUI_FAIL;
 		}
 	}
-
-
 
 	public boolean managerTest() {
 
@@ -576,6 +578,7 @@ public class TeamManagerBean {
 	}
 
 	public String getTipOrganization() {
+
 		return tipOrganization;
 	}
 

@@ -24,7 +24,9 @@
 					<%-- right column --%>
 					<div id="rightColumn">
 							<div class="label1">
-                                <h1><h:outputText value="Adauga dotari la echipa"/></h1>
+                                <h1><h:outputText value="Adauga dotari echipei tale!" rendered="#{not teamBean.equipmentBool}"/>
+                                <h:outputText value="Modifica dotarile echipei tale!" rendered="#{teamBean.equipmentBool}"/>
+                                </h1>
                             </div>
                              <br/>
                              <br/>
@@ -68,17 +70,17 @@
                                     <f:selectItems value="#{teamBean.numbers}"/>
                                 </h:selectOneMenu>
                                 <br />
-                                <!-- UTILAJE -->
+                                <%--- UTILAJE 
                                 <div class="label"><h:outputText value="Utilaje de curatenie(basculanta, excavator sa)"/></div>
                                 <h:inputText value="#{teamBean.toolsUnits}" id="utilaje" styleClass="formTextfield"/>
-                              
+                              --%>
                                 <br />
                      			<br/>
                      			<br/>
                                 <!-- BUTOANE -->
                                 <div style="margin-left: 150px;">
                                     <h:commandButton action="#{teamBean.actionAddEquipment}"
-                                                     value="Inregistreaza dotarile"
+                                                     value="Salveaza"
                                                      id="confirma"
                                                      styleClass="formButton">
                                              <f:param name="teamId" value="#{orgBean.teamId}"/>

@@ -80,12 +80,13 @@
 								<li><a
 									href="${pageContext.servletContext.contextPath}/users/garbage-vote.jsf"><img
 										src="/icons/03-votare-zona.jpg" width="230" height="230" /></a></li>
-								<c:if test="${not (role eq 'VOLUNTEER')}">
+								<c:if test="${not (sessionScope['USER_DETAILS'].role eq 'VOLUNTEER')}">
 									<li><a href="${pageContext.servletContext.contextPath}/admin/admin-lista-mormane.jsf"><img src="/icons/05-listare-gunoi.jpg"
 											width="230" height="230" /></a></li>
 									<li><a href="${pageContext.servletContext.contextPath}/admin/admin-lista-voluntari.jsf"><img src="/icons/06-listare-useri.jpg"
 											width="230" height="230" /></a></li>
 								</c:if>
+								
 								<li>
 									<div class="button-profile">
 										<a href="${pageContext.servletContext.contextPath}/users/user-vizualizare.jsf"><img src="/icons/09-profil.jpg" width="230"
