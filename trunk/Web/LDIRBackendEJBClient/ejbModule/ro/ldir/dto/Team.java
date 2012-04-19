@@ -126,7 +126,7 @@ public class Team extends FieldAccessBean {
 	/**
 	 * @return the equipments
 	 */
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "teamOwner")
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "teamOwner", orphanRemoval = true)
 	public List<Equipment> getEquipments() {
 		return equipments;
 	}
