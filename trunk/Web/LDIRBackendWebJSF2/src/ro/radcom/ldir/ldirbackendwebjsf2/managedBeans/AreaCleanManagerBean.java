@@ -204,6 +204,7 @@ public class AreaCleanManagerBean {
         		if(teamId==team.getTeamId())
                 {
         			teamSelected=team;
+        			log4j.info("[AREACLEANMANAGER]: added on session TEAM_SELECTED:"+teamSelected.getTeamId());
         			JsfUtils.getHttpSession().removeAttribute("TEAM_SELECTED");
         			JsfUtils.getHttpSession().setAttribute("TEAM_SELECTED", teamSelected.getTeamId());
         			break;

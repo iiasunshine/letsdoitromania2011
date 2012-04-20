@@ -35,11 +35,11 @@
                          <h:panelGroup rendered="#{fn:length(orgBean.teamList) gt 0}">
                            <a4j:repeat value="#{orgBean.teamList}" var="team">
                           		 <div class="entryLeft">
-                          		 	    <h:outputText value="Echipa Nume = " />
+                          		 	    <h:outputText value="Echipa: " />
                                         <strong><h:outputText value="#{team.teamName}"/></strong>
                                         <br/>
                                         <h:outputLink value="echipa-org-multi-add.jsf?teamId=#{team.teamId}">
-                                            <h:outputText value="#{msg.details_view_link}" escape="false"/>
+                                            <h:outputText value="#{msg.team_view_more_info_label}" escape="false"/>
                                         </h:outputLink>
                           		 </div>
                            </a4j:repeat>
@@ -55,7 +55,7 @@
  				<h:panelGroup rendered="#{orgBean.teamId ne 0}">
  					<h:form>
  							<div class="label1">
-                                <h1><h:outputText value="Editeaza echipa #{orgBean.teamName}"/></h1>
+                                <h1><h:outputText value="Editeaza echipa cu numele: #{orgBean.teamName}"/></h1>
                             </div>
                             <br/>
  						<div class="label">
@@ -86,7 +86,7 @@
                                 <br/>
  								<div style="margin-left: 150px;">
                                     <h:commandButton action="echipa_mem_detalii.jsf"
-                                                     value="Cod acces echipa"
+                                                     value="Codul de acces al echipei"
                                                      id="confirma3"
                                                      styleClass="formButton">
                                          <f:param name="teamId" value="#{orgBean.teamId}"/>
@@ -107,7 +107,7 @@
                                  <h:panelGroup rendered="#{not orgBean.orgBool}">
                                 <div style="margin-left: 150px;">
                                     <h:commandButton action="echipa-org-detalii.jsf"
-                                                     value="Adauga organizatie in echipa"
+                                                     value="Adauga grup de voluntari in echipa"
                                                      id="confirma5"
                                                      styleClass="formButton">
                                        <f:param name="teamId" value="#{orgBean.teamId}"/>
@@ -118,7 +118,7 @@
                                 <h:panelGroup rendered="#{orgBean.orgBool}">
                                 <div style="margin-left: 150px;">
                                     <h:commandButton action="echipa-org-detalii.jsf"
-                                                     value="Modifica datele organizatiei"
+                                                     value="Modifica datele grupului din echipa"
                                                      id="confirma5a"
                                                      styleClass="formButton">
                					       <f:param name="teamId" value="#{orgBean.teamId}"/>
@@ -149,15 +149,11 @@
                                  <br/>
                                  </h:panelGroup>
                                 <div style="margin-left: 150px;">
-                                    <h:commandButton action="#{orgBean.actionTeam}"
-                                                     value="Aloca mormane pentru curatenie"
-                                                     id="confirma7"
-                                                     styleClass="formButton"
-                                                     disabled="true"
-                                                     >
-                                        <f:param name="teamId" value="#{orgBean.teamId}"/>
-                                   </h:commandButton>              
-                                <h:outputText value="Momentan inactiv"/>
+                                        <h:commandLink action="#{areaCleanManager.actionSelectTeam}" id="confirma7">
+                                            <f:param name="team" value="#{orgBean.teamId}"/>
+                                            <h:outputText value="Foloseste echipa pentru alocare gunoaie" escape="false"/>
+                                        </h:commandLink>          
+                               
                                 </div>
                                  <br/>
                                 <div style="margin-left: 150px;">

@@ -76,6 +76,12 @@ public class JsfUtils {
         return facesMsg;
     }
 
+    public static FacesMessage addWarnMessage(String msg) {
+        FacesMessage facesMsg = new FacesMessage(FacesMessage.SEVERITY_WARN, msg, msg);
+        FacesContext.getCurrentInstance().addMessage("warn", facesMsg);
+        return facesMsg;
+    }
+    
     public static FacesMessage addWarnBundleMessage(String uicomponent_id, String msg) {
         ResourceBundle bundle = FacesContext.getCurrentInstance().getApplication().getResourceBundle(FacesContext.getCurrentInstance(), "msg");
 

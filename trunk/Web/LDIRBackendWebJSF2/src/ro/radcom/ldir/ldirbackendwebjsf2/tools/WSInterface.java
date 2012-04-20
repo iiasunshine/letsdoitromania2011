@@ -346,13 +346,19 @@ public class WSInterface {
 	/**
 	 * @param selectedUser
 	 */
-	public void updateUser(User selectedUser) {
-		String password = selectedUser.getPasswd();
-		selectedUser.setPasswd(SHA256Encrypt.encrypt(password));
+	public void updateUser(User selectedUser, String nonHashPassword) {
+		//String password = selectedUser.getPasswd();
+		//selectedUser.setPasswd(SHA256Encrypt.encrypt(password));
 		userManager.updateUser(selectedUser.getUserId(), selectedUser);
-		selectedUser.setPasswd(password);
+		//selectedUser.setPasswd(password);
+		if(nonHashPassword!=null&&nonHashPassword.length()>0)
+			userManager.setPassword(selectedUser.getUserId(), nonHashPassword);
 	}
 
+	public User refreshUser(int userId, User user){
+		return userManager.getUser(userId);
+		
+	}
 	/**
 	 * @param teamTemp
 	 */
@@ -381,8 +387,12 @@ public class WSInterface {
 	 */
 	public void registerUser(User regiterUser)
 			throws InvalidUserOperationException {
-		regiterUser.setPasswd(SHA256Encrypt.encrypt(regiterUser.getPasswd()));
-		userManager.addUser(regiterUser);
+		//iianewvariantregiterUser.setPasswd(SHA256Encrypt.encrypt(regiterUser.getPasswd()));
+		String nonHashedPassword=regiterUser.getPasswd();
+		int userid=userManager.addUser(regiterUser);
+		
+		userManager.setPassword(userid, nonHashedPassword);
+		
 	}
 
 	public String getThumbnail(int garbageId, int imageId) {
@@ -462,5 +472,9 @@ public class WSInterface {
 		catch (Exception err) {
 
 		}
+	}
+	
+	public void updateRole(int userId, User.SecurityRole role){
+		userManager.setUserRole(userId, role);
 	}
 }

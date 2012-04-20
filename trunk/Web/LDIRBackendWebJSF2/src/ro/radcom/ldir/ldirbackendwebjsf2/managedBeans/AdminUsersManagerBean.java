@@ -31,88 +31,111 @@ import ro.radcom.ldir.ldirbackendwebjsf2.tools.JsfUtils;
 import ro.radcom.ldir.ldirbackendwebjsf2.tools.WSInterface;
 
 /**
- *
+ * 
  * @author dan.grigore
  */
 public class AdminUsersManagerBean {
 
-    private static final Logger log4j = Logger.getLogger(LoginBean.class.getCanonicalName());
-    private WSInterface wsi;
-    /* variabile afisare */
-    private User userDetails = new User();
-    private List<User> usersList;
-    private CountyArea[] countyAreas;
-    private String selectedCounty;
-    private int selectedBirthYear;
-    private String selectedRole;
-    private String selectedMinGarbages = "";
-    private String selectedMaxGarbages = "";
-    private boolean noFilter = true;
-    /* pentru editare detalii user */
-    private User selectedUser = new User();
-    private int day;
-    private int month;
-    private int year;
-    private boolean cartare = false;
-    private boolean curatenie = false;
+	private static final Logger log4j = Logger.getLogger(LoginBean.class
+			.getCanonicalName());
+	private WSInterface wsi;
+	/* variabile afisare */
+	private User userDetails = new User();
+	private List<User> usersList;
+	private CountyArea[] countyAreas;
+	private String selectedCounty;
+	private int selectedBirthYear;
+	private String selectedRole;
+	private String selectedMinGarbages = "";
+	private String selectedMaxGarbages = "";
+	private boolean noFilter = true;
+	/* pentru editare detalii user */
+	private User selectedUser = new User();
+	private int day;
+	private int month;
+	private int year;
+	private boolean cartare = false;
+	private boolean curatenie = false;
 
-    /** Creates a new instance of AdminUsersManagerBean 
-     * @throws NamingException */
-    public AdminUsersManagerBean() throws NamingException {
-    	wsi = new WSInterface();
-    	
-        /* obtinere detalii utilizator */
-        userDetails = (User) JsfUtils.getHttpSession().getAttribute("USER_DETAILS");
-        countyAreas = wsi.getCountyList();
-        
+	/**
+	 * Creates a new instance of AdminUsersManagerBean
+	 * 
+	 * @throws NamingException
+	 */
+	public AdminUsersManagerBean() throws NamingException {
+		wsi = new WSInterface();
 
-        /* obtinere lista utilizatori */
-        //initUsersList();
+		/* obtinere detalii utilizator */
+		userDetails = (User) JsfUtils.getHttpSession().getAttribute(
+				"USER_DETAILS");
+		countyAreas = wsi.getCountyList();
 
-    }
+		/* obtinere lista utilizatori */
+		// initUsersList();
 
-    public void actionEditUser() {
-        /**
-         * validare campuri
-         */
-        if (selectedUser.getFirstName() == null || selectedUser.getFirstName().trim().length() == 0
-                || selectedUser.getLastName() == null || selectedUser.getLastName().trim().length() == 0
-                || selectedUser.getEmail() == null || selectedUser.getEmail().trim().length() == 0
-                || selectedUser.getPasswd() == null || selectedUser.getPasswd().trim().length() == 0
-                || (!curatenie && !cartare)) {
-            JsfUtils.addWarnBundleMessage("err_mandatory_fields");
-            return;
-        } else {
-            selectedUser.setFirstName(selectedUser.getFirstName().trim());
-            selectedUser.setLastName(selectedUser.getLastName().trim());
-            selectedUser.setEmail(selectedUser.getEmail().trim());
-        }
+	}
 
-        /**
-         * procesare
-         */
-        List<User.Activity> activities = new ArrayList<User.Activity>();
-        if (cartare) {
-            activities.add(User.Activity.CHART);
-        }
-        if (curatenie) {
-            activities.add(User.Activity.CLEAN);
-        }
-        selectedUser.setActivities(activities);
+	public void actionEditUser() {
+		/**
+		 * validare campuri
+		 */
+		if (selectedUser.getFirstName() == null
+				|| selectedUser.getFirstName().trim().length() == 0
+				|| selectedUser.getLastName() == null
+				|| selectedUser.getLastName().trim().length() == 0
+				|| selectedUser.getEmail() == null
+				|| selectedUser.getEmail().trim().length() == 0) {
+			JsfUtils.addWarnBundleMessage("err_mandatory_fields");
+			return;
+		} else {
+			selectedUser.setFirstName(selectedUser.getFirstName().trim());
+			selectedUser.setLastName(selectedUser.getLastName().trim());
+			selectedUser.setEmail(selectedUser.getEmail().trim());
+		}
 
-        if (day > 0 && month > 0 && year > 0) {
-            Date birthDay = new Date(year - 1900, month - 1, day);
-            selectedUser.setBirthday(birthDay);
-            log4j.debug("---> BirthDay: " + new SimpleDateFormat("dd/MM/yyyy").format(birthDay));
-        }
+		/**
+		 * procesare
+		 */
+		List<User.Activity> activities = new ArrayList<User.Activity>();
+		if (cartare) {
+			activities.add(User.Activity.CHART);
+		}
+		if (curatenie) {
+			activities.add(User.Activity.CLEAN);
+		}
+		selectedUser.setActivities(activities);
 
-        /* update date utilizator */
-        wsi.updateUser(selectedUser);
-      
-        initUsersList();
-    }
+		if (day > 0 && month > 0 && year > 0) {
+			Date birthDay = new Date(year - 1900, month - 1, day);
+			selectedUser.setBirthday(birthDay);
+			log4j.debug("---> BirthDay: "
+					+ new SimpleDateFormat("dd/MM/yyyy").format(birthDay));
+		}
+		log4j.info("[ADMINUSERSMANAGER] password="+selectedUser.getPasswd());
 
-    
+		if (selectedRole != null) {
+			if(selectedRole.equals(User.SecurityRole.ADMIN.toString())){
+				//nu fac nimic. nu poti face admin
+			}
+			if(selectedRole.equals(User.SecurityRole.ORGANIZER.toString())){
+				wsi.updateRole(selectedUser.getUserId(), User.SecurityRole.ORGANIZER);
+			}
+			if(selectedRole.equals(User.SecurityRole.ORGANIZER_MULTI.toString())){
+				wsi.updateRole(selectedUser.getUserId(), User.SecurityRole.ORGANIZER_MULTI);
+			}
+			if(selectedRole.equals(User.SecurityRole.VOLUNTEER.toString())){
+				wsi.updateRole(selectedUser.getUserId(), User.SecurityRole.VOLUNTEER);
+			}
+			selectedUser.setRole(selectedRole);
+		}
+		/* update date utilizator */
+		log4j.info("[ADMINUSERSMANAGER] - selectedUser.FIRSTNAME:"
+				+ selectedUser.getFirstName());
+		wsi.updateUser(selectedUser, null);
+
+		initUsersList();
+	}
+
 	public void actionGenerateExcel() throws IOException {
 		ExcelFormatter fmt = new UserExcelFormatter(usersList);
 		byte report[] = new GenericXlsxFormatter(fmt).getBytes();
@@ -135,46 +158,46 @@ public class AdminUsersManagerBean {
 
 	}
 
-    public List<SelectItem> getCountyItems() {
-        List<SelectItem> items = new ArrayList<SelectItem>();
+	public List<SelectItem> getCountyItems() {
+		List<SelectItem> items = new ArrayList<SelectItem>();
 
-        try {
-            for (int i = 0; i < countyAreas.length; i++) {
-                CountyArea ca = countyAreas[i];
+		try {
+			for (int i = 0; i < countyAreas.length; i++) {
+				CountyArea ca = countyAreas[i];
 
-                items.add(new SelectItem(ca.getName(), ca.getName()));
-            }
-        } catch (Exception ex) {
-            log4j.fatal("eroare: " + ex);
-        }
+				items.add(new SelectItem(ca.getName(), ca.getName()));
+			}
+		} catch (Exception ex) {
+			log4j.fatal("eroare: " + ex);
+		}
 
-        return items;
-    }
+		return items;
+	}
 
-    public List<SelectItem> getYearsItems() {
-        List<SelectItem> years = new ArrayList<SelectItem>();
+	public List<SelectItem> getYearsItems() {
+		List<SelectItem> years = new ArrayList<SelectItem>();
 
-        for (int i = 1993; i >= 1930; i--) {
-            years.add(new SelectItem(i, "" + i));
-        }
+		for (int i = 1993; i >= 1930; i--) {
+			years.add(new SelectItem(i, "" + i));
+		}
 
-        return years;
-    }
+		return years;
+	}
 
-    public List<SelectItem> getDaysItems() {
-        List<SelectItem> days = new ArrayList<SelectItem>();
+	public List<SelectItem> getDaysItems() {
+		List<SelectItem> days = new ArrayList<SelectItem>();
 
-        for (int i = 1; i <= 31; i++) {
-            days.add(new SelectItem(i, "" + i));
-        }
+		for (int i = 1; i <= 31; i++) {
+			days.add(new SelectItem(i, "" + i));
+		}
 
-        return days;
-    }
+		return days;
+	}
 
 	public void actionSelectUser(ActionEvent event) {
 		int userId = AppUtils.parseToInt(JsfUtils.getHttpRequest()
 				.getParameter("userId"));
-		
+
 		for (User user : usersList) {
 			if (userId != user.getUserId().intValue())
 				continue;
@@ -183,6 +206,7 @@ public class AdminUsersManagerBean {
 			day = selectedUser.getBirthday().getDate();
 			month = 1 + selectedUser.getBirthday().getMonth();
 			year = 1900 + selectedUser.getBirthday().getYear();
+			selectedRole = selectedUser.getRole();
 			if (selectedUser.getActivities() != null) {
 				for (int j = 0; j < selectedUser.getActivities().size(); j++) {
 					if (selectedUser.getActivities().get(j)
@@ -199,9 +223,9 @@ public class AdminUsersManagerBean {
 		}
 	}
 
-    public void actionApplyFilter() {
-        initUsersList();
-    }
+	public void actionApplyFilter() {
+		initUsersList();
+	}
 
 	private void initUsersList() {
 		if ((selectedCounty == null || selectedCounty.length() == 0)
@@ -227,194 +251,205 @@ public class AdminUsersManagerBean {
 		//
 		setCountySelectedValue(selectedCounty);
 	}
-    
-	 public String encodeUrl(String arg){
-		  try{
-			  arg = URLEncoder.encode(arg,"UTF-8"); 
-			  log4j.debug("---> encode: " + arg);
-		  }catch(UnsupportedEncodingException uee){
-			  log4j.debug("---> encode error: " + uee.getMessage());  
-		  }
-		  return  arg;
-	 }
 
-    /**
-     * @return the userDetails
-     */
-    public User getUserDetails() {
-        return userDetails;
-    }
+	public String encodeUrl(String arg) {
+		try {
+			arg = URLEncoder.encode(arg, "UTF-8");
+			log4j.debug("---> encode: " + arg);
+		} catch (UnsupportedEncodingException uee) {
+			log4j.debug("---> encode error: " + uee.getMessage());
+		}
+		return arg;
+	}
 
-    /**
-     * @return the usersList
-     */
-    public List<User> getUsersList() {
-        return usersList;
-    }
+	/**
+	 * @return the userDetails
+	 */
+	public User getUserDetails() {
+		return userDetails;
+	}
 
-    /**
-     * @return the selectedCounty
-     */
-    public String getSelectedCounty() {
-		if(selectedCounty!=null){
-		return selectedCounty;
-		}else{
+	/**
+	 * @return the usersList
+	 */
+	public List<User> getUsersList() {
+		return usersList;
+	}
+
+	/**
+	 * @return the selectedCounty
+	 */
+	public String getSelectedCounty() {
+		if (selectedCounty != null) {
+			return selectedCounty;
+		} else {
 			return getCountySelectedValue();
 		}
-    }
+	}
 
-    /**
-     * @param selectedCounty the selectedCounty to set
-     */
-    public void setSelectedCounty(String selectedCounty) {
-        this.selectedCounty = selectedCounty;
-    }
+	/**
+	 * @param selectedCounty
+	 *            the selectedCounty to set
+	 */
+	public void setSelectedCounty(String selectedCounty) {
+		this.selectedCounty = selectedCounty;
+	}
 
-    /**
-     * @return the selectedBirthYear
-     */
-    public Integer getSelectedBirthYear() {
-        return selectedBirthYear;
-    }
+	/**
+	 * @return the selectedBirthYear
+	 */
+	public Integer getSelectedBirthYear() {
+		return selectedBirthYear;
+	}
 
-    /**
-     * @param selectedBirthYear the selectedBirthYear to set
-     */
-    public void setSelectedBirthYear(Integer selectedBirthYear) {
-        this.selectedBirthYear = selectedBirthYear != null ? selectedBirthYear.intValue() : 0;
-    }
+	/**
+	 * @param selectedBirthYear
+	 *            the selectedBirthYear to set
+	 */
+	public void setSelectedBirthYear(Integer selectedBirthYear) {
+		this.selectedBirthYear = selectedBirthYear != null ? selectedBirthYear
+				.intValue() : 0;
+	}
 
-    /**
-     * @return the selectedRole
-     */
-    public String getSelectedRole() {
-        return selectedRole;
-    }
+	/**
+	 * @return the selectedRole
+	 */
+	public String getSelectedRole() {
+		return selectedRole;
+	}
 
-    /**
-     * @param selectedRole the selectedRole to set
-     */
-    public void setSelectedRole(String selectedRole) {
-        this.selectedRole = selectedRole;
-    }
+	/**
+	 * @param selectedRole
+	 *            the selectedRole to set
+	 */
+	public void setSelectedRole(String selectedRole) {
+		this.selectedRole = selectedRole;
+	}
 
-    /**
-     * @return the selectedMinGarbages
-     */
-    public String getSelectedMinGarbages() {
-        return selectedMinGarbages;
-    }
+	/**
+	 * @return the selectedMinGarbages
+	 */
+	public String getSelectedMinGarbages() {
+		return selectedMinGarbages;
+	}
 
-    /**
-     * @param selectedMinGarbages the selectedMinGarbages to set
-     */
-    public void setSelectedMinGarbages(String selectedMinGarbages) {
-        this.selectedMinGarbages = selectedMinGarbages;
-    }
+	/**
+	 * @param selectedMinGarbages
+	 *            the selectedMinGarbages to set
+	 */
+	public void setSelectedMinGarbages(String selectedMinGarbages) {
+		this.selectedMinGarbages = selectedMinGarbages;
+	}
 
-    /**
-     * @return the selectedMaxGarbages
-     */
-    public String getSelectedMaxGarbages() {
-        return selectedMaxGarbages;
-    }
+	/**
+	 * @return the selectedMaxGarbages
+	 */
+	public String getSelectedMaxGarbages() {
+		return selectedMaxGarbages;
+	}
 
-    /**
-     * @param selectedMaxGarbages the selectedMaxGarbages to set
-     */
-    public void setSelectedMaxGarbages(String selectedMaxGarbages) {
-        this.selectedMaxGarbages = selectedMaxGarbages;
-    }
+	/**
+	 * @param selectedMaxGarbages
+	 *            the selectedMaxGarbages to set
+	 */
+	public void setSelectedMaxGarbages(String selectedMaxGarbages) {
+		this.selectedMaxGarbages = selectedMaxGarbages;
+	}
 
-    /**
-     * @return the noFilter
-     */
-    public boolean isNoFilter() {
-        return noFilter;
-    }
+	/**
+	 * @return the noFilter
+	 */
+	public boolean isNoFilter() {
+		return noFilter;
+	}
 
-    /**
-     * @return the selectedUser
-     */
-    public User getSelectedUser() {
-        return selectedUser;
-    }
+	/**
+	 * @return the selectedUser
+	 */
+	public User getSelectedUser() {
+		return selectedUser;
+	}
 
-    /**
-     * @return the day
-     */
-    public int getDay() {
-        return day;
-    }
+	/**
+	 * @return the day
+	 */
+	public int getDay() {
+		return day;
+	}
 
-    /**
-     * @param day the day to set
-     */
-    public void setDay(int day) {
-        this.day = day;
-    }
+	/**
+	 * @param day
+	 *            the day to set
+	 */
+	public void setDay(int day) {
+		this.day = day;
+	}
 
-    /**
-     * @return the month
-     */
-    public int getMonth() {
-        return month;
-    }
+	/**
+	 * @return the month
+	 */
+	public int getMonth() {
+		return month;
+	}
 
-    /**
-     * @param month the month to set
-     */
-    public void setMonth(int month) {
-        this.month = month;
-    }
+	/**
+	 * @param month
+	 *            the month to set
+	 */
+	public void setMonth(int month) {
+		this.month = month;
+	}
 
-    /**
-     * @return the year
-     */
-    public int getYear() {
-        return year;
-    }
+	/**
+	 * @return the year
+	 */
+	public int getYear() {
+		return year;
+	}
 
-    /**
-     * @param year the year to set
-     */
-    public void setYear(int year) {
-        this.year = year;
-    }
+	/**
+	 * @param year
+	 *            the year to set
+	 */
+	public void setYear(int year) {
+		this.year = year;
+	}
 
-    /**
-     * @return the cartare
-     */
-    public boolean isCartare() {
-        return cartare;
-    }
+	/**
+	 * @return the cartare
+	 */
+	public boolean isCartare() {
+		return cartare;
+	}
 
-    /**
-     * @param cartare the cartare to set
-     */
-    public void setCartare(boolean cartare) {
-        this.cartare = cartare;
-    }
+	/**
+	 * @param cartare
+	 *            the cartare to set
+	 */
+	public void setCartare(boolean cartare) {
+		this.cartare = cartare;
+	}
 
-    /**
-     * @return the curatenie
-     */
-    public boolean isCuratenie() {
-        return curatenie;
-    }
+	/**
+	 * @return the curatenie
+	 */
+	public boolean isCuratenie() {
+		return curatenie;
+	}
 
-    /**
-     * @param curatenie the curatenie to set
-     */
-    public void setCuratenie(boolean curatenie) {
-        this.curatenie = curatenie;
-    }
-    
-	public String getCountySelectedValue(){
+	/**
+	 * @param curatenie
+	 *            the curatenie to set
+	 */
+	public void setCuratenie(boolean curatenie) {
+		this.curatenie = curatenie;
+	}
+
+	public String getCountySelectedValue() {
 		return wsi.getCountySelectedValue();
 	}
-	
-	public void setCountySelectedValue(String value){
+
+	public void setCountySelectedValue(String value) {
 		wsi.setCountySelectedValue(value);
 	}
 }
