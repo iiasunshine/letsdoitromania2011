@@ -64,7 +64,7 @@ public interface UserManagerLocal {
 	 *             When the insertion cannot be completed successfully. This can
 	 *             be triggered for instance by a duplicate email address.
 	 */
-	public void addUser(User user) throws InvalidUserOperationException;
+	public int addUser(User user) throws InvalidUserOperationException;
 
 	/**
 	 * Returns the User object corresponding to a given user ID.
@@ -224,4 +224,14 @@ public interface UserManagerLocal {
 	 *            The new configuration for the user.
 	 */
 	public void updateUser(int userId, User user);
+	
+	
+	/**
+	 * Set new password for given user
+	 * @param userId
+	 * 			The user ID to update password
+	 * @param newPassword
+	 * 			The new password to be used
+	 */
+	public void setPassword(int userId, String newPassword);
 }

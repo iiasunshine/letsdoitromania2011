@@ -223,6 +223,7 @@ public class TeamManager implements TeamManagerLocal {
 		user.getManagedTeams().add(team);
 		em.merge(user);
 		em.persist(team);
+
 	}
 
 	/*

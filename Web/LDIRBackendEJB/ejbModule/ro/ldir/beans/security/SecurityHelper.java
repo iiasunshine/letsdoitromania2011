@@ -191,6 +191,10 @@ public class SecurityHelper {
 	public static void checkUser(User user, SessionContext ctx) {
 		if (ctx.isCallerInRole(User.SecurityRole.ADMIN.toString()))
 			return;
+		if (ctx.isCallerInRole(User.SecurityRole.ORGANIZER.toString()))
+			return;
+		if (ctx.isCallerInRole(User.SecurityRole.ORGANIZER_MULTI.toString()))
+			return;
 		if (user.getEmail().equals(ctx.getCallerPrincipal().getName()))
 			return;
 		throw new SecurityException("Access to this user is denied.");

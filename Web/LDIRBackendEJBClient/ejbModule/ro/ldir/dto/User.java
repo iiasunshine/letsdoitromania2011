@@ -455,6 +455,7 @@ public class User extends FieldAccessBean implements Serializable {
 	 * @param passwd
 	 *            the passwd to set
 	 */
+	@NonTransferableField
 	public void setPasswd(String passwd) {
 		this.passwd = passwd;
 	}
