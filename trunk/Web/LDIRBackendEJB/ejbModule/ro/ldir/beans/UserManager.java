@@ -125,7 +125,7 @@ public class UserManager implements UserManagerLocal {
 	 * @see ro.ldir.beans.UserManagerLocal#addUser(ro.ldir.dto.User)
 	 */
 	@Override
-	public void addUser(User user) throws InvalidUserOperationException {
+	public int addUser(User user) throws InvalidUserOperationException {
 		String email = new String(user.getEmail());
 
 		Query query = em
@@ -148,6 +148,7 @@ public class UserManager implements UserManagerLocal {
 
 		activateUser(user.getUserId(), user.getRegistrationToken());
 
+		return user.getUserId();
 		// userMailer.sendWelcomeMessage(user.getEmail());
 	}
 
@@ -489,6 +490,25 @@ public class UserManager implements UserManagerLocal {
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see ro.ldir.beans.UserManagerLocal#setPassword(int, java.lang.String)
+	 */
+	@Override
+	public void setPassword(int userId, String newPassword) {
+		User user = em.find(User.class, userId);
+		if (user != null) {
+			user.setPasswd(SHA256Encrypt.encrypt(newPassword));
+			log.fine("set password for " + user.getEmail());
+			em.merge(user);
+		} else {
+			throw new SecurityException(
+					"The user cannot change password for id:" + user);
+		}
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see ro.ldir.beans.UserManagerLocal#setUserActivities(int,
 	 * java.util.List)
 	 */
@@ -507,7 +527,7 @@ public class UserManager implements UserManagerLocal {
 	 * ro.ldir.dto.User.SecurityRole)
 	 */
 	@Override
-	@RolesAllowed("ADMIN")
+	@RolesAllowed({ "ADMIN", "ORGANIZER", "ORGANIZER_MULTI" })
 	public void setUserRole(int userId, User.SecurityRole role) {
 		User existing = em.find(User.class, userId);
 		existing.setRole(role.toString());
