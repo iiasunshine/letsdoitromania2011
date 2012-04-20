@@ -12,10 +12,10 @@
             <center>
                 <%-- page Top --%>
                 <h:panelGroup rendered="#{sessionScope['USER_DETAILS'] eq null}">
-                    <custom:page_top selected="view"/>
+                    <custom:page_top selected="mapview"/>
                 </h:panelGroup>
                 <h:panelGroup rendered="#{not (sessionScope['USER_DETAILS'] eq null)}">
-                    <custom:page_top_login selected="view"/>
+                    <custom:page_top_login selected="mapview"/>
                 </h:panelGroup>
 
                 <%-- page Content --%>
@@ -23,7 +23,7 @@
                     <div id="content">
                         <%-- left column (empty) --%>
                         <div id="leftColumn">
-                           <custom:layers_options/> 
+                           <custom:layers_options selected="mormaneDeVotat"/> 
 
                         </div>
                         <%-- righ column (harta cu gunoaie) --%>

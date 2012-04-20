@@ -92,6 +92,18 @@ var layersOptions = {
 		judet:""
 }
 
+function initLayersOptions(){
+	
+	layersOptions.mormaneToate=getElementByValue("mormaneToate").checked;
+	layersOptions.mormane2010=getElementByValue("mormane2010").checked;
+	layersOptions.mormane2011=getElementByValue("mormane2011").checked;
+	layersOptions.mormane2012=getElementByValue("mormane2012").checked;
+	layersOptions.mormaneCuratate=getElementByValue("mormaneCuratate").checked;
+	layersOptions.mormaneNecuratate=getElementByValue("mormaneNecuratate").checked;
+	layersOptions.mormaneDeVotat=getElementByValue("mormaneDeVotat").checked;
+	
+}
+
 function getElementByValue(value){
 	var btns = document.getElementsByTagName('input');
 	for(i=0;i<btns.length;i++)
@@ -99,9 +111,6 @@ function getElementByValue(value){
 	    if(btns[i].value==value)
 	       return btns[i]
 	}
-
-
-	
 }
 
 function layersoptions(element){
@@ -191,10 +200,11 @@ if(dontAjax==true)return;
 
 xhr = new XMLHttpRequest();
 xhr.onreadystatechange = processGetMormane;
-if(soloMormanId!=-1)
-	xhr.open("GET", url, true,userEmail,userPasswd);
-else 
-	xhr.open("GET", url, true);
+//if(soloMormanId!=-1)
+//	xhr.open("GET", url, true,userEmail,userPasswd);
+//else 
+//	xhr.open("GET", url, true);
+xhr.open("POST",url,true)
 xhr.setRequestHeader('Accept', 'application/json');
 xhr.send();
 if(document.getElementById("ajaxloader")!=null)
@@ -202,11 +212,14 @@ if(document.getElementById("ajaxloader")!=null)
 }
 
 function processGetMormane(){
+//	alert(xhr.readyState)
+//	alert(xhr.responseText)
 if (xhr.readyState == 4) {
 		//oldxml=xmlfrombackend;
 	    //xmlfrombackend = xhr.responseText;
 		
-		response=JSON.parse(xhr.responseText);
+		if(xhr.responseText!=null)
+		{response=JSON.parse(xhr.responseText);
 		if(response!=null)
 			newmormane=response["garbage"];
 		if(response!=null&&newmormane==undefined)
@@ -214,7 +227,7 @@ if (xhr.readyState == 4) {
 		if(document.getElementById("ajaxloader")!=null)
 			document.getElementById("ajaxloader").style.display="none";
 		renderData();
-		
+		}
 	}
 }
 
@@ -496,7 +509,7 @@ function onboundschange(){
 		if(soloMormanId!=-1)
 			url += '/LDIRBackend/ws/garbage/'+soloMormanId;
 		else 
-			url += '/LDIRBackend/map/ws/garbageList/';
+			url += '/LDIRBackend/map/ws/garbageList2/';
 		url += '?topLeftX='+Number(topLeftX).toString()
 		  
 		url += '&topLeftY='+topLeftY
@@ -504,6 +517,7 @@ function onboundschange(){
 		url += '&bottomRightY='+bottomRightY;
 	
 	//alert(soloMormanId);
+		
 	getMormane(url);
 	
 	}
@@ -533,6 +547,7 @@ function load() {
 			onboundschange();
 		});;
 		
+		initLayersOptions();	
 	};	
 	
 function somefunction(mormanId){

@@ -45,7 +45,7 @@
 						<button type="reset" class="formButtonLeft">Anuleaza</button>
 					</a4j:form>
 					
-					 <custom:layers_options/> 
+					 <custom:layers_options selected="mormaneDeVotat"/> 
 				</div>
 
 				<%-- Right Column (harta) --%>
