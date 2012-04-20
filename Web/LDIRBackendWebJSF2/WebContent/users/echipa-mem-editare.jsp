@@ -28,6 +28,11 @@
 					<h:messages warnClass="registerMessageError"
 						infoClass="registerMessageOk" />
 					<br /> <br />
+					<h1>
+						<h:outputFormat
+							value="Echipa nu are nici-un membru!" rendered="#{((fn:length(teamBean.volunteerMembers)) eq 0) and ((fn:length(teamBean.organizationMembers)) eq 0)}">
+						</h:outputFormat>
+					</h1>
 					<a4j:outputPanel id="lista-utilizatori"
 						rendered="#{(fn:length(teamBean.volunteerMembers))gt 0}">
 
@@ -92,7 +97,8 @@
 						</h:form>
 
 					</a4j:outputPanel>
-					<a4j:outputPanel id="lista-organizatii" rendered="#{(fn:length(teamBean.organizationMembers)) gt 0}">
+					<a4j:outputPanel id="lista-organizatii"
+						rendered="#{(fn:length(teamBean.organizationMembers)) gt 0}">
 
 						<h1>
 							<h:outputFormat value="Lista grupurilor ({0})">

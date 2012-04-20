@@ -64,7 +64,7 @@
 						</h3>
 					</h:panelGroup>
 				</div>
-				<div id="rightColumn" style="height: 200px;">
+				<div id="rightColumn" style="height: 400px;">
 					<h:panelGroup rendered="#{(sessionScope['USER_DETAILS'] eq null)}">
 						<h:messages warnClass="registerMessageError"
 							infoClass="registerMessageOk" />

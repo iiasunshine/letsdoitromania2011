@@ -81,8 +81,7 @@ public class UserManagerBean {
          * validare campuri
          */
         if (userDetails.getFirstName() == null || userDetails.getFirstName().trim().length() == 0
-                || userDetails.getLastName() == null || userDetails.getLastName().trim().length() == 0
-                || (!curatenie && !cartare)) {
+                || userDetails.getLastName() == null || userDetails.getLastName().trim().length() == 0) {
             JsfUtils.addWarnBundleMessage("err_mandatory_fields");
             return NavigationValues.USER_EDIT_FAIL;
         }
@@ -114,7 +113,7 @@ public class UserManagerBean {
     	//userDetails.setAcceptsMoreInfo(acceptReceiveNotifications);
     	userDetails.setProfileView(profileView);
     	
-    	wsi.updateUser(userDetails);
+    	wsi.updateUser(userDetails, null);
     	JsfUtils.addInfoBundleMessage("success_edit_message");
         return NavigationValues.USER_EDIT_SUCCESS;
 
@@ -137,7 +136,7 @@ public class UserManagerBean {
 		}
 		userDetails.setPasswd(password);
 		
-		wsi.updateUser(userDetails);
+		wsi.updateUser(userDetails, password);
 		JsfUtils.addInfoBundleMessage("success_edit_message");
         return NavigationValues.USER_EDIT_PASS_FAIL;
         

@@ -188,7 +188,7 @@ public class TeamManagerBean {
 
 	public void initOrganization(Integer teamId) {
 
-		if (teamId > 0) {
+		if (teamId!=null&&teamId > 0) {
 			try {
 				log4j.info("[TEAM] - organizatile sunt aflate prin echipa!!!");
 				organizationMembers = userTeam.getOrganizationMembers();

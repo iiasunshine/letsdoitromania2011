@@ -88,12 +88,13 @@
             <br />
             <!-- ROL -->
             <div class="label"><h:outputText value="ROL: "/><span class="important">*</span></div>
-            <h:selectOneMenu value="#{adminUsersManagerBean.selectedUser.role}" id="rol" styleClass="formDropdown">
+            <h:selectOneMenu value="#{adminUsersManagerBean.selectedRole}" id="rol" styleClass="formDropdown">
                 <f:selectItem itemLabel="ADMIN" itemValue="ADMIN"/>
                 <f:selectItem itemLabel="VOLUNTEER" itemValue="VOLUNTEER"/>
                 <f:selectItem itemLabel="ORGANIZER" itemValue="ORGANIZER"/>
                 <f:selectItem itemLabel="ORGANIZER_MULTI" itemValue="ORGANIZER_MULTI"/>
             </h:selectOneMenu>
+            
             <!-- Accepta si alte informari -->
             <!--h:selectBooleanCheckbox value="{adminUsersManagerBean.selectedUseracceptsMoreInfo}" id="acceptReceiveNotifications"/>
             <label class="formCheckbox">
