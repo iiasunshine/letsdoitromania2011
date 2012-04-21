@@ -23,7 +23,7 @@ import ro.ldir.exceptions.InvalidTeamOperationException;
  */
 @Stateless
 @LocalBean
-@DeclareRoles("ADMIN")
+@DeclareRoles({ "ADMIN", "ORGANIZER", "ORGANIZER_MULTI" })
 public class OrganizationManager implements OrganizationManagerLocal {
 	@Resource
 	private SessionContext ctx;
@@ -131,7 +131,7 @@ public class OrganizationManager implements OrganizationManagerLocal {
 	}
 
 	/*
-	 * (non-Javadoc)
+	 * (non-Javadoc)checkAccessToUser
 	 * 
 	 * @see ro.ldir.beans.OrganizationManagerLocal#updateOrganization(int,
 	 * ro.ldir.dto.Organization)
