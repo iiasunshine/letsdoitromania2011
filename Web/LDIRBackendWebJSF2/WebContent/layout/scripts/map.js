@@ -200,11 +200,11 @@ if(dontAjax==true)return;
 
 xhr = new XMLHttpRequest();
 xhr.onreadystatechange = processGetMormane;
-//if(soloMormanId!=-1)
-//	xhr.open("GET", url, true,userEmail,userPasswd);
-//else 
-//	xhr.open("GET", url, true);
-xhr.open("POST",url,true)
+if(soloMormanId!=-1)
+	xhr.open("GET", url, true,userEmail,userPasswd);
+else 
+	xhr.open("GET", url, true);
+//xhr.open("POST",url,true)
 xhr.setRequestHeader('Accept', 'application/json');
 xhr.send();
 if(document.getElementById("ajaxloader")!=null)
@@ -509,7 +509,7 @@ function onboundschange(){
 		if(soloMormanId!=-1)
 			url += '/LDIRBackend/ws/garbage/'+soloMormanId;
 		else 
-			url += '/LDIRBackend/map/ws/garbageList2/';
+			url += '/LDIRBackend/map/ws/garbageList/';
 		url += '?topLeftX='+Number(topLeftX).toString()
 		  
 		url += '&topLeftY='+topLeftY
