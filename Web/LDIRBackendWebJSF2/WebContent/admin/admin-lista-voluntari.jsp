@@ -106,13 +106,18 @@
 									rendered="#{fn:length(adminUsersManagerBean.usersList) gt 0}"
 									styleClass="formButtonLeft" value="Export lista utilizatori" />
 								<a4j:commandButton
-									actionListener="#{adminUsersManagerBean.actionGenerateTeamExcel}"
-									rendered="#{fn:length(adminUsersManagerBean.usersList) gt 0}"
-									styleClass="formButtonLeft" value="Export lista echipe" />
+									actionListener="#{adminUsersManagerBean.actionGenerateTeamExcel}"									
+									styleClass="formButtonLeft" value="Export lista echipe" 
+									rendered="false"
+									/>
 							</h1>
 							<h:outputText
 								value="Exporturile Excel contin mai multe campuri decat sunt afisate pe pagina web."
 								rendered="#{fn:length(adminUsersManagerBean.usersList) gt 0}" />
+							<br/>
+							<h:outputText
+								value="Exportul Excel contine si echipele."
+								rendered="#{fn:length(adminUsersManagerBean.usersList) gt 0}" />								
 							<br />
 							<br />
 
