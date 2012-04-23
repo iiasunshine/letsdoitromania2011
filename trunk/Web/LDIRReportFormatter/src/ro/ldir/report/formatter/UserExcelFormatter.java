@@ -24,6 +24,7 @@
 package ro.ldir.report.formatter;
 
 import java.util.List;
+import java.util.*;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -32,20 +33,29 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
+
 import ro.ldir.dto.User;
+import ro.ldir.dto.Team;
+import ro.ldir.report.formatter.TeamExcelFormatter;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
 
 /** Converts a list of users to an Excel workbook. */
 public class UserExcelFormatter implements ExcelFormatter {
 	private List<User> users;
+	private List<Team> teams;
 
 	public UserExcelFormatter(List<User> users) {
 		this.users = users;
 	}
 
+	
 	public final Workbook convert(Workbook wb) {
 		Sheet sheet = wb.createSheet("Utilizatori");
 		CreationHelper createHelper = wb.getCreationHelper();
-
+		teams = new ArrayList<Team>();
+		
 		Row row = sheet.createRow(0);
 		row.createCell(0).setCellValue("Prenume");
 		row.createCell(1).setCellValue("Nume");
@@ -58,7 +68,7 @@ public class UserExcelFormatter implements ExcelFormatter {
 		row.createCell(8).setCellValue("ID");
 		row.createCell(9).setCellValue("Nr. mormane");
 		row.createCell(10).setCellValue("Nr. zone");
-		row.createCell(11).setCellValue("Activitate");
+		row.createCell(11).setCellValue("Activitate");		
 
 		for (int i = 0; i < users.size(); i++) {
 			row = sheet.createRow(i + 1);
@@ -104,10 +114,18 @@ public class UserExcelFormatter implements ExcelFormatter {
 				row.createCell(11).setCellValue(
 						ab.substring(0, ab.length() - 2));
 			}
-
+			List<Team> managedTeams = user.getManagedTeams();
+			if (managedTeams != null && managedTeams.size() > 0) {
+				for (Team team : managedTeams)
+					teams.add(team);
+			}
 			        
 			
 		}
+		
+		TeamExcelFormatter teamWb = new TeamExcelFormatter(teams);
+		wb = teamWb.convert(wb);
+				
 		return wb;
 	}
 }
