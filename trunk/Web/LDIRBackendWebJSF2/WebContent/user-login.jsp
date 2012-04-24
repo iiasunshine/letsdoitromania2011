@@ -53,7 +53,7 @@
 						<br />
 						<br />
 						<h3>
-						<%--	<h:outputLink value="user-register.jsf">
+							<%--	<h:outputLink value="user-register.jsf">
 								<h:outputText value="#{msg.meniu_inscriere_voluntar}"
 									escape="false" />
 							</h:outputLink>--%>
@@ -64,7 +64,7 @@
 						</h3>
 					</h:panelGroup>
 				</div>
-				<div id="rightColumn" style="height: 400px;">
+				<div id="rightColumn" style="height: 600px;">
 					<h:panelGroup rendered="#{(sessionScope['USER_DETAILS'] eq null)}">
 						<h:messages warnClass="registerMessageError"
 							infoClass="registerMessageOk" />
@@ -75,23 +75,25 @@
 							escape="false" />
 						<br /> <br />
 					</h2>
-						<div id="homepage-grid">
-							<ul>
-								<li><a
-									href="${pageContext.servletContext.contextPath}/user-register.jsf"><img
-										src="/icons/01-inscriere-utilizator.jpg" width="230"
-										height="230" /></a></li>
+					<div id="homepage-grid">
+						<ul>
+							<li><a
+								href="${pageContext.servletContext.contextPath}/user-register.jsf"><img
+									src="/icons/01-inscriere-utilizator.jpg" width="230"
+									height="230" /></a></li>
 
-								<li><a
-									href="${pageContext.servletContext.contextPath}/users/free-cartare-mormane-editare.jsf"><img
-										src="/icons/02-adaugare-gunoi.jpg" width="230" height="230" /></a>
-								</li>
-								<li><a
-									href="${pageContext.servletContext.contextPath}/free-garbage-vote.jsf"><img
-										src="/icons/03-votare-zona.jpg" width="230" height="230" /></a></li>
-
-							</ul>
-						</div>
+							<li><a
+								href="${pageContext.servletContext.contextPath}/users/free-cartare-mormane-editare.jsf"><img
+									src="/icons/02-adaugare-gunoi.jpg" width="230" height="230" /></a>
+							</li>
+							<li><a
+								href="${pageContext.servletContext.contextPath}/free-garbage-vote.jsf"><img
+									src="/icons/03-votare-zona.jpg" width="230" height="230" /></a></li>
+							<li><a href="http://www.letsdoitromania.ro/feedback-proiect"><img
+									src="/icons/11-feedback.jpg" width="230" height="230" /></a></li>
+							<li>
+						</ul>
+					</div>
 				</div>
 			</div>
 		</div>
