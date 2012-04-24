@@ -19,7 +19,8 @@
                     <div id="content">
                         <%-- Left Column --%>
                         <div id="leftColumn" style="">
-                            <h3><h:outputText rendered="false" value="#{msg.map_select_county}"/></h3>
+
+                          <%--  <h3><h:outputText rendered="false" value="#{msg.map_select_county}"/></h3>
                             <h:form>
                             <h:selectOneMenu  rendered="false" value="#{areaCleanManager.country}" styleClass="formDropdownLeft">
                                 <f:selectItem itemLabel="Selecteaza Judet" itemValue=""/>
@@ -138,7 +139,9 @@
 
 
                             </h:selectOneMenu>
-                            <br/><br/>
+                            <br/>
+                           
+                            
                              <!-- BUTOANE -->
                                 <div>
                                     <h:commandButton action="#{areaCleanManager.garbageFromCountry}"
@@ -147,9 +150,9 @@
                                                      rendered="false"
                                                      styleClass="formButton"/>
                                 </div>
-                            
-							</h:form>
-							<br/>
+                             --%>
+	
+							<custom:layers_options/> <br/>
 						  <br/>
 
  						 <h1>
@@ -165,14 +168,15 @@
                           		 	   <br/>
                           		 	   <h3><h:outputText value="Echipa: #{team.teamName}" /></h3>
 								<h:form>
-                                        <h:commandLink action="#{areaCleanManager.actionSelectTeam}">
+                                        <h:commandLink action="#{areaCleanManager.actionSelectTeam}" rendered="#{not(areaCleanManager.teamSelected.teamId eq team.teamId)}">
                                             <f:param name="team" value="#{team.teamId}"/>
                                             <h:outputText value="Aloca pt aceasta echipa" escape="false"/>
                                         </h:commandLink>
                                 </h:form>	 	   
                             <span class=important><h:outputText value="<strong>Echipa selectata:</strong><br/>" escape="false" rendered="#{areaCleanManager.teamSelected.teamId eq team.teamId}"/></span>
- 							<h:outputText value="Membrii: #{team.countMembers()}" escape="false"/></span><br/>
-							<h:outputText value="A aloca: #{team.getBagsEnrolled()} / #{team.getCleaningPower()*team.countMembers()} saci" escape="false"/></span><br/>
+ 							<h:outputText value="Nr membrii: #{team.countMembers()}" escape="false"/></span><br/>
+							<h:outputText value="A alocat: #{team.getBagsEnrolled()}  saci" escape="false"/><br/>
+							<h:outputText value="Numar maxim: #{team.getCleaningPower()*team.countMembers()} saci" escape="false"/><br/>
  							<h:panelGroup rendered="#{fn:length(team.garbages) eq 0}">
                                 <h:outputText value="#{msg.clean_empty_list}"/>
                             </h:panelGroup>
@@ -198,13 +202,14 @@
                          
                          <br/>
                              
-                           <custom:layers_options/>  
+                            
                         </div>
 
                         <%-- Right Column (harta) --%>
                         <div id="rightColumn">
                             <!-- mesaj eroare sau info -->
                             <h:messages warnClass="registerMessageError" errorClass="registerMessageError" infoClass="registerMessageOk"/>
+                            <br/>
 								<div id="map" style="width: 100%; height: 600px"></div>
                              
                         </div>

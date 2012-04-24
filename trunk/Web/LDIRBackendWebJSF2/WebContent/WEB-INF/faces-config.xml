@@ -90,9 +90,5 @@
 		<managed-bean-scope>view</managed-bean-scope>
 
 	</managed-bean>
-	<managed-bean>
-		<managed-bean-name>sessionsVariables</managed-bean-name>
-		<managed-bean-class>ro.radcom.ldir.ldirbackendwebjsf2.managedBeans.SessionsVariables</managed-bean-class>
-		<managed-bean-scope>session</managed-bean-scope>
-	</managed-bean>
+
 </faces-config>

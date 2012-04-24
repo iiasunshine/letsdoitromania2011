@@ -81,6 +81,18 @@
 			<from-outcome>morman_delete_fail</from-outcome>
 			<to-view-id>/users/cartare-mormane-detalii.jsp</to-view-id>
 		</navigation-case>
+
+		<navigation-case>
+			<from-outcome>area_assign_success</from-outcome>
+			<to-view-id>/users/cartare-zone-lista.jsp</to-view-id>
+			<redirect />
+		</navigation-case>
+
+		<navigation-case>
+			<from-outcome>area_assign_fail</from-outcome>
+			<to-view-id>/users/cartare-zone-vizualizare.jsp</to-view-id>
+		</navigation-case>
+
 	</navigation-rule>
 
 	<navigation-rule>
@@ -95,7 +107,6 @@
 			<to-view-id>/users/cartare-zone-vizualizare.jsp</to-view-id>
 		</navigation-case>
 	</navigation-rule>
-
 	<navigation-rule>
 		<from-view-id>/users/curatenie-morman-detalii.jsp</from-view-id>
 		<navigation-case>
@@ -108,7 +119,6 @@
 			<to-view-id>/users/curatenie-vizualizare.jsp</to-view-id>
 		</navigation-case>
 	</navigation-rule>
-
 	<navigation-rule>
 		<from-view-id>/users/curatenie-morman-detalii.jsp</from-view-id>
 		<navigation-case>
@@ -121,7 +131,6 @@
 			<to-view-id>/users/curatenie-vizualizare.jsp</to-view-id>
 		</navigation-case>
 	</navigation-rule>
-
 	<navigation-rule>
 		<from-view-id>/users/curatenie-morman-detalii.jsp</from-view-id>
 		<navigation-case>
@@ -170,7 +179,7 @@
 		</navigation-case>
 	</navigation-rule>
 
-	
+
 	<navigation-rule>
 		<from-view-id>/new-password.jsp</from-view-id>
 		<navigation-case>

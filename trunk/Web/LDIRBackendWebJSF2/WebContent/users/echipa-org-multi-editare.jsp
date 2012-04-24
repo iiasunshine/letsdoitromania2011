@@ -21,6 +21,8 @@
 			<div id="content">
 				<%-- left column --%>
 				<div id="leftColumn">
+				<custom:page_left_links role="${userManager.userDetails.role}" />
+					<%--
 					<h3>
 						<a
 							href="${pageContext.servletContext.contextPath}/users/echipa-org-multi-editare.jsf">
@@ -47,7 +49,7 @@
 						</a4j:repeat>
 
 					</h:panelGroup>
-
+ --%>
 				</div>
 				<%-- right column --%>
 				<div id="rightColumn">

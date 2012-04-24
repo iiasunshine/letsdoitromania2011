@@ -108,8 +108,10 @@ public class MormanManagerBean {
 		if (JsfUtils.getHttpSession().getAttribute("TEAM_SELECTED") != null)
 			teamSelectedId = (Integer) JsfUtils.getHttpSession().getAttribute(
 					"TEAM_SELECTED");
-		if (teamSelectedId != -1)
+		if (teamSelectedId != -1) {
+			log4j.info("Before reload team");
 			reloadTeam(teamSelectedId);
+		}
 
 		/* initializare detalii utilizator si lista mormane */
 		if (garbageId == 0)
@@ -227,6 +229,113 @@ public class MormanManagerBean {
 
 	}
 
+	private void initStrange(int garbageId) {
+		if (garbageId > 0) {
+
+			if (teamSelected != null) {
+				Iterator<Garbage> iterator = teamSelected.getGarbages()
+						.iterator();
+				while (iterator.hasNext()) {
+					Garbage g1 = iterator.next();
+					if (g1.getGarbageId() == garbageId) {
+						mormanAlocat = true;
+						break;
+					}
+
+				}
+			}
+			;
+
+			Garbage g = wsi.getGarbage(userDetails, garbageId);
+			garbageSimplu = g;
+			myGarbage = new MyGarbage(g);
+			longitudine = "" + g.getX();
+			latitudine = "" + g.getY();
+			double lat_grd1 = Math.floor(g.getY());
+			double long_grd1 = Math.floor(g.getX());
+
+			double lat_min1 = (g.getY() - lat_grd1) * 60;
+			double long_min1 = (g.getX() - long_grd1) * 60;
+
+			double lat_sec1 = (lat_min1 - Math.floor(lat_min1)) * 60;
+			double long_sec1 = (long_min1 - Math.floor(long_min1)) * 60;
+			lat_min1 = Math.floor(lat_min1);
+			long_min1 = Math.floor(long_min1);
+			lat_grd = String.valueOf(lat_grd1);
+			long_grd = String.valueOf(long_grd1);
+
+			lat_min = String.valueOf(lat_min1);
+			long_min = String.valueOf(long_min1);
+
+			lat_sec = String.valueOf(lat_sec1);
+			long_sec = String.valueOf(long_sec1);
+			int latSecStringSize = lat_sec.length();
+			int longSecStringSize = long_sec.length();
+			int latIndex = lat_sec.indexOf(".");
+			int longIndex = long_sec.indexOf(".");
+			int diffLat = latSecStringSize - latIndex;
+			int diffLong = longSecStringSize - longIndex;
+			if (diffLat > 0)
+				if (diffLat >= 3)
+					lat_sec = lat_sec.substring(0, latIndex + 3);
+				else
+					lat_sec = lat_sec.substring(0, latIndex + diffLat);
+			if (diffLong > 0)
+				if (diffLong >= 3)
+					long_sec = long_sec.substring(0, longIndex + 3);
+				else
+					long_sec = long_sec.substring(0, longIndex + diffLong);
+			/* obtinere numar poze */
+			for (int i = 0; i < g.getPictures().size(); i++) {
+				int height = 0;
+				try {
+					/**
+					 * thumbnail
+					 */
+
+					String thumb = wsi.compileImagePath(g, i, false);
+					thumbnails.add(thumb);
+					log4j.warn("[THUMBNAIL]----------->S-a adaugat in thumbnails ["
+							+ i + "] temFile " + thumb);
+					/**
+					 * imagine full
+					 */
+
+					String poster = wsi.compileImagePath(g, i, true);
+					posters.add(poster);
+
+					log4j.warn("[FULL]---->posters add:" + poster);
+
+				} catch (Exception ex) {
+					log4j.fatal("[FULL]Eroare obtinere imagine: "
+							+ AppUtils.printStackTrace(ex));
+				}
+			}
+
+			String infoHtml = "<strong>"
+					+ JsfUtils.getBundleMessage("details_morman") + " "
+					+ g.getGarbageId() + "</strong><br/>";
+			infoHtml += JsfUtils.getBundleMessage("details_area")
+					+ " "
+					+ (g.getChartedArea() != null ? g.getChartedArea()
+							.getName() : "unknown") + "<br/>";
+			infoHtml += JsfUtils.getBundleMessage("details_county")
+					+ " "
+					+ (g.getCounty() != null ? g.getCounty().getName()
+							: "unknown") + "<br/>";
+			infoHtml += JsfUtils.getBundleMessage("details_state")
+					+ " "
+					+ (g.getStatus() != null ? g.getStatus().name() : "unknown")
+					+ "<br/><br/>";
+			infoHtml += (g.getDescription() != null ? g.getDescription() : "")
+					+ "<br/>";
+			infoHtml += "<br/><a href=\"cartare-mormane-detalii.jsf?garbageId="
+					+ g.getGarbageId() + "\" style=\"color: #4D751F;\">"
+					+ JsfUtils.getBundleMessage("details_view_link") + "</a>";
+			myGarbageList.add(new MyGarbage(g, infoHtml));
+		}
+	}
+
 	private void init(int garbageId) {
 		try {
 			/* obtinere detalii utilizator */
@@ -240,9 +349,11 @@ public class MormanManagerBean {
 		 * cazul
 		 */
 		if (userDetails != null) {
+			log4j.info("[MORMANMANAGER] - userDetails!=null");
 			if (userDetails.getGarbages() != null) {
 				Iterator<Garbage> iterator = userDetails.getGarbages()
 						.iterator();
+				log4j.info("[MORMANMANAGER] - there are some garbages");
 				while (iterator.hasNext()) {
 					Garbage g = iterator.next();
 
@@ -346,7 +457,7 @@ public class MormanManagerBean {
 		} else {
 			myGarbage.getGarbage().setStatus(Garbage.GarbageStatus.CLEANED);
 		}
-		
+
 		wsi.setStatusGarbage(userDetails, myGarbage.getGarbage());
 		/* cerere informatii user */
 		JsfUtils.getHttpSession().setAttribute("INFO_MESSAGE",
@@ -364,9 +475,9 @@ public class MormanManagerBean {
 	}
 
 	public void actionSelectGarbage(ActionEvent event) {
-		
+
 	}
-	
+
 	/**
 	 * @return
 	 */
@@ -582,38 +693,67 @@ public class MormanManagerBean {
 		}
 	}
 
+	private int teamForAllocationId = 0;
+	private int allocatedGarbageId = 0;
+
+	public void actionSelectGarbageForAllocate() {
+		log4j.info("START");
+		if (JsfUtils.getHttpSession().getAttribute("TEAM_SELECTED") != null) {
+			teamForAllocationId = (Integer) JsfUtils.getHttpSession()
+					.getAttribute("TEAM_SELECTED");
+			log4j.info("[MORMANNANAGER] - teamSelected=" + teamForAllocationId);
+
+		}
+
+		allocatedGarbageId = AppUtils.parseToInt(JsfUtils
+				.getRequestParameter("garbageId"));
+	}
+
 	public String actionAssignMorman() {
 		/* atribuire zona noua daca este cazul */
-		if (JsfUtils.getHttpSession().getAttribute("TEAM_SELECTED") != null
-				&& teamSelected == null) {
-			int teamSelectedId = (Integer) JsfUtils.getHttpSession()
-					.getAttribute("TEAM_SELECTED");
-			reloadTeam(teamSelectedId);
-		}
-		;
+		log4j.info("[MORMANMANAGER] - START");
+		if (teamForAllocationId > 0)
+			reloadTeam(teamForAllocationId);
+
 		if (teamSelected == null) {
 			JsfUtils.addWarnBundleMessage("internal_err");
+			log4j.info("[MORMANMANAGER] TeamSelected=null");
 			return NavigationValues.MORMAN_ALOCAT_FAIL;
 		}
-		;
 
-		int addGarbageId = AppUtils.parseToInt(JsfUtils
-				.getRequestParameter("addGarbageId"));
-
+		log4j.info("[MORMANMANAGER] - garbageId=" + allocatedGarbageId);
 		Garbage garbage = new Garbage();
-		garbage.setGarbageId(addGarbageId);
+		garbage.setGarbageId(allocatedGarbageId);
 
-		if (addGarbageId > 0) {
+		if (allocatedGarbageId > 0) {
+			log4j.info("[MORMANMANAGER] - prepare for allocate");
 			try {
 				wsi.addGarbageToTeam(userDetails, teamSelected, garbage);
+				this.mormanAlocat = true;
+				if (teamForAllocationId > 0)
+					reloadTeam(teamForAllocationId);
+				initStrange(allocatedGarbageId);
+				if (userDetails != null) {
+					userDetails = wsi.refreshUser(userDetails.getUserId(),
+							userDetails);
+					JsfUtils.getHttpSession().setAttribute("USER_DETAILS",
+							userDetails);
+				}
 			} catch (InvalidTeamOperationException e) {
+				log4j.info("[MORMANMANAGER]" + e.getMessage());
+				JsfUtils.addErrorMessage(e.getMessage());
 				return NavigationValues.MORMAN_ALOCAT_FAIL;
 			}
-			log4j.debug("garbage atribuit " + addGarbageId);
+			log4j.info("[MORMANMANAGER - REPORT] :garbage atribuit "
+					+ allocatedGarbageId);
+			log4j.info("[MORMANMANAGER - REPORT] :garbage bag count "
+					+ myGarbage.getGarbage().getBagCount());
+			log4j.info("[MORMANMANAGER - REPORT] :garbage enrollmentcount "
+					+ myGarbage.getGarbage().getCountBagsEnrollments());
 
 			String infoText = JsfUtils.getBundleMessage("garbage_add_confirm")
-					.replaceAll("\\{0\\}", "" + addGarbageId);
-			JsfUtils.getHttpSession().setAttribute("INFO_MESSAGE", infoText);
+					.replaceAll("\\{0\\}", "" + allocatedGarbageId);
+			JsfUtils.addInfoMessage(infoText);
 
 			JsfUtils.getHttpSession().setAttribute("LASTPOSITION",
 					latitudine + "," + longitudine);
@@ -627,7 +767,7 @@ public class MormanManagerBean {
 	public void reloadTeam(int id) {
 
 		List<Team> teamList = userDetails.getManagedTeams();
-		log4j.info("user teams:" + teamList);
+		log4j.info("user teams: -----" + teamList);
 
 		if (teamList != null && teamList.size() > 0)
 			for (Team team : teamList) {
@@ -650,26 +790,39 @@ public class MormanManagerBean {
 
 	public String actionRemoveMormanFromTeam() {
 
-		// TO BE REWRITED FOR TEAMS AND WITH CORRECT wsi. call
+		log4j.info("[MORMANMANAGER] - START");
+		if (teamForAllocationId > 0)
+			reloadTeam(teamForAllocationId);
+
 		if (teamSelected == null) {
 			JsfUtils.addWarnBundleMessage("internal_err");
+			log4j.info("[MORMANMANAGER] TeamSelected=null");
 			return NavigationValues.MORMAN_DEZALOCAT_FAIL;
 		}
 
-		int removeGarbageId = AppUtils.parseToInt(JsfUtils
-				.getRequestParameter("removeGarbageId"));
+		log4j.info("[MORMANMANAGER] - garbageId=" + allocatedGarbageId);
 
 		Garbage garbage = new Garbage();
-		garbage.setGarbageId(removeGarbageId);
+		garbage.setGarbageId(allocatedGarbageId);
 		wsi.deleteGarbageFromTeam(userDetails, teamSelected.getTeamId(),
-				removeGarbageId);
-		/* cerere informatii user */
-		// cr = wsi.reinitUser(userDetails);
-		// log4j.debug("---> Reinit User Garbage statusCode: " + statusCode +
-		// " (" + cr.getClientResponseStatus() + ")");
-		String infoText = "Mormanul " + removeGarbageId
+				allocatedGarbageId);
+		log4j.info("[MORMANMANAGER - REPORT] :garbage atribuit "
+				+ allocatedGarbageId);
+		log4j.info("[MORMANMANAGER - REPORT] :garbage bag count "
+				+ myGarbage.getGarbage().getBagCount());
+		log4j.info("[MORMANMANAGER - REPORT] :garbage enrollmentcount "
+				+ myGarbage.getGarbage().getCountBagsEnrollments());
+		mormanAlocat = false;
+		if (teamForAllocationId > 0)
+			reloadTeam(teamForAllocationId);
+		initStrange(allocatedGarbageId);
+		if (userDetails != null) {
+			userDetails = wsi.refreshUser(userDetails.getUserId(), userDetails);
+			JsfUtils.getHttpSession().setAttribute("USER_DETAILS", userDetails);
+		}
+		String infoText = "Mormanul " + allocatedGarbageId
 				+ " a fost dealocat cu succes";
-		JsfUtils.getHttpSession().setAttribute("INFO_MESSAGE", infoText);
+		JsfUtils.addInfoMessage(infoText);
 		return NavigationValues.MORMAN_DEZALOCAT_SUCCESS;
 
 	}
@@ -723,13 +876,13 @@ public class MormanManagerBean {
 
 	public boolean getAllocable() {
 		this.allocable = !getMormanAlocat()
-				&& this.myGarbage.getGarbage().isToVote();
+				&& this.myGarbage.getGarbage().isToClean();
 		return this.allocable;
 	}
 
 	public boolean isAllocable() {
 		this.allocable = !getMormanAlocat()
-				&& this.myGarbage.getGarbage().isToVote();
+				&& this.myGarbage.getGarbage().isToClean();
 		return this.allocable;
 	}
 

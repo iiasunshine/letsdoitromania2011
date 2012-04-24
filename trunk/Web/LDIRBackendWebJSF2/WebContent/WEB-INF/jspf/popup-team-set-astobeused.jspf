@@ -1,0 +1,54 @@
+<%@ include file="/WEB-INF/jspf/page-header.jspf"%>
+
+<!-- create new issue form dialog -->
+<rich:modalPanel id="popup_garbage_set_astobeused" height="170"
+	width="400" resizeable="false">
+
+	<%-- HEADER --%>
+	<f:facet name="header">
+		<h:outputText value="Confirmare actiune" />
+	</f:facet>
+
+	<%-- CONTROLS --%>
+	<f:facet name="controls">
+		<h:panelGroup>
+			<h:graphicImage value="/layout/images/close.png"
+				styleClass="hidelink">
+				<rich:componentControl for="popup_garbage_set_astobeused"
+					operation="hide" event="onclick" />
+			</h:graphicImage>
+		</h:panelGroup>
+	</f:facet>
+
+	<%-- BODY POPUP --%>
+	<a4j:outputPanel>
+		<div style="height: 100px; margin-top: 15px; overflow: hidden;">
+			<h2>
+
+				<h:outputText
+					value="Esti sigur ca vrei sa folosesti echipa?"
+					escape="false"/>
+				
+			</h2>
+		</div>
+
+		<!-- BUTOANE -->
+		<div style="text-align: center;">
+			<a4j:form>
+				<a4j:commandButton
+					actionListener="#{orgBean.actionUseTeam}" value="DA"
+					reRender="rightPanelTeamCommands"
+					onclick="#{rich:component('popup_garbage_set_astobeused')}.hide();"
+					styleClass="formButton"
+					/>
+
+				<a4j:commandButton value="NU"
+					onclick="#{rich:component('popup_garbage_set_astobeused')}.hide();"
+					styleClass="formButton" />
+			</a4j:form>
+		</div>
+	</a4j:outputPanel>
+</rich:modalPanel>
+
+
+

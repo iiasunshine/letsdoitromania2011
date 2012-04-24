@@ -4,6 +4,7 @@
  */
 package ro.radcom.ldir.ldirbackendwebjsf2.managedBeans;
 
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -52,6 +53,7 @@ public class LoginBean {
 
         	 UserSessionRecord userSessionRecord=new UserSessionRecord();
         	 userSessionRecord.setUser(userDetails);
+        	 userSessionRecord.setDate(new Date(System.currentTimeMillis()).toString());
 
         	 JsfUtils.getHttpSession().setAttribute("userSessionRecord", userSessionRecord);
 

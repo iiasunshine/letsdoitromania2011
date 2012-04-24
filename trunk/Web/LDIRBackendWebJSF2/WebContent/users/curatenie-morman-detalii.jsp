@@ -2,22 +2,25 @@
 <jsp:directive.include file="/WEB-INF/jspf/page-header.jspf" />
 <jsp:directive.include file="/WEB-INF/jspf/login-checkpoint.jspf" />
 <f:view>
-	<c:if test="${mormanManager.myGarbage eq null}">
+<%--	<c:if test="${mormanManager.myGarbage eq null}">
 		<custom:page_redirect target="/users/cartare-mormane-lista.jsf" />
-	</c:if>
+	</c:if>--%>
 	<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+
 <jsp:directive.include file="/WEB-INF/jspf/googlemaps-meta.jspf" />
 <jsp:directive.include file="/WEB-INF/jspf/page-meta.jspf" />
 <jsp:directive.include file="/WEB-INF/jspf/usermeta.jspf" />
 
 <title>Let's do it Romania</title>
 </head>
-<body
-	onload="somefunction(${mormanManager.myGarbage.garbage.getGarbageId()})">
-
+<%--<body
+	onload="somefunction(${mormanManager.myGarbage.garbage.getGarbageId()})">--%>
+<body>
 	<center>
 		<%-- page Top --%>
+
+
 		<h:panelGroup
 			rendered="#{mormanManager.userDetails.role eq 'VOLUNTEER'}">
 			<custom:page_top_login selected="curatenie" role="VOLUNTEER" />
@@ -28,10 +31,14 @@
 		</h:panelGroup>
 
 		<%-- galerie imagini --%>
+
 		<a4j:keepAlive beanName="mormanManager" />
+
 		<jsp:directive.include file="/WEB-INF/jspf/popup-img-gallery.jspf" />
 		<jsp:directive.include
 			file="/WEB-INF/jspf/popup-garbage-set-cleaned.jspf" />
+		<jsp:directive.include
+			file="/WEB-INF/jspf/popup-garbage-set-allocated.jspf" />
 
 		<%-- page Content --%>
 		<div id="pageContainer">
@@ -41,8 +48,7 @@
 					<a4j:outputPanel id="detalii_Morman">
 						<br />
 						<!-- mesaj eroare -->
-						<h:messages warnClass="registerMessageError"
-							infoClass="registerMessageOk" />
+
 
 						<a4j:form>
 							<h:panelGroup
@@ -52,9 +58,13 @@
 											value="#{areaCleanManager.teamSelected.teamName}" /></strong></span>
 								<br />
 								<h:outputText
-									value="Putere de curatare: #{areaCleanManager.teamSelected.getBagsEnrolled()} / #{areaCleanManager.teamSelected.getCleaningPower()*areaCleanManager.teamSelected.countMembers()} saci"
+									value="A alocat: #{areaCleanManager.teamSelected.getBagsEnrolled()}  saci"
 									escape="false" />
-
+								<br />
+								<h:outputText
+									value="Numar maxim: #{areaCleanManager.teamSelected.getCleaningPower()*areaCleanManager.teamSelected.countMembers()} saci"
+									escape="false" />
+								<br />
 								<br />
 								<br />
 								<br />
@@ -125,8 +135,8 @@
 								<br />
 								<br />
 								<h:outputText escape="false" id="GarbageStatusLabel"
-									value="Starea mormanului: #{mormanManager.myGarbage.garbage.status}" />
-									<br />
+									value="Starea gunoiului: #{mormanManager.myGarbage.garbage.status}" />
+								<br />
 								<%----<h:form
 							rendered="#{mormanManager.userDetails.role eq 'ADMIN' or mormanManager.userDetails.role eq 'ORGANIZER_MULTI' or mormanManager.userDetails.role eq 'ORGANIZER' or areaCleanManager.teamSelected.isGarbageIdinTeam(mormanManager.myGarbage.garbage.garbageId)}">
 							<h:commandLink action="#{mormanManager.actionChangeStare}"
@@ -208,18 +218,19 @@
 								</a4j:form>
 								<br />
 								<br />
-								<h3>
+						<%--		<h3>
 									<h:outputLink value="pachetmorman.jsf">
 										<f:param name="garbageId"
 											value="#{mormanManager.myGarbage.garbage.garbageId}" />
 										<h:outputText escape="false" value="» Pachet pentru print" />
 									</h:outputLink>
-								</h3>
-
+								</h3>--%>
+								<%--
 								<h3>
-									<h:form rendered="#{mormanManager.allocable}">
-										<%-- only voted garbage zones can be cleaned --%>
-										<h:commandLink action="#{mormanManager.actionAssignMorman}">
+									<h:form rendered="true">
+										
+										<h:commandLink action="#{mormanManager.actionAssignMorman}"
+											id="assignActionID">
 											<f:param name="addGarbageId"
 												value="#{mormanManager.myGarbage.garbage.garbageId}" />
 											<h:outputText value="#{msg.details_assign_link}"
@@ -234,7 +245,27 @@
 											<h:outputText value="» Dez-aloca morman" escape="false" />
 										</h:commandLink>
 									</h:form>
-								</h3>
+								</h3>--%>
+
+
+								<a4j:commandLink
+									actionListener="#{mormanManager.actionSelectGarbageForAllocate}"
+									reRender="popup_garbage_set_allocated" id="popupLinkToAllocate"
+									ajaxSingle="true"
+									oncomplete="#{rich:component('popup_garbage_set_allocated')}.show();"
+									>
+									<strong> <h:outputText value="» Aloca gunoiul"
+											escape="false" rendered="#{not (mormanManager.mormanAlocat)}" />
+										<h:outputText value="» Renunta la gunoi" escape="false"
+											rendered="#{mormanManager.mormanAlocat}" /> <f:param
+											name="garbageId"
+											value="#{mormanManager.myGarbage.garbage.garbageId}" /> <f:param
+											name="TEAM_SELECTED"
+											value="#{areaCleanManager.teamSelected.teamId}" />
+									</strong>
+								</a4j:commandLink>
+
+								<br />
 								<h3>
 									<h:outputLink value="curatenie-vizualizare.jsf">
 										<h:outputText escape="false" value="#{msg.details_lista_link}" />
@@ -249,7 +280,12 @@
 
 				<%-- Right Column (harta) --%>
 				<div id="rightColumn">
-					<div id="map" style="width: 100%; height: 600px"></div>
+					<a4j:outputPanel id="hartaAlocari">
+						<h:messages warnClass="registerMessageError"
+							infoClass="registerMessageOk" />
+						<br />
+						<div id="map" style="width: 100%; height: 600px"></div>
+					</a4j:outputPanel>
 				</div>
 			</div>
 		</div>
