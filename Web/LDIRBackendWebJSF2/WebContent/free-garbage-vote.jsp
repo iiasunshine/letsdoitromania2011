@@ -75,7 +75,7 @@
 								</h:outputFormat>
 								<br /> <br />
 								<h:outputFormat
-									value="Nu exista nici-o zona de gunoaie nominalizata pentru votare!" rendered="#{fn: length(voteGarbageManagerBean.garbageList) eq 0 }">
+									value="In acest moment nu sunt zone de gunoaie incarcate pe site din judetul dumneavoastra. Daca aveti sugestii de zone cu deseuri, va rugam sa le incarcati folosind linkul din meniu." rendered="#{fn: length(voteGarbageManagerBean.garbageList) eq 0 }">
 								</h:outputFormat>
 								<br /> <br />
 							</h1>

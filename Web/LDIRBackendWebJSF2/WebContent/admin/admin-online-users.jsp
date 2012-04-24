@@ -52,9 +52,10 @@
 								<div class="listHeader">Prenume</div>
 								<div class="listHeaderLarge">E-mail</div>
 								<div class="listHeader">Telefon</div>
-								<div class="listHeader">Rol</div>
+								<div class="listHeaderLarge">Rol</div>
 								<div class="listHeader">Oras</div>
 								<div class="listHeader">Judet</div>
+								<div class="listHeader">Login</div>
 
 								<div class="listHeader">ID</div>
 
@@ -69,13 +70,13 @@
 										<h:outputText value="#{user.user.firstName}" />
 									</div>
 									<div class="listEntryLarge">
-										<a href="mailto:nume@domeniu.ro"><h:outputText
-												value="#{user.user.email}" /></a>
+										<h:outputText
+												value="#{user.user.email}" />
 									</div>
 									<div class="listEntry">
 										<h:outputText value="#{user.user.phone}" />
 									</div>
-									<div class="listEntry">
+									<div class="listEntryLarge">
 										<h:outputText value="#{user.user.role}" />
 									</div>
 									<div class="listEntry">
@@ -84,7 +85,9 @@
 									<div class="listEntry">
 										<h:outputText value="#{user.user.county}" />
 									</div>
-
+									<div class="listEntry">
+										<h:outputText value="#{user.date}" />
+									</div>
 									<div class="listEntry">
 										<h:outputText value="#{user.user.userId}" />
 									</div>

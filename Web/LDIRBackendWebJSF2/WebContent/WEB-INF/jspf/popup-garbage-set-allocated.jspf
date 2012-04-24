@@ -1,0 +1,60 @@
+<%@ include file="/WEB-INF/jspf/page-header.jspf"%>
+
+<!-- create new issue form dialog -->
+<rich:modalPanel id="popup_garbage_set_allocated" height="170"
+	width="400" resizeable="false">
+
+	<%-- HEADER --%>
+	<f:facet name="header">
+		<h:outputText value="Confirmare actiune" />
+	</f:facet>
+
+	<%-- CONTROLS --%>
+	<f:facet name="controls">
+		<h:panelGroup>
+			<h:graphicImage value="/layout/images/close.png"
+				styleClass="hidelink">
+				<rich:componentControl for="popup_garbage_set_allocated"
+					operation="hide" event="onclick" />
+			</h:graphicImage>
+		</h:panelGroup>
+	</f:facet>
+
+	<%-- BODY POPUP --%>
+	<a4j:outputPanel>
+		<div style="height: 100px; margin-top: 15px; overflow: hidden;">
+			<h2>
+
+				<h:outputText
+					value="Esti sigur ca vrei sa aloci echipei tale gunoiul cu ID #{mormanManager.myGarbage.garbage.garbageId }?"
+					escape="false" rendered="#{not (mormanManager.mormanAlocat)}" />
+				<h:outputText
+					value="Esti sigur ca vrei sa renunti la gunoiul cu ID #{mormanManager.myGarbage.garbage.garbageId }?"
+					escape="false" rendered="#{mormanManager.mormanAlocat}" />
+			</h2>
+		</div>
+
+		<!-- BUTOANE -->
+		<div style="text-align: center;">
+			<a4j:form>
+				<a4j:commandButton
+					actionListener="#{mormanManager.actionAssignMorman}" value="DA"
+					reRender="detalii_Morman, hartaAlocari"
+					onclick="#{rich:component('popup_garbage_set_allocated')}.hide();"
+					styleClass="formButton"
+					rendered="#{not (mormanManager.mormanAlocat)}"/>
+				<a4j:commandButton
+					actionListener="#{mormanManager.actionRemoveMormanFromTeam}" value="DA"
+					reRender="detalii_Morman, hartaAlocari"
+					onclick="#{rich:component('popup_garbage_set_allocated')}.hide();"
+					styleClass="formButton" rendered="#{mormanManager.mormanAlocat}" />
+				<a4j:commandButton value="NU"
+					onclick="#{rich:component('popup_garbage_set_allocated')}.hide();"
+					styleClass="formButton" />
+			</a4j:form>
+		</div>
+	</a4j:outputPanel>
+</rich:modalPanel>
+
+
+

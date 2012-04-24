@@ -49,7 +49,9 @@ public class AreaCleanManagerBean {
     private String currentLng="26.1015844";
 	
     private int teamSelectedId=-1;
+    
 	public AreaCleanManagerBean() throws NamingException{
+		log4j.info("---------[AREACLEANMANAGER] - fresh start");
 		wsi = new WSInterface();
 	  
 	/**
@@ -67,7 +69,7 @@ public class AreaCleanManagerBean {
     if(JsfUtils.getHttpSession().getAttribute("TEAM_SELECTED")!=null){
     	teamSelectedId = (Integer)  JsfUtils.getHttpSession().getAttribute("TEAM_SELECTED");
     };
-    
+    log4j.info("---------[AREACLEANMANAGER] - teamSelectedId: "+teamSelectedId);
     /* adaugare mesaj info de pe sesiune daca exista */
     String infoMessage = (String) JsfUtils.getHttpSession().getAttribute("INFO_MESSAGE");
     if (infoMessage != null) {
@@ -128,7 +130,7 @@ public class AreaCleanManagerBean {
             	}
             }
         
-        
+            log4j.info("---------[AREACLEANMANAGER] - finish start");
 
     }
     
@@ -197,6 +199,10 @@ public class AreaCleanManagerBean {
 	{
 		
 		int teamId=AppUtils.parseToInt(JsfUtils.getRequestParameter("team"));
+		log4j.info("[AREACLEANMANAGER]: trying to set team number "+teamId+" for cleaning");
+		JsfUtils.getHttpSession().removeAttribute("TEAM_SELECTED");
+		JsfUtils.getHttpSession().setAttribute("TEAM_SELECTED", teamSelected.getTeamId());
+		/*
 	    if(teamList != null && teamList.size() > 0)
         	for(Team team : teamList){
 
@@ -209,8 +215,8 @@ public class AreaCleanManagerBean {
         			JsfUtils.getHttpSession().setAttribute("TEAM_SELECTED", teamSelected.getTeamId());
         			break;
                 };
-        	};
-	};
+        	};*/
+	}
 	
 	public void reloadTeam(int id){
     	teamList = userDetails.getManagedTeams();
@@ -234,11 +240,12 @@ public class AreaCleanManagerBean {
     	teamList = userDetails.getManagedTeams();
     	log4j.info("user teams:" + teamList);
     }
+    
 	public void initManager(){
 		
 		try {
 			managerDetails = userTeam.getTeamManager();
-			log4j.debug("managerDetails->" + managerDetails);
+			log4j.info("managerDetails->" + managerDetails);
 		} catch (Exception e) {
 			log4j.debug("error->" + e.getMessage());
 		}

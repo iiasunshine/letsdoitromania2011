@@ -166,7 +166,7 @@ public class TeamManager implements TeamManagerLocal {
 
 		if (!garbage.isToClean())
 			throw new InvalidTeamOperationException(
-					"The garbage is not selected for cleaning!");
+					"Gunoiul nu este selectat pentru curatenie!");
 
 		GarbageEnrollment existingEnrollment = null;
 
@@ -185,12 +185,12 @@ public class TeamManager implements TeamManagerLocal {
 
 		if (teamBagsLeft <= 0)
 			throw new InvalidTeamOperationException(
-					"The total cleaning capacity for this team is "
-							+ totalCapacity + " bags, " + allocatedBags
-							+ " bags already allocated, cannot allocate more!");
+					"Capacitatea totala a acestei echipe este de  "
+							+ totalCapacity + " saci, " + allocatedBags
+							+ ". Echipa nu mai poate aloca alte gunoaie pentru curatenie!");
 		if (garbageBagsLeft <= 0)
 			throw new InvalidTeamOperationException(
-					"All the bags in this morman have been allocated");
+					"Gunoiul a fost alocat deja de alta echipa");
 
 		if (teamBagsLeft <= garbageBagsLeft)
 			bagCount = teamBagsLeft;
@@ -209,6 +209,9 @@ public class TeamManager implements TeamManagerLocal {
 		garbage.getGarbageEnrollements().add(enrollment);
 		team.getGarbageEnrollements().add(enrollment);
 		em.persist(enrollment);
+		em.merge(garbage);
+		em.merge(team);
+		em.flush();
 	}
 
 	/*
@@ -430,6 +433,7 @@ public class TeamManager implements TeamManagerLocal {
 				garbage.getGarbageEnrollements().remove(enrollment);
 				em.merge(team);
 				em.merge(garbage);
+				em.flush();
 				return;
 			}
 		}

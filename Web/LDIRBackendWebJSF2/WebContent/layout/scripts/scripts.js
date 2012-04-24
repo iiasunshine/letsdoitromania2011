@@ -69,3 +69,7 @@ function popup(mylink, windowname){
     return false;
 }
 
+function cleanup_redirect(){
+	sleep(4);
+	window.location.href='/users/curatenie-vizualizare.jsf';
+}

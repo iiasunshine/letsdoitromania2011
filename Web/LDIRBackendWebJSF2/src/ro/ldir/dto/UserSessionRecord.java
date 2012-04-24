@@ -1,5 +1,6 @@
 package ro.ldir.dto;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,6 +19,8 @@ public class UserSessionRecord implements HttpSessionBindingListener {
 	private User user;
 
 	private String ip;
+	
+	private String date;
 	
 	
 	public static Map<UserSessionRecord, HttpSession> getLoggedUsers() {
@@ -41,6 +44,14 @@ public class UserSessionRecord implements HttpSessionBindingListener {
 	}
 
 
+
+	public String getDate() {
+		return date;
+	}
+
+	public void setDate(String date) {
+		this.date = date;
+	}
 
 	@Override
 	public boolean equals(Object other) {
