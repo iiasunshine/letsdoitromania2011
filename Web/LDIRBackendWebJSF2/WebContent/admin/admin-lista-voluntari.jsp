@@ -118,7 +118,11 @@
 							<h:outputText
 								value="Exportul Excel contine si echipele."
 								rendered="#{fn:length(adminUsersManagerBean.usersList) gt 0}" />								
+							<h:outputText
+								value="ATENTIE! Exportul poate dura mult pentru liste mari de useri. Folositi cu atentie si rar."
+								rendered="#{fn:length(adminUsersManagerBean.usersList) gt 0}" />								
 							<br />
+
 							<br />
 
 							<div id="listHeaderContainer">
