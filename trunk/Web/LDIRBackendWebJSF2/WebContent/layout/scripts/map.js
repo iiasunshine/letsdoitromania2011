@@ -10,8 +10,14 @@ var votx = new XMLHttpRequest();;
 var soloMormanId=-1;
 
 var markerClusterer = null;
-var imageUrl = 'http://chart.apis.google.com/chart?cht=mm&chs=24x32&' +
-    'chco=FFFFFF,008CFF,000000&ext=.png';
+//var markerRed = 'http://chart.apis.google.com/chart?cht=mm&chs=24x32&' +
+//    'chco=FFFFFF,008CFF,000000&ext=.png';
+var markerCOMPLETELY = WS_URL+'/layout/images/COMPLETELY.png'; 
+var markerPARTIALLY = WS_URL+'/layout/images/PARTIALLY.png';
+var markerUNALLOCATED = WS_URL+'/layout/images/UNALLOCATED.png';
+var markerCLEANED = WS_URL+'/layout/images/CLEANED.png';
+//var markerIDENTIFIED = WS_URL+'/layout/images/IDENTIFIED.png';
+var markerTOVOTE = WS_URL+'/layout/images/TOVOTE.png';
 
 var infoWindow = new google.maps.InfoWindow;
 
@@ -318,7 +324,7 @@ var onMarkerClick = function() {
 function renderData(){
 	
 	
-	console.log('cache length: '+mormane.length,"new data: "+newmormane.length)
+	//console.log('cache length: '+mormane.length,"new data: "+newmormane.length)
 	if(mormane.length+newmormane.length>1000)
 	{
 		for(var i=0;i<markers.length;i++)
@@ -337,6 +343,7 @@ function renderData(){
 	
 	for(var i=0;i<newmormane.length;i++)
 		{
+			var imageUrl="";
 			var morman=newmormane[i];	
 			alreadyonmap=false;
 			
@@ -354,43 +361,56 @@ function renderData(){
 			latitude=morman.y;
 			longitude=morman.x;
 			
-		    var markerImage = new google.maps.MarkerImage(imageUrl,
-		             new google.maps.Size(24, 32));
+			if(morman.allocatedStatus=="COMPLETELY")
+				imageUrl=markerCOMPLETELY; 
+			if(morman.allocatedStatus=="PARTIALLY")
+				imageUrl=markerPARTIALLY; 
+			if(morman.allocatedStatus=="UNALLOCATED")
+				imageUrl=markerUNALLOCATED; 
+			if(morman.allocatedStatus=="CLEANED")
+				imageUrl=markerCLEANED; 
+
+			if(morman.toVote=="true")
+				imageUrl=markerTOVOTE;
+			
+		    var markerImage = new google.maps.MarkerImage(imageUrl);
 		    var infowindow = new google.maps.InfoWindow();
 
 			var latLng = new google.maps.LatLng(latitude,longitude)
 			
-		    if(morman.toVote=="true"){
-		        var marker1 = new MarkerWithLabel({
-		            position: latLng,
-		            draggable: false,
-		            map: map,
-		            labelContent: 'Voteaza!',
-		            labelAnchor: new google.maps.Point(22, 0),
-		            labelClass: "labels", // the CSS class for the label
-		            labelStyle: {opacity: 0.75}
-		          });
-		    
-		    //marker1.morman=undefined;
-		    marker1.morman=morman;
-		    morman.marker=marker1;
-		    google.maps.event.addListener(marker1, 'click', onMarkerClick);
-		    marker1.setVisible(false);
-		    markers.push(marker1);
-		    }
-			if(morman.toVote=="false"){
+//		    if(morman.toVote=="true"){
+//		        var marker1 = new MarkerWithLabel({
+//		            position: latLng,
+//		            draggable: false,
+//		            map: map,
+//		            labelContent: 'Voteaza!',
+//		            labelAnchor: new google.maps.Point(22, 0),
+//		            labelClass: "labels", // the CSS class for the label
+//		            labelStyle: {opacity: 0.75}
+//		          });
+//		    
+//		    //marker1.morman=undefined;
+//		    marker1.morman=morman;
+//		    morman.marker=marker1;
+//		    google.maps.event.addListener(marker1, 'click', onMarkerClick);
+//		    marker1.setVisible(false);
+//		    markers.push(marker1);
+//		    }
+			//if(morman.toVote=="false"){
 			var marker = new google.maps.Marker({
 		           position: latLng,
+		           icon:markerImage,
 		           draggable: false,
 		           map: map,
-		           title:"Hello World!"
+		           title:""
 		          });			 
+			
 		    marker.morman=morman;
 		    morman.marker=marker;
 		    google.maps.event.addListener(marker, 'click', onMarkerClick);
 		    marker.setVisible(false);
 		    markers.push(marker);
-			};
+			//};
 		    //marker.morman=undefined;
 			
 		mormane.push(newmormane[i])
