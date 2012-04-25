@@ -204,6 +204,24 @@ public class UserManager implements UserManagerLocal {
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see ro.ldir.beans.UserManagerLocal#adminGetUser(java.lang.String)
+	 */
+	@Override
+	public User adminGetUser(String email) {
+		Query query = em
+				.createQuery("SELECT x FROM User x WHERE x.email = :emailParam");
+		query.setParameter("emailParam", email);
+
+		@SuppressWarnings("unchecked")
+		List<User> users = (List<User>) query.getResultList();
+		if (users == null || users.size() == 0)
+			return null;
+		User user = users.get(0);
+		return user;
+	}
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see ro.ldir.beans.UserManagerLocal#getUsers(ro.ldir.dto.User.Activity)
 	 */
 	@SuppressWarnings("unchecked")

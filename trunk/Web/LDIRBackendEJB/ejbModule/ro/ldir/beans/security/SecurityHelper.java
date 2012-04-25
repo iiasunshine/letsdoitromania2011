@@ -54,7 +54,7 @@ public class SecurityHelper {
 		String email = ctx.getCallerPrincipal().getName();
 		if (user.getEmail().equals(email))
 			return;
-		User loggedInUser = userManager.getUser(email);
+		User loggedInUser = userManager.adminGetUser(email);
 
 		if (user.getMemberOf().equals(loggedInUser.getMemberOf()))
 			return;

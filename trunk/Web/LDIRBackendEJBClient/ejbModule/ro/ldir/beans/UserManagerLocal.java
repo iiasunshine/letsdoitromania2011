@@ -85,6 +85,15 @@ public interface UserManagerLocal {
 	public User getUser(String email);
 
 	/**
+	 * Get a user by email.
+	 * 
+	 * @param email
+	 *            The email of the user.
+	 * @return The user matching the email, {@code null} if none.
+	 */
+	public User adminGetUser(String email);
+
+	/**
 	 * A list of users that have a given role
 	 * 
 	 * @param role
