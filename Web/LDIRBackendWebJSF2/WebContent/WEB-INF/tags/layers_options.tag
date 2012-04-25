@@ -53,8 +53,12 @@
 							 <h:graphicImage value="/layout/images/m2.png" width="20px"></h:graphicImage><h:outputText value=" 10-100 mormane"/><br/>
 							 <h:graphicImage value="/layout/images/m3.png" width="20px"></h:graphicImage><h:outputText value=" 100-1000 mormane"/><br/>							 
 							<h:graphicImage value="/layout/images/m4.png" width="20px"></h:graphicImage><h:outputText value=" 1000+ mormane"/><br/>
-							<br/>							
-							 <h:graphicImage value="http://maps.gstatic.com/mapfiles/markers/marker_sprite.png" width="30px"></h:graphicImage><h:outputText value=" Morman"/><br/>
+							<br/>			
+							 <h:graphicImage value="http://app.letsdoitromania.ro/layout/images/UNALLOCATED.png" width="30px"/><h:outputText value="Morman identificat"/><br/>
+							 <h:graphicImage value="http://app.letsdoitromania.ro/layout/images/PARTIALLY.png" width="30px"/><h:outputText value=" Morman alocat partial"/><br/>
+							 <h:graphicImage value="http://app.letsdoitromania.ro/layout/images/COMPLETELY.png" width="30px"/><h:outputText value=" Morman alocat complet"/><br/>	
+							 <h:graphicImage value="http://app.letsdoitromania.ro/layout/images/CLEANED.png" width="30px"/><h:outputText value=" Morman curatat"/><br/>	
+							 <h:graphicImage value="http://app.letsdoitromania.ro/layout/images/TOVOTE.png" width="30px"/><h:outputText value=" Zona pentru votare"/><br/>								 
 							 <br/>
 							 <div id="ajaxloader" style="display:none">							 
 							 <h:graphicImage value="/layout/images/ajaxloader.gif" width="20px"></h:graphicImage><h:outputText value="  Loading..." style="font-style:italic" /><br/>
