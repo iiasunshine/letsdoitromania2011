@@ -382,6 +382,7 @@ public class TeamManagerBean {
 	public String actionDelOrgTeam() {
 
 		String orgDeleteId = JsfUtils.getRequestParameter("orgDeleteId");
+		log4j.info("[TEAM] removing group with id: "+orgDeleteId);
 		if (orgDeleteId == null || orgDeleteId.length() == 0) {
 			JsfUtils.addWarnBundleMessage("err_user_rem");
 			if (role.equals(ORGANIZER_MULTI))

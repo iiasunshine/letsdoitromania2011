@@ -100,10 +100,16 @@ public class OrganizationManager implements OrganizationManagerLocal {
 	public void deleteOrganization(int organizationId) {
 		Organization existing = em.find(Organization.class, organizationId);
 		User user = existing.getManager();
+		Team team = existing.getMemberOf();
 		SecurityHelper.checkUser(user, ctx);
 		user.getOrganizations().remove(existing);
+		if(team!=null)
+			team.getOrganizationMembers().remove(existing);
 		em.remove(existing);
 		em.merge(user);
+		if(team!=null)
+			em.merge(team);
+		em.flush();
 	}
 
 	/*

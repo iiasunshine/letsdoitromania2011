@@ -64,10 +64,13 @@ public class OrganizationManagementBean {
 
 	public void actionSelectTeamToBeUsed() {
 		log4j.info("=====================================================START");
+		try{
 		usedTeamId = AppUtils.parseToInt(JsfUtils.getRequestParameter("team"));
 		log4j.info("[AREACLEANMANAGER]: trying to set team number "
 				+ usedTeamId + " for cleaning");
-
+		}catch(Exception err){
+			
+		}
 		/*
 		 * if(teamList != null && teamList.size() > 0) for(Team team :
 		 * teamList){
