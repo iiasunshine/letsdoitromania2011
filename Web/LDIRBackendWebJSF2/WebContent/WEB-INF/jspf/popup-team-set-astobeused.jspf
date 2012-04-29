@@ -26,7 +26,7 @@
 			<h2>
 
 				<h:outputText
-					value="Esti sigur ca vrei sa folosesti echipa?"
+					value="Esti sigur ca vrei sa folosesti echipa pentru curatenie?"
 					escape="false"/>
 				
 			</h2>

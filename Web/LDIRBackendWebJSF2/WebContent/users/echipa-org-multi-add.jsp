@@ -14,7 +14,7 @@
 		<%-- page Top --%>
 		<custom:page_top_login selected="echipa_edit"
 			role="${userManager.userDetails.role}" />
-		<a4j:keepAlive beanName="orgBean" />
+		<%--<a4j:keepAlive beanName="orgBean" /> --%>
 		<jsp:directive.include
 			file="/WEB-INF/jspf/popup-team-set-astobeused.jspf" />
 		<%-- page Content --%>

@@ -78,7 +78,7 @@
 			<h:outputText value="#{msg.echipa_list_title}"
 				rendered="#{fn:length(orgBean.teamList) gt 0}" />
 		</h3>
-		<h:panelGroup rendered="#{fn:length(orgBean.teamList) gt 0}">
+		<a4j:outputPanel  rendered="#{fn:length(orgBean.teamList) gt 0}">
 			<a4j:repeat value="#{orgBean.teamList}" var="team">
 				<div class="entryLeft">
 					<h:outputText value="Echipa Nume = " />
@@ -98,6 +98,6 @@
 				</div>
 			</a4j:repeat>
 
-		</h:panelGroup>
+		</a4j:outputPanel>
 	</c:if>
 </div>
