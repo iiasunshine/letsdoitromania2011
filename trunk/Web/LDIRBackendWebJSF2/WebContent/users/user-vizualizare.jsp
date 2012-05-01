@@ -63,8 +63,8 @@
                              <br/>
                              <!-- ACTIVITATI -->
                              <div class="label form"><h:outputText value="#{msg.register_activities} "/></div>
-                             <h:selectBooleanCheckbox value="#{userManager.cartare}" id="cartare" disabled="true"/>
-                             <label class="formCheckbox"><h:outputText value="#{msg.register_activities_cartare}"/></label>
+                             <h:selectBooleanCheckbox value="#{userManager.cartare}" id="cartare" disabled="true" rendered="false"/>
+                             <label class="formCheckbox"><h:outputText value="#{msg.register_activities_cartare}" rendered="false"/></label>
   							 <h:selectBooleanCheckbox value="#{userManager.curatenie}" id="curatenie" disabled="true" />
                        		 <label class="formCheckbox"><h:outputText value="#{msg.register_activities_curatenie}"/></label>
                              <br/>

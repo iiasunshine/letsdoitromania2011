@@ -51,7 +51,7 @@ public class RegisterBean {
 	private int month;
 	private int year;
 	private boolean cartare = false;
-	private boolean curatenie = false;
+	private boolean curatenie = true;
 	private boolean acceptTerms = false;
 	private boolean profileView = true;
 	private boolean acceptReceiveNotifications = true;
