@@ -89,8 +89,8 @@
                                 <br />
                                 <!-- ACTIVITATI -->
                                 <div class="label"><h:outputText value="#{msg.register_activities} "/><span class="important">*</span></div>
-                                <h:selectBooleanCheckbox value="#{userManager.cartare}" id="cartare"/>
-                                <label class="formCheckbox"><h:outputText value="#{msg.register_activities_cartare}"/></label>
+                                <h:selectBooleanCheckbox value="#{userManager.cartare}" id="cartare" rendered="false"/>
+                                <label class="formCheckbox"><h:outputText value="#{msg.register_activities_cartare}" rendered="false"/></label>
   								<h:selectBooleanCheckbox value="#{userManager.curatenie}" id="curatenie"/>
                        			<label class="formCheckbox"><h:outputText value="#{msg.register_activities_curatenie}"/></label>
                                 <br />
