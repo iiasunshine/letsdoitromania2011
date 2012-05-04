@@ -23,15 +23,16 @@
  */
 package ro.ldir.report.formatter;
 
-import java.util.List;
 import java.util.*;
 
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.ss.usermodel.CellStyle;
 
 
 import ro.ldir.dto.User;
@@ -68,11 +69,12 @@ public class UserExcelFormatter implements ExcelFormatter {
 		row.createCell(8).setCellValue("ID");
 		row.createCell(9).setCellValue("Nr. mormane");
 		row.createCell(10).setCellValue("Nr. zone");
-		row.createCell(11).setCellValue("Activitate");		
+		row.createCell(11).setCellValue("Activitate");
 
 		for (int i = 0; i < users.size(); i++) {
 			row = sheet.createRow(i + 1);
 			User user = users.get(i);
+			if(user==null)continue;
 
 			row.createCell(0).setCellValue(user.getFirstName());
 			row.createCell(1).setCellValue(user.getLastName());
@@ -99,6 +101,7 @@ public class UserExcelFormatter implements ExcelFormatter {
 			else
 				row.createCell(9, Cell.CELL_TYPE_NUMERIC).setCellValue(
 						user.getGarbages().size());
+			
 			if (user.getMemberOf() == null
 					|| user.getMemberOf().getChartedAreas() == null)
 				row.createCell(10, Cell.CELL_TYPE_NUMERIC).setCellValue(0);
@@ -108,17 +111,31 @@ public class UserExcelFormatter implements ExcelFormatter {
 
 			StringBuffer ab = new StringBuffer();
 			List<User.Activity> activities = user.getActivities();
-			if (activities != null && activities.size() > 0) {
+			if (activities != null && activities.size() > 0) 
+			{
 				for (User.Activity activity : activities)
-					ab.append(activity.getReportName() + ", ");
+				
+					if(activity!=null)
+					if(activity.getReportName()!=null)
+					 ab.append(activity.getReportName() + ", ");
+					else ab.append("  " + ", ");
+				
+				if(ab.length()>1)
 				row.createCell(11).setCellValue(
 						ab.substring(0, ab.length() - 2));
+				else 
+					row.createCell(11).setCellValue(" ");
+
 			}
+			
+						
 			List<Team> managedTeams = user.getManagedTeams();
 			if (managedTeams != null && managedTeams.size() > 0) {
 				for (Team team : managedTeams)
 					teams.add(team);
 			}
+			
+			
 			        
 			
 		}
