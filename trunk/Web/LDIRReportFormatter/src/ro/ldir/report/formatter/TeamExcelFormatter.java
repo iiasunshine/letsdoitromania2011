@@ -26,10 +26,14 @@ package ro.ldir.report.formatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.CellStyle;
 
 import ro.ldir.dto.CleaningEquipment;
 import ro.ldir.dto.CleaningEquipment.CleaningType;
@@ -39,6 +43,7 @@ import ro.ldir.dto.GarbageEnrollment;
 import ro.ldir.dto.GpsEquipment;
 import ro.ldir.dto.Organization;
 import ro.ldir.dto.Team;
+import ro.ldir.dto.User;
 import ro.ldir.dto.TransportEquipment;
 
 /** Converts a list of teams to an Excel workbook. */
@@ -137,7 +142,6 @@ public class TeamExcelFormatter implements ExcelFormatter {
 			}
 			row.createCell(23).setCellValue(buf.toString());
 			row.createCell(24, Cell.CELL_TYPE_NUMERIC).setCellValue(volume);
-
 		}
 	}
 
@@ -195,8 +199,11 @@ public class TeamExcelFormatter implements ExcelFormatter {
 		row.createCell(22).setCellValue("Num\u04d1r mormane alocate");
 		row.createCell(23).setCellValue("List\u04d1 mormane alocate");
 		row.createCell(24).setCellValue("Sum\u04d1 volum mormane alocate");
+		row.createCell(25).setCellValue("Activitati");
+		row.createCell(26).setCellValue("Data inregistrarii");
 
 		int i = 0;
+		CreationHelper createHelper = wb.getCreationHelper();
 		for (Team team : teams) {
 			if (team.getOrganizationMembers() == null
 					|| team.getOrganizationMembers().size() == 0) {
@@ -213,6 +220,37 @@ public class TeamExcelFormatter implements ExcelFormatter {
 				organization(row, org);
 				teamFooter(row, team);
 			}
+			
+			if (team.getTeamManager() != null) {
+				StringBuffer ab = new StringBuffer();
+				
+				List<User.Activity> activities = team.getTeamManager().getActivities();
+				if (activities != null && activities.size() > 0) 
+				{
+					for (User.Activity activity : activities)
+					
+						if(activity!=null)
+						if(activity.getReportName()!=null)
+						 ab.append(activity.getReportName() + ", ");
+						else ab.append("  " + ", ");
+					
+					if(ab.length()>1)
+					row.createCell(25).setCellValue(
+							ab.substring(0, ab.length() - 2));
+					else 
+						row.createCell(25).setCellValue(" ");
+				}
+				if (team.getTeamManager().getRecordDate() != null) {
+					CellStyle cellStyle = wb.createCellStyle();
+					cellStyle.setDataFormat(createHelper.createDataFormat()
+							.getFormat("m/d/yy h:mm"));
+					Cell dateCell = row.createCell(26);
+					dateCell.setCellValue(team.getTeamManager().getRecordDate());
+					dateCell.setCellStyle(cellStyle);
+				}
+
+			}
+			
 		}
 
 		return wb;
