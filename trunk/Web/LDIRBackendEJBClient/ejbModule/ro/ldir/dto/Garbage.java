@@ -124,71 +124,70 @@ public class Garbage extends FieldAccessBean {
 	}
 
 	private void buildRadius() {
-		
 		return;
-		if (radius == null)
-			return;
-
-		polyline = new ArrayList<Point2D.Double>();
-
-		double error = -radius;
-		double x = radius, y = 0;
-		while (x > 0) {
-			polyline.add(new Point2D.Double(this.x + x, this.y + y));
-			error += x;
-			x -= CIRCLE_INCREMENT;
-			error += x;
-			if (error >= 0) {
-				error -= y;
-				y += CIRCLE_INCREMENT;
-				error -= y;
-			}
-		}
-
-		error = -radius + CIRCLE_INCREMENT;
-		x = CIRCLE_INCREMENT;
-		y = radius;
-		while (y > 0) {
-			polyline.add(new Point2D.Double(this.x - x, this.y + y));
-			error += y;
-			y -= CIRCLE_INCREMENT;
-			error += y;
-			if (error >= 0) {
-				error -= x;
-				x += CIRCLE_INCREMENT;
-				error -= x;
-			}
-		}
-
-		error = -radius - CIRCLE_INCREMENT;
-		x = -radius;
-		y = -CIRCLE_INCREMENT;
-		while (x < 0) {
-			polyline.add(new Point2D.Double(this.x + x, this.y + y));
-			error -= y;
-			y -= CIRCLE_INCREMENT;
-			error -= y;
-			if (error >= 0) {
-				error += x;
-				x += CIRCLE_INCREMENT;
-				error += x;
-			}
-		}
-
-		error = radius;
-		x = 0;
-		y = -radius;
-		while (y < -CIRCLE_INCREMENT) {
-			polyline.add(new Point2D.Double(this.x + x, this.y + y));
-			error += x;
-			x += CIRCLE_INCREMENT;
-			error += x;
-			if (error >= 0) {
-				error -= y;
-				y += CIRCLE_INCREMENT;
-				error -= y;
-			}
-		}
+//		if (radius == null)
+//			return;
+//
+//		polyline = new ArrayList<Point2D.Double>();
+//
+//		double error = -radius;
+//		double x = radius, y = 0;
+//		while (x > 0) {
+//			polyline.add(new Point2D.Double(this.x + x, this.y + y));
+//			error += x;
+//			x -= CIRCLE_INCREMENT;
+//			error += x;
+//			if (error >= 0) {
+//				error -= y;
+//				y += CIRCLE_INCREMENT;
+//				error -= y;
+//			}
+//		}
+//
+//		error = -radius + CIRCLE_INCREMENT;
+//		x = CIRCLE_INCREMENT;
+//		y = radius;
+//		while (y > 0) {
+//			polyline.add(new Point2D.Double(this.x - x, this.y + y));
+//			error += y;
+//			y -= CIRCLE_INCREMENT;
+//			error += y;
+//			if (error >= 0) {
+//				error -= x;
+//				x += CIRCLE_INCREMENT;
+//				error -= x;
+//			}
+//		}
+//
+//		error = -radius - CIRCLE_INCREMENT;
+//		x = -radius;
+//		y = -CIRCLE_INCREMENT;
+//		while (x < 0) {
+//			polyline.add(new Point2D.Double(this.x + x, this.y + y));
+//			error -= y;
+//			y -= CIRCLE_INCREMENT;
+//			error -= y;
+//			if (error >= 0) {
+//				error += x;
+//				x += CIRCLE_INCREMENT;
+//				error += x;
+//			}
+//		}
+//
+//		error = radius;
+//		x = 0;
+//		y = -radius;
+//		while (y < -CIRCLE_INCREMENT) {
+//			polyline.add(new Point2D.Double(this.x + x, this.y + y));
+//			error += x;
+//			x += CIRCLE_INCREMENT;
+//			error += x;
+//			if (error >= 0) {
+//				error -= y;
+//				y += CIRCLE_INCREMENT;
+//				error -= y;
+//			}
+//		}
 	}
 
 	@Transient
