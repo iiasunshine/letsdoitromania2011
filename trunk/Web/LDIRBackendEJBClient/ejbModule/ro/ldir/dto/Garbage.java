@@ -124,6 +124,8 @@ public class Garbage extends FieldAccessBean {
 	}
 
 	private void buildRadius() {
+		
+		return;
 		if (radius == null)
 			return;
 
