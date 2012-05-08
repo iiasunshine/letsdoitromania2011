@@ -86,9 +86,7 @@
 								href="${pageContext.servletContext.contextPath}/users/free-cartare-mormane-editare.jsf"><img
 									src="/icons/02-adaugare-gunoi.jpg" width="230" height="230" /></a>
 							</li>
-							<li><a
-								href="${pageContext.servletContext.contextPath}/free-garbage-vote.jsf"><img
-									src="/icons/03-votare-zona.jpg" width="230" height="230" /></a></li>
+
 							<li><a href="http://www.letsdoitromania.ro/feedback-proiect"><img
 									src="/icons/11-feedback.jpg" width="230" height="230" /></a></li>
 							<li>
