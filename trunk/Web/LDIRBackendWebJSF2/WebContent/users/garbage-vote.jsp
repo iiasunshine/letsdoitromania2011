@@ -6,17 +6,18 @@ l<%@page contentType="text/html" pageEncoding="UTF-8"%>
 	<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <jsp:directive.include file="/WEB-INF/jspf/page-meta.jspf" />
-<jsp:directive.include file="/WEB-INF/jspf/googlemaps-meta.jspf"/>
+<jsp:directive.include file="/WEB-INF/jspf/googlemaps-meta.jspf" />
 
 <title>Let's do it Romania</title>
 </head>
 <body>
-<jsp:directive.include file="/WEB-INF/jspf/usermeta.jspf"/>
+	<jsp:directive.include file="/WEB-INF/jspf/usermeta.jspf" />
 	<center>
 		<%-- page Top --%>
 		<%-- 	<custom:page_top selected="lista_mormane"
 			role="${voteGarbageManagerBean.userDetails.role}" /> --%>
-		<custom:page_top_login selected="garbageVote" role="${voteGarbageManagerBean.userDetails.role}"/>
+		<custom:page_top_login selected="garbageVote"
+			role="${voteGarbageManagerBean.userDetails.role}" />
 		<%-- page Content --%>
 		<div id="pageContainer">
 			<div id="contentList">
@@ -36,11 +37,11 @@ l<%@page contentType="text/html" pageEncoding="UTF-8"%>
 							<h3>
 								Judet<br />
 								<h:selectOneMenu
-								onchange="document.getElementById('formjudete:butonchange').click()"
-								value="#{voteGarbageManagerBean.countyId}">
+									onchange="document.getElementById('formjudete:butonchange').click()"
+									value="#{voteGarbageManagerBean.countyId}">
 									<f:selectItems value="#{voteGarbageManagerBean.countyItems}" />
 								</h:selectOneMenu>
-								
+
 							</h3>
 						</div>
 
@@ -53,7 +54,7 @@ l<%@page contentType="text/html" pageEncoding="UTF-8"%>
 						<a4j:commandButton
 							actionListener="#{voteGarbageManagerBean.actionApplyFilterAsMap}"
 							styleClass="formButtonLeft"
-							onclick="window.location = '/users/garbage-vote-map.jsf'"							
+							onclick="window.location = '/users/garbage-vote-map.jsf'"
 							value="Vezi zonele pe harta" />
 						<button type="reset" class="formButtonLeft">Anuleaza</button>
 					</a4j:form>
@@ -69,15 +70,16 @@ l<%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 						<a4j:form>
 							<h1>
-								<h:outputFormat
-									value="Zonele cu gunoaie ce pot fi votate:{0}" rendered="#{fn: length(voteGarbageManagerBean.garbageList) > 0 }">
+								<h:outputFormat value="Zonele cu gunoaie ce pot fi votate:{0}"
+									rendered="#{fn: length(voteGarbageManagerBean.garbageList) > 0 }">
 									<f:param
 										value="#{fn:length(voteGarbageManagerBean.garbageList)}" />
 								</h:outputFormat>
 								<br /> <br />
 								<h:outputFormat
-									value="In acest moment nu sunt zone de gunoaie incarcate pe site din judetul dumneavoastra. Daca aveti sugestii de zone cu deseuri, va rugam sa le incarcati folosind linkul din meniu." rendered="#{fn: length(voteGarbageManagerBean.garbageList) eq 0 }">
-									
+									value="In acest moment nu sunt zone de gunoaie incarcate pe site din judetul dumneavoastra. Daca aveti sugestii de zone cu deseuri, va rugam sa le incarcati folosind linkul din meniu."
+									rendered="#{fn: length(voteGarbageManagerBean.garbageList) eq 0 }">
+
 								</h:outputFormat>
 
 								<br /> <br />
@@ -92,6 +94,10 @@ l<%@page contentType="text/html" pageEncoding="UTF-8"%>
 								<div class="listHeader">Raza[m]</div>
 								<div class="listHeader">Numar saci</div>
 								<div class="listHeaderLarge">Galerie foto</div>
+								<c:if
+									test="${not (voteGarbageManagerBean.userDetails.role eq 'VOLUNTEER')}">
+									<div class="listHeader">Numar voturi</div>
+								</c:if>
 								<div class="listHeaderLarge">Optiuni</div>
 							</div>
 
@@ -144,7 +150,12 @@ l<%@page contentType="text/html" pageEncoding="UTF-8"%>
 										</a4j:commandLink>
 									</div>
 
-
+									<c:if
+										test="${not (voteGarbageManagerBean.userDetails.role eq 'VOLUNTEER')}">
+										<div class="listEntry">
+											<h:outputText value="#{garbage.voteCount}" />
+										</div>
+									</c:if>
 									<div class="listEntryLarge">
 										<%-- vote --%>
 										<a4j:commandLink
@@ -168,7 +179,8 @@ l<%@page contentType="text/html" pageEncoding="UTF-8"%>
 							<br />
 							<br />
 							<h3>
-								<h:outputText value="Selecteaza un judet pentru a afisa zonele cu gunoaie vota!" />
+								<h:outputText
+									value="Selecteaza un judet pentru a afisa zonele cu gunoaie vota!" />
 							</h3>
 						</h:panelGroup>
 					</a4j:outputPanel>

@@ -14,166 +14,20 @@
 	<jsp:directive.include file="/WEB-INF/jspf/usermeta.jspf" />
 	<center>
 		<%-- page Top --%>
-		<%-- 	<custom:page_top selected="lista_mormane"
-			role="${voteGarbageManagerBean.userDetails.role}" /> --%>
+
 		<custom:page_top selected="freeGarbageVote" />
 		<%-- page Content --%>
 		<div id="pageContainer">
 			<div id="contentList">
 
-				<jsp:directive.include file="/WEB-INF/jspf/popup-loading.jspf" />
-				<jsp:directive.include
-					file="/WEB-INF/jspf/popup-vote-img-gallery.jspf" />
-				<jsp:directive.include file="/WEB-INF/jspf/popup-garbage-vote.jspf" />
-
 				<%-- Left Column --%>
 				<div id="leftColumn">
-					<div class="labelLeft">
-						<h1>Selecteaza judetul:</h1>
-					</div>
-					<a4j:form id="formjudete">
-						<div>
-							<h3>
-								Judet<br />
-								<h:selectOneMenu
-								onchange="document.getElementById('formjudete:butonchange').click()"
-								value="#{voteGarbageManagerBean.countyId}">
-									<f:selectItems value="#{voteGarbageManagerBean.countyItems}" />
-								</h:selectOneMenu>
-							</h3>
-						</div>
-
-						<a4j:commandButton id="butonchange"
-							actionListener="#{voteGarbageManagerBean.actionApplyFilterAsList}"
-							reRender="garbageVoteList" styleClass="formButtonLeft"
-							onclick="#{rich:component('popup-loading')}.show()"
-							oncomplete="#{rich:component('popup-loading')}.hide();"
-							value="Vezi zonele in tabel" />
-						<a4j:commandButton
-							actionListener="#{voteGarbageManagerBean.actionApplyFilterAsMap}"
-							styleClass="formButtonLeft"
-							onclick="window.location = 'free-garbage-vote-map.jsf'"							
-							value="Vezi zonele pe harta" />
-						<button type="reset" class="formButtonLeft">Anuleaza</button>
-					</a4j:form>
+					
 				</div>
 
 				<%-- Right Column (harta) --%>
 				<div id="rightColumnList" style="min-height: 300px;">
-
-					<a4j:outputPanel id="garbageVoteList"
-						>
-						<h:messages warnClass="registerMessageError"
-							infoClass="registerMessageOk" errorClass="registerMessageError" />
-
-						<a4j:form rendered="true">
-							<h1>
-								<h:outputFormat
-									value="Zonele cu gunoaie ce pot fi votate:{0}" rendered="#{fn: length(voteGarbageManagerBean.garbageList) > 0 }">
-									<f:param
-										value="#{fn:length(voteGarbageManagerBean.garbageList)}" />
-								</h:outputFormat>
-								<br /> <br />
-								<h:outputFormat
-									value="In acest moment nu sunt zone de gunoaie incarcate pe site din judetul dumneavoastra. Daca aveti sugestii de zone cu deseuri, va rugam sa le incarcati folosind linkul din meniu." rendered="#{fn: length(voteGarbageManagerBean.garbageList) eq 0 }">
-								</h:outputFormat>
-								<br /> <br />
-							</h1>
-
-							<div id="listHeaderContainer">
-								<div class="listHeader">ID</div>
-								<div class="listHeaderLarge">Numele zonei cu gunoaie</div>
-								<div class="listHeader">Judet</div>
-								<div class="listHeaderLarge">Descriere</div>
-
-								<div class="listHeader">Raza[m]</div>
-								<div class="listHeader">Numar saci</div>
-								<div class="listHeaderLarge">Galerie foto</div>
-								<div class="listHeaderLarge">Optiuni</div>
-							</div>
-
-							<a4j:repeat value="#{voteGarbageManagerBean.garbageList}"
-								var="garbage">
-								<div id="listEntryContainer">
-									<div class="listEntry">
-										<h:outputText value="#{garbage.garbageId}" />
-									</div>
-									<div class="listEntryLarge">
-										<h:outputText value="#{garbage.name}" />
-									</div>
-									<div class="listEntry">
-										<h:outputText value="#{garbage.county.name}" />
-									</div>
-									<div class="listEntryLarge">
-										<rich:panel rendered="#{fn:length(garbage.description) gt 0}"
-											onmouseover="this.style.cursor='help'">
-											<h:outputText
-												value="#{fn:substring(garbage.description, 0 , 30)} ..."
-												rendered="#{fn:length(garbage.description) gt 30}" />
-											<h:outputText value="#{garbage.description}"
-												rendered="#{not (fn:length(garbage.description) gt 30)}" />
-											<rich:toolTip>
-												<h:outputText value="#{garbage.description}" />
-											</rich:toolTip>
-										</rich:panel>
-									</div>
-
-
-									<div class="listEntry">
-										<h:outputText value="#{garbage.radius}" />
-									</div>
-
-									<div class="listEntry">
-										<h:outputText value="#{garbage.bagCount}" />
-									</div>
-
-									<div class="listEntryLarge">
-										<a4j:commandLink
-											actionListener="#{voteGarbageManagerBean.actionSelectGarbage}"
-											rendered="#{fn:length(garbage.pictures) gt 0}"
-											reRender="img_gallery" ajaxSingle="true"
-											onclick="#{rich:component('popup-loading')}.show();"
-											oncomplete="#{rich:component('popup-loading')}.hide(); #{rich:component('img_gallery')}.show();">
-											<f:param name="garbageId" value="#{garbage.garbageId}" />
-											<f:param name="ipAddress" value="#{request.remoteAddr}" />
-											<strong><h:outputText
-													value="DESCHIDE (#{fn:length(garbage.pictures)})" /></strong>
-										</a4j:commandLink>
-									</div>
-
-
-									<div class="listEntryLarge">
-										<%-- vote --%>
-										<a4j:commandLink
-											actionListener="#{voteGarbageManagerBean.actionSelectGarbage}"
-											reRender="popup_garbage_vote" id="voteButton"
-											ajaxSingle="true"
-											oncomplete="#{rich:component('popup_garbage_vote')}.show();">
-											<f:param name="garbageId" value="#{garbage.garbageId}" />
-											<f:param name="ipAddress" value="#{request.remoteAddr}" />
-											<strong> <h:outputText value="VOTEAZA" />
-											</strong>
-										</a4j:commandLink>
-
-									</div>
-								</div>
-							</a4j:repeat>
-						</a4j:form>
-
-						<h:panelGroup rendered="#{voteGarbageManagerBean.noFilter}">
-							<br />
-							<br />
-							<br />
-							<h3>
-								<h:outputText
-									value="Selecteaza un judet pentru a afisa zonele cu gunoaie pt a vota!" />
-							</h3>
-						
-						</h:panelGroup>
-						
-				
-				</a4j:outputPanel>
-					
+					<h1> Procesul de votare s-a incheiat. Fa-ti cont si participa la curatenia din 12 mai 2012. Pentru mai multe detalii acceseaza butonul AJUTOR dupa ce te-ai logat!</h1>
 					
 				</div>
 
