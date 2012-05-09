@@ -231,7 +231,7 @@ tbody tr:hover {background: #fafafa;}
   <div id="mainContent">
     <h3>1. Date Generale</h3>
     <p><strong>Judeţul</strong>:  </f:verbatim><h:outputText value="#{mormanManager.garbageSimplu.county.name}" /><f:verbatim><br />
-      <strong>Comuna:</strong>  </f:verbatim><h:outputText value="#{mormanManager.garbageSimplu.town}" /><f:verbatim><br />
+      <strong>Comuna:</strong>  </f:verbatim><h:outputText value="#{mormanManager.garbageSimplu.town.name}" /><f:verbatim><br />
       Zona de cartare: </f:verbatim><h:outputText value="#{mormanManager.garbageSimplu.chartedArea.name}" /> <f:verbatim><br />
       <br />
       Situarea Geografica (in grade zecimale şi grade minute secunde): <br />

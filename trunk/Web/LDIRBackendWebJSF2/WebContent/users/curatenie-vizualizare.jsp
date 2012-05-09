@@ -210,7 +210,8 @@
                             <!-- mesaj eroare sau info -->
                             <h:messages warnClass="registerMessageError" errorClass="registerMessageError" infoClass="registerMessageOk"/>
                             <br/>
-								<div id="map" style="width: 100%; height: 600px"></div>
+                			<h:outputText value="Se afiseaza doar mormanele ce pot fi alocate de voluntari. " escape="false"/><h:outputText value="Unele judete nu fac alocarea online, contactati echipa locala pentru detalii." escape="false"/>
+                			<div id="map" style="width: 100%; height: 600px"></div>
                              
                         </div>
                     </div>

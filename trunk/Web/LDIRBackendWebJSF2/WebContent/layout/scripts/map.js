@@ -7,7 +7,10 @@ var newmormane=[] //the current ajax batch
 var xhr = new XMLHttpRequest();
 var votx = new XMLHttpRequest();;
 
-var soloMormanId=-1;
+//var soloMormanId=-1;
+if (typeof soloMormanId === 'undefined') {
+	var soloMormanId='';
+}
 
 var markerClusterer = null;
 //var markerRed = 'http://chart.apis.google.com/chart?cht=mm&chs=24x32&' +
@@ -88,25 +91,35 @@ var styles = [[{
   }]];
 
 var layersOptions = {
-		mormaneToate:true,
+		mormaneToate:false,
 		mormane2010:false,
 		mormane2011:false,
 		mormane2012:false,
 		mormaneCuratate:false,
 		mormaneNecuratate:false,
 		mormaneDeVotat:false,
+		mormanedeCuratat:true,
 		judet:""
-}
+};
 
 function initLayersOptions(){
 	
-	layersOptions.mormaneToate=getElementByValue("mormaneToate").checked;
-	layersOptions.mormane2010=getElementByValue("mormane2010").checked;
-	layersOptions.mormane2011=getElementByValue("mormane2011").checked;
-	layersOptions.mormane2012=getElementByValue("mormane2012").checked;
-	layersOptions.mormaneCuratate=getElementByValue("mormaneCuratate").checked;
-	layersOptions.mormaneNecuratate=getElementByValue("mormaneNecuratate").checked;
-	layersOptions.mormaneDeVotat=getElementByValue("mormaneDeVotat").checked;
+	if(getElementByValue("mormaneToate")!=undefined)
+		layersOptions.mormaneToate=getElementByValue("mormaneToate").checked;
+	if(getElementByValue("mormane2010")!=undefined)
+		layersOptions.mormane2010=getElementByValue("mormane2010").checked;
+	if(getElementByValue("mormane2011")!=undefined)
+		layersOptions.mormane2011=getElementByValue("mormane2011").checked;
+	if(getElementByValue("mormane2012")!=undefined)
+		layersOptions.mormane2012=getElementByValue("mormane2012").checked;
+	if(getElementByValue("mormaneCuratate")!=undefined)
+		layersOptions.mormaneCuratate=getElementByValue("mormaneCuratate").checked;
+	if(getElementByValue("mormaneNecuratate")!=undefined)
+		layersOptions.mormaneNecuratate=getElementByValue("mormaneNecuratate").checked;
+	if(getElementByValue("mormaneDeVotat")!=undefined)
+		layersOptions.mormaneDeVotat=getElementByValue("mormaneDeVotat").checked;
+	if(getElementByValue("mormaneDeCuratat")!=undefined)
+		layersOptions.mormaneDeCuratat=getElementByValue("mormaneDeCuratat").checked;
 	
 }
 
@@ -139,17 +152,24 @@ function layersoptions(element){
 }
 
 function showMarker(morman){
+	
+	if(soloMormanId!=-1&&soloMormanId!='')
+		return true;
+	
 	date=new Date(morman.recordDate);
 	year=date.getFullYear();
 	month=date.getMonth();
 	status=morman.status; //CLEANED,IDENTIFIED
 	
 	toClean=(morman.toClean==="true");
+	
 	yearB=false;
 	
 	toVote=(morman.toVote==="true")&&layersOptions.mormaneDeVotat;
 	cleaned=(status=="CLEANED")&&layersOptions.mormaneCuratate;
 	notcleaned=(status=="IDENTIFIED")&&layersOptions.mormaneNecuratate;
+	
+	
 	
 	if(layersOptions.mormaneToate==true)
 		return true;
@@ -195,6 +215,8 @@ function showMarker(morman){
 			&&!layersOptions.mormaneCuratate
 			&&!layersOptions.mormaneNecuratate)return true;
 	
+	if(toClean==true)
+		return true;
 	
 	return false;
 }
@@ -206,7 +228,7 @@ if(dontAjax==true)return;
 
 xhr = new XMLHttpRequest();
 xhr.onreadystatechange = processGetMormane;
-if(soloMormanId!=-1)
+if(soloMormanId!=-1&&soloMormanId!='')
 	xhr.open("GET", url, true,userEmail,userPasswd);
 else 
 	xhr.open("GET", url, true);
@@ -306,8 +328,9 @@ var onMarkerClick = function() {
     content+="<p>Descriere: "+morman.description+"</p>"
     content+="<p>Saci: "+morman.bagCount+"</p>"
     content+="<p></p>"
-    content+="<p><a target=\"_self\" style=\"color: #4D751F;\" href=\""+WS_URL+"/users/curatenie-morman-detalii.jsf?garbageId="+morman.garbageId+"\">&raquo; Detalii morman</a></p>";
+    content+="<p><a target=\"_self\" style=\"color: #4D751F;\" href=\""+WS_URL+"/users/curatenie-morman-detalii.jsf?garbageId="+morman.garbageId+"\">&raquo; Click aici pentru detalii si ca sa ti-l aloci</a></p>";
     
+    if(false)
     if(morman.toVote=="true")
 		content+="<span style=\"color: #4D751F;cursor: pointer\" onMouseOver=\"this.style.textDecoration='underline'\" onMouseOut=\"this.style.textDecoration='none'\" onclick=\"javascript:voteMorman("+morman.garbageId+")\">Voteaza</span>";
 //	if(userRole=="ORGANIZER" || userRole=="ORGANIZER_MULTI" || userRole == "ADMIN")
@@ -370,8 +393,8 @@ function renderData(){
 			if(morman.allocatedStatus=="CLEANED")
 				imageUrl=markerCLEANED; 
 
-			if(morman.toVote=="true")
-				imageUrl=markerTOVOTE;
+			//if(morman.toVote=="true")
+				//imageUrl=markerTOVOTE;
 			
 		    var markerImage = new google.maps.MarkerImage(imageUrl);
 		    var infowindow = new google.maps.InfoWindow();
@@ -412,7 +435,13 @@ function renderData(){
 		    markers.push(marker);
 			//};
 		    //marker.morman=undefined;
-			
+		    if(soloMormanId!=-1&&soloMormanId!='')
+		    if(morman.garbageId==soloMormanId)
+		    {
+		    	map.panTo(latLng);
+		    	map.setCenter(latLng);
+		    	map.setZoom(13);
+		    }
 		mormane.push(newmormane[i])
 		};
 		
@@ -434,6 +463,7 @@ function renderData(){
     clearClusters();
     showhidemarkers();
     //MarkerClusterer.IMAGE_PATH = "/layout/images/m";
+    
     markerClusterer = new MarkerClusterer(map, markers, {
       maxZoom: zoom,
       gridSize: size,
@@ -449,6 +479,7 @@ function returnVisibleMarkers(){
 	for(var i=0;i<markers.length;i++)
 		{
 		    var marker=markers[i];
+		    
 			if(showMarker(marker.morman)==true)
 					whatMarkersAreVisible.push(marker)
 		}
@@ -526,7 +557,7 @@ function onboundschange(){
 		var url = WS_URL;
 		
 		//url = 'http://app.letsdoitromania.ro/LDIRBackend/map/ws/garbageList/';
-		if(soloMormanId!=-1)
+		if(soloMormanId!=-1&&soloMormanId!='')
 			url += '/LDIRBackend/ws/garbage/'+soloMormanId;
 		else 
 			url += '/LDIRBackend/map/ws/garbageList/';
@@ -572,7 +603,7 @@ function load() {
 	
 function somefunction(mormanId){
 	//alert(mormanId)
-	soloMormanId=mormanId;
+	//soloMormanId=mormanId;
 }
 
 google.maps.event.addDomListener(window, 'load', load);
