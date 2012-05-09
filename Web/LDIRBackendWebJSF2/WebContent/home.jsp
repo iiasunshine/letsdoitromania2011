@@ -24,6 +24,7 @@
 				<div id="leftColumn"></div>
 
 				<!-- 				<div id="rightColumn" style="height: 800px;"> -->
+				<div id="rightColumn" >
 				<br /> <br />
 				<h:panelGroup rendered="#{sessionScope['USER_DETAILS'] eq null}">
 
