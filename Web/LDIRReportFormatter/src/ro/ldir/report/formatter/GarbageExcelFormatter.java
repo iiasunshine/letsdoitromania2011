@@ -68,6 +68,7 @@ public class GarbageExcelFormatter implements ExcelFormatter {
 		
 		row.createCell(18).setCellValue("Data introducerii");
 		row.createCell(19).setCellValue("Nominalizat pentru Votare");
+		row.createCell(19).setCellValue("Nominalizat pentru Curatare");
 
 		for (int i = 0; i < garbages.size(); i++) {
 			row = sheet.createRow(i + 1);
@@ -147,6 +148,7 @@ public class GarbageExcelFormatter implements ExcelFormatter {
 			}
 			
 			row.createCell(19, Cell.CELL_TYPE_STRING).setCellValue(garbage.isToVote());
+			row.createCell(19, Cell.CELL_TYPE_STRING).setCellValue(garbage.isToClean());
 
 		}
 		return wb;

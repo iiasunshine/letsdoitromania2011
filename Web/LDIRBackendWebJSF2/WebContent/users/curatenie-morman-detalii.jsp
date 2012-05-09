@@ -7,7 +7,9 @@
 	</c:if>--%>
 	<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-
+<script type="text/javascript">
+    var soloMormanId = '${param["garbageId"]}';	
+</script>
 <jsp:directive.include file="/WEB-INF/jspf/googlemaps-meta.jspf" />
 <jsp:directive.include file="/WEB-INF/jspf/page-meta.jspf" />
 <jsp:directive.include file="/WEB-INF/jspf/usermeta.jspf" />
@@ -66,6 +68,37 @@
 									escape="false" />
 								<br />
 								<br />
+							<h3>
+							<a4j:commandLink
+									actionListener="#{mormanManager.actionSelectGarbageForAllocate}"
+									reRender="popup_garbage_set_allocated" id="popupLinkToAllocate"
+									ajaxSingle="true"
+									oncomplete="#{rich:component('popup_garbage_set_allocated')}.show();"
+									>
+									<strong> <h:outputText value="» Aloca gunoiul"
+											escape="false" rendered="#{not (mormanManager.mormanAlocat)}" />
+										<h:outputText value="» Renunta la gunoi" escape="false"
+											rendered="#{mormanManager.mormanAlocat}" /> <f:param
+											name="garbageId"
+											value="#{mormanManager.myGarbage.garbage.garbageId}" /> <f:param
+											name="TEAM_SELECTED"
+											value="#{areaCleanManager.teamSelected.teamId}" />
+									</strong>
+								</a4j:commandLink>
+								</h3>
+								<h3>
+									<h:outputLink value="curatenie-vizualizare.jsf">
+										<h:outputText escape="false" value="#{msg.details_lista_link}" />
+									</h:outputLink>
+								</h3>
+								<h3>
+									<h:outputLink value="pachetmormanindicatii.jsf">
+									<f:param name="garbageId"
+											value="#{mormanManager.myGarbage.garbage.garbageId}" />
+										<h:outputText escape="false" value="» Pachet pentru print" />
+									</h:outputLink>
+								</h3>
+								
 								<br />
 								<br />
 								<h2>
@@ -246,31 +279,6 @@
 										</h:commandLink>
 									</h:form>
 								</h3>--%>
-
-
-								<a4j:commandLink
-									actionListener="#{mormanManager.actionSelectGarbageForAllocate}"
-									reRender="popup_garbage_set_allocated" id="popupLinkToAllocate"
-									ajaxSingle="true"
-									oncomplete="#{rich:component('popup_garbage_set_allocated')}.show();"
-									>
-									<strong> <h:outputText value="» Aloca gunoiul"
-											escape="false" rendered="#{not (mormanManager.mormanAlocat)}" />
-										<h:outputText value="» Renunta la gunoi" escape="false"
-											rendered="#{mormanManager.mormanAlocat}" /> <f:param
-											name="garbageId"
-											value="#{mormanManager.myGarbage.garbage.garbageId}" /> <f:param
-											name="TEAM_SELECTED"
-											value="#{areaCleanManager.teamSelected.teamId}" />
-									</strong>
-								</a4j:commandLink>
-
-								<br />
-								<h3>
-									<h:outputLink value="curatenie-vizualizare.jsf">
-										<h:outputText escape="false" value="#{msg.details_lista_link}" />
-									</h:outputLink>
-								</h3>
 
 							</h:panelGroup>
 
