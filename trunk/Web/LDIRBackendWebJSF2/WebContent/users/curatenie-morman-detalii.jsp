@@ -59,14 +59,6 @@
 								<span class="important"><strong><h:outputText
 											value="#{areaCleanManager.teamSelected.teamName}" /></strong></span>
 								<br />
-								<h:outputText
-									value="A alocat: #{areaCleanManager.teamSelected.getBagsEnrolled()}  saci"
-									escape="false" />
-								<br />
-								<h:outputText
-									value="Numar maxim: #{areaCleanManager.teamSelected.getCleaningPower()*areaCleanManager.teamSelected.countMembers()} saci"
-									escape="false" />
-								<br />
 								<br />
 							<h3>
 							<a4j:commandLink
