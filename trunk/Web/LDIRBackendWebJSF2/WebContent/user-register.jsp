@@ -17,6 +17,15 @@
                     <div id="content">
                         <%-- left column --%>
                         <div id="leftColumn">
+                        <h3>Dupa inregistrare, pentru a participa la curatenia din 12 Mai 2012, poti sa:
+                        <br/><br/>
+                        1. Te loghezi in aplicatie si din meniul Curatenie iti aloci mormane pentru tine sau echipa ta </br>
+                        <br/>
+                        sau
+                        </br>
+                        <br>
+                        2. Te duci, impreuna cu echipa, la cel mai apropiat punct de inregistrare in ziua de 12 mai 2012 incepand cu ora 08:00 pentru a primi informatii despre curatenie</br>
+                        </h3>
 
                         </div>
 
