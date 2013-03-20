@@ -10,7 +10,7 @@
  # Grant the `ldir` user all permissions on the `ldir` database. Restrict the remote access to the database.
 
 == Java tools ==
- # Install Java [www.oracle.com/technetwork/java/javaee/downloads/java-ee-sdk-6u3-jdk-6u29-downloads-523388.html JDK 1.6].
+ # Install Java [http://www.oracle.com/technetwork/java/javaee/downloads/java-ee-sdk-6u3-jdk-6u29-downloads-523388.html JDK 1.6].
  # Install Apache Ant from [http://ant.apache.org/ here].
  # Download and install MySQL JDBC driver from [http://dev.mysql.com/downloads/connector/j/]
 
