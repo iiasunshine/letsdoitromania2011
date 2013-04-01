@@ -92,13 +92,22 @@ public class RegisterBean {
 		/**
 		 * validare campuri
 		 */
-		if (regiterUser.getFirstName() == null
-				|| regiterUser.getFirstName().trim().length() == 0
-				|| regiterUser.getLastName() == null
-				|| regiterUser.getLastName().trim().length() == 0
-				|| regiterUser.getEmail() == null
-				|| regiterUser.getEmail().trim().length() == 0
-				|| regiterUser.getPasswd() == null
+		
+		//manareala pentru formular scurt
+		regiterUser.setFirstName("");
+		regiterUser.setLastName("");
+		curatenie=true;
+		day=1;
+		month=1;
+		year=1901;
+		
+		if (//	   regiterUser.getFirstName() == null
+			//	|| regiterUser.getFirstName().trim().length() == 0
+			//	|| regiterUser.getLastName() == null
+			//	|| regiterUser.getLastName().trim().length() == 0
+			//	|| regiterUser.getEmail() == null
+			//	|| regiterUser.getEmail().trim().length() == 0
+				regiterUser.getPasswd() == null
 				|| regiterUser.getPasswd().trim().length() == 0
 				|| passwordConfirm == null
 				|| passwordConfirm.length() == 0
