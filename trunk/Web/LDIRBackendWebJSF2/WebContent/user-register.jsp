@@ -41,14 +41,6 @@
 
                             <!-- form inregistrare -->
                             <h:form styleClass="form" rendered="#{not fn:contains(facesContext.messageList[0].severity, 'INFO')}">
-                                <!-- NUME -->
-                                <div class="label"><h:outputText value="#{msg.register_name} "/><span class="important">*</span></div>
-                                <h:inputText value="#{registerBean.regiterUser.lastName}" id="nume" styleClass="formTextfield"/>
-                                <br />
-                                <!-- PRENUME -->
-                                <div class="label"><h:outputText value="#{msg.register_surname} "/><span class="important">*</span></div>
-                                <h:inputText value="#{registerBean.regiterUser.firstName}" id="prenume" styleClass="formTextfield"/>
-                                <br />
                                 <!-- MAIL -->
                                 <div class="label"><h:outputText value="#{msg.register_email} "/><span class="important">*</span></div>
                                 <h:inputText value="#{registerBean.regiterUser.email}" id="email" styleClass="formTextfield"/>
@@ -60,39 +52,8 @@
                                 <!-- CONFIRMARE PAROLA -->
                                 <div class="label"><h:outputText value="#{msg.register_password_confirm} "/><span class="important">*</span></div>
                                 <h:inputSecret value="#{registerBean.passwordConfirm}" id="confirmare_parola" styleClass="formTextfield"/>
-                                <!-- DATA NASTERE -->
                                 <br />
-                                <div class="label"><h:outputText value="#{msg.register_birthday} "/><span class="important">*</span></div>
-                                <h:selectOneMenu value="#{registerBean.day}" id="zi_nastere" styleClass="formDate">
-                                    <f:selectItem itemLabel="Zi" itemValue="-1"/>
-                                    <f:selectItems value="#{registerBean.daysItems}"/>
-                                </h:selectOneMenu>
-
-                                <h:selectOneMenu value="#{registerBean.month}" id="luna_nastere" styleClass="formDate">
-                                    <f:selectItem itemLabel="Luna" itemValue="-1"/>
-                                    <f:selectItem itemLabel="Ianuarie" itemValue="1"/>
-                                    <f:selectItem itemLabel="Februarie" itemValue="2"/>
-                                    <f:selectItem itemLabel="Martie" itemValue="3"/>
-                                    <f:selectItem itemLabel="Aprilie" itemValue="4"/>
-                                    <f:selectItem itemLabel="Mai" itemValue="5"/>
-                                    <f:selectItem itemLabel="Iunie" itemValue="6"/>
-                                    <f:selectItem itemLabel="Iulie" itemValue="7"/>
-                                    <f:selectItem itemLabel="August" itemValue="8"/>
-                                    <f:selectItem itemLabel="Septembrie" itemValue="9"/>
-                                    <f:selectItem itemLabel="Octombrie" itemValue="10"/>
-                                    <f:selectItem itemLabel="Noiembrie" itemValue="11"/>
-                                    <f:selectItem itemLabel="Decembrie" itemValue="12"/>
-                                </h:selectOneMenu>
-
-                                <h:selectOneMenu value="#{registerBean.year}" id="an_nastere" styleClass="formDate">
-                                    <f:selectItem itemLabel="An" itemValue="-1"/>
-                                    <f:selectItems value="#{registerBean.yearsItems}"/>
-                                </h:selectOneMenu>
-                                <br />
-                                <!-- ORAS -->
-                                <div class="label"><h:outputText value="#{msg.register_city} "/></div>
-                                <h:inputText value="#{registerBean.regiterUser.town}" id="oras_resedinta" styleClass="formTextfield"/>
-                                <br />
+								
                                 <!-- JUDET -->
                                 <div class="label"><h:outputText value="#{msg.register_area} "/><span class="important">*</span></div>
                                 <h:selectOneMenu value="#{registerBean.regiterUser.county}" id="judet_resedinta" styleClass="formDropdown">
@@ -100,26 +61,7 @@
                                     <f:selectItems value="#{registerBean.countyItems}"/>
                                 </h:selectOneMenu>
                                 <br />
-                                <!-- ACTIVITATI --><%-- --
-                                <div class="label"><h:outputText value="#{msg.register_activities} "/><span class="important">*</span></div>
-                                <h:selectBooleanCheckbox value="#{registerBean.cartare}" id="cartare"/>
-                                <label class="formCheckbox"><h:outputText value="#{msg.register_activities_cartare}   "/></label>
-                                <h:selectBooleanCheckbox value="#{registerBean.curatenie}" id="curatenie"/>
-                                <label class="formCheckbox"><h:outputText value="#{msg.register_activities_curatenie}"/></label>
-                                <br />---%>
-                                <!-- TELEFON -->
-                                <div class="label"><h:outputText value="#{msg.register_phone} "/></div>
-                                <h:inputText value="#{registerBean.regiterUser.phone}" id="telefon" styleClass="formTextfield"/>
-                                <br />
-                                <br/>
-                                <!-- PARTICIPANTI -->
-                                <div class="label"><h:outputText value="Numar voluntari din echipa:"/></div>
-                                <h:inputText value="#{registerBean.organization.membersCount}" id="participanti" styleClass="formTextfield"
-                                ><f:validateLongRange minimum="1" maximum="1000"/></h:inputText>
-                                <br />
-                                <h:outputText value="Completeaza daca vii la curatenie cu prietenii sau familia ta"/>
-                                <br/>
-                                
+                               
                                 <!-- TERMENI -->
                                 <br/>
                                 <h:selectBooleanCheckbox value="#{registerBean.acceptTerms}" id="conditii"/>
@@ -131,15 +73,7 @@
                                 </label>
                                 <div class="label"><span class="important">*</span></div>
                                 <br/>
-                                 <!-- Accepta vizualizare de date Lead -->
-                                <h:selectBooleanCheckbox value="#{registerBean.profileView}" id="vizibleData" onchange="showWarning(this)"/>
-                                <label class="formCheckbox">
-                                    <h:outputText value="#{msg.register_acceptVizibleData} "/>
-                                </label>
-                                <br/>
- 								<label id="warningPersonalData" style="display:block;color:green">
-									<h:outputText value="Emailul si telefonul vor fi vizible liderului de echipa" />
-                                </label> 
+                                
                                 <!-- Accepta si alte informari -->
                                 <h:selectBooleanCheckbox value="#{registerBean.acceptReceiveNotifications}" id="acceptReceiveNotifications"/>
                                 <label class="formCheckbox">
