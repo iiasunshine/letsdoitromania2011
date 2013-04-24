@@ -86,12 +86,37 @@ public class Garbage extends FieldAccessBean {
 			return translation;
 		}
 	}
+	
+	public enum slovakGarbageTypes {
+		household("Menajer"), 
+		automotive("Auto"),
+		construction("Constructii"),
+		plastic("Plastic"),
+		electronic("Sticlă"),
+		metal("Metal"),
+		liquid("Lichide"),
+		dangerous("Periculoase");
+		
+		private String translation;
+
+		slovakGarbageTypes(String translation) {
+			this.translation = translation;
+		}
+
+		public String getTranslation() {
+			return translation;
+		}
+	}
 
 	private static final double CIRCLE_INCREMENT = 0.1;
 	public static final int DESCRIPTION_LENGTH = 20;
 
 	public static final int DETAILS_LENGTH = 30;
 	private int bagCount;
+	private int accuracy;
+	private int slovakSize;
+	private String garbageTypes;
+	
 	private String bigComponentsDescription;
 	private ChartedArea chartedArea;
 	private CountyArea county;
@@ -210,6 +235,32 @@ public class Garbage extends FieldAccessBean {
 		return bagCount;
 	}
 
+	
+	/**
+	 * @return the gps accuracy
+	 */
+	public int getAccuracy() {
+		return accuracy;
+	}
+	
+	/**
+	 * @return the size for slovak mobile app.
+	 * Possible values: 1,2,3
+	 */
+	public int getSlovakSize() {
+		return slovakSize;
+	}
+	
+	/**
+	 * @return the types of trash for slovak mobile app
+	 * Possible values: 1,2,3
+	 */
+	
+	public String getGarbageTypes() {
+		return garbageTypes;
+	}	
+	
+	
 	/**
 	 * @return the bigComponentsDescription
 	 */
@@ -435,7 +486,33 @@ public class Garbage extends FieldAccessBean {
 	public void setBagCount(int bagCount) {
 		this.bagCount = bagCount;
 	}
+	
+	/**
+	 * @param accuracy
+	 *            the gps Accuracy to set
+	 */
+	public void setAccuracy(int accuracy) {
+		this.accuracy = accuracy;
+	}
+	
+	/**
+	 * @param the size for slovak mobile app.
+	 * Possible values: 1,2,3
+	 */
+	public void setSlovakSize(int slovakSize) {
+		this.slovakSize=slovakSize;
+	}
+	
+	/**
+	 * @param the types of trash for slovak mobile app
+	 */
+	
+	public void setGarbageTypes(String garbageTypes) {
+		this.garbageTypes=garbageTypes;
+	}	
 
+	
+	
 	/**
 	 * @param bigComponentsDescription
 	 *            the bigComponentsDescription to set
