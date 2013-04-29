@@ -87,7 +87,7 @@ public class Garbage extends FieldAccessBean {
 		}
 	}
 	
-	public enum slovakGarbageTypes {
+	public enum trashOutGarbageTypes {
 		household("Menajer"), 
 		automotive("Auto"),
 		construction("Constructii"),
@@ -99,7 +99,7 @@ public class Garbage extends FieldAccessBean {
 		
 		private String translation;
 
-		slovakGarbageTypes(String translation) {
+		trashOutGarbageTypes(String translation) {
 			this.translation = translation;
 		}
 
@@ -114,8 +114,8 @@ public class Garbage extends FieldAccessBean {
 	public static final int DETAILS_LENGTH = 30;
 	private int bagCount;
 	private int accuracy;
-	private int slovakSize;
-	private String garbageTypes;
+	private int trashOutSize;
+	private String trashOutTypes;
 	
 	private String bigComponentsDescription;
 	private ChartedArea chartedArea;
@@ -247,8 +247,8 @@ public class Garbage extends FieldAccessBean {
 	 * @return the size for slovak mobile app.
 	 * Possible values: 1,2,3
 	 */
-	public int getSlovakSize() {
-		return slovakSize;
+	public int getTrashOutSize() {
+		return trashOutSize;
 	}
 	
 	/**
@@ -256,8 +256,8 @@ public class Garbage extends FieldAccessBean {
 	 * Possible values: 1,2,3
 	 */
 	
-	public String getGarbageTypes() {
-		return garbageTypes;
+	public String getTrashOutTypes() {
+		return trashOutTypes;
 	}	
 	
 	
@@ -499,16 +499,16 @@ public class Garbage extends FieldAccessBean {
 	 * @param the size for slovak mobile app.
 	 * Possible values: 1,2,3
 	 */
-	public void setSlovakSize(int slovakSize) {
-		this.slovakSize=slovakSize;
+	public void setTrashOutSize(int trashOutSize) {
+		this.trashOutSize=trashOutSize;
 	}
 	
 	/**
 	 * @param the types of trash for slovak mobile app
 	 */
 	
-	public void setGarbageTypes(String garbageTypes) {
-		this.garbageTypes=garbageTypes;
+	public void setTrashOutTypes(String trashOutTypes) {
+		this.trashOutTypes=trashOutTypes;
 	}	
 
 	
