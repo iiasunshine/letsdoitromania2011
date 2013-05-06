@@ -23,6 +23,13 @@
  */
 package ro.ldir.garbage;
 
+import java.io.File;
+import javax.activation.MimetypesFileTypeMap;
+import com.sun.jersey.api.Responses;
+import com.sun.jersey.core.header.FormDataContentDisposition;
+import com.sun.jersey.multipart.FormDataParam;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import javax.ejb.EJBException;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -66,6 +73,36 @@ public class GarbageAnonymousWebService {
 			throw new WebApplicationException(Status.BAD_REQUEST);
 		}
 		return new Integer(insertedId).toString();
+	}
+
+	@POST
+	@Consumes("multipart/form-data")
+	@Path("{garbageId:[0-9]+}/image")
+	public Response addNewImage(@PathParam("garbageId") int garbageId,
+			@FormDataParam("file") File file,
+			@FormDataParam("file") FormDataContentDisposition fcdsFile) {
+		Response response = Response.ok().build();
+
+		String mimeType = new MimetypesFileTypeMap().getContentType(fcdsFile
+				.getFileName());
+		if (mimeType.indexOf("image/") != 0)
+			return Response
+					.status(Responses.NOT_ACCEPTABLE)
+					.entity("File " + fcdsFile.getFileName()
+							+ " is of uknown type.").build();
+
+		try {
+			garbageManager.addNewImage(garbageId, file, fcdsFile.getFileName());
+		} catch (NullPointerException e) {
+			response = Response.status(404).build();
+		} catch (FileNotFoundException e) {
+			response = Response.status(500).entity(e.getMessage()).build();
+		} catch (IOException e) {
+			response = Response.status(500).entity(e.getMessage()).build();
+		} finally {
+			file.delete();
+		}
+		return response;
 	}
 
 	@PUT
