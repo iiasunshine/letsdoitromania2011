@@ -116,6 +116,7 @@ public class Garbage extends FieldAccessBean {
 	private int accuracy;
 	private int trashOutSize;
 	private String trashOutTypes;
+	private String trashOutImageUrls;
 	
 	private String bigComponentsDescription;
 	private ChartedArea chartedArea;
@@ -255,12 +256,18 @@ public class Garbage extends FieldAccessBean {
 	 * @return the types of trash for slovak mobile app
 	 * Possible values: 1,2,3
 	 */
-	
+
 	public String getTrashOutTypes() {
 		return trashOutTypes;
 	}	
 	
-	
+	/**
+	 * @return the url of images of trash for slovak mobile app
+	 * Possible values: 1,2,3
+	 */
+	public String getTrashOutImageUrls() {
+		return trashOutImageUrls;
+	}	
 	/**
 	 * @return the bigComponentsDescription
 	 */
@@ -509,7 +516,12 @@ public class Garbage extends FieldAccessBean {
 	
 	public void setTrashOutTypes(String trashOutTypes) {
 		this.trashOutTypes=trashOutTypes;
+	}
+	
+	public void setTrashOutImageUrls(String trashOutImageUrls) {
+		this.trashOutImageUrls=trashOutImageUrls;
 	}	
+
 
 	
 	
