@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
@@ -202,6 +203,40 @@ public class MormanManagerBean {
 							+ AppUtils.printStackTrace(ex));
 				}
 			}
+			
+			log4j.warn("[THUMBNAILGEO]----------->" + g.getTrashOutImageUrls());
+			if(g.getTrashOutImageUrls()!=null){
+			ArrayList<String> ArrLis= SplitUsingTokenizer(g.getTrashOutImageUrls(), ",");
+			
+			log4j.warn("[THUMBNAILGEO]----------->" + ArrLis);
+			
+			if(ArrLis!=null)
+			for (int i = 0; i < ArrLis.size(); i++) {
+				int height = 0;
+				try {
+					/**
+					 * thumbnail
+					 */
+
+					String thumb = ArrLis.get(i);
+					thumbnails.add(thumb);
+					log4j.warn("[THUMBNAIL]----------->S-a adaugat in thumbnails ["
+							+ i + "] temFile " + thumb);
+					/**
+					 * imagine full
+					 */
+
+					String poster =  ArrLis.get(i);
+					posters.add(poster);
+
+					log4j.warn("[FULL]---->posters add:" + poster);
+
+				} catch (Exception ex) {
+					log4j.fatal("[FULL]Eroare obtinere imagine: "
+							+ AppUtils.printStackTrace(ex));
+				}
+			};
+			};
 
 			String infoHtml = "<strong>"
 					+ JsfUtils.getBundleMessage("details_morman") + " "
@@ -229,6 +264,18 @@ public class MormanManagerBean {
 
 	}
 
+	
+    public ArrayList<String> SplitUsingTokenizer(String Subject, String Delimiters) 
+    {
+     StringTokenizer StrTkn = new StringTokenizer(Subject, Delimiters);
+     ArrayList<String> ArrLis = new ArrayList<String>(Subject.length());
+     while(StrTkn.hasMoreTokens())
+     {
+       ArrLis.add(StrTkn.nextToken());
+     }
+     return ArrLis;
+    }
+	
 	private void initStrange(int garbageId) {
 		if (garbageId > 0) {
 
@@ -311,6 +358,41 @@ public class MormanManagerBean {
 							+ AppUtils.printStackTrace(ex));
 				}
 			}
+			
+			log4j.warn("[THUMBNAILGEO]----------->" + g.getTrashOutImageUrls());
+			if(g.getTrashOutImageUrls()!=null){
+			ArrayList<String> ArrLis= SplitUsingTokenizer(g.getTrashOutImageUrls(), ",");
+			
+			log4j.warn("[THUMBNAILGEO]----------->" + ArrLis);
+			
+			if(ArrLis!=null)
+			for (int i = 0; i < ArrLis.size(); i++) {
+				int height = 0;
+				try {
+					/**
+					 * thumbnail
+					 */
+
+					String thumb = ArrLis.get(i);
+					thumbnails.add(thumb);
+					log4j.warn("[THUMBNAIL]----------->S-a adaugat in thumbnails ["
+							+ i + "] temFile " + thumb);
+					/**
+					 * imagine full
+					 */
+
+					String poster =  ArrLis.get(i);
+					posters.add(poster);
+
+					log4j.warn("[FULL]---->posters add:" + poster);
+
+				} catch (Exception ex) {
+					log4j.fatal("[FULL]Eroare obtinere imagine: "
+							+ AppUtils.printStackTrace(ex));
+				}
+			};
+			};
+
 
 			String infoHtml = "<strong>"
 					+ JsfUtils.getBundleMessage("details_morman") + " "
@@ -392,6 +474,41 @@ public class MormanManagerBean {
 							}
 						}
 					}
+					
+					log4j.warn("[THUMBNAILGEO]----------->" + g.getTrashOutImageUrls());
+					if(g.getTrashOutImageUrls()!=null){
+					ArrayList<String> ArrLis= SplitUsingTokenizer(g.getTrashOutImageUrls(), ",");
+					
+					log4j.warn("[THUMBNAILGEO]----------->" + ArrLis);
+					
+					if(ArrLis!=null)
+					for (int i = 0; i < ArrLis.size(); i++) {
+						int height = 0;
+						try {
+							/**
+							 * thumbnail
+							 */
+
+							String thumb = ArrLis.get(i);
+							thumbnails.add(thumb);
+							log4j.warn("[THUMBNAIL]----------->S-a adaugat in thumbnails ["
+									+ i + "] temFile " + thumb);
+							/**
+							 * imagine full
+							 */
+
+							String poster =  ArrLis.get(i);
+							posters.add(poster);
+
+							log4j.warn("[FULL]---->posters add:" + poster);
+
+						} catch (Exception ex) {
+							log4j.fatal("[FULL]Eroare obtinere imagine: "
+									+ AppUtils.printStackTrace(ex));
+						}
+					};
+					};
+					
 					String infoHtml = "<strong>"
 							+ JsfUtils.getBundleMessage("details_morman") + " "
 							+ g.getGarbageId() + "</strong><br/>";
