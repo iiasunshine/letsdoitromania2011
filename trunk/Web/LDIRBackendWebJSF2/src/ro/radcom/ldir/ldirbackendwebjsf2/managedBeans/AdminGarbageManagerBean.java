@@ -12,6 +12,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
@@ -168,6 +169,45 @@ public class AdminGarbageManagerBean {
 						+ AppUtils.printStackTrace(ex));
 			}
 		}
+		
+			Garbage g=selectedGarbage;
+			log4j.warn("[THUMBNAILINADMINGARBAGEManagerGEO]----------->" + g.getTrashOutImageUrls());
+			
+			if(g.getTrashOutImageUrls()!=null){
+			ArrayList<String> ArrLis= SplitUsingTokenizer(g.getTrashOutImageUrls(), ",");
+			
+			log4j.warn("[THUMBNAILINADMINGARBAGEManagerGEO]----------->" + ArrLis);
+			
+
+			if(ArrLis!=null)
+			for (int i = 0; i < ArrLis.size(); i++) {
+				int height = 0;
+				try {
+					/**
+					 * thumbnail
+					 */
+
+					String thumb = ArrLis.get(i);
+					thumbnails.add(thumb);
+					log4j.warn("[THUMBNAIL]----------->S-a adaugat in thumbnails ["
+							+ i + "] temFile " + thumb);
+					/**
+					 * imagine full
+					 */
+
+					String poster =  ArrLis.get(i);
+					posters.add(poster);
+
+					log4j.warn("[FULL]---->posters add:" + poster);
+
+				} catch (Exception ex) {
+					log4j.fatal("[FULL]Eroare obtinere imagine: "
+							+ AppUtils.printStackTrace(ex));
+				}
+			};
+		}
+			
+				
 	}
 
 	public void actionSetSelectedImage() {
@@ -200,6 +240,18 @@ public class AdminGarbageManagerBean {
 		initGarbageList();
 	}
 
+	
+	 public ArrayList<String> SplitUsingTokenizer(String Subject, String Delimiters) 
+	    {
+	     StringTokenizer StrTkn = new StringTokenizer(Subject, Delimiters);
+	     ArrayList<String> ArrLis = new ArrayList<String>(Subject.length());
+	     while(StrTkn.hasMoreTokens())
+	     {
+	       ArrLis.add(StrTkn.nextToken());
+	     }
+	     return ArrLis;
+	    }
+	
 	private void initGarbageList() {
 		if ((countyId == null) && (gridId == null || gridId.length() == 0)
 				&& (userId == null || userId.length() == 0)
@@ -218,6 +270,38 @@ public class AdminGarbageManagerBean {
 		garbageList = wsi.getGarbageListByFilters(userDetails, countyId,
 				AppUtils.parseToInt(gridId, null),
 				AppUtils.parseToInt(userId, null), addDate, null);
+		
+		
+		for(int k=0;k<garbageList.size();k++)			
+		{
+			List<String> posters = new ArrayList<String>();
+			Garbage g=garbageList.get(k);
+			log4j.warn("[THUMBNAILINADMINGARBAGEManagerGEO]----------->" + g.getTrashOutImageUrls());
+			if(g.getTrashOutImageUrls()!=null){
+			ArrayList<String> ArrLis= SplitUsingTokenizer(g.getTrashOutImageUrls(), ",");
+			
+			log4j.warn("[THUMBNAILINADMINGARBAGEManagerGEO]----------->" + ArrLis);
+			
+
+			if(ArrLis!=null)
+			for (int i = 0; i < ArrLis.size(); i++) {
+				int height = 0;
+				try {
+					String poster =  ArrLis.get(i);
+					posters.add(poster);
+
+					log4j.warn("[FULL]---->posters add:" + poster);
+
+				} catch (Exception ex) {
+					log4j.fatal("[FULL]Eroare obtinere imagine: "
+							+ AppUtils.printStackTrace(ex));
+				}
+			};
+			g.setPictures(posters);
+			}
+			
+		}
+		
 		setCountySelectedValue(countyId);
 	}
 
