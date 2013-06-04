@@ -71,7 +71,7 @@
 					</h:panelGroup>
 					<h2>
 						<h:outputText
-							value="Bine ai venit pe aplicatia Let`s Do It, Romania! 2012"
+							value="Bine ai venit pe aplicatia Let`s Do It, Romania! 2013"
 							escape="false" />
 						<br /> <br />
 					</h2>

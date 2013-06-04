@@ -30,7 +30,7 @@
 
 					<h2>
 						<h:outputText
-							value="Bine ai venit pe aplicatia Let`s Do It, Romania! 2012"
+							value="Bine ai venit pe aplicatia Let`s Do It, Romania! 2013"
 							escape="false" />
 						<br /> <br />
 					</h2>
@@ -68,7 +68,7 @@
 
 					<h2>
 						<h:outputText
-							value="Bine ai venit pe aplicatia Let`s Do It, Romania! 2012"
+							value="Bine ai venit pe aplicatia Let`s Do It, Romania! 2013"
 							escape="false" />
 						<br /> <br />
 					</h2>
@@ -78,12 +78,12 @@
 								href="${pageContext.servletContext.contextPath}/users/cartare-mormane-lista.jsf"><img
 									src="/icons/02-adaugare-gunoi.jpg" width="230" height="230" /></a></li>
 
-							<c:if
+	 						<c:if
 								test="${not (sessionScope['USER_DETAILS'].role eq 'VOLUNTEER')}">
-								<li><a
+	<%--							<li><a
 									href="${pageContext.servletContext.contextPath}/users/garbage-vote.jsf"><img
 										src="/icons/03-votare-zona.jpg" width="230" height="230" /></a></li>
-
+--%>
 								<li><a
 									href="${pageContext.servletContext.contextPath}/admin/admin-lista-mormane.jsf"><img
 										src="/icons/05-listare-gunoi.jpg" width="230" height="230" /></a></li>
@@ -91,10 +91,10 @@
 									href="${pageContext.servletContext.contextPath}/admin/admin-lista-voluntari.jsf"><img
 										src="/icons/06-listare-useri.jpg" width="230" height="230" /></a></li>
 							</c:if>
-							
+		<%-- 					
 							<li><a href="${pageContext.servletContext.contextPath}/users/curatenie-vizualizare.jsf"><img
 									src="/icons/04-alocare-gunoi.jpg" width="230" height="230" /></a></li>
-																
+								--%>								
 							<li><a href="http://www.letsdoitromania.ro/feedback-proiect"><img
 									src="/icons/11-feedback.jpg" width="230" height="230" /></a></li>
 							<li><a
