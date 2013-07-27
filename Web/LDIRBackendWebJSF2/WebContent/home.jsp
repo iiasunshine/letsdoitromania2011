@@ -4,6 +4,7 @@
 	<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <jsp:directive.include file="/WEB-INF/jspf/page-meta.jspf" />
+<jsp:directive.include file="/WEB-INF/jspf/googlemaps-meta.jspf"/>
 <title>Let's do it Romania</title>
 </head>
 <body>
@@ -20,21 +21,27 @@
 
 		<%-- page Content --%>
 		<div id="pageContainer">
-			<div id="content">
-				<div id="leftColumn"></div>
-
-				<!-- 				<div id="rightColumn" style="height: 800px;"> -->
-				<div id="rightColumn" >
-				<br /> <br />
-				<h:panelGroup rendered="#{sessionScope['USER_DETAILS'] eq null}">
-
-					<h2>
+		
+		<h2>
 						<h:outputText
 							value="Bine ai venit pe aplicatia Let`s Do It, Romania! 2013"
 							escape="false" />
 						<br /> <br />
 					</h2>
+					
+                     <div id="mapDIV" style="width:80%;display:block;padding:10px; background-color: white; border: 1px solid rgb(171, 171, 171); box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.2);">
+							<div id="map" style="width: 100%; height: 600px"></div>
+                        </div>
 
+		
+
+				<!-- 				<div id="rightColumn" style="height: 800px;"> -->
+			
+				<br /> <br />
+				<h:panelGroup rendered="#{sessionScope['USER_DETAILS'] eq null}">
+
+                        <%-- righ column (harta cu gunoaie) --%>
+		           
 					<div id="homepage-grid">
 						<ul>
 							<li><a
@@ -59,13 +66,15 @@
 						</ul>
 					</div>
 
-
+		
 				</h:panelGroup>
 
 
 				<h:panelGroup
 					rendered="#{not (sessionScope['USER_DETAILS'] eq null)}">
-
+			<div id="content">
+			<div id="leftColumn></div>
+				<div id="rightColumn>
 					<h2>
 						<h:outputText
 							value="Bine ai venit pe aplicatia Let`s Do It, Romania! 2013"
@@ -113,10 +122,10 @@
 							</li>
 						</ul>
 					</div>
-
+			</div>
 				</h:panelGroup>
 				<br /> <br /> <br /> <br /> <br /> <br />
-			</div>
+
 		</div>
 		</div>
 
