@@ -139,7 +139,7 @@ public class GarbageGroupManager implements GarbageGroupManagerLocal {
 				- GarbageGroup.JOIN_RANGE, garbage.getY()
 				+ GarbageGroup.JOIN_RANGE, garbage.getX()
 				+ GarbageGroup.JOIN_RANGE, garbage.getY()
-				- GarbageGroup.JOIN_RANGE);
+				- GarbageGroup.JOIN_RANGE,null);
 
 		logger.finest("found " + garbages.size() + " neighbors for "
 				+ garbage.getX() + "," + garbage.getY());

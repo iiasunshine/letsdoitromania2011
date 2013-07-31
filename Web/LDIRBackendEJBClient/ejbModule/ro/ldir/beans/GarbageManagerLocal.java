@@ -102,7 +102,7 @@ public interface GarbageManagerLocal {
 	 * @return A list of garbages inside the bounding box.
 	 */
 	public List<Garbage> getGarbages(double topLeftX, double topLeftY,
-			double bottomRightX, double bottomRightY);
+			double bottomRightX, double bottomRightY, String recorddate);
 
 	/**
 	 * Searches a garbage by status.

@@ -209,9 +209,10 @@ public class MapWebService {
 			@QueryParam("topLeftY") double topLeftY,
 			@QueryParam("bottomRightX") double bottomRightX,
 			@QueryParam("bottomRightY") double bottomRightY,
+			@QueryParam("recorddate") String recorddate,
 			@QueryParam("maxResults") Integer maxResults) {
 		List<Garbage> garbages = garbageManager.getGarbages(topLeftX, topLeftY,
-				bottomRightX, bottomRightY);
+				bottomRightX, bottomRightY,recorddate);
 		if (maxResults != null && maxResults > 0
 				&& garbages.size() > maxResults)
 			throw new WebApplicationException(Status.NOT_ACCEPTABLE);
@@ -228,7 +229,7 @@ public class MapWebService {
 			@QueryParam("bottomRightY") double bottomRightY,
 			@QueryParam("maxResults") Integer maxResults) {
 		List<Garbage> garbages = garbageManager.getGarbages(topLeftX, topLeftY,
-				bottomRightX, bottomRightY);
+				bottomRightX, bottomRightY,null);
 		
 		Response response = Response.ok().build();
 		
@@ -247,9 +248,10 @@ public class MapWebService {
 			@QueryParam("topLeftY") double topLeftY,
 			@QueryParam("bottomRightX") double bottomRightX,
 			@QueryParam("bottomRightY") double bottomRightY,
+			@QueryParam("recorddate") String recorddate,
 			@QueryParam("cb") String callbackPattern) {
 		List<Garbage> garbages = garbageManager.getGarbages(topLeftX, topLeftY,
-				bottomRightX, bottomRightY);
+				bottomRightX, bottomRightY,recorddate);
 		return new GarbagesKMLFormatter(garbages, callbackPattern).toString();
 	}
 }
