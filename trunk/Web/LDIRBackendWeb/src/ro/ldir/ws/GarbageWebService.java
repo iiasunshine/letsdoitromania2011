@@ -215,9 +215,11 @@ public class GarbageWebService {
 			@QueryParam("topLeftY") double topLeftY,
 			@QueryParam("bottomRightX") double bottomRightX,
 			@QueryParam("bottomRightY") double bottomRightY,
+			@QueryParam("recorddate") String recorddate,
 			@QueryParam("maxResults") Integer maxResults) {
+		
 		List<Garbage> garbages = garbageManager.getGarbages(topLeftX, topLeftY,
-				bottomRightX, bottomRightY);
+				bottomRightX, bottomRightY,recorddate);
 		if (maxResults != null && maxResults > 0
 				&& garbages.size() > maxResults)
 			throw new WebApplicationException(Status.NOT_ACCEPTABLE);

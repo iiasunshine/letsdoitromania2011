@@ -38,6 +38,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -45,6 +46,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
+import java.text.SimpleDateFormat;
 
 import javax.annotation.Resource;
 import javax.annotation.security.DeclareRoles;
@@ -64,6 +66,8 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import ro.ldir.beans.security.SecurityHelper;
 import ro.ldir.dto.ChartedArea;
@@ -81,6 +85,7 @@ import com.sun.image.codec.jpeg.ImageFormatException;
 import com.sun.image.codec.jpeg.JPEGCodec;
 import com.sun.image.codec.jpeg.JPEGEncodeParam;
 import com.sun.image.codec.jpeg.JPEGImageEncoder;
+import com.sun.media.sound.MidiUtils.TempoCache;
 
 /**
  * Session bean managing garbages.
@@ -302,14 +307,28 @@ public class GarbageManager implements GarbageManagerLocal {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Garbage> getGarbages(double topLeftX, double topLeftY,
-			double bottomRightX, double bottomRightY) {
+			double bottomRightX, double bottomRightY, String recorddate) {
+		if(recorddate==null)
+			recorddate="2009-01-01";
+		SimpleDateFormat ft = new SimpleDateFormat ("yyyy-MM-dd"); 
+		Date date;
+		try {
+			date=ft.parse(recorddate);
+		  } catch (Exception e) {
+		        return null;
+		    };
+		  
 		Query query = em.createQuery("SELECT g FROM Garbage g WHERE "
 				+ "g.x BETWEEN :topLeftX AND :bottomRightX AND "
-				+ "g.y BETWEEN :bottomRightY AND :topLeftY");
+				+ "g.y BETWEEN :bottomRightY AND :topLeftY AND "
+				+ "g.recordDate > :recorddate");	
+		
 		query.setParameter("topLeftX", topLeftX);
 		query.setParameter("topLeftY", topLeftY);
 		query.setParameter("bottomRightX", bottomRightX);
 		query.setParameter("bottomRightY", bottomRightY);
+		query.setParameter("recorddate",date ,TemporalType.DATE);
+		
 		return query.getResultList();
 	}
 
