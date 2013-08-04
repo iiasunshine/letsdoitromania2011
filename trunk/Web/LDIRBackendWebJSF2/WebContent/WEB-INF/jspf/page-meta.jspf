@@ -7,8 +7,11 @@
 
 <%-- CSS Files --%>
 <link rel="stylesheet" type="text/css" href="${pageContext.servletContext.contextPath}/layout/css/style.css"/>
+<link href="${pageContext.servletContext.contextPath}/layout/css/lightbox.css" rel="stylesheet" />
 
 <%-- JS Files --%>
+<script src="${pageContext.servletContext.contextPath}/layout/scripts/jquery-1.10.2.min.js"></script>
+<script src="${pageContext.servletContext.contextPath}/layout/scripts/lightbox-2.6.min.js"></script>
 <script type="text/javascript"  src="${pageContext.servletContext.contextPath}/layout/scripts/scripts.js"></script>
 <script type="text/javascript">
 
