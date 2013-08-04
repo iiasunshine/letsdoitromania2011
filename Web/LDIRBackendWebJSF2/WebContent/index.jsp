@@ -15,6 +15,6 @@ response.sendRedirect("home.jsf");%>
 </c:if>
 <c:if test="${(sessionScope['USER_DETAILS'] eq null)}">
 <%
-response.sendRedirect("user-login.jsf");
+response.sendRedirect("home.jsf");
 %>
 </c:if>

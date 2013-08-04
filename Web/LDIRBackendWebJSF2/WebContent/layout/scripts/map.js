@@ -7,10 +7,58 @@ var newmormane=[] //the current ajax batch
 var xhr = new XMLHttpRequest();
 var votx = new XMLHttpRequest();;
 
+var judetName=Array();
+judetName[4]="ALBA";
+judetName[5]="ARAD";
+judetName[6]="ARGES";
+judetName[7]="BACAU";
+judetName[8]="BIHOR";
+judetName[9]="BISTRITA-NASAUD";
+judetName[10]="BOTOSANI";
+judetName[11]="BRAILA";
+judetName[12]="BRASOV";
+judetName[13]="BUZAU";
+judetName[14]="CALARASI";
+judetName[15]="CARAS-SEVERIN";
+judetName[16]="CLUJ";
+judetName[17]="CONSTANTA";
+judetName[18]="COVASNA";
+judetName[19]="DAMBOVITA";
+judetName[20]="DOLJ";
+judetName[21]="GALATI";
+judetName[22]="GIURGIU";
+judetName[23]="GORJ";
+judetName[24]="HARGHITA";
+judetName[25]="HUNEDOARA";
+judetName[26]="IALOMITA";
+judetName[27]="IASI";
+judetName[28]="MARAMURES";
+judetName[29]="MEHEDINTI";
+judetName[30]="MUNICIPIUL BUCURESTI";
+judetName[31]="MURES";
+judetName[32]="NEAMT";
+judetName[33]="OLT";
+judetName[34]="PRAHOVA";
+judetName[35]="SALAJ";
+judetName[36]="SATU MARE";
+judetName[37]="SIBIU";
+judetName[38]="SUCEAVA";
+judetName[39]="TELEORMAN";
+judetName[40]="TIMIS";
+judetName[41]="TULCEA";
+judetName[42]="VALCEA";
+judetName[43]="VASLUI";
+judetName[44]="VRANCEA";
+judetName[45]="ILFOV";
+
+
 //var soloMormanId=-1;
 if (typeof soloMormanId === 'undefined') {
 	var soloMormanId='';
 }
+
+
+
 
 var markerClusterer = null;
 //var markerRed = 'http://chart.apis.google.com/chart?cht=mm&chs=24x32&' +
@@ -21,11 +69,14 @@ var markerUNALLOCATED = WS_URL+'/layout/images/UNALLOCATED.png';
 var markerCLEANED = WS_URL+'/layout/images/CLEANED.png';
 //var markerIDENTIFIED = WS_URL+'/layout/images/IDENTIFIED.png';
 var markerTOVOTE = WS_URL+'/layout/images/TOVOTE.png';
+var markerGREY= WS_URL+'/layout/images/GREY.png';
+var markerGREYCLEANED = WS_URL+'/layout/images/GREYCLEANED.png';
 
 var infoWindow = new google.maps.InfoWindow;
 
 var dontAjax=false //to stop refreshing from clicking the markers
 
+var dontLoad=false //to stop refreshing from zooming to morman
 
 var styles = [[{
     url: '../images/people35.png',
@@ -95,6 +146,7 @@ var layersOptions = {
 		mormane2010:false,
 		mormane2011:false,
 		mormane2012:false,
+		mormane2013:false,
 		mormaneCuratate:false,
 		mormaneNecuratate:false,
 		mormaneDeVotat:false,
@@ -106,8 +158,6 @@ function initLayersOptions(){
 	
 	if(getElementByValue("mormaneToate")!=undefined)
 		layersOptions.mormaneToate=getElementByValue("mormaneToate").checked;
-	if(getElementByValue("mormane2010")!=undefined)
-		layersOptions.mormane2010=getElementByValue("mormane2010").checked;
 	if(getElementByValue("mormane2011")!=undefined)
 		layersOptions.mormane2011=getElementByValue("mormane2011").checked;
 	if(getElementByValue("mormane2012")!=undefined)
@@ -120,7 +170,15 @@ function initLayersOptions(){
 		layersOptions.mormaneDeVotat=getElementByValue("mormaneDeVotat").checked;
 	if(getElementByValue("mormaneDeCuratat")!=undefined)
 		layersOptions.mormaneDeCuratat=getElementByValue("mormaneDeCuratat").checked;
-	
+
+
+	if(getElementByValue("mormaneDeCuratatTotiAnii")!=undefined)
+		layersOptions.mormaneToate=getElementByValue("mormaneDeCuratatTotiAnii").checked;
+	if(getElementByValue("mormane2013")!=undefined)
+		layersOptions.mormane2013=getElementByValue("mormane2013").checked;
+
+	if(getElementByValue("clustering")!=undefined)
+		getElementByValue("clustering").checked=true;
 }
 
 function getElementByValue(value){
@@ -133,7 +191,35 @@ function getElementByValue(value){
 }
 
 function layersoptions(element){
+
+	if(getElementByValue("clustering")==element){
+		if(getElementByValue("clustering").checked!=true)
+
+		{clearClusters();
+		for(var i=0;i<markers.length;i++)
+		markers[i].setMap(map);
+		return;};
+      //for(var i=0;i<markers.length;i++)
+		//markers[i].setMap(null);
+	  markerClusterer = new MarkerClusterer(map, markers, {
+      maxZoom: zoom,
+      gridSize: size,
+      styles: styles[style],
+      ignoreHidden:true	
+    }
+	  );
+
+	return;
+	};
 	layersOptions[element.value]=document.getElementById(element.id).checked;
+	if(element.value=="mormaneToate")
+		{getElementByValue("mormane2013").checked=false
+		layersOptions["mormaneToate"]=true;};
+	if(element.value=="mormane2013")
+		{getElementByValue("mormaneToate").checked=false
+		layersOptions["mormaneToate"]=false;};
+
+	/*
 	if(element.value!="mormaneToate"&&layersOptions[element.value]==true)
 		{
 			layersOptions.mormaneToate=false;
@@ -145,7 +231,7 @@ function layersoptions(element){
 			if(layersOptions.mormaneToate==true&&p!="mormaneToate"&&p!="judet")
 				getElementByValue(p).checked=false;
 		}
-	
+	*/
 	onboundschange();
 	//alert("layersOptions["+element.value+"]="+layersOptions[element.value]);
 	//renderData(false);
@@ -157,6 +243,23 @@ function showMarker(morman){
 		return true;
 	
 	date=new Date(morman.recordDate);
+	cutoffDate=new Date("2012-09-29");
+
+	judet=true;
+	if(getElementByValue("judet").checked==true)
+		if(layersOptions.judet!=judetName[parseInt(morman.county)])
+			judet=false;
+
+	if(layersOptions.mormane2013==true)
+		if(date-cutoffDate>0 && judet==true) return true
+	if(layersOptions.mormaneToate==true)
+		if(judet==true) return true
+	
+	return false;
+
+
+
+
 	year=date.getFullYear();
 	month=date.getMonth();
 	status=morman.status; //CLEANED,IDENTIFIED
@@ -169,6 +272,7 @@ function showMarker(morman){
 	cleaned=(status=="CLEANED")&&layersOptions.mormaneCuratate;
 	notcleaned=(status=="IDENTIFIED")&&layersOptions.mormaneNecuratate;
 	
+
 	
 	
 	if(layersOptions.mormaneToate==true)
@@ -215,8 +319,15 @@ function showMarker(morman){
 			&&!layersOptions.mormaneCuratate
 			&&!layersOptions.mormaneNecuratate)return true;
 	
+	if(getElementByValue("judet").checked==true)
+		if(layersOptions.judet==judetName[parseInt(morman.county)])
+			return true;
+		else return false;
+
+
 	if(toClean==true)
 		return true;
+
 	
 	return false;
 }
@@ -224,6 +335,12 @@ function showMarker(morman){
 
 function getMormane(url){
 //alert(url)
+
+if (dontAjax==true)
+{
+var map=infoWindow.getMap();
+dontAjax=(map === null || typeof map === "undefined");
+}
 if(dontAjax==true)return;
 
 xhr = new XMLHttpRequest();
@@ -328,8 +445,27 @@ var onMarkerClick = function() {
     content+="<p>Descriere: "+morman.description+"</p>"
     content+="<p>Saci: "+morman.bagCount+"</p>"
     content+="<p></p>"
-    content+="<p><a target=\"_self\" style=\"color: #4D751F;\" href=\""+WS_URL+"/users/curatenie-morman-detalii.jsf?garbageId="+morman.garbageId+"\">&raquo; Click aici pentru detalii si ca sa ti-l aloci</a></p>";
-    
+    content+="<p><a target=\"_self\" style=\"color: #4D751F;\" href=\""+WS_URL+"/users/curatenie-morman-detalii.jsf?garbageId="+morman.garbageId+"\">&raquo; Click aici pentru detalii si ca sa ti-l aloci</a></p><br/>";
+	content+='<div style="display:block; width:300px; height:130px">'
+
+	if (morman.pictures!=null)
+	{
+		for(var j=0;j<morman.pictures.length;j++){
+		 imgurl='http://app.letsdoitromania.ro/ImageLoaderServlet?garbageID='+morman.garbageId+'&imageIndex='+j+'&display=1';
+	 	 content+='<a href='+imgurl+' data-lightbox="roadtrip"><img style="display:inline; padding-left:5px;width:110px" src='+imgurl+'></img></a>';
+		}
+	}
+	if (morman.trashOutImageUrls!=null)
+	{
+		trashoutImg=morman.trashOutImageUrls.split(",");
+		for (var j=0;j<trashoutImg.length;j++)
+		{	
+
+		imgurl=trashoutImg;
+		content+='<a href='+imgurl+' data-lightbox="roadtrip"><img style="display:inline;padding-left:5px;width:110px" src='+imgurl+'></img></a>';
+		}
+	};
+   	content+='</div>'
     if(false)
     if(morman.toVote=="true")
 		content+="<span style=\"color: #4D751F;cursor: pointer\" onMouseOver=\"this.style.textDecoration='underline'\" onMouseOut=\"this.style.textDecoration='none'\" onclick=\"javascript:voteMorman("+morman.garbageId+")\">Voteaza</span>";
@@ -343,6 +479,13 @@ var onMarkerClick = function() {
     
   };
 
+
+function expandPhoto(id)
+{
+
+
+ 
+}
 
 function renderData(){
 	
@@ -392,6 +535,12 @@ function renderData(){
 				imageUrl=markerUNALLOCATED; 
 			if(morman.allocatedStatus=="CLEANED")
 				imageUrl=markerCLEANED; 
+			mormanDate=new Date(morman.recordDate);
+			cutoffDate=new Date("2012-09-29");
+			if(morman.allocatedStatus=="CLEANED"&&(mormanDate-cutoffDate<0))
+				imageUrl=markerGREYCLEANED; 
+			if(morman.allocatedStatus!="CLEANED"&&(mormanDate-cutoffDate<0))
+				imageUrl=markerGREY; 
 
 			//if(morman.toVote=="true")
 				//imageUrl=markerTOVOTE;
@@ -462,16 +611,76 @@ function renderData(){
    // if(layersOptions.mormaneToate==true)
     clearClusters();
     showhidemarkers();
+
     //MarkerClusterer.IMAGE_PATH = "/layout/images/m";
-    
-    markerClusterer = new MarkerClusterer(map, markers, {
-      maxZoom: zoom,
-      gridSize: size,
-      styles: styles[style],
-      ignoreHidden:true
-    });
+    if(getElementByValue("clustering").checked==true)
+		markerClusterer = new MarkerClusterer(map, markers, {
+		  maxZoom: zoom,
+		  gridSize: size,
+		  styles: styles[style],
+		  ignoreHidden:true
+		});
+
+  	poze=0;
+	///if(dontLoad==false)
+	if(false)
+	{
+		
+		var elements = document.getElementsByClassName("photoMormanLista");
+		parent=document.getElementById('scrollPhotos')
+		for(var i=0; i<elements.length; i++) {
+			parent.removeChild(elements[i]);
+		}
+	
+	document.getElementById('scrollPhotos').innerHTML="";
+	for(var i=0;i<mormane.length && poze<100;i++)
+	if (showMarker(mormane[i])==true)
+	if (mormane[i].pictures!=null)
+		for (var j=0;j<mormane[i].pictures.length;j++)
+		{
+	
+ 		 parent.innerHTML += '<span class="photoMormanLista" onclick="zoomToGarbage('+i+')" style="display:block;padding:5px;"><img width="110px" src="http://app.letsdoitromania.ro/ImageLoaderServlet?garbageID='+mormane[i].garbageId+'&imageIndex='+j+'&display=1"></img></span>';
+		 poze++;
+		break;
+		}
+	if (mormane[i].trashOutImageUrls!=null)
+		for (var j=0;j<mormane[i].trashOutImageUrls.length;j++)
+		{
+	
+ 		 parent.innerHTML += '<span class="photoMormanLista" onclick="zoomToGarbage('+i+')" style="display:block;padding:5px;"><img width="110px" src="'+mormane[i].trashOutImageUrls[j]+'"></img></span>';
+		 poze++;
+		break;
+		}
+		
+	};
+
     
     newmormane=[];
+}
+
+function zoomToGarbage(value){
+	if(value!=null){
+        garbage=mormane[value];
+		garbage.marker.setVisible(true);
+		//"x":"25.85997","y":"44.37364"
+		centerLatitude=garbage.y;
+		centerLongitude=garbage.x;
+		bottomRightY=parseFloat(garbage.y)-0.0005;
+		bottomRightX=parseFloat(garbage.x)+0.0005;
+		topLeftY=parseFloat(garbage.y)+0.0005;
+		topLeftX=parseFloat(garbage.x)-0.0005;
+		var latLngBottom = new google.maps.LatLng(bottomRightY,bottomRightX)
+	    var latLngTop = new google.maps.LatLng(topLeftY,topLeftX)
+	
+	    var bounds = new google.maps.LatLngBounds();
+	    bounds.extend(latLngBottom);
+	    bounds.extend(latLngTop);
+		dontLoad=true;
+	    map.fitBounds(bounds);
+		map.setZoom(18);
+	    map.panTo(bounds.getCenter());
+
+	};
 }
 
 function returnVisibleMarkers(){
@@ -527,7 +736,10 @@ function showlinks(element) {
 
 function centerOnCounty(value){
 	if(value!=null){
+
         var jsonObject = JSON.parse(value);
+		layersOptions.judet=jsonObject.name;
+		getElementByValue("judet").checked="checked";
 	    var latLngBottom = new google.maps.LatLng(jsonObject.bottomRightY,jsonObject.bottomRightX)
 	    var latLngTop = new google.maps.LatLng(jsonObject.topLeftY,jsonObject.topLeftX)
 	
@@ -540,6 +752,11 @@ function centerOnCounty(value){
 }
 
 function onboundschange(){
+	  if (dontLoad==true)
+	  {
+		  //dontLoad=false;
+		  //return;
+	  }
 	  bounds=map.getBounds();
 	  ne=bounds.getNorthEast();
 	  sw=bounds.getSouthWest();
@@ -556,7 +773,7 @@ function onboundschange(){
 		
 		var url = WS_URL;
 		
-		//url = 'http://app.letsdoitromania.ro/LDIRBackend/map/ws/garbageList/';
+		//url = 'http://localhost:8080/LDIRBackend/map/ws/garbageList/';
 		if(soloMormanId!=-1&&soloMormanId!='')
 			url += '/LDIRBackend/ws/garbage/'+soloMormanId;
 		else 
@@ -576,7 +793,7 @@ function onboundschange(){
 function load() {   
 		
 		var myOptions = {
-		                zoom: 10,
+		                zoom: 12,
 		                center: new google.maps.LatLng(44.4317879, 26.1015844),
 		                mapTypeId: google.maps.MapTypeId.ROADMAP
 		              }
@@ -591,7 +808,12 @@ function load() {
 		google.maps.event.addListener(map, 'zoom_changed', function() {
 //			  if(map.getZoom()<10)
 //				  map.setZoom(10);
+			  if(map.getZoom()<17)
+					dontLoad=false;
+//				  map.setZoom(10);
+
 		  })
+
 		google.maps.event.addListener(map, 'click', function() {
 			infoWindow.close();
 			dontAjax=false;

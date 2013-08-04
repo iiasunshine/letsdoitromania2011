@@ -26,12 +26,33 @@
 						<h:outputText
 							value="Bine ai venit pe aplicatia Let`s Do It, Romania! 2013"
 							escape="false" />
-						<br /> <br />
+						<br /> <br />	<br /> <br />
 					</h2>
 					
-                     <div id="mapDIV" style="width:80%;display:block;padding:10px; background-color: white; border: 1px solid rgb(171, 171, 171); box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.2);">
+					 <div id="map_options" style="float:left;display:block">
+					        
+					&nbsp;&nbsp;<input id="layers0" type="checkbox" title="Layers" onchange="layersoptions(this)" value="mormaneToate" name="layers"></input><label for="layers0">Toti anii</label>	<input id="layers1" type="checkbox" title="Layers" onchange="layersoptions(this)" value="mormane2013" name="layers" checked="checked"></input><label for="layers1">2013</label> <input id="layers2" type="checkbox" title="Layers" onchange="layersoptions(this)" value="judet" name="layers"></input><label for="layers2">Judet: </label>
+
+
+					  <h:selectOneMenu styleClass="formDropdownLeft" onchange="centerOnCounty(this.value);">
+                                <f:selectItem itemLabel="Selecteaza Judet" itemValue=""/>
+                                <f:selectItems value="#{mapViewBean.countyItems}"/>
+                            </h:selectOneMenu>
+					 <input id="layers3" type="checkbox" title="Layers" onchange="layersoptions(this)" value="clustering" name="layers"></input><label for="layers3" checked="checked">Clustere</label> &nbsp;&nbsp;
+					<div id="ajaxloader" style="float:right;display:block">							 
+							 <h:graphicImage value="/layout/images/ajaxloader.gif" width="20px"></h:graphicImage><h:outputText value="  Loading..." style="font-style:italic" /><br/>
+							 </div>
+
+					 </div><br/>
+
+                     <div id="mapDIV" style="width:90%;float:left;padding:10px; background-color: white; border: 1px solid rgb(171, 171, 171); box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.2);margin-right:30px;margin-left:20px">
 							<div id="map" style="width: 100%; height: 600px"></div>
                         </div>
+
+					 <div id="scrollingPhotosDIV" style="height:600px;float:left;width:10%;padding:10px; background-color: white; border: 1px solid rgb(171, 171, 171); box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.2);overflow-y:scroll;display:none;">
+					  <div id="scrollPhotos" style="" ></div>
+                      </div>
+
 
 		
 
@@ -41,8 +62,8 @@
 				<h:panelGroup rendered="#{sessionScope['USER_DETAILS'] eq null}">
 
                         <%-- righ column (harta cu gunoaie) --%>
-		           
-					<div id="homepage-grid">
+		            <div style="clear:both"></div>
+					<div id="homepage-grid" style="margin-top:40px">
 						<ul>
 							<li><a
 								href="${pageContext.servletContext.contextPath}/user-register.jsf"><img
