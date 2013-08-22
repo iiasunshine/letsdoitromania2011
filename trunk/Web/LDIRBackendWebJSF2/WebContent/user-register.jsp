@@ -17,7 +17,7 @@
                     <div id="content">
                         <%-- left column --%>
                         <div id="leftColumn">
-                        <h3>Dupa inregistrare, pentru a participa la curatenia din 12 Mai 2012, poti sa:
+                        <h3>Dupa inregistrare, pentru a participa la curatenia din 28 septembrie 2013, poti sa:
                         <br/><br/>
                         1. Te loghezi in aplicatie si din meniul Curatenie iti aloci mormane pentru tine sau echipa ta </br>
                         <br/>

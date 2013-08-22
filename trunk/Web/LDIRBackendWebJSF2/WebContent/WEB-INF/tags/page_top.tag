@@ -16,9 +16,9 @@
                 <li><a href="${pageContext.servletContext.contextPath}/home.jsf"
                        class="${selected eq 'home' ? 'active' : ''}"><span>${msg.meniu_home}</span></a></li>
                  <li><a href="${pageContext.servletContext.contextPath}/user-login.jsf"
-                       class="${selected eq 'login' ? 'active' : ''}"><span>${msg.meniu_login}</span></a></li><%--
+                       class="${selected eq 'login' ? 'active' : ''}"><span>${msg.meniu_login}</span></a></li>
                 <li><a href="${pageContext.servletContext.contextPath}/user-register.jsf"
-                       class="${selected eq 'register' ? 'active' : ''}"><span>${msg.meniu_inscriere_voluntar}</span></a></li> --%>
+                       class="${selected eq 'register' ? 'active' : ''}"><span>${msg.meniu_inscriere_voluntar}</span></a></li> 
                  <li><a href="${pageContext.servletContext.contextPath}/users/free-cartare-mormane-editare.jsf" class="${selected eq 'mormane' ? 'active' : ''}"><span>${msg.meniu_cartare_mormane_free}</span></a></li>
                 <%--<li><a href="${pageContext.servletContext.contextPath}/free-garbage-vote.jsf" class="${selected eq 'freeGarbageVote' ? 'active' : ''}"><span>VOTEAZA ZONA</span></a></li>--%>
                 <%--<li><a href="${pageContext.servletContext.contextPath}/map-view.jsf" 
