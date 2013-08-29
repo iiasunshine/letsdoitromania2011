@@ -24,7 +24,7 @@
                         sau
                         </br>
                         <br>
-                        2. Te duci, impreuna cu echipa, la cel mai apropiat punct de inregistrare in ziua de 12 mai 2012 incepand cu ora 08:00 pentru a primi informatii despre curatenie</br>
+                        2. Te duci, impreuna cu echipa, la cel mai apropiat punct de inregistrare in ziua de 28 septembrie 2013 incepand cu ora 08:00 pentru a primi informatii despre curatenie</br>
                         </h3>
 
                         </div>
