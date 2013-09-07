@@ -52,6 +52,8 @@ judetName[44]="VRANCEA";
 judetName[45]="ILFOV";
 
 
+
+
 //var soloMormanId=-1;
 if (typeof soloMormanId === 'undefined') {
 	var soloMormanId='';
@@ -153,6 +155,12 @@ var layersOptions = {
 		mormanedeCuratat:true,
 		judet:""
 };
+
+
+function callBackAutoLocation()
+{
+	
+}
 
 function initLayersOptions(){
 	
@@ -783,7 +791,8 @@ function onboundschange(){
 		url += '&topLeftY='+topLeftY
 		url += '&bottomRightX='+bottomRightX
 		url += '&bottomRightY='+bottomRightY;
-	
+		if(layersOptions.mormane2013==true)
+			url+='&recorddate=2012-09-29'
 	//alert(soloMormanId);
 		
 	getMormane(url);
@@ -829,3 +838,4 @@ function somefunction(mormanId){
 }
 
 google.maps.event.addDomListener(window, 'load', load);
+geocoder = new google.maps.Geocoder();

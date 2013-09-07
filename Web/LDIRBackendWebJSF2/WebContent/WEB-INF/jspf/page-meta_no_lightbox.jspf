@@ -7,11 +7,8 @@
 
 <%-- CSS Files --%>
 <link rel="stylesheet" type="text/css" href="${pageContext.servletContext.contextPath}/layout/css/style.css"/>
-<link href="${pageContext.servletContext.contextPath}/layout/css/lightbox.css" rel="stylesheet" />
 
 <%-- JS Files --%>
-<script src="${pageContext.servletContext.contextPath}/layout/scripts/jquery-1.10.2.min.js"></script>
-<script src="${pageContext.servletContext.contextPath}/layout/scripts/lightbox-2.6.min.js"></script>
 <script type="text/javascript"  src="${pageContext.servletContext.contextPath}/layout/scripts/scripts.js"></script>
 <script type="text/javascript">
 
@@ -24,7 +21,5 @@
     ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
   })();
- 
 
 </script>
-
