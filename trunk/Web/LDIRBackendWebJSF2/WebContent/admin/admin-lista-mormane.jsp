@@ -4,7 +4,7 @@
 <f:view>
 	<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<jsp:directive.include file="/WEB-INF/jspf/page-meta.jspf" />
+<jsp:directive.include file="/WEB-INF/jspf/page-meta_no_lightbox.jspf" />
 <title>Let's do it Romania</title>
 </head>
 <body>
@@ -211,6 +211,7 @@
 									
 											<%-- nominate to vote --%>
 											<a4j:commandLink
+												rendered="false"
 												actionListener="#{adminGarbageManagerBean.actionSelectGarbage}"
 												reRender="popup_garbage_nominate" id="popupLinkNominate"
 												ajaxSingle="true"
