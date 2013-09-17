@@ -222,10 +222,14 @@ function layersoptions(element){
 	layersOptions[element.value]=document.getElementById(element.id).checked;
 	if(element.value=="mormaneToate")
 		{getElementByValue("mormane2013").checked=false
-		layersOptions["mormaneToate"]=true;};
+		layersOptions["mormaneToate"]=true;
+		layersOptions["mormane2013"]=false;
+		};
 	if(element.value=="mormane2013")
 		{getElementByValue("mormaneToate").checked=false
-		layersOptions["mormaneToate"]=false;};
+		layersOptions["mormaneToate"]=false;
+		layersOptions["mormane2013"]=true;
+	};
 
 	/*
 	if(element.value!="mormaneToate"&&layersOptions[element.value]==true)
@@ -266,7 +270,7 @@ function showMarker(morman){
 	return false;
 
 
-
+// DEAD CODE DEAD CODE DEAD CODE DEAD CODE
 
 	year=date.getFullYear();
 	month=date.getMonth();
@@ -541,14 +545,15 @@ function renderData(){
 				imageUrl=markerPARTIALLY; 
 			if(morman.allocatedStatus=="UNALLOCATED")
 				imageUrl=markerUNALLOCATED; 
-			if(morman.allocatedStatus=="CLEANED")
-				imageUrl=markerCLEANED; 
 			mormanDate=new Date(morman.recordDate);
 			cutoffDate=new Date("2012-09-29");
-			if(morman.allocatedStatus=="CLEANED"&&(mormanDate-cutoffDate<0))
+			if(morman.status=="CLEANED"&&(mormanDate-cutoffDate<0))
 				imageUrl=markerGREYCLEANED; 
-			if(morman.allocatedStatus!="CLEANED"&&(mormanDate-cutoffDate<0))
+			if(morman.status!="CLEANED"&&(mormanDate-cutoffDate<0))
 				imageUrl=markerGREY; 
+			if(morman.status=="CLEANED")
+				imageUrl=markerCLEANED; 
+
 
 			//if(morman.toVote=="true")
 				//imageUrl=markerTOVOTE;
