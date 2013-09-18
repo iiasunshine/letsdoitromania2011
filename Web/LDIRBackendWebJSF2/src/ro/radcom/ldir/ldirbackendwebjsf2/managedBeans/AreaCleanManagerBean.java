@@ -201,7 +201,9 @@ public class AreaCleanManagerBean {
 		int teamId=AppUtils.parseToInt(JsfUtils.getRequestParameter("team"));
 		log4j.info("[AREACLEANMANAGER]: trying to set team number "+teamId+" for cleaning");
 		JsfUtils.getHttpSession().removeAttribute("TEAM_SELECTED");
-		JsfUtils.getHttpSession().setAttribute("TEAM_SELECTED", teamSelected.getTeamId());
+		//JsfUtils.getHttpSession().setAttribute("TEAM_SELECTED", teamSelected.getTeamId());
+		JsfUtils.getHttpSession().setAttribute("TEAM_SELECTED", teamId);
+		reloadTeam(teamId);
 		/*
 	    if(teamList != null && teamList.size() > 0)
         	for(Team team : teamList){

@@ -50,11 +50,15 @@
 						class="${selected eq 'echipa_edit' ? 'active': ''}"><span>${msg.meniu_echipa_edit}</span></a></li>
 				</c:if>
 
-<%-- 
+ 				<c:if
+					test="${(role eq 'ADMIN') or (role eq 'ORGANIZER') or (role eq 'VOLUNTEER') or (role eq 'ORGANIZER_MULTI')}">
 				<li><a
 					href="${pageContext.servletContext.contextPath}/users/curatenie-vizualizare.jsf"
-					class="${selected eq 'curatenie' ? 'active': ''}"><span>${msg.meniu_curatenie_list}</span></a></li>
-				<c:if test="${not (role eq 'VOLUNTEER')}">
+					class="${selected eq 'curatenie' ? 'active': ''}"><span>${msg.meniu_curatenie_list}</span></a>
+				</li>
+				
+				</c:if>
+<%-- 				<c:if test="${not (role eq 'VOLUNTEER')}">
 					<li><a
 						href="${pageContext.servletContext.contextPath}/users/garbage-vote.jsf"
 						class="${selected eq 'garbageVote' ? 'active' : ''}"><span>VOTEAZA

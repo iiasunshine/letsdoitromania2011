@@ -125,10 +125,10 @@
 									href="${pageContext.servletContext.contextPath}/admin/admin-lista-voluntari.jsf"><img
 										src="/icons/06-listare-useri.jpg" width="230" height="230" /></a></li>
 							</c:if>
-		<%-- 					
+		 					
 							<li><a href="${pageContext.servletContext.contextPath}/users/curatenie-vizualizare.jsf"><img
 									src="/icons/04-alocare-gunoi.jpg" width="230" height="230" /></a></li>
-								--%>								
+																
 							<li><a href="http://www.letsdoitromania.ro/feedback-proiect"><img
 									src="/icons/11-feedback.jpg" width="230" height="230" /></a></li>
 							<li><a

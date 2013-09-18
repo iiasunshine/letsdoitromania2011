@@ -86,7 +86,7 @@ public class OrganizationManagementBean {
 	}
 
 	public void actionUseTeam() {
-		if (teamId < -0) {
+		//if (teamId < 0) {
 			try {
 				usedTeamId = AppUtils.parseToInt(JsfUtils
 						.getRequestParameter("team"));
@@ -95,7 +95,7 @@ public class OrganizationManagementBean {
 			} catch (Exception ee) {
 
 			}
-		}
+		//}
 		teamId = usedTeamId;
 		log4j.info("=====================================================START");
 		JsfUtils.getHttpSession().removeAttribute("TEAM_SELECTED");
@@ -143,9 +143,15 @@ public class OrganizationManagementBean {
 			JsfUtils.getHttpSession().setAttribute("USER_DETAILS", userDetails);
 		}
 		teamList = userDetails.getManagedTeams();
-		if (teamList != null)
+		if (teamList != null){
 			log4j.info("[ORGANIZATION__MANAGEMENT] - (managedTeams) teamList:"
 					+ teamList.size());
+			if(teamId<0){
+				teamId=teamList.get(0).getTeamId();
+				JsfUtils.getHttpSession().removeAttribute("TEAM_SELECTED");
+				JsfUtils.getHttpSession().setAttribute("TEAM_SELECTED", teamId);
+			};
+		};
 		log4j.info("[ORGANIZATION__MANAGEMENT] - (managedTeams) - END");
 	}
 
@@ -271,6 +277,7 @@ public class OrganizationManagementBean {
 		try {
 			wsi.deleteTeam(teamId);
 			log4j.info("[ORGANIZATION__MANAGEMENT] - (actionDeleteTeam) - wsi.deleted");
+			teamId=-1;
 			managedTeams();
 			String message = "";
 			if (teamName != null)
@@ -282,6 +289,8 @@ public class OrganizationManagementBean {
 						"team_delete_success_message")
 						.replaceAll("\\{0\\}", "");
 			JsfUtils.addInfoMessage(message);
+			
+
 
 		} catch (Exception err) {
 			String message = "";

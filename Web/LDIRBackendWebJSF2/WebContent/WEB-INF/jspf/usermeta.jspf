@@ -1,7 +1,8 @@
      <script type="text/javascript" language="javascript">  
         var userRole = '${sessionScope["USER_DETAILS"].role}';
         var userEmail = '${sessionScope["USER_DETAILS"].email}';
-        var userPasswd = '${sessionScope["USER_DETAILS"].passwd}';
+	var userCounty= '${sessionScope["USER_DETAILS"].county}';
+        //var userPasswd = '${sessionScope["USER_DETAILS"].passwd}';
         if(userRole=='')
         	userRole='anon'
         </script>  
