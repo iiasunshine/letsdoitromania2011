@@ -228,6 +228,25 @@ public class Garbage extends FieldAccessBean {
 			return AllocatedStatus.COMPLETELY;
 		return AllocatedStatus.PARTIALLY;
 	}
+	
+	@Transient
+	@NonComparableField
+	public int getAllocatedTeams() {
+		int totalTeams = 0;
+		for (GarbageEnrollment enrollment : garbageEnrollements)
+			totalTeams += 1;
+	return totalTeams;
+	}
+	
+	@Transient
+	@NonComparableField
+	public int getAllocatedVolunteers() {
+		int totalVolunteers = 0;
+		for (GarbageEnrollment enrollment : garbageEnrollements)
+			totalVolunteers += enrollment.getTeam().countMembers();
+	return totalVolunteers;
+	}
+
 
 	/**
 	 * @return the bagCount

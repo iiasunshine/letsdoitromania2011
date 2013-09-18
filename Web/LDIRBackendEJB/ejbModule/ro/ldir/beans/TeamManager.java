@@ -183,15 +183,21 @@ public class TeamManager implements TeamManagerLocal {
 		int garbageBagsLeft = garbage.getBagCount()
 				- garbage.getCountBagsEnrollments();
 
-		if (teamBagsLeft <= 0)
+		// GARBAGE WILL BE NOW ALLOCATED FREEELY OH SO FREELY
+		teamBagsLeft = totalCapacity;
+		garbageBagsLeft = garbage.getBagCount();
+		
+		/* if (teamBagsLeft <= 0)
 			throw new InvalidTeamOperationException(
 					"Capacitatea totala a acestei echipe este de  "
 							+ totalCapacity + " saci, " + allocatedBags
 							+ ". Echipa nu mai poate aloca alte gunoaie pentru curatenie!");
+		
 		if (garbageBagsLeft <= 0)
 			throw new InvalidTeamOperationException(
 					"Gunoiul a fost alocat deja de alta echipa");
-
+		*/
+		
 		if (teamBagsLeft <= garbageBagsLeft)
 			bagCount = teamBagsLeft;
 

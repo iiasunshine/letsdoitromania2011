@@ -265,6 +265,33 @@ public class MormanManagerBean {
 	}
 
 	
+	public boolean isPermiteAlocarea()
+	{
+		Garbage g;
+		g = myGarbage.getGarbage();
+		String judet="unknown";
+		if(userDetails.isMultiRole()!=true || userDetails.getRole()!="ORGANIZER"!=true)
+			return false;
+		
+		if(true)
+			return true;
+		
+		if (g.getCounty()!=null)
+			judet=g.getCounty().getName();
+		if (judet.equalsIgnoreCase("brasov")==true) return false;
+		if (judet.equalsIgnoreCase("Cluj")==true) 
+			if(userDetails.isMultiRole()!=true)
+				return false;
+		if (judet.equalsIgnoreCase("Sibiu")==true) return false;
+		if (judet.equalsIgnoreCase("Iasi")==true) return false;
+		if (judet.equalsIgnoreCase("Satu Mare")==true) return false;
+		if (judet.equalsIgnoreCase("Timis")==true) return false;
+		if (judet.equalsIgnoreCase("Alba")==true) return false;
+		if (judet.equalsIgnoreCase("Dolj")==true) return false;
+		
+		return true;
+	}
+	
     public ArrayList<String> SplitUsingTokenizer(String Subject, String Delimiters) 
     {
      StringTokenizer StrTkn = new StringTokenizer(Subject, Delimiters);
