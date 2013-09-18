@@ -9,6 +9,11 @@
 <jsp:directive.include file="/WEB-INF/jspf/page-meta.jspf" />
 <title>Let's do it Romania</title>
 </head>
+<script>
+function redirectBrowser() {
+    window.location.href='/users/echipa-org-multi-editare.jsf';
+} 
+</script>
 <body>
 	<center>
 		<%-- page Top --%>
@@ -101,26 +106,38 @@
 								</h:commandButton>
 							</div>
 							<br />
-							<div style="margin-left: 150px;">
+<%--							<div style="margin-left: 150px;">
 								<h:commandButton action="#{orgBean.actionDeleteTeam}"
 									value="Sterge echipa" id="confirma2" styleClass="formButton">
 									<f:param name="teamId" value="#{orgBean.teamId}" />
 								</h:commandButton>
+							</div>--%>
+							
+						<div style="margin-left: 150px;">
+							<a4j:commandButton actionListener="#{orgBean.actionDeleteTeam}"
+								id="deleteTeama4jButton"
+								reRender="rightPanelTeamCommands,leftColumn"
+								oncomplete="redirectBrowser()"
+								value="Sterge echipa"
+								styleClass="formButton">
+								<f:param name="team" value="#{orgBean.teamId}" />
+							</a4j:commandButton>
 							</div>
+							
 
 							<br />
 							
 							
-<%--
-							<a4j:commandButton actionListener="#{orgBean.actionSelectTeam}"
+						<div style="margin-left: 150px;">
+							<a4j:commandButton actionListener="#{orgBean.actionUseTeam}"
 								id="selectTeamForCleaningMainButton"
 								reRender="rightPanelTeamCommands"
 								value="Foloseste echipa pentru alocare gunoaie"
 								styleClass="formButton">
 								<f:param name="team" value="#{orgBean.teamId}" />
-							</a4j:commandButton>--%>
-
-							<a4j:commandLink actionListener="#{orgBean.actionSelectTeamToBeUsed}"
+							</a4j:commandButton>
+							</div> 
+<%--- 							<a4j:commandLink actionListener="#{orgBean.actionSelectTeamToBeUsed}"
 								reRender="popup_garbage_set_astobeused"
 								id="popupLinkToActivateTeam" ajaxSingle="true"
 								oncomplete="#{rich:component('popup_garbage_set_astobeused')}.show();">
@@ -128,7 +145,7 @@
 
 								<f:param name="team" value="#{orgBean.teamId}" />
 
-							</a4j:commandLink>
+							</a4j:commandLink>--%>
 
 							<br />
 							<br />

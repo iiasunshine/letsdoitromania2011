@@ -34,9 +34,12 @@ import javax.ejb.EJBException;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.servlet.http.HttpServletRequest;
+
 import javax.ws.rs.Consumes;
+import javax.ws.rs.Produces;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
+import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.WebApplicationException;
@@ -49,6 +52,8 @@ import ro.ldir.beans.GarbageManagerLocal;
 import ro.ldir.dto.Garbage;
 import ro.ldir.exceptions.InvalidUserOperationException;
 import ro.ldir.exceptions.NoCountyException;
+//import ro.ldir.ws.GET;
+//import ro.ldir.ws.Produces;
 
 /** Serves anonymous calls to handle garbages. */
 @Path("ws")
@@ -120,4 +125,15 @@ public class GarbageAnonymousWebService {
 		}
 		return Response.ok().build();
 	}
+	
+	@GET
+	@Produces({ "application/json", "application/xml" })
+	@Path("{garbageId:[0-9]+}")
+	public Garbage getGarbage(@PathParam("garbageId") Integer garbageId) {
+		Garbage garbage = garbageManager.getGarbage(garbageId);
+		if (garbage == null)
+			throw new WebApplicationException(404);
+		return garbage;
+	}
+	
 }

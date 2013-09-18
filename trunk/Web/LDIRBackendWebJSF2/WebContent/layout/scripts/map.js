@@ -258,7 +258,12 @@ function showMarker(morman){
 	cutoffDate=new Date("2012-09-29");
 
 	judet=true;
+	if(getElementByValue("judet")!=null)
 	if(getElementByValue("judet").checked==true)
+		if(layersOptions.judet!=judetName[parseInt(morman.county)])
+			judet=false;
+	if(document.getElementById("judetecuratenie")!=null)
+	if(document.getElementById("judetecuratenie").selectedIndex!=0)
 		if(layersOptions.judet!=judetName[parseInt(morman.county)])
 			judet=false;
 
@@ -331,7 +336,13 @@ function showMarker(morman){
 			&&!layersOptions.mormaneCuratate
 			&&!layersOptions.mormaneNecuratate)return true;
 	
+	if(getElementByValue("judet")!=null)
 	if(getElementByValue("judet").checked==true)
+		if(layersOptions.judet==judetName[parseInt(morman.county)])
+			return true;
+		else return false;
+	if(document.getElementById("judetecuratenie")!=null)
+	if(document.getElementById("judetecuratenie").selectedIndex!=0)
 		if(layersOptions.judet==judetName[parseInt(morman.county)])
 			return true;
 		else return false;
@@ -358,7 +369,7 @@ if(dontAjax==true)return;
 xhr = new XMLHttpRequest();
 xhr.onreadystatechange = processGetMormane;
 if(soloMormanId!=-1&&soloMormanId!='')
-	xhr.open("GET", url, true,userEmail,userPasswd);
+	xhr.open("GET", url, true);
 else 
 	xhr.open("GET", url, true);
 //xhr.open("POST",url,true)
@@ -626,7 +637,8 @@ function renderData(){
     showhidemarkers();
 
     //MarkerClusterer.IMAGE_PATH = "/layout/images/m";
-    if(getElementByValue("clustering").checked==true)
+    if(getElementByValue("clustering")!=null)
+	if(getElementByValue("clustering").checked==true)
 		markerClusterer = new MarkerClusterer(map, markers, {
 		  maxZoom: zoom,
 		  gridSize: size,
@@ -752,7 +764,8 @@ function centerOnCounty(value){
 
         var jsonObject = JSON.parse(value);
 		layersOptions.judet=jsonObject.name;
-		getElementByValue("judet").checked="checked";
+		if(getElementByValue("judet")!=null)
+			getElementByValue("judet").checked="checked";
 	    var latLngBottom = new google.maps.LatLng(jsonObject.bottomRightY,jsonObject.bottomRightX)
 	    var latLngTop = new google.maps.LatLng(jsonObject.topLeftY,jsonObject.topLeftX)
 	
@@ -788,7 +801,7 @@ function onboundschange(){
 		
 		//url = 'http://localhost:8080/LDIRBackend/map/ws/garbageList/';
 		if(soloMormanId!=-1&&soloMormanId!='')
-			url += '/LDIRBackend/ws/garbage/'+soloMormanId;
+			url += '/LDIRBackend/garbage/ws/'+soloMormanId;
 		else 
 			url += '/LDIRBackend/map/ws/garbageList/';
 		url += '?topLeftX='+Number(topLeftX).toString()

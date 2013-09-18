@@ -8,7 +8,7 @@
 <%@attribute name="selected"%>
 
 <h3><h:outputText value="Selecteaza un judet pentru vedea gunoaiele ce se pot curata in 2012"/></h3>
-                            <h:selectOneMenu styleClass="formDropdownLeft" onchange="centerOnCounty(this.value);">
+                            <h:selectOneMenu id="judetecuratenie" styleClass="formDropdownLeft" onchange="centerOnCounty(this.value);">
                                 <f:selectItem itemLabel="Selecteaza Judet" itemValue=""/>
                                 <f:selectItems value="#{mapViewBean.countyItems}"/>
                             </h:selectOneMenu>
@@ -17,12 +17,13 @@
                               
                             <c:if test="${not (selected eq 'mormaneDeVotat')}">
 							<h:selectManyCheckbox id="layers"
-                             value="mormaneDeCuratat"
+                             value="mormane2013"
                              disabled="false" layout="pageDirection"
 								  title="Layers"
 						onchange="layersoptions(this)">
 								
-								<f:selectItem id="mormaneDeCuratat" itemLabel="Mormane de curatat 2012" itemValue="mormaneDeCuratat" itemDisabled="true"/>
+								<f:selectItem id="mormaneToate" itemLabel="Toti anii " itemValue="mormaneToate" itemDisabled="false"/>
+								<f:selectItem id="mormane2013" itemLabel="Mormane 2013" itemValue="mormane2013" itemDisabled="false"/>
 						</h:selectManyCheckbox><br/>
 							   
 							</c:if> 
