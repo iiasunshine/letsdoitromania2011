@@ -11,7 +11,7 @@
     var soloMormanId = '${param["garbageId"]}';	
 </script>
 <jsp:directive.include file="/WEB-INF/jspf/googlemaps-meta.jspf" />
-<jsp:directive.include file="/WEB-INF/jspf/page-meta.jspf" />
+<jsp:directive.include file="/WEB-INF/jspf/page-meta_no_lightbox.jspf" />
 <jsp:directive.include file="/WEB-INF/jspf/usermeta.jspf" />
 
 <title>Let's do it Romania</title>
@@ -66,6 +66,7 @@
 									reRender="popup_garbage_set_allocated" id="popupLinkToAllocate"
 									ajaxSingle="true"
 									oncomplete="#{rich:component('popup_garbage_set_allocated')}.show();"
+									rendered="#{mormanManager.permiteAlocarea}"
 									>
 									<strong> <h:outputText value="» Aloca gunoiul"
 											escape="false" rendered="#{not (mormanManager.mormanAlocat)}" />
@@ -77,6 +78,10 @@
 											value="#{areaCleanManager.teamSelected.teamId}" />
 									</strong>
 								</a4j:commandLink>
+								<strong> <h:outputText value="Alocarea online nu este inca deschisa."
+											escape="false" rendered="#{not (mormanManager.permiteAlocarea)}" />
+											</strong>
+								
 								</h3>
 								<h3>
 									<h:outputLink value="curatenie-vizualizare.jsf">
@@ -106,9 +111,9 @@
 										value="#{mormanManager.garbageSimplu.county.name}" /></strong>
 								<br />
 								<br />
-								<h:outputText escape="false" value="Saci alocati: " />
+								<h:outputText escape="false" value="Voluntari care si-au alocat mormanul: " />
 								<strong><h:outputText
-										value="#{mormanManager.enrollBags} / #{mormanManager.myGarbage.garbage.bagCount}" /></strong>
+										value="#{mormanManager.myGarbage.garbage.allocatedVolunteers} voluntari" /></strong>
 								<br />
 								<br />
 
