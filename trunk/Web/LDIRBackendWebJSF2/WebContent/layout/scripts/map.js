@@ -560,7 +560,7 @@ function renderData(){
 			cutoffDate=new Date("2012-09-29");
 			if(morman.status=="CLEANED"&&(mormanDate-cutoffDate<0))
 				imageUrl=markerGREYCLEANED; 
-			if(morman.status!="CLEANED"&&(mormanDate-cutoffDate<0))
+			if(morman.status!="CLEANED"&&(mormanDate-cutoffDate<0)&&morman.allocatedStatus=="UNALLOCATED")
 				imageUrl=markerGREY; 
 			if(morman.status=="CLEANED")
 				imageUrl=markerCLEANED; 

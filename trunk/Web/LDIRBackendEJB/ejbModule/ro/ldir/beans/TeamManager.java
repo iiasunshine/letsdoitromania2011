@@ -184,8 +184,8 @@ public class TeamManager implements TeamManagerLocal {
 				- garbage.getCountBagsEnrollments();
 
 		// GARBAGE WILL BE NOW ALLOCATED FREEELY OH SO FREELY
-		teamBagsLeft = totalCapacity;
-		garbageBagsLeft = garbage.getBagCount();
+		teamBagsLeft = totalCapacity-1;
+		garbageBagsLeft = garbage.getBagCount()-1;
 		
 		/* if (teamBagsLeft <= 0)
 			throw new InvalidTeamOperationException(
