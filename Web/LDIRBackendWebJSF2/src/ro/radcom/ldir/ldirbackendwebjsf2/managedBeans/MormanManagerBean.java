@@ -270,11 +270,6 @@ public class MormanManagerBean {
 		Garbage g;
 		g = myGarbage.getGarbage();
 		String judet="unknown";
-		if(userDetails.isMultiRole()!=true || userDetails.getRole()!="ORGANIZER"!=true)
-			return false;
-		
-		if(true)
-			return true;
 		
 		if (g.getCounty()!=null)
 			judet=g.getCounty().getName();
@@ -288,6 +283,9 @@ public class MormanManagerBean {
 		if (judet.equalsIgnoreCase("Timis")==true) return false;
 		if (judet.equalsIgnoreCase("Alba")==true) return false;
 		if (judet.equalsIgnoreCase("Dolj")==true) return false;
+
+		/*if(userDetails.isMultiRole()!=true || userDetails.getRole()!="ORGANIZER"!=true)
+			return false;*/
 		
 		return true;
 	}
